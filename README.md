@@ -63,7 +63,9 @@ This project follows a structured approach to issue management:
 
 For more information on issue management:
 
+* [Issue Management Guide](/docs/project/issue-management-guide.md) - Complete guide for issue management
 * [Issue Creation Guide](/docs/project/issues-creation-guide.md) - Instructions for creating issues
 * [Issue Labels](/docs/project/issue-labels.md) - Standard labeling system
 * [Issue Management Workflow](/docs/project/issue-management-workflow.md) - Process for managing issues
 * [Initial Issues](/docs/project/initial-issues.md) - Template issues for project components
+* [Issue Implementation Guide](/docs/project/issue-implementation-guide.md) - Steps to create planned issues
