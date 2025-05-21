@@ -15,6 +15,7 @@ The issue management system is documented in the following files:
 | [Issue Labels](/docs/project/issue-labels.md) | Defines the standard labels to be used for GitHub issues |
 | [Issue Verification Checklist](/docs/project/issue-verification-checklist.md) | Provides a checklist to ensure issues maintain consistent formatting |
 | [Issue Implementation Guide](/docs/project/issue-implementation-guide.md) | Provides step-by-step instructions for creating the planned issues |
+| [Issue Execution Guide](/docs/project/issue-execution-guide.md) | A concise execution checklist to implement the issue creation process |
 
 ## 🛠️ Tools and Resources
 
@@ -40,10 +41,12 @@ This will create all the standard labels defined in the `.github/labels.yml` fil
 
 ### Step 2: Create Initial Issues
 
-Follow the [Issue Implementation Guide](/docs/project/issue-implementation-guide.md) to create the initial set of issues for the project. You can either:
+Follow the [Issue Execution Guide](/docs/project/issue-execution-guide.md) for a concise checklist to create all issues. You can either:
 
 - Use the automated script approach (recommended)
 - Create issues manually using the templates and content provided
+
+For detailed instructions, refer to the [Issue Implementation Guide](/docs/project/issue-implementation-guide.md).
 
 ### Step 3: Set Up Project Board (Optional)
 
