@@ -67,3 +67,21 @@ When creating a batch of related issues:
 3. **Periodic Audits**: Periodically review existing issues using this checklist to maintain issue quality over time.
 
 By consistently applying this verification process, the project will maintain high-quality issues that provide clear direction for implementation and ensure proper tracking of work.
+
+## Example Issues for Reference
+
+When verifying issues, compare them to the following examples to ensure consistency:
+
+### Infrastructure/Foundation Example
+[Set up development environment and tools](/docs/project/initial-issues.md#issue-1-set-up-development-environment-and-tools)
+
+### Core Feature Example
+[Implement event creation and announcement system](/docs/project/initial-issues.md#issue-4-implement-event-creation-and-announcement-system)
+
+### Enhancement Example
+[Implement in-site feedback mechanisms](/docs/project/initial-issues.md#issue-7-implement-in-site-feedback-mechanisms)
+
+### Compliance Example
+[Implement accessibility standards compliance](/docs/project/initial-issues.md#issue-8-implement-accessibility-standards-compliance)
+
+Reference these examples when creating or verifying new issues to maintain consistent quality and format.

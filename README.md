@@ -51,3 +51,19 @@ For more detailed specifications, please refer to the documentation in the `docs
 ## Project Status
 
 Currently in the foundation building phase (Phase 1) - establishing the development infrastructure and basic site functionality.
+
+## Issue Management
+
+This project follows a structured approach to issue management:
+
+* Standardized issue templates for features, bugs, and general issues
+* Comprehensive labeling system for issue categorization
+* Prioritized implementation roadmap
+* Detailed documentation for issue creation and management
+
+For more information on issue management:
+
+* [Issue Creation Guide](/docs/project/issues-creation-guide.md) - Instructions for creating issues
+* [Issue Labels](/docs/project/issue-labels.md) - Standard labeling system
+* [Issue Management Workflow](/docs/project/issue-management-workflow.md) - Process for managing issues
+* [Initial Issues](/docs/project/initial-issues.md) - Template issues for project components
