@@ -51,6 +51,14 @@ const __dirname = path.dirname(__filename);
 // Use process.cwd() to ensure correct path resolution in GitHub Actions environment
 const ISSUES_DATA_PATH = path.resolve(process.cwd(), 'docs/project/issues-data.json');
 
+// Debug: Log file path and check if it exists
+if (isGitHubActions) {
+  console.log(`Debug: Looking for data file at: ${ISSUES_DATA_PATH}`);
+  console.log(`Debug: Working directory: ${process.cwd()}`);
+  console.log(`Debug: Directory contents: ${fs.readdirSync(path.dirname(ISSUES_DATA_PATH)).join(', ')}`);
+  console.log(`Debug: File exists: ${fs.existsSync(ISSUES_DATA_PATH)}`);
+}
+
 // Check if running in GitHub Actions
 const isGitHubActions = process.env.GITHUB_ACTIONS === 'true';
 
@@ -72,6 +80,11 @@ const stats = {
  */
 async function createIssues(categoryFilter = null) {
   try {
+    // Check if data file exists first
+    if (!fs.existsSync(ISSUES_DATA_PATH)) {
+      throw new Error(`Data file not found: ${ISSUES_DATA_PATH}. Check that the file exists and the path is correct.`);
+    }
+    
     // Load issues data
     const issuesData = JSON.parse(fs.readFileSync(ISSUES_DATA_PATH, 'utf8'));
     
