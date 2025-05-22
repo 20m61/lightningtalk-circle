@@ -17,15 +17,19 @@
  * 3. Run: node create-issues.js
  */
 
-require('dotenv').config();
-const { Octokit } = require('@octokit/rest');
-const fs = require('fs');
-const path = require('path');
+import { Octokit } from '@octokit/rest';
+import dotenv from 'dotenv';
+import fs from 'fs';
+import { fileURLToPath } from 'url';
+import path from 'path';
+
+dotenv.config();
 
 // Try to import chalk, but don't fail if it's not available
 let chalk;
 try {
-  chalk = require('chalk');
+  chalk = await import('chalk');
+  chalk = chalk.default;
 } catch (e) {
   // Create a simple chalk replacement
   chalk = {
@@ -40,6 +44,10 @@ try {
 // Configuration
 const REPO_OWNER = '20m61';
 const REPO_NAME = 'lightningtalk-circle';
+
+// Get current file path and directory (ES Module equivalent of __dirname)
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 const ISSUES_DATA_PATH = path.resolve(__dirname, '../docs/project/issues-data.json');
 
 // Check if running in GitHub Actions
@@ -64,7 +72,7 @@ const stats = {
 async function createIssues(categoryFilter = null) {
   try {
     // Load issues data
-    const issuesData = require(ISSUES_DATA_PATH);
+    const issuesData = JSON.parse(fs.readFileSync(ISSUES_DATA_PATH, 'utf8'));
     
     log(chalk.blue('Starting issue creation process...'));
     
@@ -198,15 +206,18 @@ function promptUser(question) {
     return Promise.resolve('y');
   }
   
-  const readline = require('readline').createInterface({
-    input: process.stdin,
-    output: process.stdout
-  });
+  // Using dynamic import for readline
+  return import('readline').then(readline => {
+    const rl = readline.createInterface({
+      input: process.stdin,
+      output: process.stdout
+    });
 
-  return new Promise(resolve => {
-    readline.question(question, answer => {
-      readline.close();
-      resolve(answer);
+    return new Promise(resolve => {
+      rl.question(question, answer => {
+        rl.close();
+        resolve(answer);
+      });
     });
   });
 }

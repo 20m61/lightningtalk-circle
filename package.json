@@ -1,0 +1,15 @@
+{
+  "name": "lightningtalk-circle",
+  "version": "1.0.0",
+  "description": "Lightning Talk Circle - Issue Management",
+  "type": "module",
+  "scripts": {
+    "create-issues": "node scripts/create-issues.js",
+    "verify-issues": "node scripts/verify-issues.js"
+  },
+  "dependencies": {
+    "@octokit/rest": "^19.0.0",
+    "chalk": "^5.0.0",
+    "dotenv": "^16.0.0"
+  }
+}
