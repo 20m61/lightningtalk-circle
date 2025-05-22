@@ -312,6 +312,14 @@ async function main() {
     process.exit(1);
   }
   
+  // Verify data file exists
+  if (!fs.existsSync(ISSUES_DATA_PATH)) {
+    log(chalk.red(`Error: Data file not found: ${ISSUES_DATA_PATH}`));
+    log(`Current working directory: ${process.cwd()}`);
+    setGitHubActionsFailed(`Data file not found: ${ISSUES_DATA_PATH}`);
+    process.exit(1);
+  }
+  
   // Check for category filter
   let categoryFilter = null;
   const validCategories = ['infrastructure', 'core', 'enhancement', 'compliance'];
