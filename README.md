@@ -65,6 +65,7 @@ For more information on issue management:
 
 * [Issue Management Guide](/docs/project/issue-management-guide.md) - Complete guide for issue management
 * [Issue Implementation Steps](/docs/project/issue-implementation-steps.md) - Concrete steps for implementing issues
+* [Issue Creation Execution Guide](/docs/project/issue-creation-execution-guide.md) - Final steps to execute issue creation
 * [Issue Creation Checklist](/docs/project/issue-creation-checklist.md) - Verification checklist for issue creation
 * [Issue Creation Tutorial](/docs/project/issue-creation-tutorial.md) - Command-line tutorial for issue creation
 * [Issue Labels](/docs/project/issue-labels.md) - Standard labeling system

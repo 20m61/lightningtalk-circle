@@ -7,24 +7,43 @@
  * and checks if they have the appropriate labels and content.
  * 
  * Prerequisites:
- * - Node.js installed
- * - GitHub Personal Access Token with 'repo' scope
- * - npm packages: octokit, dotenv
+ * - Node.js installed (v14.x or later)
+ * - GitHub Personal Access Token with 'repo' scope (for local use)
+ * - npm packages: @octokit/rest, dotenv, chalk
  * 
  * Setup:
  * 1. npm install @octokit/rest dotenv chalk
- * 2. Create a .env file with GITHUB_TOKEN=your_personal_access_token
+ * 2. Create a .env file with GITHUB_TOKEN=your_personal_access_token (for local use)
  * 3. Run: node verify-issues.js
  */
 
 require('dotenv').config();
 const { Octokit } = require('@octokit/rest');
-const chalk = require('chalk');
+const fs = require('fs');
+const path = require('path');
+
+// Try to import chalk, but don't fail if it's not available
+let chalk;
+try {
+  chalk = require('chalk');
+} catch (e) {
+  // Create a simple chalk replacement
+  chalk = {
+    blue: (text) => text,
+    green: (text) => text,
+    yellow: (text) => text,
+    red: (text) => text,
+    bold: (text) => text
+  };
+}
 
 // Configuration
 const REPO_OWNER = '20m61';
 const REPO_NAME = 'lightningtalk-circle';
-const ISSUES_DATA_PATH = './docs/project/issues-data.json';
+const ISSUES_DATA_PATH = path.resolve(__dirname, '../docs/project/issues-data.json');
+
+// Check if running in GitHub Actions
+const isGitHubActions = process.env.GITHUB_ACTIONS === 'true';
 
 // Initialize Octokit
 const octokit = new Octokit({
@@ -36,7 +55,7 @@ async function verifyIssues() {
     // Load expected issues data
     const issuesData = require(ISSUES_DATA_PATH);
     
-    console.log(chalk.blue('Starting issue verification process...'));
+    log(chalk.blue('Starting issue verification process...'));
     
     // Get all issues from the repository
     const { data: repoIssues } = await octokit.issues.listForRepo({
@@ -81,8 +100,8 @@ async function verifyIssues() {
       });
     });
     
-    console.log(`Expected issues: ${expectedIssues.size}`);
-    console.log(`Repository issues: ${repoIssues.length}`);
+    log(`Expected issues: ${expectedIssues.size}`);
+    log(`Repository issues: ${repoIssues.length}`);
     
     // Check for missing issues
     const foundIssues = new Set();
@@ -123,59 +142,130 @@ async function verifyIssues() {
     }
     
     // Print verification results
-    console.log('\n--- Verification Results ---');
+    log('\n--- Verification Results ---');
     
     if (missingIssues.length === 0) {
-      console.log(chalk.green('✓ All expected issues are created'));
+      log(chalk.green('✓ All expected issues are created'));
     } else {
-      console.log(chalk.red(`✗ Missing issues: ${missingIssues.length}`));
+      log(chalk.red(`✗ Missing issues: ${missingIssues.length}`));
       missingIssues.forEach(issue => {
-        console.log(chalk.yellow(`  - [${issue.category}] ${issue.title}`));
+        log(chalk.yellow(`  - [${issue.category}] ${issue.title}`));
       });
     }
     
     if (mismatchedIssues.length === 0) {
-      console.log(chalk.green('✓ All issues have the expected labels'));
+      log(chalk.green('✓ All issues have the expected labels'));
     } else {
-      console.log(chalk.red(`✗ Issues with label mismatches: ${mismatchedIssues.length}`));
+      log(chalk.red(`✗ Issues with label mismatches: ${mismatchedIssues.length}`));
       mismatchedIssues.forEach(issue => {
-        console.log(chalk.yellow(`  - #${issue.number} ${issue.title}: ${issue.problem}`));
+        log(chalk.yellow(`  - #${issue.number} ${issue.title}: ${issue.problem}`));
       });
     }
     
-    console.log('\n--- Summary ---');
-    console.log(`Expected issues: ${expectedIssues.size}`);
-    console.log(`Found issues: ${foundIssues.size}`);
-    console.log(`Missing issues: ${missingIssues.length}`);
-    console.log(`Issues with problems: ${mismatchedIssues.length}`);
+    log('\n--- Summary ---');
+    log(`Expected issues: ${expectedIssues.size}`);
+    log(`Found issues: ${foundIssues.size}`);
+    log(`Missing issues: ${missingIssues.length}`);
+    log(`Issues with problems: ${mismatchedIssues.length}`);
+    
+    // Generate summary for GitHub Actions
+    if (isGitHubActions) {
+      const summary = `
+## Issue Verification Summary
+
+| Category | Count |
+|----------|-------|
+| Expected issues | ${expectedIssues.size} |
+| Found issues | ${foundIssues.size} |
+| Missing issues | ${missingIssues.length} |
+| Issues with problems | ${mismatchedIssues.length} |
+
+${missingIssues.length > 0 ? 
+`### Missing Issues\n\n${missingIssues.map(issue => `- [${issue.category}] ${issue.title}`).join('\n')}\n` : ''}
+
+${mismatchedIssues.length > 0 ? 
+`### Issues With Problems\n\n${mismatchedIssues.map(issue => `- #${issue.number} ${issue.title}: ${issue.problem}`).join('\n')}\n` : ''}
+`;
+      
+      // Write to GitHub Actions summary
+      const summaryPath = process.env.GITHUB_STEP_SUMMARY;
+      if (summaryPath) {
+        try {
+          fs.appendFileSync(summaryPath, summary);
+        } catch (error) {
+          console.log(`::warning::Could not write to summary: ${error.message}`);
+        }
+      }
+      
+      // Set status based on verification results
+      if (missingIssues.length > 0 || mismatchedIssues.length > 0) {
+        setGitHubActionsWarning(`Verification found ${missingIssues.length} missing issues and ${mismatchedIssues.length} issues with problems`);
+      }
+    }
     
     if (missingIssues.length === 0 && mismatchedIssues.length === 0) {
-      console.log(chalk.green('\n✅ All issues verified successfully!'));
+      log(chalk.green('\n✅ All issues verified successfully!'));
+      return true;
     } else {
-      console.log(chalk.red('\n❌ Some issues are missing or have problems.'));
+      log(chalk.red('\n❌ Some issues are missing or have problems.'));
+      return false;
     }
     
   } catch (error) {
-    console.error('Error verifying issues:', error);
+    log(chalk.red(`Error verifying issues: ${error.message}`));
+    setGitHubActionsFailed(`Error verifying issues: ${error.message}`);
+    return false;
+  }
+}
+
+/**
+ * Helper for logging with consistent formatting
+ */
+function log(message) {
+  console.log(message);
+}
+
+/**
+ * Set GitHub Actions step as failed
+ */
+function setGitHubActionsFailed(message) {
+  if (isGitHubActions) {
+    console.log(`::error::${message}`);
+  }
+}
+
+/**
+ * Set GitHub Actions step warning
+ */
+function setGitHubActionsWarning(message) {
+  if (isGitHubActions) {
+    console.log(`::warning::${message}`);
   }
 }
 
 // Main execution
 async function main() {
-  console.log(chalk.blue('GitHub Issue Verification Script'));
-  console.log(chalk.blue('==============================='));
+  log(chalk.blue('GitHub Issue Verification Script'));
+  log(chalk.blue('==============================='));
   
   // Verify GitHub token
   if (!process.env.GITHUB_TOKEN) {
-    console.error(chalk.red('Error: GITHUB_TOKEN environment variable is not set.'));
-    console.log('Please create a .env file with your GitHub token or set it in your environment.');
+    log(chalk.red('Error: GITHUB_TOKEN environment variable is not set.'));
+    log('Please create a .env file with your GitHub token or set it in your environment.');
+    setGitHubActionsFailed('GITHUB_TOKEN environment variable is not set');
     process.exit(1);
   }
   
-  await verifyIssues();
+  const success = await verifyIssues();
+  
+  if (!success && isGitHubActions) {
+    // In GitHub Actions, we'll exit with a non-zero code if verification failed
+    process.exit(1);
+  }
 }
 
 main().catch(error => {
-  console.error('Unhandled error:', error);
+  log(chalk.red(`Unhandled error: ${error.message}`));
+  setGitHubActionsFailed(`Unhandled error: ${error.message}`);
   process.exit(1);
 });

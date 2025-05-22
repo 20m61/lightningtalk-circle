@@ -65,7 +65,22 @@ curl -X POST -H "Authorization: token YOUR_TOKEN" \
 
 ## Step 4: Create All Issues
 
-### Option A: Using the Automated Script (Recommended)
+### Option A: Using the GitHub Actions Workflow (Recommended)
+
+1. Navigate to the GitHub repository
+2. Go to the "Actions" tab
+3. Find and select the "Create GitHub Issues" workflow
+4. Click "Run workflow"
+5. Enter "yes" in the confirmation field
+6. Click "Run workflow"
+
+The workflow will:
+- Run the issue creation script automatically
+- Create all issues defined in the data file
+- Apply appropriate labels to each issue
+- Verify that all issues were created correctly
+
+### Option B: Using the Command Line Script
 
 Run the issue creation script:
 
@@ -79,7 +94,7 @@ The script will:
 - Create all issues defined in the data file
 - Apply appropriate labels to each issue
 
-### Option B: Manual Creation (Alternative)
+### Option C: Manual Creation (Alternative)
 
 If you prefer to create issues manually:
 

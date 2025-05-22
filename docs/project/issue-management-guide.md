@@ -25,7 +25,9 @@ The following tools are provided to help implement the issue management system:
 
 - **Label Configuration**: `.github/labels.yml` defines all issue labels in a format compatible with GitHub Actions
 - **Label Setup Workflow**: `.github/workflows/setup-labels.yml` automates the creation of issue labels
+- **Issue Creation Workflow**: `.github/workflows/create-issues.yml` automates the creation of issues from data
 - **Issue Creation Script**: `scripts/create-issues.js` automates the creation of issues from the issues data file
+- **Issue Verification Script**: `scripts/verify-issues.js` verifies that all expected issues exist and are correctly configured
 - **Issue Data**: `docs/project/issues-data.json` contains the structured data for all planned issues
 
 ## 🚀 Getting Started
@@ -45,10 +47,19 @@ This will create all the standard labels defined in the `.github/labels.yml` fil
 
 Follow the [Issue Implementation Steps](/docs/project/issue-implementation-steps.md) for concrete steps to create all issues and use the [Issue Creation Checklist](/docs/project/issue-creation-checklist.md) to verify your implementation. You can either:
 
-- Use the automated script approach (recommended)
+- Use the automated workflow approach (recommended):
+  1. Go to the "Actions" tab
+  2. Select the "Create GitHub Issues" workflow
+  3. Click "Run workflow"
+  4. Enter "yes" in the confirmation field
+  5. Click "Run workflow"
+
+- Use the script approach:
+  - Run `node scripts/create-issues.js` locally (requires setup)
+
 - Create issues manually using the templates and content provided
 
-For detailed instructions, refer to the [Issue Implementation Guide](/docs/project/issue-implementation-guide.md).
+For detailed instructions, refer to the [Issue Implementation Guide](/docs/project/issue-implementation-guide.md) and [Issue Creation Execution Guide](/docs/project/issue-creation-execution-guide.md).
 
 ### Step 3: Set Up Project Board (Optional)
 

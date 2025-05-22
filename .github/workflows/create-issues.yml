@@ -1,0 +1,41 @@
+name: Create GitHub Issues
+
+on:
+  workflow_dispatch:
+    inputs:
+      confirm:
+        description: 'Type "yes" to confirm creating all issues from the data file'
+        required: true
+        default: 'no'
+
+jobs:
+  create-issues:
+    if: github.event.inputs.confirm == 'yes'
+    runs-on: ubuntu-latest
+    permissions:
+      issues: write
+      contents: read
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+      
+      - name: Install dependencies
+        run: npm install @octokit/rest dotenv chalk
+      
+      - name: Create issues
+        run: node scripts/create-issues.js
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NODE_ENV: production
+      
+      - name: Verify issues
+        run: node scripts/verify-issues.js
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NODE_ENV: production
