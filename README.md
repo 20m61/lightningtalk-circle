@@ -64,9 +64,10 @@ This project follows a structured approach to issue management:
 For more information on issue management:
 
 * [Issue Management Guide](/docs/project/issue-management-guide.md) - Complete guide for issue management
-* [Issue Creation Guide](/docs/project/issues-creation-guide.md) - Instructions for creating issues
+* [Issue Implementation Steps](/docs/project/issue-implementation-steps.md) - Concrete steps for implementing issues
+* [Issue Creation Checklist](/docs/project/issue-creation-checklist.md) - Verification checklist for issue creation
+* [Issue Creation Tutorial](/docs/project/issue-creation-tutorial.md) - Command-line tutorial for issue creation
 * [Issue Labels](/docs/project/issue-labels.md) - Standard labeling system
 * [Issue Management Workflow](/docs/project/issue-management-workflow.md) - Process for managing issues
+* [Issue Verification Checklist](/docs/project/issue-verification-checklist.md) - Quality checklist for issues
 * [Initial Issues](/docs/project/initial-issues.md) - Template issues for project components
-* [Issue Implementation Guide](/docs/project/issue-implementation-guide.md) - Steps to create planned issues
-* [Issue Execution Guide](/docs/project/issue-execution-guide.md) - Concise execution checklist for issue creation
