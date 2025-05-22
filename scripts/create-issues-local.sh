@@ -27,7 +27,7 @@ fi
 
 # Variables
 REPO="20m61/lightningtalk-circle"
-DATA_FILE="../docs/project/issues-data.json"
+DATA_FILE="$(dirname "$(realpath "$0")")/../docs/project/issues-data.json"
 CATEGORIES=("infrastructure_foundation_issues" "core_feature_issues" "enhancement_optimization_issues" "compliance_maintenance_issues")
 TOTAL_ISSUES=0
 CREATED_ISSUES=0
