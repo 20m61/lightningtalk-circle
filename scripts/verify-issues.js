@@ -48,7 +48,8 @@ const REPO_NAME = 'lightningtalk-circle';
 // Get current file path and directory (ES Module equivalent of __dirname)
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-const ISSUES_DATA_PATH = path.resolve(__dirname, '../docs/project/issues-data.json');
+// Use process.cwd() to ensure correct path resolution in GitHub Actions environment
+const ISSUES_DATA_PATH = path.resolve(process.cwd(), 'docs/project/issues-data.json');
 
 // Check if running in GitHub Actions
 const isGitHubActions = process.env.GITHUB_ACTIONS === 'true';
