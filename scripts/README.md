@@ -76,6 +76,41 @@ The script will:
 - Verify that all issues have the expected labels
 - Provide a detailed report of any discrepancies
 
+### `create-issues-local.sh`
+
+This shell script provides a simple way to create GitHub issues using the GitHub CLI when Node.js scripts or GitHub Actions workflows are not working.
+
+#### Prerequisites
+
+- GitHub CLI (`gh`) installed and authenticated
+- `jq` command-line JSON processor
+- Permission to create issues in the repository
+
+#### Setup
+
+1. Install GitHub CLI: https://cli.github.com/manual/installation
+2. Install jq: https://stedolan.github.io/jq/download/
+3. Login to GitHub CLI:
+   ```bash
+   gh auth login
+   ```
+
+#### Usage
+
+Run the script from the scripts directory:
+
+```bash
+cd scripts
+./create-issues-local.sh
+```
+
+The script will:
+- Check for prerequisites (gh, jq)
+- Count the number of issues to be created
+- Prompt for confirmation
+- Create each issue using the GitHub CLI
+- Report success or failures
+
 ## Customization
 
 If you need to modify the issues to be created:
@@ -83,6 +118,14 @@ If you need to modify the issues to be created:
 1. Edit the `docs/project/issues-data.json` file
 2. Follow the existing structure for each issue type
 3. Ensure all required fields are included (title, body, labels)
+
+## Troubleshooting
+
+If you're experiencing problems with issue creation:
+
+1. Check the GitHub Actions troubleshooting guide: [GitHub Actions Troubleshooting](/docs/project/github-actions-troubleshooting.md)
+2. Try the detailed execution steps: [Issue Creation Execution Steps](/docs/project/issue-creation-execution-steps.md)
+3. If GitHub Actions is not working, use the `create-issues-local.sh` script as an alternative
 
 ## Additional Resources
 

@@ -61,39 +61,55 @@ const stats = {
 /**
  * Create all issues defined in the data file
  */
-async function createIssues() {
+async function createIssues(categoryFilter = null) {
   try {
     // Load issues data
     const issuesData = require(ISSUES_DATA_PATH);
     
     log(chalk.blue('Starting issue creation process...'));
     
+    // Map category argument to data structure
+    const categoryMap = {
+      'infrastructure': 'infrastructure_foundation_issues',
+      'core': 'core_feature_issues',
+      'enhancement': 'enhancement_optimization_issues',
+      'compliance': 'compliance_maintenance_issues'
+    };
+
     // Create infrastructure/foundation issues
-    log(chalk.blue('\n--- Creating Infrastructure/Foundation Issues ---'));
-    for (const issue of issuesData.infrastructure_foundation_issues) {
-      stats.total++;
-      await createIssue(issue, 'Infrastructure/Foundation');
+    if (!categoryFilter || categoryFilter === 'infrastructure') {
+      log(chalk.blue('\n--- Creating Infrastructure/Foundation Issues ---'));
+      for (const issue of issuesData.infrastructure_foundation_issues) {
+        stats.total++;
+        await createIssue(issue, 'Infrastructure/Foundation');
+      }
     }
     
     // Create core feature issues
-    log(chalk.blue('\n--- Creating Core Feature Issues ---'));
-    for (const issue of issuesData.core_feature_issues) {
-      stats.total++;
-      await createIssue(issue, 'Core Feature');
+    if (!categoryFilter || categoryFilter === 'core') {
+      log(chalk.blue('\n--- Creating Core Feature Issues ---'));
+      for (const issue of issuesData.core_feature_issues) {
+        stats.total++;
+        await createIssue(issue, 'Core Feature');
+      }
     }
     
     // Create enhancement/optimization issues
-    log(chalk.blue('\n--- Creating Enhancement/Optimization Issues ---'));
-    for (const issue of issuesData.enhancement_optimization_issues) {
-      stats.total++;
-      await createIssue(issue, 'Enhancement/Optimization');
+    if (!categoryFilter || categoryFilter === 'enhancement') {
+      log(chalk.blue('\n--- Creating Enhancement/Optimization Issues ---'));
+      for (const issue of issuesData.enhancement_optimization_issues) {
+        stats.total++;
+        await createIssue(issue, 'Enhancement/Optimization');
+      }
     }
     
     // Create compliance/maintenance issues
-    log(chalk.blue('\n--- Creating Compliance/Maintenance Issues ---'));
-    for (const issue of issuesData.compliance_maintenance_issues) {
-      stats.total++;
-      await createIssue(issue, 'Compliance/Maintenance');
+    if (!categoryFilter || categoryFilter === 'compliance') {
+      log(chalk.blue('\n--- Creating Compliance/Maintenance Issues ---'));
+      for (const issue of issuesData.compliance_maintenance_issues) {
+        stats.total++;
+        await createIssue(issue, 'Compliance/Maintenance');
+      }
     }
     
     log(chalk.green('\nIssue creation completed!'));
@@ -271,11 +287,26 @@ async function main() {
     process.exit(1);
   }
   
+  // Check for category filter
+  let categoryFilter = null;
+  const validCategories = ['infrastructure', 'core', 'enhancement', 'compliance'];
+  
+  if (process.argv.length > 2) {
+    const requestedCategory = process.argv[2].toLowerCase();
+    if (validCategories.includes(requestedCategory)) {
+      categoryFilter = requestedCategory;
+      log(chalk.blue(`Filtering issues to category: ${categoryFilter}`));
+    } else {
+      log(chalk.yellow(`Warning: Invalid category "${requestedCategory}". Using all categories.`));
+      log(chalk.yellow(`Valid categories are: ${validCategories.join(', ')}`));
+    }
+  }
+  
   // Check for existing issues
   const shouldProceed = await verifyExistingIssues();
   
   if (shouldProceed) {
-    await createIssues();
+    await createIssues(categoryFilter);
   } else {
     log('Issue creation cancelled.');
   }

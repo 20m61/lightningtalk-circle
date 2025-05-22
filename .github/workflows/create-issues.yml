@@ -7,6 +7,10 @@ on:
         description: 'Type "yes" to confirm creating all issues from the data file'
         required: true
         default: 'no'
+      category:
+        description: 'Optional: Specify a category to create (infrastructure, core, enhancement, compliance, or leave empty for all)'
+        required: false
+        default: ''
 
 jobs:
   create-issues:
@@ -28,14 +32,56 @@ jobs:
       - name: Install dependencies
         run: npm install @octokit/rest dotenv chalk
       
+      # Added debug step to check environment
+      - name: Debug environment
+        run: |
+          echo "GitHub Actor: ${{ github.actor }}"
+          echo "GitHub Token Available: ${{ secrets.GITHUB_TOKEN != '' }}"
+          echo "Repository: ${{ github.repository }}"
+      
+      # Added retry logic for creating issues
       - name: Create issues
-        run: node scripts/create-issues.js
+        uses: nick-invision/retry@v2
+        with:
+          timeout_minutes: 10
+          max_attempts: 3
+          retry_wait_seconds: 10
+          command: |
+            if [ -n "${{ github.event.inputs.category }}" ]; then
+              node scripts/create-issues.js ${{ github.event.inputs.category }}
+            else
+              node scripts/create-issues.js
+            fi
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NODE_ENV: production
       
+      # Added retry logic for verification
       - name: Verify issues
-        run: node scripts/verify-issues.js
+        uses: nick-invision/retry@v2
+        with:
+          timeout_minutes: 5
+          max_attempts: 3
+          retry_wait_seconds: 10
+          command: node scripts/verify-issues.js
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NODE_ENV: production
+      
+      # Added a fallback using GitHub CLI if Octokit method fails
+      - name: Fallback creation (if needed)
+        if: failure()
+        run: |
+          echo "Primary issue creation failed, attempting fallback method with GitHub CLI..."
+          
+          # Install GitHub CLI
+          curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg | sudo dd of=/usr/share/keyrings/githubcli-archive-keyring.gpg
+          echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" | sudo tee /etc/apt/sources.list.d/github-cli.list > /dev/null
+          sudo apt update
+          sudo apt install gh
+          
+          # Authenticate with GITHUB_TOKEN
+          echo "${{ secrets.GITHUB_TOKEN }}" | gh auth login --with-token
+          
+          # Create issues using GitHub CLI
+          bash scripts/create-issues-local.sh

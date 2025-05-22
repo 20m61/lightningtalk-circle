@@ -20,10 +20,54 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
       
+      # Added debug step to check environment
+      - name: Debug environment
+        run: |
+          echo "GitHub Actor: ${{ github.actor }}"
+          echo "GitHub Token Available: ${{ secrets.GITHUB_TOKEN != '' }}"
+          echo "Repository: ${{ github.repository }}"
+      
+      # Added retry logic for setting up labels
       - name: Set up labels
-        uses: micnncim/action-label-syncer@v1
+        uses: nick-invision/retry@v2
+        with:
+          timeout_minutes: 5
+          max_attempts: 3
+          retry_wait_seconds: 10
+          command: |
+            # Directly run the label syncer action's core functionality
+            npx github-label-sync --access-token ${{ secrets.GITHUB_TOKEN }} --labels .github/labels.yml ${{ github.repository }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          manifest: .github/labels.yml
-          prune: false
+      
+      # Added fallback if the above fails
+      - name: Fallback label creation (if primary method fails)
+        if: failure()
+        run: |
+          echo "Primary label setup failed, attempting fallback method with GitHub CLI..."
+          
+          # Install GitHub CLI
+          curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg | sudo dd of=/usr/share/keyrings/githubcli-archive-keyring.gpg
+          echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" | sudo tee /etc/apt/sources.list.d/github-cli.list > /dev/null
+          sudo apt update
+          sudo apt install gh jq
+          
+          # Authenticate with GITHUB_TOKEN
+          echo "${{ secrets.GITHUB_TOKEN }}" | gh auth login --with-token
+          
+          # Create labels from the YAML file using GitHub CLI
+          cat .github/labels.yml | grep -A3 "name:" | while read -r line; do
+            if [[ $line == *"name:"* ]]; then
+              name=$(echo $line | cut -d '"' -f 2)
+              read -r colorline
+              color=$(echo $colorline | cut -d '"' -f 2)
+              read -r descline
+              description=$(echo $descline | cut -d '"' -f 2)
+              
+              echo "Creating label: $name"
+              gh label create "$name" --color "$color" --description "$description" --force
+              
+              # Add a small delay to avoid rate limiting
+              sleep 1
+            fi
+          done
