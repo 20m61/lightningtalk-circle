@@ -48,6 +48,10 @@ const REPO_NAME = 'lightningtalk-circle';
 // Get current file path and directory (ES Module equivalent of __dirname)
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
+
+// Check if running in GitHub Actions
+const isGitHubActions = process.env.GITHUB_ACTIONS === 'true';
+
 // Use process.cwd() to ensure correct path resolution in GitHub Actions environment
 const ISSUES_DATA_PATH = path.resolve(process.cwd(), 'docs/project/issues-data.json');
 
@@ -58,9 +62,6 @@ if (isGitHubActions) {
   console.log(`Debug: Directory contents: ${fs.readdirSync(path.dirname(ISSUES_DATA_PATH)).join(', ')}`);
   console.log(`Debug: File exists: ${fs.existsSync(ISSUES_DATA_PATH)}`);
 }
-
-// Check if running in GitHub Actions
-const isGitHubActions = process.env.GITHUB_ACTIONS === 'true';
 
 // Initialize Octokit
 const octokit = new Octokit({
