@@ -45,5 +45,36 @@ wp-config.php
 #
 # Note: If you wish to whitelist themes,
 # uncomment the next line
-#/wp-content/themesnode_modules/
+#/wp-content/themes
+
+# Node.js dependencies
+node_modules/
 package-lock.json
+
+# Build outputs (except for dist which we want to track)
+.tmp/
+*.log
+
+# Storybook
+*storybook.log
+storybook-static
+
+# Archive directories (temporary files)
+/archive/
+
+# Environment files
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS files
+.DS_Store
+Thumbs.db

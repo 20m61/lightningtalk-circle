@@ -1,0 +1,23 @@
+[
+  {
+    "id": "event-001",
+    "title": "第1回 なんでもライトニングトーク",
+    "description": "5分間で世界を変える！あなたの「なんでも」を聞かせて！",
+    "date": "2025-06-25T19:00:00+09:00",
+    "endDate": "2025-06-25T22:00:00+09:00",
+    "venue": {
+      "name": "新宿某所",
+      "address": "詳細は6月20日に確定予定",
+      "capacity": 50,
+      "online": true,
+      "onlineUrl": "https://meet.google.com/ycp-sdec-xsr"
+    },
+    "status": "upcoming",
+    "registrationOpen": true,
+    "talkSubmissionOpen": true,
+    "maxTalks": 20,
+    "talkDuration": 5,
+    "createdAt": "2025-06-20T02:18:08.467Z",
+    "updatedAt": "2025-06-20T02:18:08.467Z"
+  }
+]

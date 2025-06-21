@@ -1,0 +1,423 @@
+/**
+ * Lightning Talk WordPress Integrated Styles
+ * 統合されたCSSファイル
+ */
+
+/* WordPress統合用のベーススタイル */
+:root {
+  --lt-primary-gradient: linear-gradient(45deg, #ff6b6b, #ffd93d);
+  --lt-secondary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  --lt-accent-color: #ffd700;
+  --lt-text-primary: #333;
+  --lt-text-secondary: #666;
+  --lt-bg-light: #f8f9fa;
+  --lt-border-radius: 10px;
+  --lt-border-radius-large: 20px;
+  --lt-shadow-card: 0 20px 40px rgba(0, 0, 0, 0.1);
+  --lt-shadow-button: 0 10px 20px rgba(0, 0, 0, 0.2);
+  --lt-transition: all 0.3s ease;
+  --wp-admin-bar-height: 0px;
+}
+
+.admin-bar {
+  --wp-admin-bar-height: 32px;
+}
+
+@media screen and (max-width: 782px) {
+  .admin-bar {
+    --wp-admin-bar-height: 46px;
+  }
+}
+
+/* Lightning Talk WordPress統合コンテナ */
+.lightningtalk-container {
+  font-family: 'Helvetica Neue', Arial, sans-serif;
+  line-height: 1.6;
+}
+
+/* ボタンスタイル */
+.lt-btn {
+  display: inline-block;
+  padding: 15px 30px;
+  background: var(--lt-primary-gradient);
+  color: #fff;
+  text-decoration: none;
+  border-radius: 50px;
+  font-weight: bold;
+  transition: var(--lt-transition);
+  border: none;
+  cursor: pointer;
+  font-size: 1.1rem;
+  box-shadow: var(--lt-shadow-button);
+  position: relative;
+  overflow: hidden;
+}
+
+.lt-btn:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
+}
+
+.lt-btn-secondary {
+  background: linear-gradient(45deg, #6c757d, #adb5bd);
+}
+
+.lt-btn-disabled {
+  background: #ccc;
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.lt-btn-disabled:hover {
+  transform: none;
+  box-shadow: var(--lt-shadow-button);
+}
+
+.lt-btn-small {
+  padding: 8px 16px;
+  font-size: 0.9rem;
+}
+
+.lt-btn-large {
+  padding: 20px 40px;
+  font-size: 1.3rem;
+}
+
+/* イベントカードスタイル */
+.lt-event-card {
+  background: #fff;
+  border-radius: var(--lt-border-radius-large);
+  padding: 40px;
+  box-shadow: var(--lt-shadow-card);
+  border: 4px solid var(--lt-accent-color);
+  margin-bottom: 30px;
+  transition: var(--lt-transition);
+}
+
+.lt-event-card.lt-enhanced {
+  position: relative;
+  overflow: hidden;
+}
+
+.lt-event-card.lt-enhanced::before {
+  content: '';
+  position: absolute;
+  top: -2px;
+  left: -2px;
+  right: -2px;
+  bottom: -2px;
+  background: var(--lt-primary-gradient);
+  border-radius: var(--lt-border-radius-large);
+  z-index: -1;
+}
+
+.date-highlight {
+  background: linear-gradient(45deg, #FF6B6B, #FFD93D);
+  color: #fff;
+  padding: 15px 30px;
+  border-radius: 50px;
+  display: inline-block;
+  font-size: 1.2rem;
+  font-weight: bold;
+  margin-bottom: 20px;
+  box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+}
+
+.venue-status {
+  background: #e8f4fd;
+  border: 2px dashed #4169E1;
+  padding: 20px;
+  border-radius: 15px;
+  margin: 20px 0;
+  text-align: center;
+}
+
+.online-info {
+  background: #e8f4fd;
+  padding: 20px;
+  border-radius: 15px;
+  margin: 20px 0;
+}
+
+.online-info a {
+  color: #4169E1;
+  text-decoration: none;
+}
+
+.online-info a:hover {
+  text-decoration: underline;
+}
+
+/* トピックアイテム */
+.lt-topic-item {
+  padding: 10px 15px;
+  background: linear-gradient(45deg, var(--lt-bg-light), #e9ecef);
+  border-radius: var(--lt-border-radius);
+  border: 2px solid #dee2e6;
+  transition: var(--lt-transition);
+  cursor: pointer;
+  user-select: none;
+  display: inline-block;
+  margin: 5px;
+}
+
+.lt-topic-item:hover {
+  background: var(--lt-primary-gradient);
+  color: #fff;
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+}
+
+.lt-topic-item.selected {
+  background: linear-gradient(45deg, var(--lt-accent-color), #ff6b6b);
+  color: #fff;
+  transform: translateY(-2px) scale(1.02);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+}
+
+/* モーダルスタイル */
+.lt-modal {
+  display: none;
+  position: fixed;
+  z-index: 10000;
+  left: 0;
+  top: var(--wp-admin-bar-height);
+  width: 100%;
+  height: calc(100% - var(--wp-admin-bar-height));
+  background-color: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(5px);
+}
+
+.lt-modal-content {
+  background-color: #fff;
+  margin: 5% auto;
+  padding: 30px;
+  border-radius: var(--lt-border-radius-large);
+  width: 90%;
+  max-width: 600px;
+  position: relative;
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+.lt-close {
+  color: #aaa;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+  cursor: pointer;
+  position: absolute;
+  top: 15px;
+  right: 20px;
+}
+
+.lt-close:hover,
+.lt-close:focus {
+  color: #000;
+}
+
+/* フォームスタイル */
+.lt-form-group {
+  margin-bottom: 20px;
+}
+
+.lt-form-group label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: bold;
+  color: var(--lt-text-primary);
+}
+
+.lt-form-group input,
+.lt-form-group textarea,
+.lt-form-group select {
+  width: 100%;
+  padding: 12px;
+  border: 2px solid #ddd;
+  border-radius: var(--lt-border-radius);
+  font-size: 1rem;
+  transition: border-color 0.3s ease;
+  box-sizing: border-box;
+}
+
+.lt-form-group input:focus,
+.lt-form-group textarea:focus,
+.lt-form-group select:focus {
+  outline: none;
+  border-color: #ff6b6b;
+}
+
+.lt-form-group textarea {
+  resize: vertical;
+  min-height: 100px;
+}
+
+/* アンケートセクション */
+.lt-survey-section {
+  margin-top: 20px;
+  padding: 20px;
+  background: #f8f9fa;
+  border-radius: 10px;
+  text-align: center;
+}
+
+.lt-survey-section h4 {
+  margin-bottom: 15px;
+  color: #333;
+}
+
+.survey-buttons {
+  display: flex;
+  gap: 15px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.survey-btn {
+  position: relative;
+  min-width: 160px;
+  transition: all 0.3s ease;
+}
+
+.survey-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+}
+
+.count {
+  display: inline-block;
+  background: rgba(255,255,255,0.3);
+  padding: 2px 8px;
+  border-radius: 12px;
+  margin-left: 8px;
+  font-weight: bold;
+  min-width: 20px;
+}
+
+/* 通知スタイル */
+.lt-notification {
+  position: fixed;
+  top: 100px;
+  right: 20px;
+  padding: 15px 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+  z-index: 2001;
+  max-width: 300px;
+  color: white;
+}
+
+.lt-notification-success {
+  background: #4CAF50;
+}
+
+.lt-notification-error {
+  background: #f44336;
+}
+
+.lt-notification-info {
+  background: #2196F3;
+}
+
+/* Cocoonテーマ統合 */
+.theme-cocoon .lightningtalk-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+/* ダークモード対応 */
+.dark-mode .lightningtalk-container {
+  --lt-text-primary: #ffffff;
+  --lt-text-secondary: #cccccc;
+  --lt-bg-light: #2d2d2d;
+}
+
+.dark-mode .lt-event-card {
+  background: #1a1a1a;
+  color: var(--lt-text-primary);
+}
+
+.dark-mode .lt-modal-content {
+  background-color: #1a1a1a;
+  color: var(--lt-text-primary);
+}
+
+.dark-mode .lt-form-group input,
+.dark-mode .lt-form-group textarea,
+.dark-mode .lt-form-group select {
+  background: #2d2d2d;
+  color: var(--lt-text-primary);
+  border-color: #555;
+}
+
+.dark-mode .lt-form-group input:focus,
+.dark-mode .lt-form-group textarea:focus,
+.dark-mode .lt-form-group select:focus {
+  border-color: #ff6b6b;
+}
+
+/* レスポンシブ対応 */
+@media (max-width: 768px) {
+  .lightningtalk-container {
+    padding: 0 15px;
+  }
+  
+  .lt-event-card {
+    padding: 20px;
+  }
+  
+  .lt-btn {
+    width: 100%;
+    margin: 5px 0;
+  }
+  
+  .lt-modal-content {
+    width: 95%;
+    margin: 2% auto;
+    padding: 20px;
+  }
+  
+  .survey-buttons {
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .survey-btn {
+    width: 100%;
+    max-width: 250px;
+  }
+}
+
+/* WordPress統合フラグ */
+.lt-wordpress-integrated {
+  /* WordPress統合時の特別スタイル */
+}
+
+.lt-wordpress-integrated .lt-btn {
+  /* WordPressボタンの微調整 */
+}
+
+/* アクセシビリティ対応 */
+@media (prefers-reduced-motion: reduce) {
+  .lightningtalk-container * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* 高コントラストモード対応 */
+@media (prefers-contrast: high) {
+  .lt-btn {
+    border: 2px solid #000;
+  }
+  
+  .lt-topic-item {
+    border: 2px solid #000;
+  }
+  
+  .lt-event-card {
+    border: 3px solid #000;
+  }
+}

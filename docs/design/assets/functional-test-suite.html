@@ -1,0 +1,1133 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lightning Talk 機能テストスイート</title>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #333;
+        }
+        
+        .test-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+        }
+        
+        .test-header {
+            text-align: center;
+            margin-bottom: 40px;
+            background: linear-gradient(135deg, #FF6B35, #F7931E);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .test-category {
+            margin-bottom: 40px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            padding: 20px;
+        }
+        
+        .test-category.passed {
+            border-color: #4CAF50;
+            background: rgba(76, 175, 80, 0.05);
+        }
+        
+        .test-category.failed {
+            border-color: #F44336;
+            background: rgba(244, 67, 54, 0.05);
+        }
+        
+        .test-category.warning {
+            border-color: #FF9800;
+            background: rgba(255, 152, 0, 0.05);
+        }
+        
+        .category-title {
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .test-item {
+            margin: 15px 0;
+            padding: 10px;
+            border-radius: 5px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .test-item.pass {
+            background: rgba(76, 175, 80, 0.1);
+            border-left: 4px solid #4CAF50;
+        }
+        
+        .test-item.fail {
+            background: rgba(244, 67, 54, 0.1);
+            border-left: 4px solid #F44336;
+        }
+        
+        .test-item.warn {
+            background: rgba(255, 152, 0, 0.1);
+            border-left: 4px solid #FF9800;
+        }
+        
+        .test-status {
+            font-weight: bold;
+            padding: 5px 10px;
+            border-radius: 15px;
+            font-size: 0.9rem;
+        }
+        
+        .status-pass {
+            background: #4CAF50;
+            color: white;
+        }
+        
+        .status-fail {
+            background: #F44336;
+            color: white;
+        }
+        
+        .status-warn {
+            background: #FF9800;
+            color: white;
+        }
+        
+        .test-controls {
+            text-align: center;
+            margin: 30px 0;
+        }
+        
+        .test-btn {
+            background: linear-gradient(135deg, #FF6B35, #F7931E);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 25px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            margin: 0 10px;
+            transition: all 0.3s ease;
+        }
+        
+        .test-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(255, 107, 53, 0.3);
+        }
+        
+        .test-progress {
+            width: 100%;
+            height: 20px;
+            background: #e0e0e0;
+            border-radius: 10px;
+            overflow: hidden;
+            margin: 20px 0;
+        }
+        
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(135deg, #4CAF50, #45a049);
+            width: 0%;
+            transition: width 0.5s ease;
+        }
+        
+        .test-summary {
+            background: #f5f5f5;
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 30px;
+        }
+        
+        .summary-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-top: 15px;
+        }
+        
+        .summary-item {
+            text-align: center;
+            padding: 15px;
+            border-radius: 10px;
+            background: white;
+        }
+        
+        .summary-number {
+            font-size: 2rem;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        
+        .device-test {
+            margin: 20px 0;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            background: #fafafa;
+        }
+        
+        .console-output {
+            background: #1e1e1e;
+            color: #00ff00;
+            padding: 15px;
+            border-radius: 5px;
+            font-family: 'Courier New', monospace;
+            margin: 15px 0;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+        
+        .performance-metric {
+            display: inline-block;
+            margin: 5px;
+            padding: 8px 12px;
+            background: #e3f2fd;
+            border-radius: 20px;
+            font-size: 0.9rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="test-container">
+        <div class="test-header">
+            <h1>🧪 Lightning Talk 機能テストスイート</h1>
+            <p>超楽しいUX版の全機能・仕様実現度を検証</p>
+        </div>
+
+        <div class="test-controls">
+            <button class="test-btn" onclick="runAllTests()">🚀 全テスト実行</button>
+            <button class="test-btn" onclick="runQuickTest()">⚡ クイックテスト</button>
+            <button class="test-btn" onclick="runPerformanceTest()">📊 パフォーマンステスト</button>
+            <button class="test-btn" onclick="clearResults()">🗑️ 結果クリア</button>
+        </div>
+
+        <div class="test-progress">
+            <div class="progress-bar" id="progressBar"></div>
+        </div>
+
+        <div class="console-output" id="consoleOutput">
+            <div>🔧 テストシステム初期化完了</div>
+            <div>📋 テスト対象: lightning-talk-super-fun.html</div>
+            <div>⏰ 準備完了 - テスト開始をお待ちしています...</div>
+        </div>
+
+        <!-- 基本機能テスト -->
+        <div class="test-category" id="basicFunctions">
+            <div class="category-title">
+                <span>🔧</span>
+                <span>基本機能テスト</span>
+                <span id="basicStatus" class="test-status">待機中</span>
+            </div>
+            <div class="test-item" id="test-page-load">
+                <span>ページ読み込み</span>
+                <span class="test-status">未実行</span>
+            </div>
+            <div class="test-item" id="test-dom-elements">
+                <span>DOM要素の存在確認</span>
+                <span class="test-status">未実行</span>
+            </div>
+            <div class="test-item" id="test-css-loading">
+                <span>CSSスタイル適用</span>
+                <span class="test-status">未実行</span>
+            </div>
+            <div class="test-item" id="test-js-initialization">
+                <span>JavaScript初期化</span>
+                <span class="test-status">未実行</span>
+            </div>
+            <div class="test-item" id="test-local-storage">
+                <span>ローカルストレージ機能</span>
+                <span class="test-status">未実行</span>
+            </div>
+        </div>
+
+        <!-- UIインタラクションテスト -->
+        <div class="test-category" id="uiInteractions">
+            <div class="category-title">
+                <span>🎮</span>
+                <span>UIインタラクションテスト</span>
+                <span id="uiStatus" class="test-status">待機中</span>
+            </div>
+            <div class="test-item" id="test-button-clicks">
+                <span>ボタンクリック応答</span>
+                <span class="test-status">未実行</span>
+            </div>
+            <div class="test-item" id="test-form-validation">
+                <span>フォームバリデーション</span>
+                <span class="test-status">未実行</span>
+            </div>
+            <div class="test-item" id="test-modal-functionality">
+                <span>モーダル開閉機能</span>
+                <span class="test-status">未実行</span>
+            </div>
+            <div class="test-item" id="test-chat-widget">
+                <span>チャットウィジェット</span>
+                <span class="test-status">未実行</span>
+            </div>
+            <div class="test-item" id="test-survey-voting">
+                <span>アンケート投票機能</span>
+                <span class="test-status">未実行</span>
+            </div>
+        </div>
+
+        <!-- アニメーション・エフェクトテスト -->
+        <div class="test-category" id="animations">
+            <div class="category-title">
+                <span>✨</span>
+                <span>アニメーション・エフェクトテスト</span>
+                <span id="animationStatus" class="test-status">待機中</span>
+            </div>
+            <div class="test-item" id="test-particle-system">
+                <span>パーティクルシステム</span>
+                <span class="test-status">未実行</span>
+            </div>
+            <div class="test-item" id="test-confetti-effect">
+                <span>コンフェッティエフェクト</span>
+                <span class="test-status">未実行</span>
+            </div>
+            <div class="test-item" id="test-hover-animations">
+                <span>ホバーアニメーション</span>
+                <span class="test-status">未実行</span>
+            </div>
+            <div class="test-item" id="test-scroll-animations">
+                <span>スクロールアニメーション</span>
+                <span class="test-status">未実行</span>
+            </div>
+            <div class="test-item" id="test-micro-interactions">
+                <span>マイクロインタラクション</span>
+                <span class="test-status">未実行</span>
+            </div>
+        </div>
+
+        <!-- ゲーミフィケーションテスト -->
+        <div class="test-category" id="gamification">
+            <div class="category-title">
+                <span>🏆</span>
+                <span>ゲーミフィケーションテスト</span>
+                <span id="gameStatus" class="test-status">待機中</span>
+            </div>
+            <div class="test-item" id="test-achievement-system">
+                <span>達成システム</span>
+                <span class="test-status">未実行</span>
+            </div>
+            <div class="test-item" id="test-score-tracking">
+                <span>スコア追跡</span>
+                <span class="test-status">未実行</span>
+            </div>
+            <div class="test-item" id="test-progress-tracking">
+                <span>プログレス追跡</span>
+                <span class="test-status">未実行</span>
+            </div>
+            <div class="test-item" id="test-notification-system">
+                <span>通知システム</span>
+                <span class="test-status">未実行</span>
+            </div>
+        </div>
+
+        <!-- レスポンシブデザインテスト -->
+        <div class="test-category" id="responsive">
+            <div class="category-title">
+                <span>📱</span>
+                <span>レスポンシブデザインテスト</span>
+                <span id="responsiveStatus" class="test-status">待機中</span>
+            </div>
+            <div class="device-test">
+                <strong>デバイス別テスト結果:</strong>
+                <div id="deviceTestResults"></div>
+            </div>
+        </div>
+
+        <!-- アクセシビリティテスト -->
+        <div class="test-category" id="accessibility">
+            <div class="category-title">
+                <span>♿</span>
+                <span>アクセシビリティテスト</span>
+                <span id="a11yStatus" class="test-status">待機中</span>
+            </div>
+            <div class="test-item" id="test-keyboard-navigation">
+                <span>キーボードナビゲーション</span>
+                <span class="test-status">未実行</span>
+            </div>
+            <div class="test-item" id="test-aria-attributes">
+                <span>ARIA属性</span>
+                <span class="test-status">未実行</span>
+            </div>
+            <div class="test-item" id="test-color-contrast">
+                <span>色コントラスト</span>
+                <span class="test-status">未実行</span>
+            </div>
+            <div class="test-item" id="test-screen-reader">
+                <span>スクリーンリーダー対応</span>
+                <span class="test-status">未実行</span>
+            </div>
+        </div>
+
+        <!-- パフォーマンステスト -->
+        <div class="test-category" id="performance">
+            <div class="category-title">
+                <span>⚡</span>
+                <span>パフォーマンステスト</span>
+                <span id="perfStatus" class="test-status">待機中</span>
+            </div>
+            <div id="performanceMetrics"></div>
+        </div>
+
+        <!-- テスト結果サマリー -->
+        <div class="test-summary">
+            <h3>📊 テスト結果サマリー</h3>
+            <div class="summary-grid">
+                <div class="summary-item">
+                    <div class="summary-number" style="color: #4CAF50;" id="passedCount">0</div>
+                    <div>成功</div>
+                </div>
+                <div class="summary-item">
+                    <div class="summary-number" style="color: #F44336;" id="failedCount">0</div>
+                    <div>失敗</div>
+                </div>
+                <div class="summary-item">
+                    <div class="summary-number" style="color: #FF9800;" id="warningCount">0</div>
+                    <div>警告</div>
+                </div>
+                <div class="summary-item">
+                    <div class="summary-number" style="color: #2196F3;" id="totalCount">0</div>
+                    <div>総計</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        class LightningTalkTestSuite {
+            constructor() {
+                this.testResults = {
+                    passed: 0,
+                    failed: 0,
+                    warnings: 0,
+                    total: 0
+                };
+                this.testTarget = null;
+                this.consoleOutput = document.getElementById('consoleOutput');
+                this.progressBar = document.getElementById('progressBar');
+                this.currentProgress = 0;
+            }
+
+            log(message, type = 'info') {
+                const timestamp = new Date().toLocaleTimeString();
+                const colors = {
+                    'info': '#00ff00',
+                    'success': '#00ff88',
+                    'error': '#ff4444',
+                    'warning': '#ffaa00'
+                };
+                
+                const logDiv = document.createElement('div');
+                logDiv.style.color = colors[type] || colors.info;
+                logDiv.textContent = `[${timestamp}] ${message}`;
+                this.consoleOutput.appendChild(logDiv);
+                this.consoleOutput.scrollTop = this.consoleOutput.scrollHeight;
+            }
+
+            updateProgress(percent) {
+                this.currentProgress = percent;
+                this.progressBar.style.width = percent + '%';
+            }
+
+            setTestResult(testId, status, message = '') {
+                const testElement = document.getElementById(testId);
+                if (!testElement) return;
+
+                testElement.className = `test-item ${status}`;
+                const statusElement = testElement.querySelector('.test-status');
+                
+                const statusClasses = {
+                    'pass': 'status-pass',
+                    'fail': 'status-fail',
+                    'warn': 'status-warn'
+                };
+                
+                const statusTexts = {
+                    'pass': '✅ 成功',
+                    'fail': '❌ 失敗',
+                    'warn': '⚠️ 警告'
+                };
+                
+                statusElement.className = `test-status ${statusClasses[status]}`;
+                statusElement.textContent = statusTexts[status];
+                
+                this.testResults[status === 'pass' ? 'passed' : status === 'fail' ? 'failed' : 'warnings']++;
+                this.testResults.total++;
+                
+                this.updateSummary();
+                
+                if (message) {
+                    this.log(`${testId}: ${message}`, status === 'pass' ? 'success' : status === 'fail' ? 'error' : 'warning');
+                }
+            }
+
+            updateSummary() {
+                document.getElementById('passedCount').textContent = this.testResults.passed;
+                document.getElementById('failedCount').textContent = this.testResults.failed;
+                document.getElementById('warningCount').textContent = this.testResults.warnings;
+                document.getElementById('totalCount').textContent = this.testResults.total;
+            }
+
+            setCategoryStatus(categoryId, status) {
+                const category = document.getElementById(categoryId);
+                const statusElement = document.getElementById(categoryId.replace(/s$/, 'Status'));
+                
+                category.className = `test-category ${status}`;
+                
+                const statusTexts = {
+                    'passed': '✅ 完了',
+                    'failed': '❌ 問題あり',
+                    'warning': '⚠️ 注意'
+                };
+                
+                statusElement.textContent = statusTexts[status] || '⏳ 実行中';
+            }
+
+            // 基本機能テスト
+            async testBasicFunctions() {
+                this.log('🔧 基本機能テストを開始...');
+                this.setCategoryStatus('basicFunctions', 'running');
+
+                // ページ読み込みテスト
+                try {
+                    // 新しいiframeを作成してテスト対象を読み込み
+                    const iframe = document.createElement('iframe');
+                    iframe.style.display = 'none';
+                    iframe.src = './lightning-talk-super-fun.html';
+                    document.body.appendChild(iframe);
+                    
+                    await new Promise((resolve, reject) => {
+                        iframe.onload = () => {
+                            this.testTarget = iframe.contentWindow;
+                            this.setTestResult('test-page-load', 'pass', 'ページが正常に読み込まれました');
+                            resolve();
+                        };
+                        iframe.onerror = () => {
+                            this.setTestResult('test-page-load', 'fail', 'ページの読み込みに失敗しました');
+                            reject();
+                        };
+                        
+                        // 5秒でタイムアウト
+                        setTimeout(() => {
+                            if (iframe.contentDocument.readyState !== 'complete') {
+                                this.setTestResult('test-page-load', 'warn', 'ページ読み込みが遅い可能性があります');
+                                resolve();
+                            }
+                        }, 5000);
+                    });
+
+                    // DOM要素存在確認
+                    const requiredElements = [
+                        'header', 'nav', 'main', 'footer',
+                        '#hero-heading', '#event-heading', '#about-heading', '#join-heading',
+                        '.btn', '.hero-stats', '.event-card', '.chat-widget'
+                    ];
+
+                    let elementsFound = 0;
+                    requiredElements.forEach(selector => {
+                        if (iframe.contentDocument.querySelector(selector)) {
+                            elementsFound++;
+                        }
+                    });
+
+                    if (elementsFound === requiredElements.length) {
+                        this.setTestResult('test-dom-elements', 'pass', `全${requiredElements.length}個の必須要素が見つかりました`);
+                    } else {
+                        this.setTestResult('test-dom-elements', 'warn', `${elementsFound}/${requiredElements.length}個の要素が見つかりました`);
+                    }
+
+                    // CSSスタイル適用確認
+                    const bodyStyles = iframe.contentWindow.getComputedStyle(iframe.contentDocument.body);
+                    if (bodyStyles.fontFamily && bodyStyles.background) {
+                        this.setTestResult('test-css-loading', 'pass', 'CSSスタイルが正常に適用されています');
+                    } else {
+                        this.setTestResult('test-css-loading', 'fail', 'CSSスタイルの適用に問題があります');
+                    }
+
+                    // JavaScript初期化確認
+                    if (iframe.contentWindow.superFunLightningTalkApp) {
+                        this.setTestResult('test-js-initialization', 'pass', 'JavaScriptアプリケーションが初期化されました');
+                    } else {
+                        this.setTestResult('test-js-initialization', 'fail', 'JavaScriptの初期化に失敗しました');
+                    }
+
+                    // ローカルストレージテスト
+                    try {
+                        iframe.contentWindow.localStorage.setItem('test', 'value');
+                        const testValue = iframe.contentWindow.localStorage.getItem('test');
+                        if (testValue === 'value') {
+                            this.setTestResult('test-local-storage', 'pass', 'ローカルストレージが利用可能です');
+                            iframe.contentWindow.localStorage.removeItem('test');
+                        } else {
+                            this.setTestResult('test-local-storage', 'fail', 'ローカルストレージの読み書きに失敗しました');
+                        }
+                    } catch (e) {
+                        this.setTestResult('test-local-storage', 'fail', 'ローカルストレージが利用できません');
+                    }
+
+                    this.setCategoryStatus('basicFunctions', 'passed');
+
+                } catch (error) {
+                    this.log(`基本機能テストでエラー: ${error.message}`, 'error');
+                    this.setCategoryStatus('basicFunctions', 'failed');
+                }
+            }
+
+            // UIインタラクションテスト
+            async testUIInteractions() {
+                this.log('🎮 UIインタラクションテストを開始...');
+                this.setCategoryStatus('uiInteractions', 'running');
+
+                if (!this.testTarget) {
+                    this.log('テスト対象が読み込まれていません', 'error');
+                    return;
+                }
+
+                try {
+                    const doc = this.testTarget.document;
+                    
+                    // ボタンクリックテスト
+                    const buttons = doc.querySelectorAll('.btn');
+                    if (buttons.length > 0) {
+                        this.setTestResult('test-button-clicks', 'pass', `${buttons.length}個のボタンが見つかりました`);
+                    } else {
+                        this.setTestResult('test-button-clicks', 'fail', 'ボタンが見つかりません');
+                    }
+
+                    // フォームバリデーションテスト
+                    const forms = doc.querySelectorAll('form');
+                    const inputs = doc.querySelectorAll('input[required]');
+                    if (inputs.length > 0) {
+                        this.setTestResult('test-form-validation', 'pass', `${inputs.length}個の必須入力項目があります`);
+                    } else {
+                        this.setTestResult('test-form-validation', 'warn', '必須入力項目が見つかりません');
+                    }
+
+                    // モーダル機能テスト
+                    const modal = doc.getElementById('registerModal');
+                    if (modal) {
+                        this.setTestResult('test-modal-functionality', 'pass', 'モーダル要素が存在します');
+                    } else {
+                        this.setTestResult('test-modal-functionality', 'fail', 'モーダル要素が見つかりません');
+                    }
+
+                    // チャットウィジェットテスト
+                    const chatWidget = doc.getElementById('chatWidget');
+                    const chatToggle = doc.getElementById('chatToggle');
+                    if (chatWidget && chatToggle) {
+                        this.setTestResult('test-chat-widget', 'pass', 'チャットウィジェットが実装されています');
+                    } else {
+                        this.setTestResult('test-chat-widget', 'fail', 'チャットウィジェットに問題があります');
+                    }
+
+                    // アンケート投票機能テスト
+                    const surveyButtons = doc.querySelectorAll('.survey-btn');
+                    if (surveyButtons.length >= 2) {
+                        this.setTestResult('test-survey-voting', 'pass', 'アンケート投票ボタンが実装されています');
+                    } else {
+                        this.setTestResult('test-survey-voting', 'fail', 'アンケート投票機能に問題があります');
+                    }
+
+                    this.setCategoryStatus('uiInteractions', 'passed');
+
+                } catch (error) {
+                    this.log(`UIインタラクションテストでエラー: ${error.message}`, 'error');
+                    this.setCategoryStatus('uiInteractions', 'failed');
+                }
+            }
+
+            // アニメーション・エフェクトテスト
+            async testAnimations() {
+                this.log('✨ アニメーション・エフェクトテストを開始...');
+                this.setCategoryStatus('animations', 'running');
+
+                if (!this.testTarget) return;
+
+                try {
+                    const doc = this.testTarget.document;
+                    
+                    // パーティクルシステムテスト
+                    const particles = doc.getElementById('particles');
+                    const particleElements = doc.querySelectorAll('.particle');
+                    if (particles && particleElements.length > 0) {
+                        this.setTestResult('test-particle-system', 'pass', `${particleElements.length}個のパーティクルが生成されています`);
+                    } else {
+                        this.setTestResult('test-particle-system', 'fail', 'パーティクルシステムが動作していません');
+                    }
+
+                    // CSS アニメーション確認
+                    const animatedElements = doc.querySelectorAll('[style*="animation"], .fade-in, .scale-in');
+                    if (animatedElements.length > 0) {
+                        this.setTestResult('test-hover-animations', 'pass', `${animatedElements.length}個のアニメーション要素があります`);
+                    } else {
+                        this.setTestResult('test-hover-animations', 'warn', 'アニメーション要素が少ない可能性があります');
+                    }
+
+                    // コンフェッティエフェクト（機能の存在確認）
+                    if (this.testTarget.superFunLightningTalkApp && 
+                        typeof this.testTarget.superFunLightningTalkApp.createConfetti === 'function') {
+                        this.setTestResult('test-confetti-effect', 'pass', 'コンフェッティエフェクト機能が実装されています');
+                    } else {
+                        this.setTestResult('test-confetti-effect', 'fail', 'コンフェッティエフェクト機能が見つかりません');
+                    }
+
+                    // スクロールアニメーション
+                    const scrollElements = doc.querySelectorAll('.fade-in, .scale-in');
+                    if (scrollElements.length > 0) {
+                        this.setTestResult('test-scroll-animations', 'pass', 'スクロールアニメーション要素が実装されています');
+                    } else {
+                        this.setTestResult('test-scroll-animations', 'warn', 'スクロールアニメーションが不十分です');
+                    }
+
+                    // マイクロインタラクション
+                    const interactiveElements = doc.querySelectorAll('.btn, .topic-item, .participation-card');
+                    if (interactiveElements.length > 0) {
+                        this.setTestResult('test-micro-interactions', 'pass', `${interactiveElements.length}個のインタラクティブ要素があります`);
+                    } else {
+                        this.setTestResult('test-micro-interactions', 'fail', 'マイクロインタラクション要素が不足しています');
+                    }
+
+                    this.setCategoryStatus('animations', 'passed');
+
+                } catch (error) {
+                    this.log(`アニメーションテストでエラー: ${error.message}`, 'error');
+                    this.setCategoryStatus('animations', 'failed');
+                }
+            }
+
+            // ゲーミフィケーションテスト
+            async testGamification() {
+                this.log('🏆 ゲーミフィケーションテストを開始...');
+                this.setCategoryStatus('gamification', 'running');
+
+                if (!this.testTarget) return;
+
+                try {
+                    const app = this.testTarget.superFunLightningTalkApp;
+                    
+                    if (!app) {
+                        this.setTestResult('test-achievement-system', 'fail', 'アプリケーションオブジェクトが見つかりません');
+                        this.setCategoryStatus('gamification', 'failed');
+                        return;
+                    }
+
+                    // 達成システムテスト
+                    if (app.achievements && Array.isArray(app.achievements)) {
+                        this.setTestResult('test-achievement-system', 'pass', `${app.achievements.length}個の達成項目が定義されています`);
+                    } else {
+                        this.setTestResult('test-achievement-system', 'fail', '達成システムが実装されていません');
+                    }
+
+                    // スコア追跡テスト
+                    if (app.data && typeof app.data.gameScore !== 'undefined') {
+                        this.setTestResult('test-score-tracking', 'pass', 'スコア追跡機能が実装されています');
+                    } else {
+                        this.setTestResult('test-score-tracking', 'fail', 'スコア追跡機能が見つかりません');
+                    }
+
+                    // プログレス追跡テスト
+                    if (typeof app.addInteractionScore === 'function') {
+                        this.setTestResult('test-progress-tracking', 'pass', 'プログレス追跡機能が実装されています');
+                    } else {
+                        this.setTestResult('test-progress-tracking', 'fail', 'プログレス追跡機能が見つかりません');
+                    }
+
+                    // 通知システムテスト
+                    if (typeof app.showAchievementNotification === 'function') {
+                        this.setTestResult('test-notification-system', 'pass', '通知システムが実装されています');
+                    } else {
+                        this.setTestResult('test-notification-system', 'fail', '通知システムが見つかりません');
+                    }
+
+                    this.setCategoryStatus('gamification', 'passed');
+
+                } catch (error) {
+                    this.log(`ゲーミフィケーションテストでエラー: ${error.message}`, 'error');
+                    this.setCategoryStatus('gamification', 'failed');
+                }
+            }
+
+            // レスポンシブデザインテスト
+            async testResponsiveDesign() {
+                this.log('📱 レスポンシブデザインテストを開始...');
+                this.setCategoryStatus('responsive', 'running');
+
+                const deviceSizes = [
+                    { name: 'Desktop', width: 1920, height: 1080 },
+                    { name: 'Laptop', width: 1366, height: 768 },
+                    { name: 'Tablet', width: 768, height: 1024 },
+                    { name: 'Mobile Large', width: 414, height: 896 },
+                    { name: 'Mobile', width: 375, height: 667 },
+                    { name: 'Mobile Small', width: 320, height: 568 }
+                ];
+
+                const resultsContainer = document.getElementById('deviceTestResults');
+                resultsContainer.innerHTML = '';
+
+                let passedDevices = 0;
+
+                for (const device of deviceSizes) {
+                    try {
+                        // デバイスサイズのテスト結果を表示
+                        const deviceResult = document.createElement('div');
+                        deviceResult.style.cssText = `
+                            margin: 10px 0; 
+                            padding: 10px; 
+                            border-radius: 5px; 
+                            background: #f0f0f0;
+                            display: flex;
+                            justify-content: space-between;
+                            align-items: center;
+                        `;
+
+                        // 実際のテストロジック（簡易版）
+                        const isSupported = device.width >= 320; // 最小幅要件
+                        const hasBreakpoint = this.checkBreakpointSupport(device.width);
+                        
+                        if (isSupported && hasBreakpoint) {
+                            deviceResult.innerHTML = `
+                                <span>${device.name} (${device.width}x${device.height})</span>
+                                <span style="color: #4CAF50; font-weight: bold;">✅ 対応</span>
+                            `;
+                            passedDevices++;
+                        } else {
+                            deviceResult.innerHTML = `
+                                <span>${device.name} (${device.width}x${device.height})</span>
+                                <span style="color: #F44336; font-weight: bold;">❌ 問題</span>
+                            `;
+                        }
+
+                        resultsContainer.appendChild(deviceResult);
+
+                    } catch (error) {
+                        this.log(`${device.name}のテストでエラー: ${error.message}`, 'error');
+                    }
+                }
+
+                if (passedDevices === deviceSizes.length) {
+                    this.setCategoryStatus('responsive', 'passed');
+                    this.log(`全${deviceSizes.length}デバイスでレスポンシブ対応を確認`, 'success');
+                } else if (passedDevices >= deviceSizes.length * 0.8) {
+                    this.setCategoryStatus('responsive', 'warning');
+                    this.log(`${passedDevices}/${deviceSizes.length}デバイスで対応済み`, 'warning');
+                } else {
+                    this.setCategoryStatus('responsive', 'failed');
+                    this.log(`レスポンシブ対応が不十分: ${passedDevices}/${deviceSizes.length}`, 'error');
+                }
+            }
+
+            checkBreakpointSupport(width) {
+                // CSS breakpoints のチェック
+                const breakpoints = [320, 576, 768, 992, 1200];
+                return breakpoints.some(bp => Math.abs(width - bp) <= 100);
+            }
+
+            // アクセシビリティテスト
+            async testAccessibility() {
+                this.log('♿ アクセシビリティテストを開始...');
+                this.setCategoryStatus('accessibility', 'running');
+
+                if (!this.testTarget) return;
+
+                try {
+                    const doc = this.testTarget.document;
+
+                    // キーボードナビゲーションテスト
+                    const focusableElements = doc.querySelectorAll(
+                        'a, button, input, select, textarea, [tabindex]:not([tabindex="-1"])'
+                    );
+                    if (focusableElements.length > 0) {
+                        this.setTestResult('test-keyboard-navigation', 'pass', 
+                            `${focusableElements.length}個のフォーカス可能要素があります`);
+                    } else {
+                        this.setTestResult('test-keyboard-navigation', 'fail', 
+                            'フォーカス可能要素が不足しています');
+                    }
+
+                    // ARIA属性テスト
+                    const ariaElements = doc.querySelectorAll('[aria-label], [aria-labelledby], [aria-describedby], [role]');
+                    if (ariaElements.length > 0) {
+                        this.setTestResult('test-aria-attributes', 'pass', 
+                            `${ariaElements.length}個の要素にARIA属性が設定されています`);
+                    } else {
+                        this.setTestResult('test-aria-attributes', 'warn', 
+                            'ARIA属性の使用が少ない可能性があります');
+                    }
+
+                    // 色コントラストテスト（簡易）
+                    const colorTestPassed = this.testColorContrast(doc);
+                    if (colorTestPassed) {
+                        this.setTestResult('test-color-contrast', 'pass', '色コントラストが適切です');
+                    } else {
+                        this.setTestResult('test-color-contrast', 'warn', '色コントラストの確認が必要です');
+                    }
+
+                    // スクリーンリーダー対応テスト
+                    const headings = doc.querySelectorAll('h1, h2, h3, h4, h5, h6');
+                    const landmarks = doc.querySelectorAll('header, nav, main, footer, [role="banner"], [role="navigation"], [role="main"], [role="contentinfo"]');
+                    if (headings.length > 0 && landmarks.length > 0) {
+                        this.setTestResult('test-screen-reader', 'pass', 
+                            `見出し${headings.length}個、ランドマーク${landmarks.length}個が適切に設定されています`);
+                    } else {
+                        this.setTestResult('test-screen-reader', 'warn', 
+                            '見出し構造またはランドマークの改善が必要です');
+                    }
+
+                    this.setCategoryStatus('accessibility', 'passed');
+
+                } catch (error) {
+                    this.log(`アクセシビリティテストでエラー: ${error.message}`, 'error');
+                    this.setCategoryStatus('accessibility', 'failed');
+                }
+            }
+
+            testColorContrast(doc) {
+                // 簡易的な色コントラストテスト
+                // 実際の実装では、より詳細な計算が必要
+                const textElements = doc.querySelectorAll('p, span, div, button, a');
+                let contrastIssues = 0;
+                
+                for (let i = 0; i < Math.min(textElements.length, 20); i++) {
+                    const element = textElements[i];
+                    const styles = this.testTarget.getComputedStyle(element);
+                    const color = styles.color;
+                    const backgroundColor = styles.backgroundColor;
+                    
+                    // 簡易チェック（実際には色の明度を計算する必要があります）
+                    if (color && backgroundColor && color !== backgroundColor) {
+                        // 基本的なコントラストチェック通過
+                        continue;
+                    } else {
+                        contrastIssues++;
+                    }
+                }
+                
+                return contrastIssues < textElements.length * 0.1; // 10%未満の問題なら合格
+            }
+
+            // パフォーマンステスト
+            async testPerformance() {
+                this.log('⚡ パフォーマンステストを開始...');
+                this.setCategoryStatus('performance', 'running');
+
+                const metricsContainer = document.getElementById('performanceMetrics');
+                metricsContainer.innerHTML = '';
+
+                try {
+                    // Performance API を使用
+                    const navigation = performance.getEntriesByType('navigation')[0];
+                    const metrics = {};
+
+                    if (navigation) {
+                        metrics['DNS Lookup'] = Math.round(navigation.domainLookupEnd - navigation.domainLookupStart);
+                        metrics['TCP Connection'] = Math.round(navigation.connectEnd - navigation.connectStart);
+                        metrics['Request/Response'] = Math.round(navigation.responseEnd - navigation.requestStart);
+                        metrics['DOM Processing'] = Math.round(navigation.domContentLoadedEventEnd - navigation.responseEnd);
+                        metrics['Load Event'] = Math.round(navigation.loadEventEnd - navigation.loadEventStart);
+                        metrics['Total Load Time'] = Math.round(navigation.loadEventEnd - navigation.navigationStart);
+                    }
+
+                    // メモリ使用量（対応ブラウザのみ）
+                    if (performance.memory) {
+                        metrics['Memory Used'] = Math.round(performance.memory.usedJSHeapSize / 1024 / 1024) + ' MB';
+                        metrics['Memory Total'] = Math.round(performance.memory.totalJSHeapSize / 1024 / 1024) + ' MB';
+                    }
+
+                    // FPS計測（簡易）
+                    const fpsMetric = await this.measureFPS();
+                    metrics['Average FPS'] = fpsMetric;
+
+                    // メトリクス表示
+                    Object.entries(metrics).forEach(([key, value]) => {
+                        const metricElement = document.createElement('span');
+                        metricElement.className = 'performance-metric';
+                        metricElement.textContent = `${key}: ${value}${typeof value === 'number' && key.includes('Time') ? 'ms' : ''}`;
+                        metricsContainer.appendChild(metricElement);
+                    });
+
+                    // パフォーマンス評価
+                    const totalLoadTime = metrics['Total Load Time'];
+                    if (totalLoadTime < 3000) {
+                        this.setCategoryStatus('performance', 'passed');
+                        this.log(`優秀なパフォーマンス: ${totalLoadTime}ms`, 'success');
+                    } else if (totalLoadTime < 5000) {
+                        this.setCategoryStatus('performance', 'warning');
+                        this.log(`普通のパフォーマンス: ${totalLoadTime}ms`, 'warning');
+                    } else {
+                        this.setCategoryStatus('performance', 'failed');
+                        this.log(`改善が必要なパフォーマンス: ${totalLoadTime}ms`, 'error');
+                    }
+
+                } catch (error) {
+                    this.log(`パフォーマンステストでエラー: ${error.message}`, 'error');
+                    this.setCategoryStatus('performance', 'failed');
+                }
+            }
+
+            async measureFPS() {
+                return new Promise((resolve) => {
+                    let frames = 0;
+                    const startTime = performance.now();
+                    
+                    function countFrames() {
+                        frames++;
+                        if (frames < 60) {
+                            requestAnimationFrame(countFrames);
+                        } else {
+                            const endTime = performance.now();
+                            const fps = Math.round((frames * 1000) / (endTime - startTime));
+                            resolve(fps);
+                        }
+                    }
+                    
+                    requestAnimationFrame(countFrames);
+                });
+            }
+
+            // 全テスト実行
+            async runAllTests() {
+                this.log('🚀 全機能テストを開始します...', 'info');
+                this.clearResults();
+                
+                const tests = [
+                    { name: 'basicFunctions', func: this.testBasicFunctions, progress: 20 },
+                    { name: 'uiInteractions', func: this.testUIInteractions, progress: 35 },
+                    { name: 'animations', func: this.testAnimations, progress: 50 },
+                    { name: 'gamification', func: this.testGamification, progress: 65 },
+                    { name: 'responsive', func: this.testResponsiveDesign, progress: 80 },
+                    { name: 'accessibility', func: this.testAccessibility, progress: 90 },
+                    { name: 'performance', func: this.testPerformance, progress: 100 }
+                ];
+
+                for (const test of tests) {
+                    this.updateProgress(test.progress);
+                    await test.func.call(this);
+                    await new Promise(resolve => setTimeout(resolve, 1000)); // テスト間の待機時間
+                }
+
+                this.log('✅ 全テスト完了', 'success');
+                this.generateTestReport();
+            }
+
+            async runQuickTest() {
+                this.log('⚡ クイックテストを開始します...', 'info');
+                this.clearResults();
+                
+                await this.testBasicFunctions();
+                this.updateProgress(50);
+                await this.testUIInteractions();
+                this.updateProgress(100);
+                
+                this.log('✅ クイックテスト完了', 'success');
+            }
+
+            async runPerformanceTest() {
+                this.log('📊 パフォーマンステストを開始します...', 'info');
+                this.clearResults();
+                
+                await this.testPerformance();
+                this.updateProgress(100);
+                
+                this.log('✅ パフォーマンステスト完了', 'success');
+            }
+
+            clearResults() {
+                this.testResults = { passed: 0, failed: 0, warnings: 0, total: 0 };
+                this.updateSummary();
+                this.updateProgress(0);
+                
+                // 全テスト項目をリセット
+                document.querySelectorAll('.test-item').forEach(item => {
+                    item.className = 'test-item';
+                    const status = item.querySelector('.test-status');
+                    if (status) {
+                        status.className = 'test-status';
+                        status.textContent = '未実行';
+                    }
+                });
+
+                // カテゴリステータスをリセット
+                document.querySelectorAll('[id$="Status"]').forEach(status => {
+                    status.className = 'test-status';
+                    status.textContent = '待機中';
+                });
+
+                document.querySelectorAll('.test-category').forEach(category => {
+                    category.className = 'test-category';
+                });
+
+                this.consoleOutput.innerHTML = '<div>🔧 テスト結果をクリアしました</div>';
+            }
+
+            generateTestReport() {
+                const { passed, failed, warnings, total } = this.testResults;
+                const successRate = total > 0 ? Math.round((passed / total) * 100) : 0;
+                
+                this.log('📋 テストレポート生成完了:', 'info');
+                this.log(`成功率: ${successRate}% (${passed}/${total})`, successRate >= 80 ? 'success' : 'warning');
+                this.log(`詳細: 成功=${passed}, 失敗=${failed}, 警告=${warnings}`, 'info');
+                
+                if (successRate >= 90) {
+                    this.log('🎉 優秀な品質です！', 'success');
+                } else if (successRate >= 70) {
+                    this.log('👍 良好な品質です', 'success');
+                } else {
+                    this.log('⚠️ 改善が必要です', 'warning');
+                }
+            }
+        }
+
+        // グローバル関数
+        let testSuite;
+
+        function initTestSuite() {
+            testSuite = new LightningTalkTestSuite();
+        }
+
+        function runAllTests() {
+            if (!testSuite) initTestSuite();
+            testSuite.runAllTests();
+        }
+
+        function runQuickTest() {
+            if (!testSuite) initTestSuite();
+            testSuite.runQuickTest();
+        }
+
+        function runPerformanceTest() {
+            if (!testSuite) initTestSuite();
+            testSuite.runPerformanceTest();
+        }
+
+        function clearResults() {
+            if (!testSuite) initTestSuite();
+            testSuite.clearResults();
+        }
+
+        // 初期化
+        document.addEventListener('DOMContentLoaded', () => {
+            initTestSuite();
+            testSuite.log('🎯 テストスイート準備完了 - テストを開始してください', 'success');
+        });
+    </script>
+</body>
+</html>

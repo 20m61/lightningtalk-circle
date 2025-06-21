@@ -1,0 +1,17 @@
+/*
+Theme Name: Lightning Talk Child
+Description: Lightning Talk event management system child theme for Cocoon
+Author: Lightning Talk Team
+Template: cocoon-master
+Version: 1.0.0
+Text Domain: lightningtalk-child
+*/
+
+/* 
+ * Lightning Talk Child Theme for Cocoon
+ * 
+ * このファイルは親テーマ（Cocoon）の後に読み込まれます。
+ * カスタムスタイルはここに記述してください。
+ */
+
+/* Lightning Talk カスタムスタイルの読み込みは functions.php で行います */

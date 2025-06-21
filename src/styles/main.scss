@@ -1,0 +1,13 @@
+/**
+ * Lightning Talk Main Styles
+ * メインスタイルファイル
+ */
+
+// WordPress統合スタイルをインポート
+@import 'wordpress-integration.scss';
+
+// Cocoonとの互換性を保つための基本スタイル
+.lightningtalk-wp {
+  // 元のLightning Talkスタイルを適用
+  @import '../../../public/css/style.css';
+}

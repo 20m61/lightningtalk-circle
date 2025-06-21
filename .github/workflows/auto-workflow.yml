@@ -1,0 +1,318 @@
+name: Auto Workflow Integration
+
+on:
+  # 手動トリガー（指示入力）
+  workflow_dispatch:
+    inputs:
+      instruction:
+        description: 'Development instruction (e.g., "add user authentication")'
+        required: true
+        type: string
+      auto_merge:
+        description: 'Enable auto-merge after successful review'
+        required: false
+        default: false
+        type: boolean
+  
+  # Issue作成時に自動実行
+  issues:
+    types: [opened, labeled]
+  
+  # プルリクエストの自動処理
+  pull_request:
+    types: [opened, synchronize]
+    branches: [main, develop]
+
+env:
+  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  GITHUB_OWNER: ${{ github.repository_owner }}
+  GITHUB_REPO: ${{ github.event.repository.name }}
+  AUTO_MERGE: ${{ github.event.inputs.auto_merge || 'false' }}
+  REQUIRE_REVIEW: 'true'
+
+jobs:
+  # 手動指示による自動ワークフロー
+  manual-instruction:
+    if: github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+        token: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '18'
+        cache: 'npm'
+
+    - name: Install dependencies
+      run: npm ci
+
+    - name: Setup Git
+      run: |
+        git config --global user.name "Auto Workflow Bot"
+        git config --global user.email "auto-workflow@github.com"
+
+    - name: Execute Auto Workflow
+      run: |
+        node scripts/auto-workflow.js "${{ github.event.inputs.instruction }}"
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: Upload workflow results
+      uses: actions/upload-artifact@v3
+      if: always()
+      with:
+        name: workflow-results
+        path: |
+          workflow-results.json
+          logs/
+
+  # Issue駆動の自動ワークフロー
+  issue-driven-workflow:
+    if: github.event_name == 'issues' && contains(github.event.issue.labels.*.name, 'auto-implement')
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+        token: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '18'
+        cache: 'npm'
+
+    - name: Install dependencies
+      run: npm ci
+
+    - name: Setup Git
+      run: |
+        git config --global user.name "Auto Workflow Bot"
+        git config --global user.email "auto-workflow@github.com"
+
+    - name: Process Issue
+      run: |
+        # Issueタイトルを指示として使用
+        INSTRUCTION="${{ github.event.issue.title }}"
+        echo "Processing issue: $INSTRUCTION"
+        node scripts/auto-workflow.js "$INSTRUCTION"
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: Comment on Issue
+      uses: actions/github-script@v6
+      with:
+        script: |
+          const { issue } = context.payload;
+          await github.rest.issues.createComment({
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            issue_number: issue.number,
+            body: '🤖 Auto Workflow has been triggered for this issue. A pull request will be created automatically.'
+          });
+
+  # プルリクエストの自動レビューと処理
+  pr-automation:
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout PR
+      uses: actions/checkout@v4
+      with:
+        ref: ${{ github.event.pull_request.head.sha }}
+        fetch-depth: 0
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '18'
+        cache: 'npm'
+
+    - name: Install dependencies
+      run: npm ci
+
+    - name: Run Quality Checks
+      id: quality
+      run: |
+        # ESLint
+        npm run lint || echo "lint_failed=true" >> $GITHUB_OUTPUT
+        
+        # Prettier
+        npm run format:check || echo "format_failed=true" >> $GITHUB_OUTPUT
+        
+        # TypeScript check (if applicable)
+        if [ -f "tsconfig.json" ]; then
+          npm run type-check || echo "type_failed=true" >> $GITHUB_OUTPUT
+        fi
+
+    - name: Run Security Scan
+      id: security
+      run: |
+        # npm audit
+        npm audit --audit-level=high || echo "security_failed=true" >> $GITHUB_OUTPUT
+        
+        # Snyk scan (if available)
+        if command -v snyk &> /dev/null; then
+          snyk test || echo "snyk_failed=true" >> $GITHUB_OUTPUT
+        fi
+
+    - name: Run Tests
+      id: tests
+      run: |
+        # Unit tests
+        npm run test:unit || echo "unit_failed=true" >> $GITHUB_OUTPUT
+        
+        # Integration tests
+        npm run test:integration || echo "integration_failed=true" >> $GITHUB_OUTPUT
+        
+        # E2E tests (if not in draft)
+        if [ "${{ github.event.pull_request.draft }}" != "true" ]; then
+          npm run test:e2e || echo "e2e_failed=true" >> $GITHUB_OUTPUT
+        fi
+
+    - name: Run Performance Tests
+      id: performance
+      run: |
+        # Performance benchmarks
+        npm run test:perf || echo "perf_failed=true" >> $GITHUB_OUTPUT
+
+    - name: Create Review
+      uses: actions/github-script@v6
+      with:
+        script: |
+          const qualityFailed = '${{ steps.quality.outputs.lint_failed }}' === 'true' || 
+                               '${{ steps.quality.outputs.format_failed }}' === 'true' || 
+                               '${{ steps.quality.outputs.type_failed }}' === 'true';
+          
+          const securityFailed = '${{ steps.security.outputs.security_failed }}' === 'true' || 
+                                '${{ steps.security.outputs.snyk_failed }}' === 'true';
+          
+          const testsFailed = '${{ steps.tests.outputs.unit_failed }}' === 'true' || 
+                             '${{ steps.tests.outputs.integration_failed }}' === 'true' || 
+                             '${{ steps.tests.outputs.e2e_failed }}' === 'true';
+          
+          const perfFailed = '${{ steps.performance.outputs.perf_failed }}' === 'true';
+          
+          const allPassed = !qualityFailed && !securityFailed && !testsFailed && !perfFailed;
+          
+          let reviewBody = '## 🤖 Automated Review Results\n\n';
+          
+          reviewBody += `### Code Quality\n`;
+          reviewBody += qualityFailed ? '❌ Issues found\n' : '✅ All checks passed\n';
+          
+          reviewBody += `### Security\n`;
+          reviewBody += securityFailed ? '❌ Security issues detected\n' : '✅ No security issues\n';
+          
+          reviewBody += `### Tests\n`;
+          reviewBody += testsFailed ? '❌ Test failures\n' : '✅ All tests passing\n';
+          
+          reviewBody += `### Performance\n`;
+          reviewBody += perfFailed ? '⚠️ Performance concerns\n' : '✅ Performance acceptable\n';
+          
+          reviewBody += `\n### Overall Assessment\n`;
+          reviewBody += allPassed ? 
+            '✅ **APPROVED** - All automated checks passed. Ready for merge!' : 
+            '❌ **CHANGES REQUESTED** - Please address the issues above.';
+          
+          reviewBody += '\n\n---\n*This review was generated automatically by the Auto Workflow System*';
+          
+          await github.rest.pulls.createReview({
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            pull_number: context.payload.pull_request.number,
+            body: reviewBody,
+            event: allPassed ? 'APPROVE' : 'REQUEST_CHANGES'
+          });
+          
+          // Auto-merge if all checks pass and it's enabled
+          if (allPassed && process.env.AUTO_MERGE === 'true') {
+            try {
+              await github.rest.pulls.merge({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                pull_number: context.payload.pull_request.number,
+                commit_title: `${context.payload.pull_request.title} (#${context.payload.pull_request.number})`,
+                merge_method: 'squash'
+              });
+              
+              await github.rest.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: context.payload.pull_request.number,
+                body: '🎉 **Auto-merged** - All checks passed and auto-merge is enabled!'
+              });
+            } catch (error) {
+              console.log('Auto-merge failed:', error.message);
+            }
+          }
+
+  # 継続的品質監視
+  quality-monitoring:
+    if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '18'
+        cache: 'npm'
+
+    - name: Install dependencies
+      run: npm ci
+
+    - name: Generate Quality Report
+      run: |
+        # Code coverage
+        npm run test:coverage
+        
+        # Technical debt analysis
+        npm run analyze:debt || echo "Debt analysis not available"
+        
+        # Bundle size analysis
+        npm run analyze:bundle || echo "Bundle analysis not available"
+
+    - name: Upload Reports
+      uses: actions/upload-artifact@v3
+      with:
+        name: quality-reports
+        path: |
+          coverage/
+          reports/
+
+    - name: Create Quality Issue
+      if: failure()
+      uses: actions/github-script@v6
+      with:
+        script: |
+          await github.rest.issues.create({
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            title: '🔧 Quality Monitoring Alert',
+            body: `Quality monitoring has detected issues that require attention.
+            
+            Please check the workflow logs and generated reports for details.
+            
+            **Date:** ${new Date().toISOString()}
+            **Workflow:** ${context.workflow}
+            **Run:** ${context.runNumber}`,
+            labels: ['quality', 'monitoring', 'auto-generated']
+          });
+
+# 定期実行スケジュール
+on:
+  schedule:
+    # 毎日午後9時（JST）に品質監視を実行
+    - cron: '0 12 * * *'

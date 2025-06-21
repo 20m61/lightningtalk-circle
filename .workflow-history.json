@@ -1,0 +1,29 @@
+[
+  {
+    "timestamp": "2025-06-20T02:26:15.328Z",
+    "instruction": "implement Storybook for design asset management with component library and design system documentation",
+    "analysis": {
+      "instruction": "implement Storybook for design asset management with component library and design system documentation",
+      "taskType": "feature",
+      "description": "Storybook for design asset management with",
+      "priority": "medium",
+      "estimatedHours": 4,
+      "confidence": 0.75,
+      "suggestions": [
+        "Consider writing tests alongside the feature",
+        "Update documentation after implementation"
+      ],
+      "relatedFiles": [
+        "src/features/",
+        "src/components/"
+      ],
+      "prerequisites": [],
+      "type": "feature"
+    },
+    "result": {
+      "success": false,
+      "error": "Automated tests failed",
+      "message": "Workflow execution failed"
+    }
+  }
+]

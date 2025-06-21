@@ -1,0 +1,437 @@
+/**
+ * WordPress Integration Styles for Lightning Talk
+ * Cocoon親テーマとの統合スタイル
+ */
+
+// Cocoonテーマとの互換性を保つための変数定義
+:root {
+  // Lightning Talk カラーパレット
+  --lt-primary-gradient: linear-gradient(45deg, #ff6b6b, #ffd93d);
+  --lt-secondary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  --lt-accent-color: #ffd700;
+  --lt-text-primary: #333;
+  --lt-text-secondary: #666;
+  --lt-bg-light: #f8f9fa;
+  --lt-border-radius: 10px;
+  --lt-border-radius-large: 20px;
+  --lt-shadow-card: 0 20px 40px rgba(0, 0, 0, 0.1);
+  --lt-shadow-button: 0 10px 20px rgba(0, 0, 0, 0.2);
+  --lt-transition: all 0.3s ease;
+  
+  // WordPress管理バー対応
+  --wp-admin-bar-height: 0px;
+  
+  // レスポンシブブレークポイント
+  --lt-breakpoint-mobile: 768px;
+  --lt-breakpoint-tablet: 1024px;
+}
+
+// WordPress管理バーが表示されている場合の調整
+.admin-bar {
+  --wp-admin-bar-height: 32px;
+  
+  @media screen and (max-width: 782px) {
+    --wp-admin-bar-height: 46px;
+  }
+}
+
+// Cocoonテーマとの名前空間衝突を避けるためのプレフィックス
+.lightningtalk-container {
+  // Lightning Talk固有のスタイルをここに配置
+  
+  // ボタンスタイルの再定義（Cocoonと競合しないように）
+  .lt-btn {
+    display: inline-block;
+    padding: 15px 30px;
+    background: var(--lt-primary-gradient);
+    color: #fff;
+    text-decoration: none;
+    border-radius: 50px;
+    font-weight: bold;
+    transition: var(--lt-transition);
+    border: none;
+    cursor: pointer;
+    font-size: 1.1rem;
+    box-shadow: var(--lt-shadow-button);
+    position: relative;
+    overflow: hidden;
+    
+    &::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+      transition: left 0.5s ease;
+    }
+    
+    &:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
+      
+      &::before {
+        left: 100%;
+      }
+    }
+    
+    &.lt-btn-secondary {
+      background: linear-gradient(45deg, #6c757d, #adb5bd);
+    }
+    
+    &.lt-btn-disabled {
+      background: #ccc;
+      cursor: not-allowed;
+      opacity: 0.6;
+      
+      &:hover {
+        transform: none;
+        box-shadow: var(--lt-shadow-button);
+      }
+    }
+    
+    &.lt-btn-small {
+      padding: 8px 16px;
+      font-size: 0.9rem;
+    }
+    
+    &.lt-btn-large {
+      padding: 20px 40px;
+      font-size: 1.3rem;
+    }
+  }
+  
+  // Cocoonのカードスタイルを拡張
+  .lt-event-card {
+    background: #fff;
+    border-radius: var(--lt-border-radius-large);
+    padding: 40px;
+    box-shadow: var(--lt-shadow-card);
+    border: 4px solid var(--lt-accent-color);
+    margin-bottom: 30px;
+    transition: var(--lt-transition);
+    
+    // Cocoonのカードと区別するためのスタイル
+    &.lt-enhanced {
+      position: relative;
+      overflow: hidden;
+      
+      &::before {
+        content: '';
+        position: absolute;
+        top: -2px;
+        left: -2px;
+        right: -2px;
+        bottom: -2px;
+        background: var(--lt-primary-gradient);
+        border-radius: var(--lt-border-radius-large);
+        z-index: -1;
+      }
+    }
+  }
+  
+  // トピックアイテムのスタイル
+  .lt-topic-item {
+    padding: 10px 15px;
+    background: linear-gradient(45deg, var(--lt-bg-light), #e9ecef);
+    border-radius: var(--lt-border-radius);
+    border: 2px solid #dee2e6;
+    transition: var(--lt-transition);
+    cursor: pointer;
+    user-select: none;
+    
+    &:hover {
+      background: var(--lt-primary-gradient);
+      color: #fff;
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    }
+    
+    &.selected {
+      background: linear-gradient(45deg, var(--lt-accent-color), #ff6b6b);
+      color: #fff;
+      transform: translateY(-2px) scale(1.02);
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+    }
+  }
+  
+  // モーダルスタイル（Cocoonのモーダルと競合しないように）
+  .lt-modal {
+    display: none;
+    position: fixed;
+    z-index: 10000; // Cocoonのモーダルより上に表示
+    left: 0;
+    top: var(--wp-admin-bar-height);
+    width: 100%;
+    height: calc(100% - var(--wp-admin-bar-height));
+    background-color: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(5px);
+    
+    .lt-modal-content {
+      background-color: #fff;
+      margin: 5% auto;
+      padding: 30px;
+      border-radius: var(--lt-border-radius-large);
+      width: 90%;
+      max-width: 600px;
+      position: relative;
+      animation: ltModalSlideIn 0.3s ease;
+      max-height: 90vh;
+      overflow-y: auto;
+    }
+  }
+  
+  // フォームスタイル（Cocoonのフォームスタイルを拡張）
+  .lt-form-group {
+    margin-bottom: 20px;
+    
+    label {
+      display: block;
+      margin-bottom: 5px;
+      font-weight: bold;
+      color: var(--lt-text-primary);
+    }
+    
+    input,
+    textarea,
+    select {
+      width: 100%;
+      padding: 12px;
+      border: 2px solid #ddd;
+      border-radius: var(--lt-border-radius);
+      font-size: 1rem;
+      transition: border-color 0.3s ease;
+      box-sizing: border-box;
+      
+      &:focus {
+        outline: none;
+        border-color: #ff6b6b;
+      }
+    }
+    
+    textarea {
+      resize: vertical;
+      min-height: 100px;
+    }
+  }
+}
+
+// Cocoon固有の統合スタイル
+.theme-cocoon {
+  .lightningtalk-container {
+    // Cocoonの既存スタイルを尊重しつつLightning Talkスタイルを適用
+    
+    // Cocoonのメインコンテンツ幅に合わせる
+    .lt-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 20px;
+      
+      @media (max-width: var(--lt-breakpoint-mobile)) {
+        padding: 0 15px;
+      }
+    }
+    
+    // Cocoonのヘッダーと干渉しないように調整
+    .lt-hero {
+      padding-top: calc(150px + var(--wp-admin-bar-height));
+      
+      @media (max-width: var(--lt-breakpoint-mobile)) {
+        padding-top: calc(120px + var(--wp-admin-bar-height));
+      }
+    }
+    
+    // Cocoonのサイドバーと共存する場合のレイアウト調整
+    &.has-sidebar {
+      .lt-main-content {
+        width: 70%;
+        float: left;
+        
+        @media (max-width: var(--lt-breakpoint-tablet)) {
+          width: 100%;
+          float: none;
+        }
+      }
+    }
+  }
+}
+
+// ダークモード対応（Cocoonのダークモードに合わせる）
+.dark-mode {
+  .lightningtalk-container {
+    --lt-text-primary: #ffffff;
+    --lt-text-secondary: #cccccc;
+    --lt-bg-light: #2d2d2d;
+    
+    .lt-event-card {
+      background: #1a1a1a;
+      color: var(--lt-text-primary);
+    }
+    
+    .lt-topic-item {
+      background: linear-gradient(45deg, #2d2d2d, #3a3a3a);
+      color: var(--lt-text-primary);
+      
+      &:hover {
+        background: var(--lt-primary-gradient);
+        color: #fff;
+      }
+    }
+    
+    .lt-modal-content {
+      background-color: #1a1a1a;
+      color: var(--lt-text-primary);
+    }
+    
+    .lt-form-group {
+      input,
+      textarea,
+      select {
+        background: #2d2d2d;
+        color: var(--lt-text-primary);
+        border-color: #555;
+        
+        &:focus {
+          border-color: #ff6b6b;
+        }
+      }
+    }
+  }
+}
+
+// アニメーション定義
+@keyframes ltModalSlideIn {
+  from {
+    transform: translateY(-50px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes ltFadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes ltFloat {
+  0%, 100% {
+    transform: translateY(0px) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-20px) rotate(10deg);
+  }
+}
+
+// WordPress Gutenbergブロックエディタ対応
+.block-editor-page {
+  .lightningtalk-container {
+    // エディタ内でのプレビュー調整
+    .lt-event-card {
+      margin: 1em 0;
+      max-width: 100%;
+    }
+    
+    .lt-btn {
+      pointer-events: none; // エディタ内では無効化
+      opacity: 0.8;
+    }
+  }
+}
+
+// WordPress管理画面での特別スタイル
+.wp-admin {
+  .lightningtalk-container {
+    // 管理画面固有のスタイル調整
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    
+    .lt-event-card {
+      margin: 20px 0;
+    }
+    
+    .lt-btn {
+      font-size: 13px;
+      padding: 10px 20px;
+    }
+  }
+}
+
+// レスポンシブ対応
+@media (max-width: var(--lt-breakpoint-mobile)) {
+  .lightningtalk-container {
+    .lt-event-card {
+      padding: 20px;
+    }
+    
+    .lt-btn {
+      width: 100%;
+      margin: 5px 0;
+    }
+    
+    .lt-modal-content {
+      width: 95%;
+      margin: 2% auto;
+      padding: 20px;
+    }
+    
+    .lt-topic-item {
+      display: block;
+      margin: 5px 0;
+      text-align: center;
+    }
+  }
+}
+
+// プリント用スタイル
+@media print {
+  .lightningtalk-container {
+    .lt-btn {
+      display: none;
+    }
+    
+    .lt-modal {
+      display: none !important;
+    }
+    
+    .lt-event-card {
+      break-inside: avoid;
+      box-shadow: none;
+      border: 1px solid #ccc;
+    }
+  }
+}
+
+// アクセシビリティ対応
+@media (prefers-reduced-motion: reduce) {
+  .lightningtalk-container * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+// 高コントラストモード対応
+@media (prefers-contrast: high) {
+  .lightningtalk-container {
+    .lt-btn {
+      border: 2px solid #000;
+    }
+    
+    .lt-topic-item {
+      border: 2px solid #000;
+    }
+    
+    .lt-event-card {
+      border: 3px solid #000;
+    }
+  }
+}

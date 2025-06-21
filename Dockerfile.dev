@@ -1,0 +1,33 @@
+FROM node:18-alpine
+
+# 開発に必要なツールをインストール
+RUN apk add --no-cache \
+    git \
+    bash \
+    curl \
+    vim \
+    tzdata
+
+# タイムゾーンを設定
+ENV TZ=Asia/Tokyo
+
+# 作業ディレクトリを設定
+WORKDIR /app
+
+# package.json と package-lock.json をコピー
+COPY package*.json ./
+
+# 依存関係をインストール（開発依存関係も含む）
+RUN npm ci --include=dev
+
+# nodemon をグローバルにインストール
+RUN npm install -g nodemon
+
+# アプリケーションのソースコードをコピー
+COPY . .
+
+# 開発用のポートを公開
+EXPOSE 3000
+
+# 開発サーバーを起動
+CMD ["npm", "run", "dev"]

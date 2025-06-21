@@ -1,0 +1,46 @@
+[
+  {
+    "siteName": "なんでもライトニングトーク",
+    "siteUrl": "http://localhost:3000",
+    "adminEmail": "admin@lightningtalk.example.com",
+    "emailEnabled": false,
+    "analyticsEnabled": true,
+    "registrationSettings": {
+      "requireApproval": false,
+      "allowWalkIn": true,
+      "maxParticipants": 100,
+      "autoConfirmation": true
+    },
+    "talkSettings": {
+      "requireApproval": false,
+      "allowLastMinute": true,
+      "maxDuration": 5,
+      "categories": [
+        "tech",
+        "hobby",
+        "learning",
+        "travel",
+        "food",
+        "game",
+        "lifehack",
+        "pet",
+        "garden",
+        "money",
+        "sports",
+        "music",
+        "other"
+      ]
+    },
+    "notificationSettings": {
+      "emailOnRegistration": true,
+      "emailOnTalkSubmission": true,
+      "reminderEmails": true,
+      "reminderDays": [
+        7,
+        1
+      ]
+    },
+    "createdAt": "2025-06-20T02:17:20.464Z",
+    "updatedAt": "2025-06-20T02:17:20.464Z"
+  }
+]
