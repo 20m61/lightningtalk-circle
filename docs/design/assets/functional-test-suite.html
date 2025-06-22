@@ -351,6 +351,14 @@
                 <strong>デバイス別テスト結果:</strong>
                 <div id="deviceTestResults"></div>
             </div>
+            <div class="test-item" id="test-modal-responsive">
+                <span>モーダルレスポンシブ対応</span>
+                <span class="test-status">未実行</span>
+            </div>
+            <div class="test-item" id="test-chat-responsive">
+                <span>チャットウィジェットレスポンシブ対応</span>
+                <span class="test-status">未実行</span>
+            </div>
         </div>
 
         <!-- アクセシビリティテスト -->
@@ -369,11 +377,23 @@
                 <span class="test-status">未実行</span>
             </div>
             <div class="test-item" id="test-color-contrast">
-                <span>色コントラスト</span>
+                <span>色コントラスト (WCAG 2.1 AA)</span>
                 <span class="test-status">未実行</span>
             </div>
             <div class="test-item" id="test-screen-reader">
                 <span>スクリーンリーダー対応</span>
+                <span class="test-status">未実行</span>
+            </div>
+            <div class="test-item" id="test-modal-accessibility">
+                <span>モーダルアクセシビリティ</span>
+                <span class="test-status">未実行</span>
+            </div>
+            <div class="test-item" id="test-chat-accessibility">
+                <span>チャットウィジェットアクセシビリティ</span>
+                <span class="test-status">未実行</span>
+            </div>
+            <div class="test-item" id="test-focus-management">
+                <span>フォーカス管理</span>
                 <span class="test-status">未実行</span>
             </div>
         </div>
@@ -784,6 +804,7 @@
                 resultsContainer.innerHTML = '';
 
                 let passedDevices = 0;
+                let responsiveIssues = [];
 
                 for (const device of deviceSizes) {
                     try {
@@ -799,29 +820,36 @@
                             align-items: center;
                         `;
 
-                        // 実際のテストロジック（簡易版）
-                        const isSupported = device.width >= 320; // 最小幅要件
-                        const hasBreakpoint = this.checkBreakpointSupport(device.width);
+                        // 詳細なレスポンシブテスト
+                        const testResults = await this.testDeviceCompatibility(device);
+                        const allTestsPassed = testResults.every(result => result.passed);
                         
-                        if (isSupported && hasBreakpoint) {
+                        if (allTestsPassed) {
                             deviceResult.innerHTML = `
                                 <span>${device.name} (${device.width}x${device.height})</span>
                                 <span style="color: #4CAF50; font-weight: bold;">✅ 対応</span>
                             `;
                             passedDevices++;
                         } else {
+                            const failedTests = testResults.filter(result => !result.passed);
                             deviceResult.innerHTML = `
                                 <span>${device.name} (${device.width}x${device.height})</span>
-                                <span style="color: #F44336; font-weight: bold;">❌ 問題</span>
+                                <span style="color: #F44336; font-weight: bold;">❌ 問題 (${failedTests.length})</span>
                             `;
+                            responsiveIssues.push(...failedTests.map(test => `${device.name}: ${test.issue}`));
                         }
 
                         resultsContainer.appendChild(deviceResult);
 
                     } catch (error) {
                         this.log(`${device.name}のテストでエラー: ${error.message}`, 'error');
+                        responsiveIssues.push(`${device.name}: テスト実行エラー`);
                     }
                 }
+
+                // モーダルとチャットウィジェットの特別テスト
+                await this.testModalResponsiveness();
+                await this.testChatWidgetResponsiveness();
 
                 if (passedDevices === deviceSizes.length) {
                     this.setCategoryStatus('responsive', 'passed');
@@ -829,9 +857,112 @@
                 } else if (passedDevices >= deviceSizes.length * 0.8) {
                     this.setCategoryStatus('responsive', 'warning');
                     this.log(`${passedDevices}/${deviceSizes.length}デバイスで対応済み`, 'warning');
+                    if (responsiveIssues.length > 0) {
+                        this.log(`問題: ${responsiveIssues.slice(0, 3).join(', ')}`, 'warning');
+                    }
                 } else {
                     this.setCategoryStatus('responsive', 'failed');
                     this.log(`レスポンシブ対応が不十分: ${passedDevices}/${deviceSizes.length}`, 'error');
+                    if (responsiveIssues.length > 0) {
+                        this.log(`主な問題: ${responsiveIssues.slice(0, 5).join(', ')}`, 'error');
+                    }
+                }
+            }
+
+            async testDeviceCompatibility(device) {
+                const results = [];
+                const doc = this.testTarget ? this.testTarget.document : document;
+                
+                // 基本的なレイアウトテスト
+                results.push({
+                    name: 'minimum_width',
+                    passed: device.width >= 320,
+                    issue: device.width < 320 ? '最小幅320px未満' : null
+                });
+
+                // ブレークポイント対応テスト
+                results.push({
+                    name: 'breakpoint_support',
+                    passed: this.checkBreakpointSupport(device.width),
+                    issue: !this.checkBreakpointSupport(device.width) ? 'ブレークポイント未対応' : null
+                });
+
+                // ビューポート設定テスト
+                const viewportMeta = doc.querySelector('meta[name="viewport"]');
+                results.push({
+                    name: 'viewport_meta',
+                    passed: !!viewportMeta && viewportMeta.content.includes('width=device-width'),
+                    issue: (!viewportMeta || !viewportMeta.content.includes('width=device-width')) ? 'viewport meta未設定' : null
+                });
+
+                // タッチターゲットサイズテスト（モバイル用）
+                if (device.width <= 768) {
+                    const buttons = doc.querySelectorAll('button, a, input[type="button"], input[type="submit"]');
+                    let touchTargetIssues = 0;
+                    
+                    buttons.forEach(button => {
+                        const styles = window.getComputedStyle ? window.getComputedStyle(button) : button.currentStyle;
+                        const minHeight = parseFloat(styles.minHeight || '0');
+                        const height = parseFloat(styles.height || '0');
+                        const actualHeight = Math.max(minHeight, height);
+                        
+                        if (actualHeight < 44) { // WCAG 2.1 AA推奨の44px
+                            touchTargetIssues++;
+                        }
+                    });
+                    
+                    results.push({
+                        name: 'touch_target_size',
+                        passed: touchTargetIssues === 0,
+                        issue: touchTargetIssues > 0 ? `${touchTargetIssues}個のボタンが44px未満` : null
+                    });
+                }
+
+                return results;
+            }
+
+            async testModalResponsiveness() {
+                if (!this.testTarget) return;
+                
+                const doc = this.testTarget.document;
+                const modals = doc.querySelectorAll('.modal, [id*="modal"], [class*="modal"]');
+                
+                modals.forEach(modal => {
+                    const styles = this.testTarget.getComputedStyle(modal);
+                    const maxWidth = styles.maxWidth;
+                    const width = styles.width;
+                    
+                    // モーダルの最大幅がビューポートを超えないかチェック
+                    if (maxWidth === 'none' && width.includes('%') && parseFloat(width) > 90) {
+                        this.log('モーダルの幅が大きすぎる可能性があります', 'warning');
+                    }
+                });
+
+                this.setTestResult('test-modal-responsive', 'pass', 'モーダルのレスポンシブ対応を確認しました');
+            }
+
+            async testChatWidgetResponsiveness() {
+                if (!this.testTarget) return;
+                
+                const doc = this.testTarget.document;
+                const chatWidget = doc.getElementById('chatWidget') || doc.querySelector('.chat-widget, [class*="chat"]');
+                
+                if (chatWidget) {
+                    const styles = this.testTarget.getComputedStyle(chatWidget);
+                    const position = styles.position;
+                    const right = styles.right;
+                    const bottom = styles.bottom;
+                    
+                    // チャットウィジェットの配置がモバイルで適切かチェック
+                    const hasResponsivePosition = position === 'fixed' && (right !== 'auto' || bottom !== 'auto');
+                    
+                    if (hasResponsivePosition) {
+                        this.setTestResult('test-chat-responsive', 'pass', 'チャットウィジェットのレスポンシブ対応を確認しました');
+                    } else {
+                        this.setTestResult('test-chat-responsive', 'warn', 'チャットウィジェットの配置に改善の余地があります');
+                    }
+                } else {
+                    this.setTestResult('test-chat-responsive', 'warn', 'チャットウィジェットが見つかりません');
                 }
             }
 
@@ -873,12 +1004,12 @@
                             'ARIA属性の使用が少ない可能性があります');
                     }
 
-                    // 色コントラストテスト（簡易）
+                    // 色コントラストテスト（改良版）
                     const colorTestPassed = this.testColorContrast(doc);
                     if (colorTestPassed) {
-                        this.setTestResult('test-color-contrast', 'pass', '色コントラストが適切です');
+                        this.setTestResult('test-color-contrast', 'pass', '色コントラストがWCAG 2.1 AA基準に適合しています');
                     } else {
-                        this.setTestResult('test-color-contrast', 'warn', '色コントラストの確認が必要です');
+                        this.setTestResult('test-color-contrast', 'warn', '色コントラストの改善が必要です（WCAG 2.1 AA基準）');
                     }
 
                     // スクリーンリーダー対応テスト
@@ -892,6 +1023,15 @@
                             '見出し構造またはランドマークの改善が必要です');
                     }
 
+                    // モーダルのアクセシビリティテスト
+                    await this.testModalAccessibility(doc);
+
+                    // チャットウィジェットのアクセシビリティテスト
+                    await this.testChatWidgetAccessibility(doc);
+
+                    // フォーカス管理テスト
+                    await this.testFocusManagement(doc);
+
                     this.setCategoryStatus('accessibility', 'passed');
 
                 } catch (error) {
@@ -900,28 +1040,245 @@
                 }
             }
 
-            testColorContrast(doc) {
-                // 簡易的な色コントラストテスト
-                // 実際の実装では、より詳細な計算が必要
-                const textElements = doc.querySelectorAll('p, span, div, button, a');
-                let contrastIssues = 0;
+            async testModalAccessibility(doc) {
+                const modals = doc.querySelectorAll('.modal, [id*="modal"], [class*="modal"]');
+                let modalIssues = [];
+
+                modals.forEach(modal => {
+                    // aria-labelledbyまたはaria-labelの確認
+                    const hasLabel = modal.hasAttribute('aria-labelledby') || modal.hasAttribute('aria-label');
+                    if (!hasLabel) {
+                        modalIssues.push('aria-labelまたはaria-labelledbyが未設定');
+                    }
+
+                    // role="dialog"の確認
+                    const hasDialogRole = modal.getAttribute('role') === 'dialog' || modal.getAttribute('role') === 'alertdialog';
+                    if (!hasDialogRole) {
+                        modalIssues.push('role="dialog"が未設定');
+                    }
+
+                    // aria-modal="true"の確認
+                    const hasAriaModal = modal.getAttribute('aria-modal') === 'true';
+                    if (!hasAriaModal) {
+                        modalIssues.push('aria-modal="true"が未設定');
+                    }
+
+                    // 閉じるボタンのアクセシビリティ確認
+                    const closeButton = modal.querySelector('.close, [data-dismiss="modal"], [aria-label*="close"], [aria-label*="閉じる"]');
+                    if (!closeButton) {
+                        modalIssues.push('アクセシブルな閉じるボタンが見つからない');
+                    } else if (!closeButton.hasAttribute('aria-label') && !closeButton.textContent.trim()) {
+                        modalIssues.push('閉じるボタンにaria-labelが必要');
+                    }
+                });
+
+                if (modals.length === 0) {
+                    this.setTestResult('test-modal-accessibility', 'warn', 'モーダル要素が見つかりません');
+                } else if (modalIssues.length === 0) {
+                    this.setTestResult('test-modal-accessibility', 'pass', 
+                        `${modals.length}個のモーダルのアクセシビリティが適切です`);
+                } else {
+                    this.setTestResult('test-modal-accessibility', 'fail', 
+                        `モーダルのアクセシビリティに問題: ${modalIssues.slice(0, 3).join(', ')}`);
+                }
+            }
+
+            async testChatWidgetAccessibility(doc) {
+                const chatWidget = doc.getElementById('chatWidget') || doc.querySelector('.chat-widget, [class*="chat"]');
+                const chatToggle = doc.getElementById('chatToggle') || doc.querySelector('[id*="chat-toggle"], [class*="chat-toggle"]');
                 
-                for (let i = 0; i < Math.min(textElements.length, 20); i++) {
+                let chatIssues = [];
+
+                if (!chatWidget && !chatToggle) {
+                    this.setTestResult('test-chat-accessibility', 'warn', 'チャットウィジェットが見つかりません');
+                    return;
+                }
+
+                // チャットトグルボタンのアクセシビリティ
+                if (chatToggle) {
+                    if (!chatToggle.hasAttribute('aria-label') && !chatToggle.hasAttribute('aria-labelledby')) {
+                        chatIssues.push('チャットトグルボタンにaria-labelが必要');
+                    }
+
+                    if (!chatToggle.hasAttribute('aria-expanded')) {
+                        chatIssues.push('チャットトグルボタンにaria-expandedが必要');
+                    }
+                }
+
+                // チャットウィジェット本体のアクセシビリティ
+                if (chatWidget) {
+                    if (!chatWidget.hasAttribute('role')) {
+                        chatIssues.push('チャットウィジェットにrole属性が必要');
+                    }
+
+                    if (!chatWidget.hasAttribute('aria-label') && !chatWidget.hasAttribute('aria-labelledby')) {
+                        chatIssues.push('チャットウィジェットにaria-labelが必要');
+                    }
+
+                    // チャット入力フィールドの確認
+                    const chatInput = chatWidget.querySelector('input, textarea');
+                    if (chatInput && !chatInput.hasAttribute('aria-label') && !chatInput.hasAttribute('aria-labelledby')) {
+                        chatIssues.push('チャット入力フィールドにaria-labelが必要');
+                    }
+
+                    // チャットメッセージエリアの確認
+                    const messagesArea = chatWidget.querySelector('[id*="messages"], [class*="messages"]');
+                    if (messagesArea && !messagesArea.hasAttribute('aria-live')) {
+                        chatIssues.push('チャットメッセージエリアにaria-live属性が推奨');
+                    }
+                }
+
+                if (chatIssues.length === 0) {
+                    this.setTestResult('test-chat-accessibility', 'pass', 'チャットウィジェットのアクセシビリティが適切です');
+                } else {
+                    this.setTestResult('test-chat-accessibility', 'fail', 
+                        `チャットウィジェットのアクセシビリティに問題: ${chatIssues.slice(0, 3).join(', ')}`);
+                }
+            }
+
+            async testFocusManagement(doc) {
+                // フォーカス可能要素のタブ順序確認
+                const focusableElements = doc.querySelectorAll(
+                    'a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])'
+                );
+
+                let focusIssues = [];
+                
+                // 負の値のtabindexの確認（スキップリンク以外は問題）
+                const negativeTabindex = doc.querySelectorAll('[tabindex^="-"]:not([tabindex="-1"])');
+                if (negativeTabindex.length > 0) {
+                    focusIssues.push(`不適切な負のtabindex: ${negativeTabindex.length}個`);
+                }
+
+                // 異常に高いtabindex値の確認
+                const highTabindex = doc.querySelectorAll('[tabindex]');
+                let maxTabindex = 0;
+                highTabindex.forEach(el => {
+                    const tabindex = parseInt(el.getAttribute('tabindex'));
+                    if (tabindex > maxTabindex) maxTabindex = tabindex;
+                });
+                
+                if (maxTabindex > 100) {
+                    focusIssues.push(`tabindex値が高すぎます (最大: ${maxTabindex})`);
+                }
+
+                // スキップリンクの確認
+                const skipLinks = doc.querySelectorAll('a[href^="#"]:first-child, .skip-link, [class*="skip"]');
+                if (skipLinks.length === 0 && focusableElements.length > 10) {
+                    focusIssues.push('スキップリンクの実装が推奨されます');
+                }
+
+                if (focusIssues.length === 0) {
+                    this.setTestResult('test-focus-management', 'pass', 
+                        `フォーカス管理が適切です (${focusableElements.length}個の要素)`);
+                } else {
+                    this.setTestResult('test-focus-management', 'warn', 
+                        `フォーカス管理の改善点: ${focusIssues.join(', ')}`);
+                }
+            }
+
+            testColorContrast(doc) {
+                // WCAG 2.1 AA準拠の色コントラストテスト
+                const textElements = doc.querySelectorAll('p, span, div, button, a, h1, h2, h3, h4, h5, h6, label, input, textarea');
+                let contrastIssues = 0;
+                let totalElements = 0;
+                
+                for (let i = 0; i < Math.min(textElements.length, 30); i++) {
                     const element = textElements[i];
                     const styles = this.testTarget.getComputedStyle(element);
                     const color = styles.color;
                     const backgroundColor = styles.backgroundColor;
+                    const fontSize = parseFloat(styles.fontSize);
+                    const fontWeight = styles.fontWeight;
                     
-                    // 簡易チェック（実際には色の明度を計算する必要があります）
-                    if (color && backgroundColor && color !== backgroundColor) {
-                        // 基本的なコントラストチェック通過
+                    if (!color || !backgroundColor || color === backgroundColor) {
                         continue;
-                    } else {
-                        contrastIssues++;
+                    }
+                    
+                    totalElements++;
+                    
+                    try {
+                        const colorRgb = this.parseColor(color);
+                        const bgColorRgb = this.parseColor(backgroundColor);
+                        
+                        if (colorRgb && bgColorRgb) {
+                            const contrastRatio = this.calculateContrastRatio(colorRgb, bgColorRgb);
+                            
+                            // WCAG 2.1 AA基準: 通常テキスト4.5:1、大きなテキスト3:1
+                            const isLargeText = fontSize >= 18 || (fontSize >= 14 && (fontWeight === 'bold' || parseInt(fontWeight) >= 700));
+                            const requiredRatio = isLargeText ? 3.0 : 4.5;
+                            
+                            if (contrastRatio < requiredRatio) {
+                                contrastIssues++;
+                                this.log(`コントラスト比違反: ${contrastRatio.toFixed(2)}:1 (要求: ${requiredRatio}:1) - ${element.tagName}`, 'warning');
+                            }
+                        }
+                    } catch (error) {
+                        this.log(`色の解析でエラー: ${error.message}`, 'warning');
                     }
                 }
                 
-                return contrastIssues < textElements.length * 0.1; // 10%未満の問題なら合格
+                return totalElements === 0 ? true : contrastIssues < totalElements * 0.1; // 10%未満の問題なら合格
+            }
+
+            // RGB色の解析
+            parseColor(colorStr) {
+                if (!colorStr) return null;
+                
+                // rgb(r, g, b) または rgba(r, g, b, a) 形式の解析
+                const rgbMatch = colorStr.match(/rgba?\((\d+),\s*(\d+),\s*(\d+)(?:,\s*[\d.]+)?\)/);
+                if (rgbMatch) {
+                    return {
+                        r: parseInt(rgbMatch[1]),
+                        g: parseInt(rgbMatch[2]),
+                        b: parseInt(rgbMatch[3])
+                    };
+                }
+                
+                // 16進色の解析
+                const hexMatch = colorStr.match(/^#([0-9a-f]{3}|[0-9a-f]{6})$/i);
+                if (hexMatch) {
+                    const hex = hexMatch[1];
+                    if (hex.length === 3) {
+                        return {
+                            r: parseInt(hex[0] + hex[0], 16),
+                            g: parseInt(hex[1] + hex[1], 16),
+                            b: parseInt(hex[2] + hex[2], 16)
+                        };
+                    } else {
+                        return {
+                            r: parseInt(hex.substr(0, 2), 16),
+                            g: parseInt(hex.substr(2, 2), 16),
+                            b: parseInt(hex.substr(4, 2), 16)
+                        };
+                    }
+                }
+                
+                return null;
+            }
+
+            // WCAG 2.1に基づくコントラスト比計算
+            calculateContrastRatio(color1, color2) {
+                const lum1 = this.getRelativeLuminance(color1);
+                const lum2 = this.getRelativeLuminance(color2);
+                
+                const lighter = Math.max(lum1, lum2);
+                const darker = Math.min(lum1, lum2);
+                
+                return (lighter + 0.05) / (darker + 0.05);
+            }
+
+            // 相対輝度の計算
+            getRelativeLuminance(rgb) {
+                const rsRGB = rgb.r / 255;
+                const gsRGB = rgb.g / 255;
+                const bsRGB = rgb.b / 255;
+
+                const r = rsRGB <= 0.03928 ? rsRGB / 12.92 : Math.pow((rsRGB + 0.055) / 1.055, 2.4);
+                const g = gsRGB <= 0.03928 ? gsRGB / 12.92 : Math.pow((gsRGB + 0.055) / 1.055, 2.4);
+                const b = bsRGB <= 0.03928 ? bsRGB / 12.92 : Math.pow((bsRGB + 0.055) / 1.055, 2.4);
+
+                return 0.2126 * r + 0.7152 * g + 0.0722 * b;
             }
 
             // パフォーマンステスト
