@@ -1,5 +1,5 @@
 {
-  "timestamp": "2025-06-22T23:42:19.545Z",
+  "timestamp": "2025-06-22T23:45:04.742Z",
   "config": {
     "thresholds": {
       "coverage": 80,
@@ -26,7 +26,7 @@
     "overall": {
       "passed": false,
       "score": 0,
-      "duration": 148
+      "duration": 146
     }
   }
 }
