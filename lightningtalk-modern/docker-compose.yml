@@ -1,0 +1,126 @@
+version: '3.8'
+
+services:
+  # WordPress メインサイト
+  wordpress:
+    image: wordpress:6.4-php8.2-apache
+    container_name: lt-wordpress
+    ports:
+      - "8080:80"
+    environment:
+      WORDPRESS_DB_HOST: mysql
+      WORDPRESS_DB_USER: lightningtalk
+      WORDPRESS_DB_PASSWORD: lightningtalk_password
+      WORDPRESS_DB_NAME: lightningtalk_db
+      WORDPRESS_DEBUG: 1
+      WORDPRESS_CONFIG_EXTRA: |
+        define('WP_ENVIRONMENT_TYPE', 'development');
+        define('SCRIPT_DEBUG', true);
+        define('SAVEQUERIES', true);
+        
+        // CORS設定
+        define('WP_CORS_ENABLED', true);
+        
+        // REST API設定
+        define('REST_REQUEST_PARAMETER_ORDER', true);
+    volumes:
+      # 子テーママウント
+      - ./packages/theme:/var/www/html/wp-content/themes/lightningtalk-child
+      
+      # WordPress設定
+      - ./docker/wordpress/wp-config-extra.php:/var/www/html/wp-config-extra.php
+      
+      # アップロード・データ永続化
+      - wordpress_uploads:/var/www/html/wp-content/uploads
+      - wordpress_plugins:/var/www/html/wp-content/plugins
+      
+      # 開発用設定
+      - ./docker/wordpress/php.ini:/usr/local/etc/php/conf.d/custom.ini
+    depends_on:
+      - mysql
+    restart: unless-stopped
+    networks:
+      - lightningtalk-network
+
+  # MySQL データベース
+  mysql:
+    image: mysql:8.0
+    container_name: lt-mysql
+    environment:
+      MYSQL_DATABASE: lightningtalk_db
+      MYSQL_USER: lightningtalk
+      MYSQL_PASSWORD: lightningtalk_password
+      MYSQL_ROOT_PASSWORD: root_password
+      MYSQL_CHARSET: utf8mb4
+      MYSQL_COLLATION: utf8mb4_unicode_ci
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./docker/mysql/my.cnf:/etc/mysql/conf.d/custom.cnf
+      - ./docker/mysql/init:/docker-entrypoint-initdb.d
+    ports:
+      - "3306:3306"
+    restart: unless-stopped
+    networks:
+      - lightningtalk-network
+
+  # Node.js 開発環境
+  node-dev:
+    build:
+      context: .
+      dockerfile: docker/node/Dockerfile.dev
+    container_name: lt-node-dev
+    working_dir: /app
+    volumes:
+      - .:/app
+      - node_modules:/app/node_modules
+    ports:
+      - "3000:3000"  # Vite Dev Server
+      - "3001:3001"  # Next.js Admin
+      - "6006:6006"  # Storybook
+    environment:
+      - NODE_ENV=development
+      - CHOKIDAR_USEPOLLING=true
+    command: npm run dev
+    depends_on:
+      - wordpress
+    restart: unless-stopped
+    networks:
+      - lightningtalk-network
+
+  # phpMyAdmin (開発用)
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin:latest
+    container_name: lt-phpmyadmin
+    ports:
+      - "8081:80"
+    environment:
+      PMA_HOST: mysql
+      PMA_USER: lightningtalk
+      PMA_PASSWORD: lightningtalk_password
+      MYSQL_ROOT_PASSWORD: root_password
+    depends_on:
+      - mysql
+    restart: unless-stopped
+    networks:
+      - lightningtalk-network
+
+  # Mailhog (メール開発テスト用)
+  mailhog:
+    image: mailhog/mailhog:latest
+    container_name: lt-mailhog
+    ports:
+      - "1025:1025"  # SMTP
+      - "8025:8025"  # Web UI
+    restart: unless-stopped
+    networks:
+      - lightningtalk-network
+
+volumes:
+  mysql_data:
+  wordpress_uploads:
+  wordpress_plugins:
+  node_modules:
+
+networks:
+  lightningtalk-network:
+    driver: bridge

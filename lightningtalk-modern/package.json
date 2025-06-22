@@ -1,0 +1,75 @@
+{
+  "name": "lightningtalk-cocoon-theme",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Modern WordPress Cocoon child theme with Lightning Talk management",
+  "workspaces": [
+    "packages/*"
+  ],
+  "scripts": {
+    "dev": "concurrently \"npm:dev:*\" --names \"THEME,ADMIN,STORYBOOK,WP\" --prefix-colors \"blue,green,yellow,magenta\"",
+    "dev:theme": "cd packages/theme && npm run dev",
+    "dev:admin": "cd packages/admin-panel && npm run dev",
+    "dev:storybook": "cd packages/components && npm run storybook",
+    "dev:wordpress": "docker-compose up wordpress mysql",
+    
+    "build": "npm run build:components && npm run build:theme && npm run build:admin",
+    "build:components": "cd packages/components && npm run build-storybook",
+    "build:theme": "cd packages/theme && npm run build", 
+    "build:admin": "cd packages/admin-panel && npm run build",
+    
+    "test": "npm run test:unit && npm run test:integration && npm run test:e2e",
+    "test:unit": "vitest run",
+    "test:integration": "vitest run tests/integration",
+    "test:e2e": "playwright test",
+    "test:visual": "cd packages/components && npm run test:visual",
+    "test:watch": "vitest",
+    
+    "lint": "eslint packages/*/src --ext .ts,.tsx,.js,.jsx,.php",
+    "lint:fix": "npm run lint -- --fix",
+    "type-check": "tsc --noEmit",
+    "format": "prettier --write \"packages/*/src/**/*.{ts,tsx,js,jsx,css,scss,md}\"",
+    
+    "wp:up": "docker-compose up -d",
+    "wp:down": "docker-compose down",
+    "wp:reset": "docker-compose down -v && docker-compose up -d",
+    "wp:logs": "docker-compose logs -f wordpress",
+    "wp:cli": "docker-compose exec wordpress wp",
+    
+    "theme:package": "cd packages/theme && npm run package",
+    "theme:deploy": "cd packages/theme && npm run deploy",
+    
+    "postinstall": "husky install"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.40.0",
+    "@types/node": "^20.0.0",
+    "@types/wordpress": "^6.0.0",
+    "@typescript-eslint/eslint-plugin": "^6.0.0",
+    "@typescript-eslint/parser": "^6.0.0",
+    "concurrently": "^8.2.0",
+    "eslint": "^8.55.0",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-plugin-react": "^7.33.0",
+    "eslint-plugin-react-hooks": "^4.6.0",
+    "husky": "^8.0.3",
+    "lint-staged": "^15.2.0",
+    "prettier": "^3.1.0",
+    "typescript": "^5.3.0",
+    "vite": "^5.0.0",
+    "vitest": "^1.0.0"
+  },
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=9.0.0"
+  },
+  "lint-staged": {
+    "*.{ts,tsx,js,jsx}": [
+      "eslint --fix",
+      "prettier --write"
+    ],
+    "*.{css,scss,md}": [
+      "prettier --write"
+    ]
+  }
+}

@@ -1,0 +1,36 @@
+# Node.js 開発環境
+FROM node:18-alpine
+
+# 必要なパッケージをインストール
+RUN apk add --no-cache \
+    git \
+    python3 \
+    make \
+    g++ \
+    bash \
+    curl
+
+# グローバルツールインストール
+RUN npm install -g \
+    @playwright/test \
+    concurrently \
+    nodemon
+
+# 作業ディレクトリ設定
+WORKDIR /app
+
+# package.json をコピーして依存関係をインストール
+COPY package*.json ./
+RUN npm ci
+
+# Playwright ブラウザインストール
+RUN npx playwright install --with-deps
+
+# アプリケーションファイルをコピー
+COPY . .
+
+# ポート公開
+EXPOSE 3000 3001 6006
+
+# 開発サーバー起動
+CMD ["npm", "run", "dev"]

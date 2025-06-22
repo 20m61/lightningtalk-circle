@@ -1,0 +1,25 @@
+/*
+Theme Name: Lightning Talk Child Theme
+Description: Modern Lightning Talk event management theme for Cocoon
+Author: Lightning Talk Team
+Template: cocoon-master
+Version: 1.0.0
+License: GPL v2 or later
+License URI: https://www.gnu.org/licenses/gpl-2.0.html
+Text Domain: lightningtalk-child
+Tags: events, lightning-talk, responsive, accessibility-ready
+*/
+
+/* 
+このファイルはWordPress子テーマの識別用です。
+実際のスタイルは src/styles/main.scss から
+Viteによってビルドされたものを使用します。
+*/
+
+/* Cocoon親テーマ継承 */
+@import url("../cocoon-master/style.css");
+
+/* 
+モダンビルドシステムによる生成CSS
+本番環境では dist/assets/main.css が読み込まれます
+*/

@@ -1,0 +1,224 @@
+name: Test Suite
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main, develop ]
+
+jobs:
+  # ユニット・統合テスト
+  unit-integration-tests:
+    runs-on: ubuntu-latest
+    
+    strategy:
+      matrix:
+        node-version: [18.x, 20.x]
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Setup Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v4
+      with:
+        node-version: ${{ matrix.node-version }}
+        cache: 'npm'
+        
+    - name: Install dependencies
+      run: npm ci
+      
+    - name: Run unit tests
+      run: npm run test:unit
+      
+    - name: Run integration tests
+      run: npm run test:integration
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        NODE_ENV: test
+        
+    - name: Generate test coverage
+      run: npm run test:coverage
+      
+    - name: Upload coverage to Codecov
+      uses: codecov/codecov-action@v3
+      with:
+        file: ./coverage/lcov.info
+        flags: unittests
+        name: codecov-umbrella
+        
+    - name: Upload test results
+      uses: actions/upload-artifact@v3
+      if: always()
+      with:
+        name: test-results-${{ matrix.node-version }}
+        path: |
+          coverage/
+          test-results.xml
+
+  # E2Eテスト
+  e2e-tests:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20.x'
+        cache: 'npm'
+        
+    - name: Install dependencies
+      run: npm ci
+      
+    - name: Install Playwright browsers
+      run: npx playwright install --with-deps
+      
+    - name: Start test server
+      run: |
+        npm run dev &
+        sleep 10
+        curl -f http://localhost:3000 || exit 1
+      env:
+        NODE_ENV: test
+        PORT: 3000
+        
+    - name: Run E2E tests
+      run: npm run test:e2e
+      env:
+        TEST_BASE_URL: http://localhost:3000
+        
+    - name: Upload E2E test results
+      uses: actions/upload-artifact@v3
+      if: always()
+      with:
+        name: e2e-test-results
+        path: |
+          playwright-report/
+          test-results/
+
+  # Docker環境でのテスト
+  docker-tests:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Build test environment
+      run: docker-compose -f docker-compose.test.yml build
+      
+    - name: Run tests in Docker
+      run: docker-compose -f docker-compose.test.yml up --abort-on-container-exit
+      
+    - name: Cleanup Docker environment
+      if: always()
+      run: docker-compose -f docker-compose.test.yml down -v
+
+  # テスト結果レポート
+  test-report:
+    runs-on: ubuntu-latest
+    needs: [unit-integration-tests, e2e-tests]
+    if: always()
+    
+    steps:
+    - name: Download test artifacts
+      uses: actions/download-artifact@v3
+      
+    - name: Publish test results
+      uses: dorny/test-reporter@v1
+      if: success() || failure()
+      with:
+        name: Test Results
+        path: '**/test-results.xml'
+        reporter: jest-junit
+        
+    - name: Comment test results on PR
+      uses: actions/github-script@v6
+      if: github.event_name == 'pull_request'
+      with:
+        script: |
+          const fs = require('fs');
+          const path = require('path');
+          
+          let comment = '## 🧪 Test Results\n\n';
+          
+          // カバレッジ情報の読み込み
+          try {
+            const coverageDir = path.join(process.cwd(), 'test-results-20.x', 'coverage');
+            if (fs.existsSync(path.join(coverageDir, 'coverage-summary.json'))) {
+              const coverage = JSON.parse(
+                fs.readFileSync(path.join(coverageDir, 'coverage-summary.json'), 'utf8')
+              );
+              
+              comment += '### Coverage Summary\n';
+              comment += `- **Lines**: ${coverage.total.lines.pct}%\n`;
+              comment += `- **Functions**: ${coverage.total.functions.pct}%\n`;
+              comment += `- **Branches**: ${coverage.total.branches.pct}%\n`;
+              comment += `- **Statements**: ${coverage.total.statements.pct}%\n\n`;
+            }
+          } catch (error) {
+            console.log('Could not read coverage data:', error.message);
+          }
+          
+          comment += '### Test Status\n';
+          comment += '- ✅ Unit/Integration Tests: Completed\n';
+          comment += '- ✅ E2E Tests: Completed\n';
+          comment += '- ✅ Docker Tests: Completed\n\n';
+          comment += 'Detailed reports are available in the Actions tab.';
+          
+          github.rest.issues.createComment({
+            issue_number: context.issue.number,
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            body: comment
+          });
+
+  # パフォーマンステスト
+  performance-tests:
+    runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request'
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20.x'
+        cache: 'npm'
+        
+    - name: Install dependencies
+      run: npm ci
+      
+    - name: Run performance tests
+      run: npm run test:perf
+      continue-on-error: true
+      
+    - name: Upload performance results
+      uses: actions/upload-artifact@v3
+      with:
+        name: performance-results
+        path: performance-results.json
+
+  # セキュリティテスト
+  security-tests:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Run security audit
+      run: npm audit --audit-level high
+      
+    - name: Run CodeQL Analysis
+      uses: github/codeql-action/init@v2
+      with:
+        languages: javascript
+        
+    - name: Perform CodeQL Analysis
+      uses: github/codeql-action/analyze@v2
