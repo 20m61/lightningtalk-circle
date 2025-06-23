@@ -62,7 +62,7 @@
     "@storybook/html-vite": "^9.0.12",
     "autoprefixer": "^10.4.0",
     "babel-loader": "^9.1.0",
-    "browser-sync": "^2.29.0",
+    "browser-sync": "^3.0.4",
     "clean-webpack-plugin": "^4.0.0",
     "copy-webpack-plugin": "^11.0.0",
     "css-loader": "^6.8.0",
