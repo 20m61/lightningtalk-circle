@@ -57,6 +57,7 @@ class QualityGateSystem {
       { name: 'Code Quality', runner: () => this.checkCodeQuality() },
       { name: 'Accessibility Compliance', runner: () => this.checkAccessibilityCompliance() },
       { name: 'Security Scan', runner: () => this.runSecurityScan() },
+      { name: 'Accessibility Check', runner: () => this.checkAccessibility() },
       { name: 'Performance Tests', runner: () => this.runPerformanceTests() },
       { name: 'Dependency Check', runner: () => this.checkDependencies() },
       { name: 'Bundle Analysis', runner: () => this.analyzeBundleSize() }
@@ -834,8 +835,205 @@ class QualityGateSystem {
   }
 
   /**
-   * バンドルサイズ分析
+   * アクセシビリティチェック
    */
+  async checkAccessibility() {
+    const accessibilityChecks = [];
+
+    try {
+      // HTML ファイルのアクセシビリティをチェック
+      const htmlFiles = this.getAllHTMLFiles('.');
+      
+      for (const file of htmlFiles) {
+        const content = fs.readFileSync(file, 'utf8');
+        const checks = this.validateHTMLAccessibility(content, file);
+        accessibilityChecks.push(...checks);
+      }
+
+      // WCAG 2.1 AA 準拠チェック
+      const wcagChecks = this.checkWCAGCompliance();
+      accessibilityChecks.push(wcagChecks);
+
+    } catch (error) {
+      accessibilityChecks.push({
+        name: 'Accessibility Check',
+        passed: false,
+        error: `Failed to run accessibility checks: ${error.message}`
+      });
+    }
+
+    const allPassed = accessibilityChecks.every(check => check.passed);
+    const score = accessibilityChecks.length > 0 ? 
+      accessibilityChecks.filter(check => check.passed).length / accessibilityChecks.length * 100 : 100;
+
+    return {
+      passed: allPassed,
+      score,
+      details: { checks: accessibilityChecks }
+    };
+  }
+
+  /**
+   * HTML アクセシビリティを検証
+   */
+  validateHTMLAccessibility(content, fileName) {
+    const issues = [];
+    
+    // img タグの alt 属性チェック
+    const imgWithoutAlt = content.match(/<img(?![^>]*\salt\s*=)/gi);
+    if (imgWithoutAlt) {
+      issues.push({
+        name: `${fileName}: Missing alt attributes`,
+        passed: false,
+        message: `Found ${imgWithoutAlt.length} img tags without alt attributes`
+      });
+    } else {
+      issues.push({
+        name: `${fileName}: Alt attributes`,
+        passed: true,
+        message: 'All img tags have alt attributes'
+      });
+    }
+
+    // form 要素の label チェック
+    const inputsWithoutLabels = content.match(/<input(?![^>]*\sid\s*=\s*["'][^"']*["'][^>]*>[\s\S]*?<label[^>]*\sfor\s*=\s*["']\1["'])/gi);
+    if (inputsWithoutLabels && inputsWithoutLabels.length > 0) {
+      issues.push({
+        name: `${fileName}: Form labels`,
+        passed: false,
+        message: 'Some form inputs may be missing associated labels'
+      });
+    } else {
+      issues.push({
+        name: `${fileName}: Form labels`,
+        passed: true,
+        message: 'Form inputs have proper labeling'
+      });
+    }
+
+    // 見出し構造のチェック
+    const headings = content.match(/<h[1-6][^>]*>/gi) || [];
+    const headingLevels = headings.map(h => parseInt(h.match(/h(\d)/i)[1]));
+    let headingStructureValid = true;
+    
+    for (let i = 1; i < headingLevels.length; i++) {
+      if (headingLevels[i] > headingLevels[i-1] + 1) {
+        headingStructureValid = false;
+        break;
+      }
+    }
+
+    issues.push({
+      name: `${fileName}: Heading structure`,
+      passed: headingStructureValid,
+      message: headingStructureValid ? 
+        'Heading structure is logical' : 
+        'Heading structure may skip levels'
+    });
+
+    // color contrast のチェック (簡易版)
+    const hasLowContrastColors = this.checkBasicColorContrast(content);
+    issues.push({
+      name: `${fileName}: Color contrast`,
+      passed: !hasLowContrastColors,
+      message: hasLowContrastColors ? 
+        'Potential color contrast issues detected' : 
+        'No obvious color contrast issues'
+    });
+
+    return issues;
+  }
+
+  /**
+   * WCAG 2.1 AA 準拠チェック
+   */
+  checkWCAGCompliance() {
+    const wcagIssues = [];
+    
+    // キーボードナビゲーション要素のチェック
+    const htmlFiles = this.getAllHTMLFiles('.');
+    let totalInteractiveElements = 0;
+    let accessibleInteractiveElements = 0;
+
+    for (const file of htmlFiles) {
+      const content = fs.readFileSync(file, 'utf8');
+      
+      // フォーカス可能要素のチェック
+      const interactiveElements = content.match(/<(button|input|select|textarea|a)[^>]*>/gi) || [];
+      totalInteractiveElements += interactiveElements.length;
+
+      // tabindex, role, aria-* 属性を持つ要素をカウント
+      const accessibleElements = content.match(/<[^>]*(tabindex|role|aria-)[^>]*>/gi) || [];
+      accessibleInteractiveElements += Math.min(accessibleElements.length, interactiveElements.length);
+    }
+
+    const accessibilityRatio = totalInteractiveElements > 0 ? 
+      accessibleInteractiveElements / totalInteractiveElements : 1;
+
+    wcagIssues.push({
+      name: 'Interactive elements accessibility',
+      passed: accessibilityRatio >= 0.8, // 80% 以上のインタラクティブ要素がアクセシブル
+      ratio: accessibilityRatio,
+      message: `${Math.round(accessibilityRatio * 100)}% of interactive elements have accessibility attributes`
+    });
+
+    return {
+      name: 'WCAG 2.1 AA Compliance',
+      passed: wcagIssues.every(issue => issue.passed),
+      details: wcagIssues
+    };
+  }
+
+  /**
+   * 基本的な色コントラストチェック
+   */
+  checkBasicColorContrast(content) {
+    // 簡易的なチェック - 明らかに問題のある色の組み合わせを検出
+    const lowContrastPatterns = [
+      /color:\s*#?([a-f0-9]{3,6}).*background.*#?([a-f0-9]{3,6})/gi,
+      /background.*#?([a-f0-9]{3,6}).*color:\s*#?([a-f0-9]{3,6})/gi
+    ];
+
+    for (const pattern of lowContrastPatterns) {
+      const matches = content.match(pattern);
+      if (matches) {
+        // 実際のプロジェクトでは、ここで色のコントラスト比を計算
+        // 今回は簡易的に黄色系の背景に白いテキストなどの問題パターンをチェック
+        for (const match of matches) {
+          if (match.includes('yellow') && match.includes('white')) {
+            return true;
+          }
+          if (match.includes('#ffff') && match.includes('#fff')) {
+            return true;
+          }
+        }
+      }
+    }
+    
+    return false;
+  }
+
+  /**
+   * HTML ファイルを取得
+   */
+  getAllHTMLFiles(dir) {
+    if (!fs.existsSync(dir)) return [];
+    
+    const files = [];
+    const items = fs.readdirSync(dir, { withFileTypes: true });
+    
+    for (const item of items) {
+      const itemPath = path.join(dir, item.name);
+      
+      if (item.isDirectory() && !item.name.startsWith('.') && item.name !== 'node_modules') {
+        files.push(...this.getAllHTMLFiles(itemPath));
+      } else if (item.name.endsWith('.html')) {
+        files.push(itemPath);
+      }
+    }
+    
+    return files;
+  }
   async analyzeBundleSize() {
     try {
       // webpack-bundle-analyzer や類似ツールを想定
@@ -927,7 +1125,7 @@ class QualityGateSystem {
    * クリティカルゲートかどうか判定
    */
   isCriticalGate(gateName) {
-    const criticalGates = ['Unit Tests', 'Security Scan'];
+    const criticalGates = ['Unit Tests', 'Security Scan', 'Accessibility Check'];
     return criticalGates.includes(gateName);
   }
 
@@ -936,13 +1134,14 @@ class QualityGateSystem {
    */
   calculateOverallScore() {
     const weights = {
-      'Unit Tests': 0.25,
-      'Integration Tests': 0.15,
-      'Code Coverage': 0.15,
-      'Code Quality': 0.15,
-      'Security Scan': 0.20,
+      'Unit Tests': 0.22,
+      'Integration Tests': 0.13,
+      'Code Coverage': 0.13,
+      'Code Quality': 0.13,
+      'Security Scan': 0.18,
+      'Accessibility Check': 0.12,
       'Performance Tests': 0.05,
-      'Dependency Check': 0.03,
+      'Dependency Check': 0.02,
       'Bundle Analysis': 0.02
     };
 
@@ -1049,6 +1248,15 @@ class QualityGateSystem {
         'Update vulnerable dependencies',
         'Remove hardcoded secrets',
         'Review security best practices'
+      ],
+      'Accessibility Check': [
+        'Add missing alt attributes to images',
+        'Ensure proper heading structure (h1, h2, h3...)',
+        'Add ARIA labels and roles where needed',
+        'Check color contrast ratios (WCAG 2.1 AA: 4.5:1 for normal text)',
+        'Ensure keyboard navigation is functional',
+        'Add focus indicators for interactive elements',
+        'Test with screen readers'
       ],
       'Performance Tests': [
         'Optimize slow endpoints',

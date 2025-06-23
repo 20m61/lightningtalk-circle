@@ -255,8 +255,8 @@ class LightningTalkServer {
                     date: '2025-06-25T19:00:00+09:00',
                     endDate: '2025-06-25T22:00:00+09:00',
                     venue: {
-                        name: '新宿某所',
-                        address: '詳細は6月20日に確定予定',
+                        name: '新宿会場',
+                        address: '西新宿8-14-19 小林第二ビル8階',
                         capacity: 50,
                         online: true,
                         onlineUrl: 'https://meet.google.com/ycp-sdec-xsr'

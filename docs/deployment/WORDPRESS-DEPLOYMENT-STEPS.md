@@ -64,8 +64,8 @@
    
    カスタムフィールド:
    - event_date: 2025-06-25 19:00:00
-   - venue_name: 新宿某所
-   - venue_address: 6月20日に詳細確定予定
+   - venue_name: 新宿会場
+   - venue_address: 西新宿8-14-19 小林第二ビル8階
    - map_url: https://maps.app.goo.gl/51TFv825jmuBsjbq5?g_st=ic
    - emergency_phone: 080-4540-7479
    - online_url: https://meet.google.com/ycp-sdec-xsr

@@ -1,0 +1,73 @@
+#!/usr/bin/env sh
+. "$(dirname -- "$0")/_/husky.sh"
+
+# コミットメッセージのファイル
+commit_msg_file=$1
+
+if [ -z "$commit_msg_file" ]; then
+  echo "❌ Commit message file not provided"
+  exit 1
+fi
+
+# コミットメッセージを読み取り
+commit_msg=$(cat "$commit_msg_file")
+
+echo "📝 Validating commit message..."
+echo "Message: $commit_msg"
+
+# 空のコミットメッセージをチェック
+if [ -z "$commit_msg" ] || [ "$commit_msg" = " " ]; then
+  echo "❌ Commit message cannot be empty"
+  exit 1
+fi
+
+# コミットメッセージの最小長をチェック
+if [ ${#commit_msg} -lt 10 ]; then
+  echo "❌ Commit message too short (minimum 10 characters)"
+  echo "Current length: ${#commit_msg}"
+  exit 1
+fi
+
+# 推奨フォーマットのチェック（Conventional Commits風）
+if echo "$commit_msg" | grep -qE "^(feat|fix|docs|style|refactor|test|chore|perf|ci|build|revert)(\(.+\))?: .+"; then
+  echo "✅ Commit message follows conventional format"
+elif echo "$commit_msg" | grep -qE "^(🎉|🐛|📚|💄|♻️|✅|🔧|⚡|👷|🏗️|⏪|🎯|🚀|🔒|📱|♿|🌐)"; then
+  echo "✅ Commit message uses emoji format"
+elif echo "$commit_msg" | grep -qE "^(Add|Update|Fix|Remove|Refactor|Improve|Initial)"; then
+  echo "✅ Commit message follows standard format"
+else
+  echo "⚠️  Commit message format recommendation:"
+  echo "  - Use conventional commits: feat: add new feature"
+  echo "  - Use emojis: 🎉 add new feature"
+  echo "  - Use standard verbs: Add new feature"
+  echo ""
+  echo "💡 Examples:"
+  echo "  feat: add user authentication"
+  echo "  fix: resolve login validation issue"  
+  echo "  🎉 add user authentication"
+  echo "  🐛 fix login validation issue"
+  echo "  Add user authentication"
+  echo "  Fix login validation issue"
+  echo ""
+  echo "⚠️  This is a warning, not an error. Commit will proceed."
+fi
+
+# WIP コミットの警告
+if echo "$commit_msg" | grep -qiE "(wip|work in progress|todo|fixme|hack)"; then
+  echo "⚠️  Warning: This appears to be a work-in-progress commit"
+  echo "Consider using a more descriptive message for production commits"
+fi
+
+# 長すぎるコミットメッセージの警告
+if [ ${#commit_msg} -gt 72 ]; then
+  echo "⚠️  Warning: Commit message is quite long (${#commit_msg} characters)"
+  echo "Consider keeping the first line under 72 characters"
+fi
+
+# 大文字で始まっているかチェック
+first_char=$(echo "$commit_msg" | head -c 1)
+if echo "$first_char" | grep -qE "[a-z]"; then
+  echo "💡 Tip: Consider starting commit message with a capital letter"
+fi
+
+echo "✅ Commit message validation passed"

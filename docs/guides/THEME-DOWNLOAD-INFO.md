@@ -99,7 +99,7 @@ Lightning Talk > Lightning Talkイベント > 新規追加
 
 カスタムフィールド:
 - event_date: 2025-06-25 19:00:00
-- venue_name: 新宿某所
+- venue_name: 新宿会場
 - emergency_phone: 080-4540-7479
 - map_url: https://maps.app.goo.gl/51TFv825jmuBsjbq5?g_st=ic
 - online_url: https://meet.google.com/ycp-sdec-xsr

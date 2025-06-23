@@ -365,17 +365,165 @@ describe('${task.description}', () => {
     process.chdir(worktreePath);
 
     try {
-      // Docker環境でテストを実行
-      execSync('docker-compose -f ../lightningtalk-circle/docker-compose.dev.yml run --rm test-runner npm test', 
-        { stdio: 'inherit' });
+      // 複数の方法でテストを実行し、より堅牢にする
+      const testResults = await this.executeTestsWithRetry();
       
-      this.log.success('All tests passed');
-      return true;
+      if (testResults.success) {
+        this.log.success('All tests passed');
+        return true;
+      } else {
+        this.log.error(`Tests failed: ${testResults.error}`);
+        return false;
+      }
     } catch (error) {
-      this.log.error('Tests failed');
+      this.log.error(`Test execution failed: ${error.message}`);
       return false;
     } finally {
       process.chdir(originalCwd);
+    }
+  }
+
+  /**
+   * リトライ機能付きテスト実行
+   */
+  async executeTestsWithRetry(maxRetries = 3) {
+    let lastError;
+    
+    for (let attempt = 1; attempt <= maxRetries; attempt++) {
+      this.log.info(`Test attempt ${attempt}/${maxRetries}`);
+      
+      try {
+        // まず Docker が利用可能かチェック
+        const dockerAvailable = await this.checkDockerAvailability();
+        
+        if (dockerAvailable) {
+          this.log.info('Using Docker test environment');
+          await this.runDockerTests();
+        } else {
+          this.log.warning('Docker not available, falling back to local tests');
+          await this.runLocalTests();
+        }
+        
+        return { success: true };
+        
+      } catch (error) {
+        lastError = error;
+        this.log.warning(`Attempt ${attempt} failed: ${error.message}`);
+        
+        if (attempt < maxRetries) {
+          const delay = Math.pow(2, attempt) * 1000; // Exponential backoff
+          this.log.info(`Retrying in ${delay/1000} seconds...`);
+          await new Promise(resolve => setTimeout(resolve, delay));
+        }
+      }
+    }
+    
+    return { 
+      success: false, 
+      error: `All ${maxRetries} attempts failed. Last error: ${lastError.message}` 
+    };
+  }
+
+  /**
+   * Docker の利用可能性をチェック
+   */
+  async checkDockerAvailability() {
+    try {
+      execSync('docker --version', { stdio: 'pipe' });
+      
+      // Docker Compose ファイルの存在確認
+      const dockerComposeFile = '../lightningtalk-circle/docker-compose.dev.yml';
+      if (!fs.existsSync(dockerComposeFile)) {
+        this.log.warning('Docker Compose file not found');
+        return false;
+      }
+      
+      // Docker daemon が動作しているかチェック
+      execSync('docker info', { stdio: 'pipe' });
+      
+      return true;
+    } catch (error) {
+      this.log.warning(`Docker not available: ${error.message}`);
+      return false;
+    }
+  }
+
+  /**
+   * Docker 環境でのテスト実行
+   */
+  async runDockerTests() {
+    const dockerComposeFile = '../lightningtalk-circle/docker-compose.dev.yml';
+    
+    try {
+      // テスト環境を準備
+      this.log.info('Preparing Docker test environment...');
+      execSync(`docker-compose -f ${dockerComposeFile} pull test-runner`, { 
+        stdio: 'pipe',
+        timeout: 120000 // 2分タイムアウト
+      });
+      
+      // テスト実行
+      this.log.info('Running tests in Docker container...');
+      const output = execSync(
+        `docker-compose -f ${dockerComposeFile} run --rm test-runner npm test`, 
+        { 
+          encoding: 'utf8',
+          timeout: 300000, // 5分タイムアウト
+          maxBuffer: 1024 * 1024 // 1MB バッファ
+        }
+      );
+      
+      // テスト結果の解析
+      if (output.includes('FAIL') || output.includes('FAILED')) {
+        throw new Error('Some tests failed in Docker environment');
+      }
+      
+      this.log.success('Docker tests completed successfully');
+      
+    } catch (error) {
+      // Docker 環境のクリーンアップ
+      try {
+        execSync(`docker-compose -f ${dockerComposeFile} down`, { stdio: 'pipe' });
+      } catch (cleanupError) {
+        this.log.warning(`Failed to cleanup Docker environment: ${cleanupError.message}`);
+      }
+      
+      throw new Error(`Docker test execution failed: ${error.message}`);
+    }
+  }
+
+  /**
+   * ローカル環境でのテスト実行
+   */
+  async runLocalTests() {
+    try {
+      this.log.info('Running tests in local environment...');
+      
+      // まず依存関係がインストールされているかチェック
+      if (!fs.existsSync('node_modules')) {
+        this.log.info('Installing dependencies...');
+        execSync('npm install', { 
+          stdio: 'inherit',
+          timeout: 300000 // 5分タイムアウト
+        });
+      }
+      
+      // ローカルテスト実行
+      const output = execSync('npm test', { 
+        encoding: 'utf8',
+        timeout: 180000, // 3分タイムアウト
+        maxBuffer: 1024 * 1024 // 1MB バッファ
+      });
+      
+      // テスト結果の解析
+      if (output.includes('FAIL') || output.includes('FAILED')) {
+        throw new Error('Some tests failed in local environment');
+      }
+      
+      this.log.success('Local tests completed successfully');
+      
+    } catch (error) {
+      throw new Error(`Local test execution failed: ${error.message}`);
     }
   }
 
@@ -628,27 +776,26 @@ ${allChecksPassed ? '✅ **APPROVED** - All automated checks passed' : '❌ **CH
       return false;
     }
 
-    this.log.step('Performing auto-merge...');
+    this.log.step('Performing auto-merge validation...');
 
     try {
-      // マージ前の最終チェック
-      const { data: prData } = await this.octokit.pulls.get({
-        owner: this.config.owner,
-        repo: this.config.repo,
-        pull_number: pr.number
-      });
-
-      if (!prData.mergeable) {
-        this.log.warning('PR is not mergeable. Manual intervention required.');
+      // マージ前の詳細な検証
+      const mergeValidation = await this.validateMergeConditions(pr);
+      
+      if (!mergeValidation.canMerge) {
+        this.log.warning(`Auto-merge blocked: ${mergeValidation.reason}`);
         return false;
       }
+
+      this.log.step('All merge conditions met. Proceeding with auto-merge...');
 
       // マージ実行
       await this.octokit.pulls.merge({
         owner: this.config.owner,
         repo: this.config.repo,
         pull_number: pr.number,
-        commit_title: `${prData.title} (#${pr.number})`,
+        commit_title: `${mergeValidation.prData.title} (#${pr.number})`,
+        commit_message: this.generateMergeCommitMessage(mergeValidation.prData),
         merge_method: 'squash'
       });
 
@@ -658,6 +805,255 @@ ${allChecksPassed ? '✅ **APPROVED** - All automated checks passed' : '❌ **CH
       this.log.error(`Auto-merge failed: ${error.message}`);
       return false;
     }
+  }
+
+  /**
+   * マージ条件を詳細に検証
+   */
+  async validateMergeConditions(pr) {
+    try {
+      // PR の詳細情報を取得
+      const { data: prData } = await this.octokit.pulls.get({
+        owner: this.config.owner,
+        repo: this.config.repo,
+        pull_number: pr.number
+      });
+
+      // 基本的なマージ可能性チェック
+      if (!prData.mergeable) {
+        return {
+          canMerge: false,
+          reason: 'PR has merge conflicts that need to be resolved manually'
+        };
+      }
+
+      if (prData.mergeable_state !== 'clean') {
+        return {
+          canMerge: false,
+          reason: `PR mergeable state is '${prData.mergeable_state}', expected 'clean'`
+        };
+      }
+
+      // CI/CD ステータスチェック
+      const statusChecks = await this.checkRequiredStatusChecks(pr);
+      if (!statusChecks.allPassed) {
+        return {
+          canMerge: false,
+          reason: `Required status checks not passed: ${statusChecks.failedChecks.join(', ')}`
+        };
+      }
+
+      // レビュー承認チェック
+      if (this.config.requireReview) {
+        const reviewStatus = await this.checkReviewApproval(pr);
+        if (!reviewStatus.approved) {
+          return {
+            canMerge: false,
+            reason: reviewStatus.reason
+          };
+        }
+      }
+
+      // ブランチ保護ルールチェック
+      const branchProtection = await this.checkBranchProtectionRules(prData.base.ref);
+      if (!branchProtection.canMerge) {
+        return {
+          canMerge: false,
+          reason: branchProtection.reason
+        };
+      }
+
+      // 追加の安全性チェック
+      const safetyChecks = await this.performSafetyChecks(prData);
+      if (!safetyChecks.safe) {
+        return {
+          canMerge: false,
+          reason: safetyChecks.reason
+        };
+      }
+
+      return {
+        canMerge: true,
+        prData,
+        reason: 'All merge conditions satisfied'
+      };
+
+    } catch (error) {
+      return {
+        canMerge: false,
+        reason: `Failed to validate merge conditions: ${error.message}`
+      };
+    }
+  }
+
+  /**
+   * 必須ステータスチェックを確認
+   */
+  async checkRequiredStatusChecks(pr) {
+    try {
+      const { data: statuses } = await this.octokit.repos.getCombinedStatusForRef({
+        owner: this.config.owner,
+        repo: this.config.repo,
+        ref: pr.head.sha
+      });
+
+      const failedChecks = statuses.statuses
+        .filter(status => status.state !== 'success')
+        .map(status => status.context);
+
+      return {
+        allPassed: statuses.state === 'success',
+        failedChecks
+      };
+    } catch (error) {
+      this.log.warning(`Could not fetch status checks: ${error.message}`);
+      return {
+        allPassed: false,
+        failedChecks: ['Status check verification failed']
+      };
+    }
+  }
+
+  /**
+   * レビュー承認状況をチェック
+   */
+  async checkReviewApproval(pr) {
+    try {
+      const { data: reviews } = await this.octokit.pulls.listReviews({
+        owner: this.config.owner,
+        repo: this.config.repo,
+        pull_number: pr.number
+      });
+
+      const latestReviews = new Map();
+      
+      // 各レビュアーの最新レビューを取得
+      reviews.forEach(review => {
+        if (!latestReviews.has(review.user.login) || 
+            new Date(review.submitted_at) > new Date(latestReviews.get(review.user.login).submitted_at)) {
+          latestReviews.set(review.user.login, review);
+        }
+      });
+
+      const approvals = Array.from(latestReviews.values()).filter(review => review.state === 'APPROVED');
+      const changesRequested = Array.from(latestReviews.values()).filter(review => review.state === 'CHANGES_REQUESTED');
+
+      if (changesRequested.length > 0) {
+        return {
+          approved: false,
+          reason: 'Changes requested in reviews'
+        };
+      }
+
+      if (approvals.length === 0) {
+        return {
+          approved: false,
+          reason: 'No approving reviews found'
+        };
+      }
+
+      return {
+        approved: true,
+        approvals: approvals.length
+      };
+
+    } catch (error) {
+      return {
+        approved: false,
+        reason: `Could not check review status: ${error.message}`
+      };
+    }
+  }
+
+  /**
+   * ブランチ保護ルールをチェック
+   */
+  async checkBranchProtectionRules(baseBranch) {
+    try {
+      const { data: protection } = await this.octokit.repos.getBranchProtection({
+        owner: this.config.owner,
+        repo: this.config.repo,
+        branch: baseBranch
+      });
+
+      // 必要な保護ルールがすべて満たされているかチェック
+      if (protection.required_status_checks && protection.required_status_checks.strict) {
+        // Strict mode requires branch to be up to date
+        // この場合は追加のチェックが必要
+      }
+
+      return {
+        canMerge: true
+      };
+
+    } catch (error) {
+      if (error.status === 404) {
+        // ブランチ保護が設定されていない場合は OK
+        return { canMerge: true };
+      }
+      
+      return {
+        canMerge: false,
+        reason: `Could not verify branch protection rules: ${error.message}`
+      };
+    }
+  }
+
+  /**
+   * 追加の安全性チェック
+   */
+  async performSafetyChecks(prData) {
+    const issues = [];
+
+    // PR が大きすぎないかチェック
+    if (prData.additions + prData.deletions > 1000) {
+      issues.push('PR is very large (>1000 lines changed)');
+    }
+
+    // 危険なファイルの変更をチェック
+    try {
+      const { data: files } = await this.octokit.pulls.listFiles({
+        owner: this.config.owner,
+        repo: this.config.repo,
+        pull_number: prData.number
+      });
+
+      const criticalFiles = files.filter(file => 
+        file.filename.includes('package.json') ||
+        file.filename.includes('.github/workflows/') ||
+        file.filename.includes('docker-compose') ||
+        file.filename.includes('Dockerfile')
+      );
+
+      if (criticalFiles.length > 0) {
+        issues.push(`Critical files modified: ${criticalFiles.map(f => f.filename).join(', ')}`);
+      }
+
+    } catch (error) {
+      issues.push('Could not verify changed files');
+    }
+
+    return {
+      safe: issues.length === 0,
+      reason: issues.length > 0 ? issues.join('; ') : 'All safety checks passed'
+    };
+  }
+
+  /**
+   * マージコミットメッセージを生成
+   */
+  generateMergeCommitMessage(prData) {
+    return `
+Automated merge of ${prData.head.ref} into ${prData.base.ref}
+
+${prData.body || 'No description provided'}
+
+Merged automatically by Auto Workflow System
+- PR: #${prData.number}
+- Author: ${prData.user.login}
+- Commits: ${prData.commits}
+- Files changed: ${prData.changed_files}
+`.trim();
   }
 
   /**

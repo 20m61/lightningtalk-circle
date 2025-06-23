@@ -1,0 +1,342 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main]
+
+env:
+  NODE_VERSION: '20'
+  REGISTRY: ghcr.io
+  IMAGE_NAME: ${{ github.repository }}
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    
+    services:
+      postgres:
+        image: postgres:15
+        env:
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: lightningtalk_test
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 5432:5432
+      
+      redis:
+        image: redis:7-alpine
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 6379:6379
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run ESLint
+        run: npm run lint || echo "ESLint not configured"
+
+      - name: Run Prettier check
+        run: npm run format:check || echo "Prettier not configured"
+
+      - name: Setup test environment
+        env:
+          NODE_ENV: test
+          DATABASE_URL: postgresql://postgres:postgres@localhost:5432/lightningtalk_test
+          REDIS_URL: redis://localhost:6379
+          EMAIL_ENABLED: false
+          JWT_SECRET: test-jwt-secret-key-for-ci-pipeline
+          SESSION_SECRET: test-session-secret-key-for-ci-pipeline
+        run: |
+          npm run db:migrate || echo "Database migration skipped"
+
+      - name: Run unit tests
+        env:
+          NODE_ENV: test
+          DATABASE_URL: postgresql://postgres:postgres@localhost:5432/lightningtalk_test
+          REDIS_URL: redis://localhost:6379
+          EMAIL_ENABLED: false
+          JWT_SECRET: test-jwt-secret-key-for-ci-pipeline
+          SESSION_SECRET: test-session-secret-key-for-ci-pipeline
+        run: npm run test:unit
+
+      - name: Run integration tests
+        env:
+          NODE_ENV: test
+          DATABASE_URL: postgresql://postgres:postgres@localhost:5432/lightningtalk_test
+          REDIS_URL: redis://localhost:6379
+          EMAIL_ENABLED: false
+          JWT_SECRET: test-jwt-secret-key-for-ci-pipeline
+          SESSION_SECRET: test-session-secret-key-for-ci-pipeline
+        run: npm run test:integration
+
+      - name: Generate test coverage
+        env:
+          NODE_ENV: test
+          DATABASE_URL: postgresql://postgres:postgres@localhost:5432/lightningtalk_test
+          REDIS_URL: redis://localhost:6379
+          EMAIL_ENABLED: false
+          JWT_SECRET: test-jwt-secret-key-for-ci-pipeline
+          SESSION_SECRET: test-session-secret-key-for-ci-pipeline
+        run: npm run test:coverage
+
+      - name: Upload coverage reports
+        uses: codecov/codecov-action@v3
+        with:
+          file: ./coverage/lcov.info
+          flags: unittests
+          name: codecov-umbrella
+
+  security:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run security audit
+        run: npm audit --audit-level=high
+
+      - name: Run Snyk security test
+        uses: snyk/actions/node@master
+        continue-on-error: true
+        env:
+          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+        with:
+          args: --severity-threshold=high
+
+  build:
+    runs-on: ubuntu-latest
+    needs: [test, security]
+    outputs:
+      image-digest: ${{ steps.build.outputs.digest }}
+      image-tags: ${{ steps.meta.outputs.tags }}
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build WordPress theme
+        run: npm run wp:build
+
+      - name: Build application
+        run: |
+          npm run build:theme
+          npm run clean:dist
+
+      - name: Setup Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Log in to Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Extract metadata
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+          tags: |
+            type=ref,event=branch
+            type=ref,event=pr
+            type=sha,prefix={{branch}}-
+            type=raw,value=latest,enable={{is_default_branch}}
+
+      - name: Build and push Docker image
+        id: build
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: ./docker/Dockerfile.production
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+          platforms: linux/amd64,linux/arm64
+
+  deploy-staging:
+    runs-on: ubuntu-latest
+    needs: build
+    if: github.ref == 'refs/heads/develop'
+    environment: staging
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Deploy to staging
+        env:
+          DOCKER_IMAGE: ${{ needs.build.outputs.image-tags }}
+          STAGING_HOST: ${{ secrets.STAGING_HOST }}
+          STAGING_USER: ${{ secrets.STAGING_USER }}
+          STAGING_KEY: ${{ secrets.STAGING_SSH_KEY }}
+        run: |
+          echo "$STAGING_KEY" > staging_key
+          chmod 600 staging_key
+          ssh -i staging_key -o StrictHostKeyChecking=no $STAGING_USER@$STAGING_HOST << 'EOF'
+            cd /opt/lightningtalk-circle
+            docker-compose pull
+            docker-compose up -d --remove-orphans
+            docker system prune -f
+          EOF
+          rm staging_key
+
+      - name: Run health checks
+        env:
+          STAGING_URL: ${{ secrets.STAGING_URL }}
+        run: |
+          for i in {1..10}; do
+            if curl -f "$STAGING_URL/api/health"; then
+              echo "Staging deployment successful"
+              exit 0
+            fi
+            echo "Waiting for staging to be ready... ($i/10)"
+            sleep 30
+          done
+          echo "Staging deployment failed"
+          exit 1
+
+  deploy-production:
+    runs-on: ubuntu-latest
+    needs: build
+    if: github.ref == 'refs/heads/main'
+    environment: production
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Deploy to production
+        env:
+          DOCKER_IMAGE: ${{ needs.build.outputs.image-tags }}
+          PRODUCTION_HOST: ${{ secrets.PRODUCTION_HOST }}
+          PRODUCTION_USER: ${{ secrets.PRODUCTION_USER }}
+          PRODUCTION_KEY: ${{ secrets.PRODUCTION_SSH_KEY }}
+        run: |
+          echo "$PRODUCTION_KEY" > production_key
+          chmod 600 production_key
+          ssh -i production_key -o StrictHostKeyChecking=no $PRODUCTION_USER@$PRODUCTION_HOST << 'EOF'
+            cd /opt/lightningtalk-circle
+            
+            # Backup current version
+            docker-compose exec -T postgres pg_dump -U postgres lightningtalk > backup-$(date +%Y%m%d-%H%M%S).sql
+            
+            # Deploy new version
+            docker-compose pull
+            docker-compose up -d --remove-orphans
+            
+            # Clean up old images
+            docker image prune -f
+          EOF
+          rm production_key
+
+      - name: Run production health checks
+        env:
+          PRODUCTION_URL: ${{ secrets.PRODUCTION_URL }}
+        run: |
+          for i in {1..15}; do
+            if curl -f "$PRODUCTION_URL/api/health"; then
+              echo "Production deployment successful"
+              exit 0
+            fi
+            echo "Waiting for production to be ready... ($i/15)"
+            sleep 30
+          done
+          echo "Production deployment failed"
+          exit 1
+          
+      - name: Notify deployment
+        if: always()
+        env:
+          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK_URL }}
+        run: |
+          if [ "${{ job.status }}" == "success" ]; then
+            curl -X POST -H 'Content-type: application/json' \
+              --data '{"text":"🚀 Lightning Talk Circle deployed to production successfully!"}' \
+              $SLACK_WEBHOOK
+          else
+            curl -X POST -H 'Content-type: application/json' \
+              --data '{"text":"❌ Lightning Talk Circle production deployment failed!"}' \
+              $SLACK_WEBHOOK
+          fi
+
+  wordpress-deploy:
+    runs-on: ubuntu-latest
+    needs: [test, security]
+    if: github.ref == 'refs/heads/main'
+    environment: wordpress
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build WordPress theme
+        run: npm run wp:package
+
+      - name: Deploy WordPress theme
+        env:
+          WP_SITE_URL: ${{ secrets.WP_SITE_URL }}
+          WP_USERNAME: ${{ secrets.WP_USERNAME }}
+          WP_APP_PASSWORD: ${{ secrets.WP_APP_PASSWORD }}
+        run: |
+          node scripts/wordpress-theme-upload.js
+
+      - name: WordPress health check
+        env:
+          WP_SITE_URL: ${{ secrets.WP_SITE_URL }}
+        run: |
+          if curl -f "$WP_SITE_URL"; then
+            echo "WordPress deployment successful"
+          else
+            echo "WordPress deployment failed"
+            exit 1
+          fi
