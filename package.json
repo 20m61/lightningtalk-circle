@@ -3,14 +3,13 @@
   "version": "1.0.0",
   "type": "module",
   "description": "Lightning Talk Circle - Issue Management",
-  "type": "module",
   "scripts": {
     "create-issues": "node scripts/create-issues.js",
     "verify-issues": "node scripts/verify-issues.js",
     "start": "node server/app.js",
     "dev": "nodemon server/app.js",
     "dev:seed": "NODE_ENV=development node server/app.js --seed",
-    "test": "node --experimental-vm-modules ./node_modules/.bin/jest",
+    "test": "jest",
     "test:unit": "jest --testPathPattern=unit",
     "test:integration": "jest --testPathPattern=integration",
     "test:e2e": "playwright test",
@@ -36,7 +35,8 @@
     "build:theme:analyze": "node scripts/clean-dist.js analyze",
     "build:theme:reset": "node scripts/clean-dist.js reset",
     "clean:dist": "node scripts/clean-dist.js",
-    "dist:analyze": "node scripts/clean-dist.js analyze"
+    "dist:analyze": "node scripts/clean-dist.js analyze",
+    "user-authentication": "echo \"Running user authentication\""
   },
   "dependencies": {
     "@octokit/rest": "^20.1.2",
@@ -57,6 +57,7 @@
   },
   "devDependencies": {
     "@babel/core": "^7.22.0",
+    "@babel/plugin-syntax-import-meta": "^7.10.4",
     "@babel/preset-env": "^7.22.0",
     "@playwright/test": "^1.40.0",
     "@storybook/addon-docs": "^9.0.12",

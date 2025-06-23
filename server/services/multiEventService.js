@@ -399,7 +399,7 @@ class MultiEventService {
 
   async getActiveEvents(dateRange) {
     let query = `
-      SELECT * FROM events 
+      SELECT * FROM events
       WHERE status IN ('upcoming', 'ongoing', 'registration_open')
     `;
 
@@ -457,17 +457,17 @@ class MultiEventService {
     return start1 < end2 && start2 < end1;
   }
 
-  async checkResourceConflicts(events) {
+  async checkResourceConflicts(_events) {
     // リソース競合のロジック実装
     return [];
   }
 
-  async checkParticipantOverlaps(concurrentEvents) {
+  async checkParticipantOverlaps(_concurrentEvents) {
     // 参加者重複チェックのロジック実装
     return [];
   }
 
-  checkVenueTimeConflicts(concurrentEvents) {
+  checkVenueTimeConflicts(_concurrentEvents) {
     // 会場・時間競合チェックのロジック実装
     return [];
   }
@@ -532,58 +532,58 @@ class MultiEventService {
   }
 
   // 省略されたヘルパーメソッドの実装
-  async checkTimeConflicts(eventData) {
+  async checkTimeConflicts(_eventData) {
     return [];
   }
-  async checkVenueConflicts(eventData) {
+  async checkVenueConflicts(_eventData) {
     return [];
   }
-  async getEventsByIds(ids) {
+  async getEventsByIds(_ids) {
     return [];
   }
-  async getAvailableResources(type) {
+  async getAvailableResources(_type) {
     return [];
   }
-  async analyzeResourceAllocations(events, type) {
+  async analyzeResourceAllocations(_events, _type) {
     return {};
   }
-  async calculateOptimalAllocation(events, resources, strategy) {
+  async calculateOptimalAllocation(_events, _resources, _strategy) {
     return {};
   }
-  compareAllocations(current, optimal) {
+  compareAllocations(_current, _optimal) {
     return [];
   }
-  calculateAllocationEfficiency(allocation) {
+  calculateAllocationEfficiency(_allocation) {
     return 0.85;
   }
-  async getAllParticipants(timeRange) {
+  async getAllParticipants(_timeRange) {
     return [];
   }
-  identifyMultiEventParticipants(participants) {
+  identifyMultiEventParticipants(_participants) {
     return [];
   }
-  detectDuplicateRegistrations(participants) {
+  detectDuplicateRegistrations(_participants) {
     return [];
   }
-  calculateParticipantStatistics(all, multi) {
+  calculateParticipantStatistics(_all, _multi) {
     return {};
   }
-  analyzeParticipationPatterns(participants) {
+  analyzeParticipationPatterns(_participants) {
     return {};
   }
-  calculateEngagementLevels(participants) {
+  calculateEngagementLevels(_participants) {
     return {};
   }
-  async calculateRetentionRates(participants) {
+  async calculateRetentionRates(_participants) {
     return {};
   }
-  analyzeCombinedTrends(analytics, granularity) {
+  analyzeCombinedTrends(_analytics, _granularity) {
     return {};
   }
-  generateCombinedForecasts(trends, analytics) {
+  generateCombinedForecasts(_trends, _analytics) {
     return {};
   }
-  generateCombinedInsights(stats, comparisons, trends, forecasts) {
+  generateCombinedInsights(_stats, _comparisons, _trends, _forecasts) {
     return {};
   }
 }
@@ -657,4 +657,5 @@ class EventScheduler {
   }
 }
 
-module.exports = new MultiEventService();
+const multiEventService = new MultiEventService();
+export default multiEventService;

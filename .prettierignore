@@ -61,3 +61,12 @@ wordpress/wp-content/themes/cocoon-child-master/
 CHANGELOG.md
 LICENSE
 *.lock
+
+# Git hooks and scripts
+.husky/
+.git/
+
+# Configuration files
+.prettierignore
+.eslintignore
+.gitignore

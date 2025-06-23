@@ -1,3 +1,4 @@
+import { jest } from '@jest/globals';
 /**
  * Database Service Unit Tests
  * データベースサービスの単体テスト
@@ -12,7 +13,7 @@ describe('DatabaseService', () => {
     database = new DatabaseService();
   });
 
-  afterEach(async() => {
+  afterEach(async () => {
     if (database && database.close) {
       await database.close();
     }
@@ -49,7 +50,7 @@ describe('DatabaseService', () => {
   });
 
   describe('query method', () => {
-    it('should handle simple queries', async() => {
+    it('should handle simple queries', async () => {
       // モックデータベースクエリ
       database.query = jest.fn().mockResolvedValue([
         { id: 1, name: 'Test Event', status: 'upcoming' },
@@ -69,7 +70,7 @@ describe('DatabaseService', () => {
       expect(database.query).toHaveBeenCalledWith('SELECT * FROM events');
     });
 
-    it('should handle parameterized queries', async() => {
+    it('should handle parameterized queries', async () => {
       database.query = jest
         .fn()
         .mockResolvedValue([{ id: 1, name: 'Test Event', status: 'upcoming' }]);
@@ -80,7 +81,7 @@ describe('DatabaseService', () => {
       expect(database.query).toHaveBeenCalledWith('SELECT * FROM events WHERE id = ?', [1]);
     });
 
-    it('should handle query errors', async() => {
+    it('should handle query errors', async () => {
       database.query = jest.fn().mockRejectedValue(new Error('Database connection failed'));
 
       await expect(database.query('SELECT * FROM events')).rejects.toThrow(
@@ -90,7 +91,7 @@ describe('DatabaseService', () => {
   });
 
   describe('transaction support', () => {
-    it('should support transactions', async() => {
+    it('should support transactions', async () => {
       const mockTransaction = {
         query: jest.fn().mockResolvedValue([{ id: 1 }]),
         commit: jest.fn().mockResolvedValue(true),
@@ -107,7 +108,7 @@ describe('DatabaseService', () => {
   });
 
   describe('connection management', () => {
-    it('should initialize connection', async() => {
+    it('should initialize connection', async () => {
       database.initialize = jest.fn().mockResolvedValue(true);
 
       const result = await database.initialize();
@@ -116,7 +117,7 @@ describe('DatabaseService', () => {
       expect(database.initialize).toHaveBeenCalled();
     });
 
-    it('should wait for connection', async() => {
+    it('should wait for connection', async () => {
       database.waitForConnection = jest.fn().mockResolvedValue(true);
 
       const result = await database.waitForConnection();
@@ -125,7 +126,7 @@ describe('DatabaseService', () => {
       expect(database.waitForConnection).toHaveBeenCalled();
     });
 
-    it('should close connection gracefully', async() => {
+    it('should close connection gracefully', async () => {
       database.close = jest.fn().mockResolvedValue(true);
 
       const result = await database.close();
@@ -141,7 +142,7 @@ describe('DatabaseService', () => {
       database.query = jest.fn();
     });
 
-    it('should insert data', async() => {
+    it('should insert data', async () => {
       database.query.mockResolvedValue([{ insertId: 1 }]);
 
       const result = await database.query('INSERT INTO events (title, description) VALUES (?, ?)', [
@@ -152,7 +153,7 @@ describe('DatabaseService', () => {
       expect(result[0].insertId).toBe(1);
     });
 
-    it('should update data', async() => {
+    it('should update data', async () => {
       database.query.mockResolvedValue([{ affectedRows: 1 }]);
 
       const result = await database.query('UPDATE events SET title = ? WHERE id = ?', [
@@ -163,7 +164,7 @@ describe('DatabaseService', () => {
       expect(result[0].affectedRows).toBe(1);
     });
 
-    it('should delete data', async() => {
+    it('should delete data', async () => {
       database.query.mockResolvedValue([{ affectedRows: 1 }]);
 
       const result = await database.query('DELETE FROM events WHERE id = ?', [1]);
@@ -173,19 +174,19 @@ describe('DatabaseService', () => {
   });
 
   describe('error handling', () => {
-    it('should handle connection errors', async() => {
+    it('should handle connection errors', async () => {
       database.initialize = jest.fn().mockRejectedValue(new Error('Connection refused'));
 
       await expect(database.initialize()).rejects.toThrow('Connection refused');
     });
 
-    it('should handle query timeout', async() => {
+    it('should handle query timeout', async () => {
       database.query = jest.fn().mockRejectedValue(new Error('Query timeout'));
 
       await expect(database.query('SELECT * FROM events')).rejects.toThrow('Query timeout');
     });
 
-    it('should handle invalid SQL', async() => {
+    it('should handle invalid SQL', async () => {
       database.query = jest.fn().mockRejectedValue(new Error('Syntax error in SQL statement'));
 
       await expect(database.query('INVALID SQL')).rejects.toThrow('Syntax error in SQL statement');
@@ -193,7 +194,7 @@ describe('DatabaseService', () => {
   });
 
   describe('data seeding', () => {
-    it('should seed database with test data', async() => {
+    it('should seed database with test data', async () => {
       const seedData = {
         events: [
           {
@@ -214,7 +215,7 @@ describe('DatabaseService', () => {
   });
 
   describe('performance', () => {
-    it('should handle multiple concurrent queries', async() => {
+    it('should handle multiple concurrent queries', async () => {
       database.query = jest
         .fn()
         .mockResolvedValueOnce([{ id: 1 }])
@@ -233,7 +234,7 @@ describe('DatabaseService', () => {
       expect(database.query).toHaveBeenCalledTimes(3);
     });
 
-    it('should handle large result sets efficiently', async() => {
+    it('should handle large result sets efficiently', async () => {
       const largeDataset = Array.from({ length: 1000 }, (_, i) => ({
         id: i + 1,
         name: `Event ${i + 1}`,

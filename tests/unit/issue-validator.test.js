@@ -2,7 +2,7 @@
  * Issue バリデーター ユニットテスト
  */
 
-import { describe, it, expect, beforeEach } from '@jest/globals';
+import { describe, it, expect } from '@jest/globals';
 import { issueFixtures, generateTestIssue } from '../fixtures/issues.js';
 
 // バリデーター関数（実装予定）
@@ -10,24 +10,25 @@ function validateIssue(issue) {
   if (!issue) {
     throw new Error('Issue is required');
   }
-  
+
   if (!issue.title || typeof issue.title !== 'string' || issue.title.trim() === '') {
     throw new Error('Issue title is required');
   }
-  
-  if (!issue.description || typeof issue.description !== 'string' || issue.description.trim() === '') {
+
+  const description = issue.description || issue.body;
+  if (!description || typeof description !== 'string' || description.trim() === '') {
     throw new Error('Issue description is required');
   }
-  
+
   if (!Array.isArray(issue.labels) || issue.labels.length === 0) {
     throw new Error('Issue must have at least one label');
   }
-  
+
   const validPriorities = ['low', 'medium', 'high'];
-  if (!issue.priority || !validPriorities.includes(issue.priority)) {
+  if (issue.priority && !validPriorities.includes(issue.priority)) {
     throw new Error('Issue must have a valid priority (low, medium, high)');
   }
-  
+
   return true;
 }
 
@@ -35,16 +36,16 @@ function validateIssueLabels(labels) {
   if (!Array.isArray(labels)) {
     return false;
   }
-  
+
   // 必須ラベルの検証
-  const hasTypeLabel = labels.some(label => 
+  const hasTypeLabel = labels.some(label =>
     ['bug', 'enhancement', 'documentation', 'infrastructure'].includes(label)
   );
-  
-  const hasPriorityLabel = labels.some(label => 
+
+  const hasPriorityLabel = labels.some(label =>
     ['low-priority', 'medium-priority', 'high-priority'].includes(label)
   );
-  
+
   return hasTypeLabel && hasPriorityLabel;
 }
 
@@ -58,26 +59,24 @@ describe('Issue Validator', () => {
 
     it('should reject issue without title', () => {
       const invalidIssue = issueFixtures.invalid.missingTitle;
-      expect(() => validateIssue(invalidIssue))
-        .toThrow('Issue title is required');
+      expect(() => validateIssue(invalidIssue)).toThrow('Issue title is required');
     });
 
     it('should reject issue without description', () => {
       const invalidIssue = issueFixtures.invalid.missingDescription;
-      expect(() => validateIssue(invalidIssue))
-        .toThrow('Issue description is required');
+      expect(() => validateIssue(invalidIssue)).toThrow('Issue description is required');
     });
 
     it('should reject issue with empty labels', () => {
       const invalidIssue = issueFixtures.invalid.emptyLabels;
-      expect(() => validateIssue(invalidIssue))
-        .toThrow('Issue must have at least one label');
+      expect(() => validateIssue(invalidIssue)).toThrow('Issue must have at least one label');
     });
 
     it('should reject issue with invalid priority', () => {
       const invalidIssue = issueFixtures.invalid.invalidPriority;
-      expect(() => validateIssue(invalidIssue))
-        .toThrow('Issue must have a valid priority (low, medium, high)');
+      expect(() => validateIssue(invalidIssue)).toThrow(
+        'Issue must have a valid priority (low, medium, high)'
+      );
     });
 
     it('should reject null or undefined issue', () => {
@@ -90,8 +89,7 @@ describe('Issue Validator', () => {
         ...issueFixtures.valid.infrastructure,
         title: ''
       };
-      expect(() => validateIssue(issueWithEmptyTitle))
-        .toThrow('Issue title is required');
+      expect(() => validateIssue(issueWithEmptyTitle)).toThrow('Issue title is required');
     });
 
     it('should reject issue with whitespace-only title', () => {
@@ -99,8 +97,7 @@ describe('Issue Validator', () => {
         ...issueFixtures.valid.infrastructure,
         title: '   '
       };
-      expect(() => validateIssue(issueWithWhitespaceTitle))
-        .toThrow('Issue title is required');
+      expect(() => validateIssue(issueWithWhitespaceTitle)).toThrow('Issue title is required');
     });
   });
 

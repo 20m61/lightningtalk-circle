@@ -1,5 +1,5 @@
 import { jest } from '@jest/globals';
-import fs from 'fs';
+import * as fs from 'fs';
 import AutoWorkflowOrchestrator from '../../scripts/auto-workflow.js';
 
 describe('AutoWorkflowOrchestrator', () => {
@@ -31,21 +31,15 @@ describe('AutoWorkflowOrchestrator', () => {
   });
 
   describe('createWorktree', () => {
-    it('worktree作成が正常に動作する（fs, execSyncをモック）', async() => {
+    it('worktree作成が正常に動作する（fs, execSyncをモック）', async () => {
       // fs, execSyncをモック
       const mockMkdirSync = jest.spyOn(fs, 'mkdirSync').mockImplementation(() => {});
       const mockExistsSync = jest.spyOn(fs, 'existsSync').mockImplementation(p => {
-        if (p === orchestrator.config.worktreeBase) {
-          return false;
-        }
-        if (p === '.env.example') {
-          return true;
-        }
-        return false;
+        return p === '.env.example';
       });
       const mockCopyFileSync = jest.spyOn(fs, 'copyFileSync').mockImplementation(() => {});
       const execSync = jest.fn();
-      // execSyncをグローバルに差し替え
+      // execSyncをorchestratorに差し替え
       orchestrator.execSync = execSync;
       const branchName = 'feature/test-branch';
       const result = await orchestrator.createWorktree(branchName);
@@ -66,15 +60,9 @@ describe('AutoWorkflowOrchestrator', () => {
   });
 
   describe('implementFeature', () => {
-    it('featureファイルとpackage.jsonが生成される', async() => {
+    it('featureファイルとpackage.jsonが生成される', async () => {
       const mockExistsSync = jest.spyOn(fs, 'existsSync').mockImplementation(p => {
-        if (p === 'src/features') {
-          return false;
-        }
-        if (p === 'package.json') {
-          return true;
-        }
-        return false;
+        return p === 'package.json';
       });
       const mockMkdirSync = jest.spyOn(fs, 'mkdirSync').mockImplementation(() => {});
       const mockWriteFileSync = jest.spyOn(fs, 'writeFileSync').mockImplementation(() => {});

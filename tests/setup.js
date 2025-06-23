@@ -1,9 +1,10 @@
+import { jest } from '@jest/globals';
 /**
  * Jest テスト環境のセットアップファイル
  */
 
-const fs = require('fs-extra');
-const path = require('path');
+import fs from 'fs-extra';
+import path from 'path';
 
 // テスト環境変数の設定
 process.env.NODE_ENV = 'test';
@@ -20,8 +21,6 @@ beforeAll(async () => {
   // テスト用データディレクトリの作成
   const testDataDir = path.join(process.cwd(), 'tests', 'data');
   await fs.ensureDir(testDataDir);
-  
-  console.log('🧪 Test environment setup completed');
 });
 
 // 各テスト後のクリーンアップ
@@ -37,8 +36,6 @@ afterAll(async () => {
   if (await fs.pathExists(testDataDir)) {
     await fs.remove(testDataDir);
   }
-  
-  console.log('🧹 Test environment cleanup completed');
 });
 
 // グローバルモック設定
@@ -57,38 +54,86 @@ if (process.env.SILENCE_CONSOLE === 'true') {
 // カスタムマッチャーの追加
 expect.extend({
   toBeValidIssue(received) {
-    const pass = received &&
-                 typeof received.title === 'string' &&
-                 received.title.length > 0 &&
-                 Array.isArray(received.labels) &&
-                 received.labels.length > 0;
-    
-    if (pass) {
+    const requiredFields = [
+      'id',
+      'title',
+      'body',
+      'state',
+      'created_at',
+      'updated_at',
+      'user',
+      'labels',
+      'assignees',
+      'comments',
+      'number'
+    ];
+    const hasAllFields = requiredFields.every(field =>
+      Object.prototype.hasOwnProperty.call(received, field)
+    );
+    if (hasAllFields) {
       return {
-        message: () => `expected ${received} not to be a valid issue`,
         pass: true,
+        message: () => 'Issue object has all required fields'
       };
     } else {
       return {
-        message: () => `expected ${received} to be a valid issue with title and labels`,
         pass: false,
+        message: () => 'Issue object is missing required fields'
       };
     }
   },
-  
-  toHaveGitHubIssueStructure(received) {
-    const requiredFields = ['number', 'title', 'state', 'html_url'];
-    const hasAllFields = requiredFields.every(field => received.hasOwnProperty(field));
-    
+  toBeValidEvent(received) {
+    const requiredFields = [
+      'id',
+      'title',
+      'date',
+      'venue',
+      'participants',
+      'speakers',
+      'status',
+      'created_at',
+      'updated_at'
+    ];
+    const hasAllFields = requiredFields.every(field =>
+      Object.prototype.hasOwnProperty.call(received, field)
+    );
     if (hasAllFields) {
       return {
-        message: () => `expected ${received} not to have GitHub issue structure`,
         pass: true,
+        message: () => 'Event object has all required fields'
       };
     } else {
       return {
-        message: () => `expected ${received} to have GitHub issue structure with fields: ${requiredFields.join(', ')}`,
         pass: false,
+        message: () => 'Event object is missing required fields'
+      };
+    }
+  },
+  toHaveGitHubIssueStructure(received) {
+    const requiredFields = [
+      'id',
+      'number',
+      'title',
+      'body',
+      'state',
+      'created_at',
+      'updated_at',
+      'user',
+      'labels',
+      'html_url'
+    ];
+    const hasAllFields = requiredFields.every(field =>
+      Object.prototype.hasOwnProperty.call(received, field)
+    );
+    if (hasAllFields) {
+      return {
+        pass: true,
+        message: () => 'GitHub Issue has all required API fields'
+      };
+    } else {
+      return {
+        pass: false,
+        message: () => 'GitHub Issue is missing required API fields'
       };
     }
   }

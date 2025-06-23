@@ -1,8 +1,8 @@
 import express from 'express';
-import notificationService from '../services/notificationService.js';
-import { logger } from '../middleware/logger.js';
 import { body, query, validationResult } from 'express-validator';
 import { v4 as uuidv4 } from 'uuid';
+import { logger } from '../middleware/logger.js';
+import notificationService from '../services/notificationService.js';
 
 const router = express.Router();
 

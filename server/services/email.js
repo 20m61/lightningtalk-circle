@@ -3,172 +3,206 @@
  * Handles all email communications
  */
 
+import { logger } from '../middleware/logger.js';
+
 export class EmailService {
-    constructor() {
-        this.enabled = process.env.EMAIL_ENABLED === 'true';
-        this.from = process.env.EMAIL_FROM || 'noreply@lightningtalk.example.com';
-        this.templates = this.initializeTemplates();
-        
-        if (this.enabled) {
-            this.setupEmailProvider();
+  constructor(config = {}) {
+    this.enabled = process.env.EMAIL_ENABLED === 'true';
+    this.from = process.env.EMAIL_FROM || 'noreply@lightningtalk.example.com';
+    this.templates = this.initializeTemplates();
+    this.provider = config.provider || 'mock';
+    this.config = {
+      provider: config.provider || 'mock',
+      apiKey: config.apiKey || '',
+      fromEmail: config.fromEmail || this.from
+    };
+    if (this.enabled) {
+      this.setupEmailProvider();
+    }
+  }
+
+  setupEmailProvider() {
+    // In a real implementation, you would set up nodemailer or another email service
+    // For now, we'll simulate email sending
+    logger.info('📧 Email service initialized (simulation mode)');
+  }
+
+  initializeTemplates() {
+    return {
+      registrationConfirmation: {
+        subject: '🎉 ライトニングトーク参加登録完了',
+        template: this.getRegistrationConfirmationTemplate()
+      },
+      speakerConfirmation: {
+        subject: '🎤 発表申込み受付完了',
+        template: this.getSpeakerConfirmationTemplate()
+      },
+      eventReminder: {
+        subject: '⚡ ライトニングトーク開催間近のお知らせ',
+        template: this.getEventReminderTemplate()
+      },
+      eventCancellation: {
+        subject: '⚠️ イベント中止のお知らせ',
+        template: this.getEventCancellationTemplate()
+      },
+      feedbackRequest: {
+        subject: '💭 イベントの感想をお聞かせください',
+        template: this.getFeedbackRequestTemplate()
+      }
+    };
+  }
+
+  async sendRegistrationConfirmation(participant, event) {
+    if (!this.enabled) {
+      logger.info('📧 [SIMULATED] Registration confirmation email sent to:', participant.email);
+      return;
+    }
+
+    const template = this.templates.registrationConfirmation;
+    const html = template.template
+      .replace('{{participantName}}', participant.name)
+      .replace('{{eventTitle}}', event.title)
+      .replace('{{eventDate}}', this.formatDate(event.date))
+      .replace('{{eventVenue}}', event.venue.name)
+      .replace('{{participationType}}', this.formatParticipationType(participant.participationType))
+      .replace('{{onlineUrl}}', event.venue.onlineUrl || '');
+
+    await this.sendEmail({
+      to: participant.email,
+      subject: template.subject,
+      html
+    });
+  }
+
+  async sendSpeakerConfirmation(participant, talk, event) {
+    if (!this.enabled) {
+      logger.info('📧 [SIMULATED] Speaker confirmation email sent to:', participant.email);
+      return;
+    }
+
+    const template = this.templates.speakerConfirmation;
+    const html = template.template
+      .replace('{{speakerName}}', participant.name)
+      .replace('{{talkTitle}}', talk.title)
+      .replace('{{eventTitle}}', event.title)
+      .replace('{{eventDate}}', this.formatDate(event.date))
+      .replace('{{talkDuration}}', talk.duration)
+      .replace('{{category}}', this.formatCategory(talk.category));
+
+    await this.sendEmail({
+      to: participant.email,
+      subject: template.subject,
+      html
+    });
+  }
+
+  async sendEventReminder(participant, event) {
+    if (!this.enabled) {
+      logger.info('📧 [SIMULATED] Event reminder email sent to:', participant.email);
+      return;
+    }
+
+    const daysUntil = Math.ceil(
+      Math.abs((new Date(event.date) - new Date()) / (1000 * 60 * 60 * 24))
+    );
+    const template = this.templates.eventReminder;
+    const html = template.template
+      .replace('{{participantName}}', participant.name)
+      .replace('{{eventTitle}}', event.title)
+      .replace('{{eventDate}}', this.formatDate(event.date))
+      .replace('{{daysUntil}}', daysUntil)
+      .replace('{{eventVenue}}', event.venue.name)
+      .replace('{{onlineUrl}}', event.venue.onlineUrl || '');
+
+    await this.sendEmail({
+      to: participant.email,
+      subject: template.subject,
+      html
+    });
+  }
+
+  async sendEventCancellation(participant, event, reason = '') {
+    if (!this.enabled) {
+      logger.info('📧 [SIMULATED] Event cancellation email sent to:', participant.email);
+      return;
+    }
+
+    const template = this.templates.eventCancellation;
+    const html = template.template
+      .replace('{{participantName}}', participant.name)
+      .replace('{{eventTitle}}', event.title)
+      .replace('{{eventDate}}', this.formatDate(event.date))
+      .replace('{{reason}}', reason || '諸事情により');
+
+    await this.sendEmail({
+      to: participant.email,
+      subject: template.subject,
+      html
+    });
+  }
+
+  async sendFeedbackRequest(participant, event) {
+    if (!this.enabled) {
+      logger.info('📧 [SIMULATED] Feedback request email sent to:', participant.email);
+      return;
+    }
+
+    const template = this.templates.feedbackRequest;
+    const html = template.template
+      .replace('{{participantName}}', participant.name)
+      .replace('{{eventTitle}}', event.title)
+      .replace('{{feedbackUrl}}', process.env.FEEDBACK_URL || 'https://forms.google.com/feedback');
+
+    await this.sendEmail({
+      to: participant.email,
+      subject: template.subject,
+      html
+    });
+  }
+
+  async sendEmail({ to, subject, _html }) {
+    try {
+      logger.info(`📧 Sending email to: ${to}`);
+      logger.info(`📧 Subject: ${subject}`);
+
+      // Simulate email sending delay
+      await new Promise(resolve => setTimeout(resolve, 100));
+
+      return { messageId: `msg-${Date.now()}` };
+    } catch (error) {
+      logger.error('Failed to send email:', error);
+      throw error;
+    }
+  }
+
+  /**
+   * メール送信をリトライ付きで実行
+   * @param {object} emailData - 送信データ
+   * @param {object} [options] - オプション（maxRetriesなど）
+   * @returns {Promise<{success: boolean, messageId?: string, attempts: number}>}
+   */
+  async sendWithRetry(emailData, options = {}) {
+    const maxRetries = options.maxRetries ?? 3;
+    let attempts = 0;
+    let lastError;
+    while (attempts < maxRetries) {
+      attempts++;
+      try {
+        const result = await this.sendEmail(emailData);
+        if (result && result.success) {
+          return { ...result, attempts };
         }
+        lastError = new Error('Unknown send failure');
+      } catch (err) {
+        lastError = err;
+      }
     }
+    throw Object.assign(lastError || new Error('Failed to send email'), { attempts });
+  }
 
-    setupEmailProvider() {
-        // In a real implementation, you would set up nodemailer or another email service
-        // For now, we'll simulate email sending
-        console.log('📧 Email service initialized (simulation mode)');
-    }
-
-    initializeTemplates() {
-        return {
-            registrationConfirmation: {
-                subject: '🎉 ライトニングトーク参加登録完了',
-                template: this.getRegistrationConfirmationTemplate()
-            },
-            speakerConfirmation: {
-                subject: '🎤 発表申込み受付完了',
-                template: this.getSpeakerConfirmationTemplate()
-            },
-            eventReminder: {
-                subject: '⚡ ライトニングトーク開催間近のお知らせ',
-                template: this.getEventReminderTemplate()
-            },
-            eventCancellation: {
-                subject: '⚠️ イベント中止のお知らせ',
-                template: this.getEventCancellationTemplate()
-            },
-            feedbackRequest: {
-                subject: '💭 イベントの感想をお聞かせください',
-                template: this.getFeedbackRequestTemplate()
-            }
-        };
-    }
-
-    async sendRegistrationConfirmation(participant, event) {
-        if (!this.enabled) {
-            console.log('📧 [SIMULATED] Registration confirmation email sent to:', participant.email);
-            return;
-        }
-
-        const template = this.templates.registrationConfirmation;
-        const html = template.template
-            .replace('{{participantName}}', participant.name)
-            .replace('{{eventTitle}}', event.title)
-            .replace('{{eventDate}}', this.formatDate(event.date))
-            .replace('{{eventVenue}}', event.venue.name)
-            .replace('{{participationType}}', this.formatParticipationType(participant.participationType))
-            .replace('{{onlineUrl}}', event.venue.onlineUrl || '');
-
-        await this.sendEmail({
-            to: participant.email,
-            subject: template.subject,
-            html
-        });
-    }
-
-    async sendSpeakerConfirmation(participant, talk, event) {
-        if (!this.enabled) {
-            console.log('📧 [SIMULATED] Speaker confirmation email sent to:', participant.email);
-            return;
-        }
-
-        const template = this.templates.speakerConfirmation;
-        const html = template.template
-            .replace('{{speakerName}}', participant.name)
-            .replace('{{talkTitle}}', talk.title)
-            .replace('{{eventTitle}}', event.title)
-            .replace('{{eventDate}}', this.formatDate(event.date))
-            .replace('{{talkDuration}}', talk.duration)
-            .replace('{{category}}', this.formatCategory(talk.category));
-
-        await this.sendEmail({
-            to: participant.email,
-            subject: template.subject,
-            html
-        });
-    }
-
-    async sendEventReminder(participant, event, daysUntil) {
-        if (!this.enabled) {
-            console.log('📧 [SIMULATED] Event reminder email sent to:', participant.email);
-            return;
-        }
-
-        const template = this.templates.eventReminder;
-        const html = template.template
-            .replace('{{participantName}}', participant.name)
-            .replace('{{eventTitle}}', event.title)
-            .replace('{{eventDate}}', this.formatDate(event.date))
-            .replace('{{daysUntil}}', daysUntil)
-            .replace('{{eventVenue}}', event.venue.name)
-            .replace('{{onlineUrl}}', event.venue.onlineUrl || '');
-
-        await this.sendEmail({
-            to: participant.email,
-            subject: template.subject,
-            html
-        });
-    }
-
-    async sendEventCancellation(participant, event, reason = '') {
-        if (!this.enabled) {
-            console.log('📧 [SIMULATED] Event cancellation email sent to:', participant.email);
-            return;
-        }
-
-        const template = this.templates.eventCancellation;
-        const html = template.template
-            .replace('{{participantName}}', participant.name)
-            .replace('{{eventTitle}}', event.title)
-            .replace('{{eventDate}}', this.formatDate(event.date))
-            .replace('{{reason}}', reason || '諸事情により');
-
-        await this.sendEmail({
-            to: participant.email,
-            subject: template.subject,
-            html
-        });
-    }
-
-    async sendFeedbackRequest(participant, event) {
-        if (!this.enabled) {
-            console.log('📧 [SIMULATED] Feedback request email sent to:', participant.email);
-            return;
-        }
-
-        const template = this.templates.feedbackRequest;
-        const html = template.template
-            .replace('{{participantName}}', participant.name)
-            .replace('{{eventTitle}}', event.title)
-            .replace('{{feedbackUrl}}', process.env.FEEDBACK_URL || 'https://forms.google.com/feedback');
-
-        await this.sendEmail({
-            to: participant.email,
-            subject: template.subject,
-            html
-        });
-    }
-
-    async sendEmail({ to, subject, html }) {
-        try {
-            // In a real implementation, use nodemailer or email service API
-            console.log(`📧 Sending email to: ${to}`);
-            console.log(`📧 Subject: ${subject}`);
-            
-            // Simulate email sending delay
-            await new Promise(resolve => setTimeout(resolve, 100));
-            
-            return { messageId: `msg-${Date.now()}` };
-        } catch (error) {
-            console.error('Failed to send email:', error);
-            throw error;
-        }
-    }
-
-    // Email templates
-    getRegistrationConfirmationTemplate() {
-        return `
+  // Email templates
+  getRegistrationConfirmationTemplate() {
+    return `
 <!DOCTYPE html>
 <html>
 <head>
@@ -193,17 +227,17 @@ export class EmailService {
         <div class="content">
             <p>{{participantName}} さん</p>
             <p>この度は「{{eventTitle}}」にご参加いただき、ありがとうございます！</p>
-            
+
             <div class="info-box">
                 <h3>📅 イベント詳細</h3>
                 <p><strong>日時:</strong> {{eventDate}}</p>
                 <p><strong>会場:</strong> {{eventVenue}}</p>
                 <p><strong>参加方法:</strong> {{participationType}}</p>
             </div>
-            
+
             <p>当日は5分間のライトニングトークを通じて、様々な「なんでも」な話をお楽しみください！</p>
             <p>ご質問がございましたら、お気軽にお問い合わせください。</p>
-            
+
             <div class="footer">
                 <p>なんでもライトニングトーク運営チーム</p>
             </div>
@@ -212,10 +246,10 @@ export class EmailService {
 </body>
 </html>
         `;
-    }
+  }
 
-    getSpeakerConfirmationTemplate() {
-        return `
+  getSpeakerConfirmationTemplate() {
+    return `
 <!DOCTYPE html>
 <html>
 <head>
@@ -240,14 +274,14 @@ export class EmailService {
         <div class="content">
             <p>{{speakerName}} さん</p>
             <p>発表申込みありがとうございます！あなたの「なんでも」な話を楽しみにしています。</p>
-            
+
             <div class="talk-info">
                 <h3>🗣️ 発表内容</h3>
                 <p><strong>タイトル:</strong> {{talkTitle}}</p>
                 <p><strong>カテゴリー:</strong> {{category}}</p>
                 <p><strong>発表時間:</strong> {{talkDuration}}分</p>
             </div>
-            
+
             <div class="tips">
                 <h4>💡 発表のコツ</h4>
                 <ul>
@@ -257,9 +291,9 @@ export class EmailService {
                     <li>完璧を目指さず、楽しく話してください！</li>
                 </ul>
             </div>
-            
+
             <p>当日まで何かご質問がございましたら、お気軽にお問い合わせください。</p>
-            
+
             <div class="footer">
                 <p>なんでもライトニングトーク運営チーム</p>
             </div>
@@ -268,10 +302,10 @@ export class EmailService {
 </body>
 </html>
         `;
-    }
+  }
 
-    getEventReminderTemplate() {
-        return `
+  getEventReminderTemplate() {
+    return `
 <!DOCTYPE html>
 <html>
 <head>
@@ -295,16 +329,16 @@ export class EmailService {
         <div class="content">
             <p>{{participantName}} さん</p>
             <p>「{{eventTitle}}」の開催が近づいてまいりました！</p>
-            
+
             <div class="countdown">
                 <h2>📅 {{eventDate}}</h2>
                 <p><strong>会場:</strong> {{eventVenue}}</p>
                 <p><strong>オンライン参加:</strong> {{onlineUrl}}</p>
             </div>
-            
+
             <p>当日は様々な「なんでも」な話が聞けることを楽しみにしています。</p>
             <p>準備はいかがですか？当日お会いできることを心よりお待ちしております！</p>
-            
+
             <div class="footer">
                 <p>なんでもライトニングトーク運営チーム</p>
             </div>
@@ -313,10 +347,10 @@ export class EmailService {
 </body>
 </html>
         `;
-    }
+  }
 
-    getEventCancellationTemplate() {
-        return `
+  getEventCancellationTemplate() {
+    return `
 <!DOCTYPE html>
 <html>
 <head>
@@ -338,15 +372,15 @@ export class EmailService {
         </div>
         <div class="content">
             <p>{{participantName}} さん</p>
-            
+
             <div class="apology">
                 <p>「{{eventTitle}}」（{{eventDate}}開催予定）につきまして、{{reason}}中止とさせていただくことになりました。</p>
                 <p>楽しみにしていただいていた皆様には、心よりお詫び申し上げます。</p>
             </div>
-            
+
             <p>次回イベントの開催が決まりましたら、改めてご案内させていただきます。</p>
             <p>この度は、ご迷惑をおかけして申し訳ございませんでした。</p>
-            
+
             <div class="footer">
                 <p>なんでもライトニングトーク運営チーム</p>
             </div>
@@ -355,10 +389,10 @@ export class EmailService {
 </body>
 </html>
         `;
-    }
+  }
 
-    getFeedbackRequestTemplate() {
-        return `
+  getFeedbackRequestTemplate() {
+    return `
 <!DOCTYPE html>
 <html>
 <head>
@@ -383,7 +417,7 @@ export class EmailService {
         <div class="content">
             <p>{{participantName}} さん</p>
             <p>「{{eventTitle}}」にご参加いただき、ありがとうございました！</p>
-            
+
             <div class="feedback-box">
                 <h3>📝 アンケートにご協力ください</h3>
                 <p>今回のイベントはいかがでしたか？<br>
@@ -391,9 +425,9 @@ export class EmailService {
                 <a href="{{feedbackUrl}}" class="button">アンケートに回答する</a>
                 <p><small>所要時間: 約3分</small></p>
             </div>
-            
+
             <p>またの機会にお会いできることを楽しみにしています！</p>
-            
+
             <div class="footer">
                 <p>なんでもライトニングトーク運営チーム</p>
             </div>
@@ -402,46 +436,46 @@ export class EmailService {
 </body>
 </html>
         `;
-    }
+  }
 
-    // Helper methods
-    formatDate(dateString) {
-        const date = new Date(dateString);
-        return date.toLocaleDateString('ja-JP', {
-            year: 'numeric',
-            month: 'long',
-            day: 'numeric',
-            weekday: 'long',
-            hour: '2-digit',
-            minute: '2-digit'
-        });
-    }
+  // Helper methods
+  formatDate(dateString) {
+    const date = new Date(dateString);
+    return date.toLocaleDateString('ja-JP', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+      weekday: 'long',
+      hour: '2-digit',
+      minute: '2-digit'
+    });
+  }
 
-    formatParticipationType(type) {
-        const types = {
-            onsite: '現地参加',
-            online: 'オンライン参加',
-            undecided: '当日決定'
-        };
-        return types[type] || type;
-    }
+  formatParticipationType(type) {
+    const types = {
+      onsite: '現地参加',
+      online: 'オンライン参加',
+      undecided: '当日決定'
+    };
+    return types[type] || type;
+  }
 
-    formatCategory(category) {
-        const categories = {
-            tech: '💻 プログラミング・技術',
-            hobby: '🎨 趣味・アート・創作',
-            learning: '📚 読書・学習体験',
-            travel: '🌍 旅行・文化体験',
-            food: '🍳 料理・グルメ',
-            game: '🎮 ゲーム・エンタメ',
-            lifehack: '💡 ライフハック・効率化',
-            pet: '🐱 ペット・動物',
-            garden: '🌱 ガーデニング・植物',
-            money: '📈 投資・副業',
-            sports: '🏃‍♂️ スポーツ・健康',
-            music: '🎵 音楽・演奏',
-            other: '🌟 その他'
-        };
-        return categories[category] || category;
-    }
+  formatCategory(category) {
+    const categories = {
+      tech: '💻 プログラミング・技術',
+      hobby: '🎨 趣味・アート・創作',
+      learning: '📚 読書・学習体験',
+      travel: '🌍 旅行・文化体験',
+      food: '🍳 料理・グルメ',
+      game: '🎮 ゲーム・エンタメ',
+      lifehack: '💡 ライフハック・効率化',
+      pet: '🐱 ペット・動物',
+      garden: '🌱 ガーデニング・植物',
+      money: '📈 投資・副業',
+      sports: '🏃‍♂️ スポーツ・健康',
+      music: '🎵 音楽・演奏',
+      other: '🌟 その他'
+    };
+    return categories[category] || category;
+  }
 }

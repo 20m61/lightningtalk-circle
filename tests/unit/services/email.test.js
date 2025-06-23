@@ -1,3 +1,5 @@
+import { jest } from '@jest/globals';
+
 /**
  * Email Service Unit Tests
  * メールサービスの単体テスト
@@ -73,7 +75,7 @@ describe('EmailService', () => {
   });
 
   describe('email sending', () => {
-    it('should send simple email', async() => {
+    it('should send simple email', async () => {
       const emailData = {
         to: 'test@example.com',
         subject: 'Test Email',
@@ -93,7 +95,7 @@ describe('EmailService', () => {
       expect(emailService.send).toHaveBeenCalledWith(emailData);
     });
 
-    it('should send templated email', async() => {
+    it('should send templated email', async () => {
       const emailData = {
         to: 'test@example.com',
         template: 'welcome',
@@ -115,7 +117,7 @@ describe('EmailService', () => {
       expect(emailService.sendTemplate).toHaveBeenCalledWith(emailData);
     });
 
-    it('should handle multiple recipients', async() => {
+    it('should handle multiple recipients', async () => {
       const emailData = {
         to: ['user1@example.com', 'user2@example.com'],
         subject: 'Bulk Email Test',
@@ -137,7 +139,7 @@ describe('EmailService', () => {
   });
 
   describe('participant notifications', () => {
-    it('should send registration confirmation', async() => {
+    it('should send registration confirmation', async () => {
       const participant = {
         name: 'Test User',
         email: 'test@example.com',
@@ -156,7 +158,7 @@ describe('EmailService', () => {
       expect(emailService.sendParticipantRegistration).toHaveBeenCalledWith(participant);
     });
 
-    it('should send event reminder', async() => {
+    it('should send event reminder', async () => {
       const participant = {
         name: 'Test User',
         email: 'test@example.com',
@@ -177,7 +179,7 @@ describe('EmailService', () => {
   });
 
   describe('speaker notifications', () => {
-    it('should send talk submission confirmation', async() => {
+    it('should send talk submission confirmation', async () => {
       const talk = {
         title: 'Test Talk',
         speakerName: 'Test Speaker',
@@ -196,7 +198,7 @@ describe('EmailService', () => {
       expect(emailService.sendTalkSubmission).toHaveBeenCalledWith(talk);
     });
 
-    it('should send talk approval notification', async() => {
+    it('should send talk approval notification', async () => {
       const talk = {
         title: 'Test Talk',
         speakerName: 'Test Speaker',
@@ -217,7 +219,7 @@ describe('EmailService', () => {
   });
 
   describe('admin notifications', () => {
-    it('should send admin notification for new registration', async() => {
+    it('should send admin notification for new registration', async () => {
       const participant = {
         name: 'Test User',
         email: 'test@example.com',
@@ -240,7 +242,7 @@ describe('EmailService', () => {
   });
 
   describe('error handling', () => {
-    it('should handle invalid email addresses', async() => {
+    it('should handle invalid email addresses', async () => {
       const emailData = {
         to: 'invalid-email',
         subject: 'Test',
@@ -252,7 +254,7 @@ describe('EmailService', () => {
       await expect(emailService.send(emailData)).rejects.toThrow('Invalid email address');
     });
 
-    it('should handle API failures', async() => {
+    it('should handle API failures', async () => {
       const emailData = {
         to: 'test@example.com',
         subject: 'Test',
@@ -264,7 +266,7 @@ describe('EmailService', () => {
       await expect(emailService.send(emailData)).rejects.toThrow('API quota exceeded');
     });
 
-    it('should handle template rendering errors', async() => {
+    it('should handle template rendering errors', async () => {
       const emailData = {
         to: 'test@example.com',
         template: 'invalid-template',
@@ -278,7 +280,7 @@ describe('EmailService', () => {
   });
 
   describe('queue management', () => {
-    it('should add email to queue', async() => {
+    it('should add email to queue', async () => {
       const emailData = {
         to: 'test@example.com',
         subject: 'Queued Email',
@@ -296,7 +298,7 @@ describe('EmailService', () => {
       expect(result.queueId).toBe('queue-123');
     });
 
-    it('should process email queue', async() => {
+    it('should process email queue', async () => {
       emailService.processQueue = jest.fn().mockResolvedValue({
         processed: 5,
         failed: 0
@@ -308,7 +310,7 @@ describe('EmailService', () => {
       expect(result.failed).toBe(0);
     });
 
-    it('should get queue status', async() => {
+    it('should get queue status', async () => {
       emailService.getQueueStatus = jest.fn().mockResolvedValue({
         pending: 10,
         processing: 2,
@@ -352,29 +354,28 @@ describe('EmailService', () => {
   });
 
   describe('performance and reliability', () => {
-    it('should handle email sending with retry logic', async() => {
+    it('should handle email sending with retry logic', async () => {
       const emailData = {
         to: 'test@example.com',
         subject: 'Retry Test',
         text: 'This email should retry on failure'
       };
 
-      emailService.sendWithRetry = jest
-        .fn()
+      // sendEmailを1回目失敗、2回目成功でモック
+      const sendEmailMock = jest
+        .spyOn(emailService, 'sendEmail')
         .mockRejectedValueOnce(new Error('Temporary failure'))
-        .mockResolvedValueOnce({
-          success: true,
-          messageId: 'retry-success',
-          attempts: 2
-        });
+        .mockResolvedValueOnce({ success: true, messageId: 'retry-success' });
 
       const result = await emailService.sendWithRetry(emailData, { maxRetries: 3 });
 
       expect(result.success).toBe(true);
       expect(result.attempts).toBe(2);
+      expect(sendEmailMock).toHaveBeenCalledTimes(2);
+      sendEmailMock.mockRestore();
     });
 
-    it('should handle rate limiting', async() => {
+    it('should handle rate limiting', async () => {
       emailService.checkRateLimit = jest.fn().mockReturnValue({
         allowed: true,
         remaining: 95,

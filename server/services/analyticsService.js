@@ -1,10 +1,10 @@
+import { logger } from '../middleware/logger.js';
+import { DatabaseService } from './database.js';
+
 /**
  * Analytics Service
  * イベント分析とレポート機能を提供するサービス
  */
-
-const logger = require('../middleware/logger');
-const { DatabaseService } = require('./database');
 
 class AnalyticsService {
   constructor() {
@@ -66,7 +66,7 @@ class AnalyticsService {
   async getBasicEventStats(eventId) {
     const stats = await this.db.query(
       `
-      SELECT 
+      SELECT
         e.id,
         e.title,
         e.date,
@@ -94,7 +94,7 @@ class AnalyticsService {
       throw new Error('Event not found');
     }
 
-    const event = stats[0];
+    const [event] = stats;
 
     return {
       eventInfo: {
@@ -137,7 +137,7 @@ class AnalyticsService {
     // 参加者の基本分布
     const participantDistribution = await this.db.query(
       `
-      SELECT 
+      SELECT
         participation_type,
         COUNT(*) as count,
         COUNT(*) * 100.0 / (SELECT COUNT(*) FROM participants WHERE event_id = ?) as percentage
@@ -151,7 +151,7 @@ class AnalyticsService {
     // 時間別登録数
     const registrationTimeline = await this.db.query(
       `
-      SELECT 
+      SELECT
         DATE(created_at) as date,
         COUNT(*) as registrations,
         participation_type
@@ -166,7 +166,7 @@ class AnalyticsService {
     // 地域別分布（optional field）
     const geographicDistribution = await this.db.query(
       `
-      SELECT 
+      SELECT
         COALESCE(location, 'Unknown') as location,
         COUNT(*) as count
       FROM participants p
@@ -180,16 +180,16 @@ class AnalyticsService {
     // 参加者の属性分析
     const attributeAnalysis = await this.db.query(
       `
-      SELECT 
+      SELECT
         COALESCE(organization, 'Individual') as organization_type,
         COUNT(*) as count,
-        AVG(CASE WHEN experience_level IS NOT NULL THEN 
-          CASE experience_level 
-            WHEN 'beginner' THEN 1 
-            WHEN 'intermediate' THEN 2 
-            WHEN 'advanced' THEN 3 
-            ELSE 2 
-          END 
+        AVG(CASE WHEN experience_level IS NOT NULL THEN
+          CASE experience_level
+            WHEN 'beginner' THEN 1
+            WHEN 'intermediate' THEN 2
+            WHEN 'advanced' THEN 3
+            ELSE 2
+          END
         END) as avg_experience_level
       FROM participants p
       WHERE event_id = ? ${dateFilter}
@@ -232,7 +232,7 @@ class AnalyticsService {
     // 発表の基本統計
     const talkDistribution = await this.db.query(
       `
-      SELECT 
+      SELECT
         category,
         status,
         COUNT(*) as count,
@@ -250,7 +250,7 @@ class AnalyticsService {
     // 発表者の属性
     const speakerAnalysis = await this.db.query(
       `
-      SELECT 
+      SELECT
         COUNT(DISTINCT speaker_name) as unique_speakers,
         COUNT(*) as total_talks,
         COUNT(*) * 1.0 / COUNT(DISTINCT speaker_name) as talks_per_speaker,
@@ -265,7 +265,7 @@ class AnalyticsService {
     // 申込み時系列
     const submissionTimeline = await this.db.query(
       `
-      SELECT 
+      SELECT
         DATE(created_at) as date,
         COUNT(*) as submissions,
         status
@@ -280,7 +280,7 @@ class AnalyticsService {
     // カテゴリ別人気度
     const categoryPopularity = await this.db.query(
       `
-      SELECT 
+      SELECT
         category,
         COUNT(*) as count,
         COUNT(*) * 100.0 / (SELECT COUNT(*) FROM talks WHERE event_id = ?) as percentage,
@@ -293,7 +293,7 @@ class AnalyticsService {
       [eventId, eventId]
     );
 
-    const speakerStats = speakerAnalysis[0];
+    const [speakerStats] = speakerAnalysis;
 
     return {
       distribution: {
@@ -368,7 +368,7 @@ class AnalyticsService {
     // 参加者詳細リスト
     const participantsList = await this.db.query(
       `
-      SELECT 
+      SELECT
         id,
         name,
         email,
@@ -387,7 +387,7 @@ class AnalyticsService {
     // 発表詳細リスト
     const talksList = await this.db.query(
       `
-      SELECT 
+      SELECT
         id,
         title,
         speaker_name,
@@ -624,7 +624,7 @@ class AnalyticsService {
     return Math.max(0, Math.min(1, rSquared));
   }
 
-  generateTrendInsights(registrations, submissions, participationTypes) {
+  generateTrendInsights(registrations, _submissions, _participationTypes) {
     const insights = [];
 
     // 登録トレンド分析
@@ -678,7 +678,7 @@ class AnalyticsService {
     return Math.sqrt(avgSquareDiff);
   }
 
-  generateComparisonInsights(comparisons, analysis) {
+  generateComparisonInsights(comparisons, _analysis) {
     const insights = [];
 
     // 参加者数の分析
@@ -718,55 +718,54 @@ class AnalyticsService {
     };
   }
 
-  async getDailyRegistrations(eventId, options) {
+  async getDailyRegistrations(_eventId, _options) {
     // 実装は簡略化
     return [];
   }
 
-  async getDailySubmissions(eventId, options) {
+  async getDailySubmissions(_eventId, _options) {
     // 実装は簡略化
     return [];
   }
 
-  async getParticipationTypeTrends(eventId, options) {
+  async getParticipationTypeTrends(_eventId, _options) {
     // 実装は簡略化
     return [];
   }
-
-  async getFeedbackSummary(eventId) {
+  async getFeedbackSummary(_eventId) {
     // 実装は簡略化
     return {};
   }
-
-  generateParticipantsCsv(participants) {
+  generateParticipantsCsv(_participants) {
     // CSV生成の実装
     return 'CSV data';
   }
 
-  generateTalksCsv(talks) {
+  generateTalksCsv(_talks) {
     // CSV生成の実装
     return 'CSV data';
   }
 
-  generateDetailedReport(stats) {
+  generateDetailedReport(_stats) {
     // 詳細レポート生成
     return {};
   }
 
-  generateExecutiveReport(stats) {
+  generateExecutiveReport(_stats) {
     // エグゼクティブレポート生成
     return {};
   }
 
-  generateParticipantReport(stats) {
+  generateParticipantReport(_stats) {
     // 参加者レポート生成
     return {};
   }
 
-  generateSpeakerReport(stats) {
+  generateSpeakerReport(_stats) {
     // 発表者レポート生成
     return {};
   }
 }
 
-module.exports = new AnalyticsService();
+const analyticsService = new AnalyticsService();
+export default analyticsService;
