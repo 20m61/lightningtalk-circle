@@ -1,6 +1,7 @@
 {
   "name": "lightningtalk-circle",
   "version": "1.0.0",
+  "type": "module",
   "description": "Lightning Talk Circle - Issue Management",
   "type": "module",
   "scripts": {
@@ -9,7 +10,7 @@
     "start": "node server/app.js",
     "dev": "nodemon server/app.js",
     "dev:seed": "NODE_ENV=development node server/app.js --seed",
-    "test": "jest",
+    "test": "node --experimental-vm-modules ./node_modules/.bin/jest",
     "test:unit": "jest --testPathPattern=unit",
     "test:integration": "jest --testPathPattern=integration",
     "test:e2e": "playwright test",

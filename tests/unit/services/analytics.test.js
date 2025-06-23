@@ -3,7 +3,7 @@
  * 分析サービスの単体テスト
  */
 
-const analyticsService = require('../../../server/services/analyticsService');
+import analyticsService from '../../../server/services/analyticsService.js';
 
 describe('AnalyticsService', () => {
   let mockDatabase;
@@ -22,8 +22,9 @@ describe('AnalyticsService', () => {
   });
 
   describe('getEventStatistics', () => {
-    it('should return basic event statistics', async () => {
+    it('should return basic event statistics', async() => {
       const eventId = 'event-001';
+      // eslint-disable-next-line no-unused-vars
       const mockBasicStats = {
         id: 'event-001',
         title: 'Test Event',
@@ -72,7 +73,7 @@ describe('AnalyticsService', () => {
       expect(result.statistics.basic.summary.totalTalks).toBe(8);
     });
 
-    it('should include trends when requested', async () => {
+    it('should include trends when requested', async() => {
       const eventId = 'event-001';
       const options = { includeTrends: true };
 
@@ -95,7 +96,7 @@ describe('AnalyticsService', () => {
       expect(analyticsService.getEventTrends).toHaveBeenCalledWith(eventId, options);
     });
 
-    it('should handle errors gracefully', async () => {
+    it('should handle errors gracefully', async() => {
       const eventId = 'invalid-event';
 
       analyticsService.getBasicEventStats = jest
@@ -109,7 +110,7 @@ describe('AnalyticsService', () => {
   });
 
   describe('getBasicEventStats', () => {
-    it('should query and return basic event statistics', async () => {
+    it('should query and return basic event statistics', async() => {
       const eventId = 'event-001';
       const mockQueryResult = [
         {
@@ -141,7 +142,7 @@ describe('AnalyticsService', () => {
       expect(mockDatabase.query).toHaveBeenCalledWith(expect.stringContaining('SELECT'), [eventId]);
     });
 
-    it('should throw error when event not found', async () => {
+    it('should throw error when event not found', async() => {
       const eventId = 'nonexistent';
       mockDatabase.query.mockResolvedValue([]);
 
@@ -150,7 +151,7 @@ describe('AnalyticsService', () => {
   });
 
   describe('getParticipantStats', () => {
-    it('should return participant distribution statistics', async () => {
+    it('should return participant distribution statistics', async() => {
       const eventId = 'event-001';
       const mockDistribution = [
         { participation_type: 'online', count: 15, percentage: 60.0 },
@@ -196,7 +197,7 @@ describe('AnalyticsService', () => {
   });
 
   describe('getTalkStats', () => {
-    it('should return talk distribution and speaker statistics', async () => {
+    it('should return talk distribution and speaker statistics', async() => {
       const eventId = 'event-001';
       const mockTalkDistribution = [
         { category: '技術', status: 'confirmed', count: 5, avg_duration: 5.2 },
@@ -253,7 +254,7 @@ describe('AnalyticsService', () => {
   });
 
   describe('generateReport', () => {
-    it('should generate summary report', async () => {
+    it('should generate summary report', async() => {
       const eventId = 'event-001';
       const reportType = 'summary';
       const mockStats = {
@@ -299,7 +300,7 @@ describe('AnalyticsService', () => {
       );
     });
 
-    it('should throw error for invalid report type', async () => {
+    it('should throw error for invalid report type', async() => {
       const eventId = 'event-001';
       const reportType = 'invalid';
 
@@ -404,7 +405,7 @@ describe('AnalyticsService', () => {
   });
 
   describe('performance tests', () => {
-    it('should handle large datasets efficiently', async () => {
+    it('should handle large datasets efficiently', async() => {
       const eventId = 'large-event';
       const largeDataset = Array.from({ length: 1000 }, (_, i) => ({
         id: i + 1,

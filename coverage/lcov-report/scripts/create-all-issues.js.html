@@ -511,7 +511,6 @@
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -550,6 +549,7 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">#!/usr/bin/env node
 &nbsp;
@@ -600,7 +600,7 @@ async function <span class="fstat-no" title="function not covered" >createIssue(
 <span class="cstat-no" title="statement not covered" >    console.log(`✅ Created issue: ${issueData.title}`);</span>
 <span class="cstat-no" title="statement not covered" >    console.log(`   URL: ${response.data.html_url}`);</span>
 <span class="cstat-no" title="statement not covered" >    console.log(`   Number: #${response.data.number}`);</span>
-    
+&nbsp;
 <span class="cstat-no" title="statement not covered" >    return response.data;</span>
   } catch (error) {
 <span class="cstat-no" title="statement not covered" >    console.error(`❌ Failed to create issue: ${issueData.title}`);</span>
@@ -625,7 +625,7 @@ async function <span class="fstat-no" title="function not covered" >loadIssueDat
     const filePath = <span class="cstat-no" title="statement not covered" >path.join(__dirname, file);</span>
 <span class="cstat-no" title="statement not covered" >    if (await fs.pathExists(filePath)) {</span>
       const data = <span class="cstat-no" title="statement not covered" >await fs.readJson(filePath);</span>
-      
+&nbsp;
       // Flatten all issue categories
 <span class="cstat-no" title="statement not covered" >      Object.values(data).forEach(<span class="fstat-no" title="function not covered" >ca</span>tegory =&gt; {</span>
 <span class="cstat-no" title="statement not covered" >        if (Array.isArray(category)) {</span>
@@ -643,7 +643,7 @@ async function <span class="fstat-no" title="function not covered" >loadIssueDat
  */
 function <span class="fstat-no" title="function not covered" >enhanceIssueForCopilot(</span>issue) {
   const enhanced = <span class="cstat-no" title="statement not covered" >{ ...issue };</span>
-  
+&nbsp;
   // Add Copilot-specific instructions to body
 <span class="cstat-no" title="statement not covered" >  enhanced.body += `</span>
 &nbsp;
@@ -704,7 +704,7 @@ async function <span class="fstat-no" title="function not covered" >createAllIss
 <span class="cstat-no" title="statement not covered" >    console.log('');</span>
 &nbsp;
     // Sort by priority (critical first, then high, medium, low)
-    const priorityOrder = <span class="cstat-no" title="statement not covered" >{ 'critical': 0, 'high': 1, 'medium': 2, 'low': 3 };</span>
+    const priorityOrder = <span class="cstat-no" title="statement not covered" >{ critical: 0, high: 1, medium: 2, low: 3 };</span>
 <span class="cstat-no" title="statement not covered" >    issues.sort(<span class="fstat-no" title="function not covered" >(a</span>, b) =&gt; {</span>
       const aPriority = <span class="cstat-no" title="statement not covered" >a.labels.find(<span class="fstat-no" title="function not covered" >l </span>=&gt; <span class="cstat-no" title="statement not covered" >l.startsWith('priority:'))</span>?.split(':')[1] || 'medium';</span>
       const bPriority = <span class="cstat-no" title="statement not covered" >b.labels.find(<span class="fstat-no" title="function not covered" >l </span>=&gt; <span class="cstat-no" title="statement not covered" >l.startsWith('priority:'))</span>?.split(':')[1] || 'medium';</span>
@@ -715,9 +715,9 @@ async function <span class="fstat-no" title="function not covered" >createAllIss
     const createdIssues = <span class="cstat-no" title="statement not covered" >[];</span>
 <span class="cstat-no" title="statement not covered" >    for (let i = <span class="cstat-no" title="statement not covered" >0;</span> i &lt; issues.length; i++) {</span>
       const issue = <span class="cstat-no" title="statement not covered" >enhanceIssueForCopilot(issues[i]);</span>
-      
+&nbsp;
 <span class="cstat-no" title="statement not covered" >      console.log(`📝 Creating issue ${i + 1}/${issues.length}: ${issue.title}`);</span>
-      
+&nbsp;
       const createdIssue = <span class="cstat-no" title="statement not covered" >await createIssue(issue);</span>
 <span class="cstat-no" title="statement not covered" >      if (createdIssue) {</span>
 <span class="cstat-no" title="statement not covered" >        createdIssues.push(createdIssue);</span>
@@ -753,8 +753,7 @@ async function <span class="fstat-no" title="function not covered" >createAllIss
 <span class="cstat-no" title="statement not covered" >    console.log('4. Review pull requests created by Copilot');</span>
 <span class="cstat-no" title="statement not covered" >    console.log('');</span>
 <span class="cstat-no" title="statement not covered" >    console.log('🤖 All issues have been assigned to Copilot for autonomous development.');</span>
-<span class="cstat-no" title="statement not covered" >    console.log('📋 Track progress: https://github.com/' + config.owner + '/' + config.repo + '/issues');</span>
-&nbsp;
+<span class="cstat-no" title="statement not covered" >    console.log(`📋 Track progress: https://github.com/${config.owner}/${config.repo}/issues`);</span>
   } catch (error) {
 <span class="cstat-no" title="statement not covered" >    console.error('❌ Error during issue creation:', error.message);</span>
 <span class="cstat-no" title="statement not covered" >    process.exit(1);</span>
@@ -795,14 +794,15 @@ async function <span class="fstat-no" title="function not covered" >addProjectMe
 <span class="cstat-no" title="statement not covered" >      console.error('💥 Fatal error:', error);</span>
 <span class="cstat-no" title="statement not covered" >      process.exit(1);</span>
     });
-}</pre></td></tr></table></pre>
+}
+&nbsp;</pre></td></tr></table></pre>
 
                 <div class='push'></div><!-- for sticky footer -->
             </div><!-- /wrapper -->
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2025-06-22T22:15:42.782Z
+                at 2025-06-23T05:42:22.111Z
             </div>
         <script src="../prettify.js"></script>
         <script>

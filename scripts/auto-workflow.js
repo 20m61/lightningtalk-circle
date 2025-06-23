@@ -5,20 +5,21 @@
  */
 
 import { Octokit } from '@octokit/rest';
-import { execSync, spawn } from 'child_process';
-import fs from 'fs';
-import path from 'path';
 import chalk from 'chalk';
+import { execSync } from 'child_process';
 import dotenv from 'dotenv';
+import * as fs from 'fs';
+import path from 'path';
 
 dotenv.config();
 
 class AutoWorkflowOrchestrator {
-  constructor() {
+  constructor({ execSyncImpl } = {}) {
     this.octokit = new Octokit({
       auth: process.env.GITHUB_TOKEN
     });
-    
+    this.execSync = execSyncImpl || execSync;
+
     this.config = {
       owner: process.env.GITHUB_OWNER || '20m61',
       repo: process.env.GITHUB_REPO || 'lightningtalk-circle',
@@ -29,11 +30,11 @@ class AutoWorkflowOrchestrator {
     };
 
     this.log = {
-      info: (msg) => console.log(chalk.blue('ℹ️ '), msg),
-      success: (msg) => console.log(chalk.green('✅'), msg),
-      warning: (msg) => console.log(chalk.yellow('⚠️ '), msg),
-      error: (msg) => console.log(chalk.red('❌'), msg),
-      step: (msg) => console.log(chalk.cyan('🔄'), msg)
+      info: msg => console.log(chalk.blue('ℹ️ '), msg),
+      success: msg => console.log(chalk.green('✅'), msg),
+      warning: msg => console.log(chalk.yellow('⚠️ '), msg),
+      error: msg => console.log(chalk.red('❌'), msg),
+      step: msg => console.log(chalk.cyan('🔄'), msg)
     };
   }
 
@@ -86,7 +87,7 @@ class AutoWorkflowOrchestrator {
       .replace(/[^a-z0-9\s-]/g, '')
       .replace(/\s+/g, '-')
       .substring(0, 50);
-    
+
     const timestamp = Date.now().toString().slice(-6);
     return `${type}/${sanitized}-${timestamp}`;
   }
@@ -96,24 +97,17 @@ class AutoWorkflowOrchestrator {
    */
   async createWorktree(branchName) {
     this.log.step(`Creating worktree for branch: ${branchName}`);
-    
     try {
       const worktreeName = branchName.replace('/', '-');
       const worktreePath = path.join(this.config.worktreeBase, worktreeName);
-      
-      // Worktreeディレクトリが存在しない場合は作成
       if (!fs.existsSync(this.config.worktreeBase)) {
         fs.mkdirSync(this.config.worktreeBase, { recursive: true });
       }
-
-      // Git worktreeを作成
-      execSync(`git worktree add -b ${branchName} ${worktreePath}`, { stdio: 'inherit' });
-      
-      // 必要なファイルをコピー
+      // execSync → this.execSync に変更
+      this.execSync(`git worktree add -b ${branchName} ${worktreePath}`, { stdio: 'inherit' });
       if (fs.existsSync('.env.example')) {
         fs.copyFileSync('.env.example', path.join(worktreePath, '.env'));
       }
-
       this.log.success(`Worktree created at: ${worktreePath}`);
       return { worktreePath, worktreeName };
     } catch (error) {
@@ -127,33 +121,33 @@ class AutoWorkflowOrchestrator {
    */
   async executeDevelopmentTask(task, worktreePath) {
     this.log.step(`Executing development task: ${task.description}`);
-    
+
     const originalCwd = process.cwd();
     process.chdir(worktreePath);
 
     try {
       // タスクタイプに基づいて適切な処理を実行
       switch (task.type) {
-        case 'feature':
-          await this.implementFeature(task);
-          break;
-        case 'bugfix':
-          await this.fixBug(task);
-          break;
-        case 'hotfix':
-          await this.implementHotfix(task);
-          break;
-        case 'refactor':
-          await this.performRefactoring(task);
-          break;
-        case 'docs':
-          await this.updateDocumentation(task);
-          break;
-        case 'test':
-          await this.addTests(task);
-          break;
-        default:
-          await this.implementFeature(task);
+      case 'feature':
+        await this.implementFeature(task);
+        break;
+      case 'bugfix':
+        await this.fixBug(task);
+        break;
+      case 'hotfix':
+        await this.implementHotfix(task);
+        break;
+      case 'refactor':
+        await this.performRefactoring(task);
+        break;
+      case 'docs':
+        await this.updateDocumentation(task);
+        break;
+      case 'test':
+        await this.addTests(task);
+        break;
+      default:
+        await this.implementFeature(task);
       }
 
       this.log.success('Development task completed');
@@ -173,7 +167,7 @@ class AutoWorkflowOrchestrator {
 
 /**
  * ${task.description}
- * 
+ *
  * @description ${task.originalInstruction}
  * @created ${new Date().toISOString()}
  */
@@ -193,7 +187,7 @@ export default {
       fs.mkdirSync(featureDir, { recursive: true });
     }
 
-    const fileName = task.description.toLowerCase().replace(/\s+/g, '-') + '.js';
+    const fileName = `${task.description.toLowerCase().replace(/\s+/g, '-')}.js`;
     fs.writeFileSync(path.join(featureDir, fileName), featureTemplate);
 
     // package.jsonを更新（必要に応じて）
@@ -298,7 +292,7 @@ TODO: Add usage examples
 *Auto-generated on ${new Date().toISOString()}*
 `;
 
-    const fileName = task.description.toLowerCase().replace(/\s+/g, '-') + '.md';
+    const fileName = `${task.description.toLowerCase().replace(/\s+/g, '-')}.md`;
     fs.writeFileSync(path.join(docPath, fileName), docContent);
   }
 
@@ -329,7 +323,7 @@ describe('${task.description}', () => {
       fs.mkdirSync(testDir, { recursive: true });
     }
 
-    const fileName = task.description.toLowerCase().replace(/\s+/g, '-') + '.test.js';
+    const fileName = `${task.description.toLowerCase().replace(/\s+/g, '-')}.test.js`;
     fs.writeFileSync(path.join(testDir, fileName), testTemplate);
   }
 
@@ -341,10 +335,12 @@ describe('${task.description}', () => {
       const packagePath = 'package.json';
       if (fs.existsSync(packagePath)) {
         const packageData = JSON.parse(fs.readFileSync(packagePath, 'utf8'));
-        
+
         // スクリプトを追加
-        if (!packageData.scripts) packageData.scripts = {};
-        
+        if (!packageData.scripts) {
+          packageData.scripts = {};
+        }
+
         const scriptName = task.description.toLowerCase().replace(/\s+/g, '-');
         packageData.scripts[scriptName] = `echo "Running ${task.description}"`;
 
@@ -361,7 +357,7 @@ describe('${task.description}', () => {
   async runAutomatedTests(worktreePath) {
     this.log.step('🧪 Running automated tests...');
     this.log.info(`📁 Test directory: ${worktreePath}`);
-    
+
     const originalCwd = process.cwd();
     const testResults = {
       success: false,
@@ -373,11 +369,11 @@ describe('${task.description}', () => {
 
     try {
       process.chdir(worktreePath);
-      
+
       // Docker環境チェック
       const dockerAvailable = await this.checkDockerEnvironment();
       testResults.environment.docker = dockerAvailable ? 'available' : 'unavailable';
-      
+
       if (dockerAvailable) {
         this.log.info('🐳 Using Docker test environment');
         await this.runDockerTests(testResults);
@@ -386,18 +382,18 @@ describe('${task.description}', () => {
         testResults.environment.fallback = true;
         await this.runLocalTests(testResults);
       }
-      
+
       // テスト結果の総合評価
       const overallSuccess = this.evaluateTestResults(testResults);
       testResults.success = overallSuccess;
-      
+
       if (overallSuccess) {
         this.log.success('✅ All tests passed successfully');
       } else {
         this.log.error('❌ Some tests failed or produced ambiguous results');
         this.logDetailedTestResults(testResults);
       }
-      
+
       return testResults;
     } catch (error) {
       this.log.error(`❌ Test execution failed: ${error.message}`);
@@ -416,17 +412,17 @@ describe('${task.description}', () => {
     try {
       execSync('docker --version', { stdio: 'ignore' });
       execSync('docker-compose --version', { stdio: 'ignore' });
-      
+
       // Docker デーモンが実行中かチェック
       execSync('docker info', { stdio: 'ignore' });
-      
+
       // 必要なイメージが利用可能かチェック
       const composeFile = '../lightningtalk-circle/docker-compose.dev.yml';
       if (!fs.existsSync(composeFile)) {
         this.log.warning(`⚠️  Docker compose file not found: ${composeFile}`);
         return false;
       }
-      
+
       return true;
     } catch (error) {
       this.log.info(`🔍 Docker check failed: ${error.message}`);
@@ -439,24 +435,27 @@ describe('${task.description}', () => {
    */
   async runDockerTests(testResults) {
     const composeFile = '../lightningtalk-circle/docker-compose.dev.yml';
-    
+
     try {
       // ユニットテスト実行
       this.log.step('🔬 Running unit tests in Docker...');
-      execSync(`docker-compose -f ${composeFile} run --rm test-runner npm run test:unit`, 
-        { stdio: 'pipe' });
+      execSync(`docker-compose -f ${composeFile} run --rm test-runner npm run test:unit`, {
+        stdio: 'pipe'
+      });
       testResults.unit.status = 'passed';
       this.log.success('✅ Unit tests passed');
-      
+
       // インテグレーションテスト実行
       this.log.step('🔗 Running integration tests in Docker...');
-      const integrationOutput = execSync(`docker-compose -f ${composeFile} run --rm test-runner npm run test:integration`, 
-        { stdio: 'pipe' }).toString();
-      
+      const integrationOutput = execSync(
+        `docker-compose -f ${composeFile} run --rm test-runner npm run test:integration`,
+        { stdio: 'pipe' }
+      ).toString();
+
       // インテグレーションテスト結果の詳細分析
       const integrationResult = this.analyzeIntegrationTestOutput(integrationOutput);
       testResults.integration = integrationResult;
-      
+
       if (integrationResult.status === 'ambiguous') {
         this.log.warning('⚠️  Integration tests produced ambiguous results');
         this.log.info('🔍 Analyzing test output for clarity...');
@@ -467,17 +466,17 @@ describe('${task.description}', () => {
       } else {
         this.log.error('❌ Integration tests failed');
       }
-      
+
       // カバレッジレポート生成
       this.log.step('📊 Generating coverage report...');
-      execSync(`docker-compose -f ${composeFile} run --rm test-runner npm run test:coverage`, 
-        { stdio: 'pipe' });
+      execSync(`docker-compose -f ${composeFile} run --rm test-runner npm run test:coverage`, {
+        stdio: 'pipe'
+      });
       testResults.coverage.status = 'generated';
       this.log.success('✅ Coverage report generated');
-      
     } catch (error) {
       this.log.error(`❌ Docker test execution failed: ${error.message}`);
-      
+
       // Docker特有のエラー分析
       if (error.message.includes('No such file or directory')) {
         this.log.error('🔍 Docker compose file or test scripts not found');
@@ -488,7 +487,7 @@ describe('${task.description}', () => {
         this.log.error('🐳 Docker daemon not running');
         this.log.info('💡 Try: sudo systemctl start docker');
       }
-      
+
       throw error;
     }
   }
@@ -499,12 +498,12 @@ describe('${task.description}', () => {
   async runLocalTests(testResults) {
     try {
       this.log.step('🏠 Running tests locally...');
-      
+
       // Node.js環境でのテスト実行
       execSync('npm test', { stdio: 'pipe' });
       testResults.unit.status = 'passed';
       testResults.integration.status = 'passed';
-      
+
       this.log.success('✅ Local tests completed');
     } catch (error) {
       this.log.error(`❌ Local test execution failed: ${error.message}`);
@@ -519,13 +518,20 @@ describe('${task.description}', () => {
    */
   analyzeIntegrationTestOutput(output) {
     const lines = output.split('\n');
-    let passed = 0, failed = 0, skipped = 0, pending = 0;
+    let passed = 0,
+      failed = 0,
+      skipped = 0,
+      pending = 0;
     let hasWarnings = false;
-    let testDetails = [];
-    
+    const testDetails = [];
+
     for (const line of lines) {
-      if (line.includes('✓') || line.includes('passed')) passed++;
-      if (line.includes('✗') || line.includes('failed')) failed++;
+      if (line.includes('✓') || line.includes('passed')) {
+        passed++;
+      }
+      if (line.includes('✗') || line.includes('failed')) {
+        failed++;
+      }
       if (line.includes('pending') || line.includes('skipped')) {
         skipped++;
         pending++;
@@ -533,27 +539,28 @@ describe('${task.description}', () => {
       if (line.includes('warning') || line.includes('deprecated')) {
         hasWarnings = true;
       }
-      
+
       // 重要なテスト詳細を記録
       if (line.includes('describe') || line.includes('it(')) {
         testDetails.push(line.trim());
       }
     }
-    
+
     // 結果の判定ロジック
     let status;
     if (failed > 0) {
       status = 'failed';
     } else if (pending > 0 && passed === 0) {
       status = 'ambiguous'; // テストが実行されていない可能性
-    } else if (hasWarnings && passed < 3) { // 最小限のテストが通っていない
+    } else if (hasWarnings && passed < 3) {
+      // 最小限のテストが通っていない
       status = 'ambiguous';
     } else if (passed > 0 && failed === 0) {
       status = 'passed';
     } else {
       status = 'ambiguous'; // 不明な状態
     }
-    
+
     return {
       status,
       passed,
@@ -569,33 +576,33 @@ describe('${task.description}', () => {
   /**
    * 曖昧なインテグレーションテスト結果への対応
    */
-  async handleAmbiguousIntegrationResults(integrationResult, testResults) {
+  async handleAmbiguousIntegrationResults(integrationResult, _testResults) {
     this.log.warning('🔍 Handling ambiguous integration test results...');
-    
+
     // 具体的な問題の特定
     const issues = [];
-    
+
     if (integrationResult.pending > 0 && integrationResult.passed === 0) {
       issues.push('No tests were actually executed - all tests are pending/skipped');
       this.log.warning('⚠️  All integration tests are pending - check test configuration');
     }
-    
+
     if (integrationResult.hasWarnings) {
       issues.push('Tests completed with warnings - potential reliability issues');
       this.log.warning('⚠️  Test warnings detected - review test output');
     }
-    
+
     if (integrationResult.passed < 3) {
       issues.push('Very few tests passed - insufficient test coverage');
       this.log.warning('⚠️  Insufficient integration test coverage');
     }
-    
+
     // 対応策の提案
     this.log.info('💡 Recommended actions for ambiguous results:');
     for (const issue of issues) {
       this.log.info(`   - ${issue}`);
     }
-    
+
     // より厳格な判定を適用
     if (issues.length > 1) {
       integrationResult.status = 'failed';
@@ -603,7 +610,7 @@ describe('${task.description}', () => {
     } else {
       this.log.info('ℹ️  Proceeding with caution due to ambiguous results');
     }
-    
+
     integrationResult.issues = issues;
   }
 
@@ -611,24 +618,26 @@ describe('${task.description}', () => {
    * テスト結果の総合評価
    */
   evaluateTestResults(testResults) {
+    // eslint-disable-next-line no-unused-vars
     const unitPassed = testResults.unit.status === 'passed';
+    // eslint-disable-next-line no-unused-vars
     const integrationPassed = ['passed', 'ambiguous'].includes(testResults.integration.status);
-    
+
     // 厳格な評価: ユニットテストは必須、インテグレーションテストは曖昧でも警告付きで通す
     if (!unitPassed) {
       this.log.error('❌ Unit tests must pass for workflow to continue');
       return false;
     }
-    
+
     if (testResults.integration.status === 'failed') {
       this.log.error('❌ Integration tests failed - workflow cannot continue');
       return false;
     }
-    
+
     if (testResults.integration.status === 'ambiguous') {
       this.log.warning('⚠️  Integration tests are ambiguous but allowing workflow to continue');
     }
-    
+
     return true;
   }
 
@@ -641,7 +650,7 @@ describe('${task.description}', () => {
     this.log.info(`   🔗 Integration Tests: ${testResults.integration.status}`);
     this.log.info(`   📊 Coverage: ${testResults.coverage.status}`);
     this.log.info(`   🐳 Docker Environment: ${testResults.environment.docker}`);
-    
+
     if (testResults.integration.issues) {
       this.log.info('⚠️  Integration Test Issues:');
       for (const issue of testResults.integration.issues) {
@@ -655,13 +664,13 @@ describe('${task.description}', () => {
    */
   async commitChanges(task, worktreePath) {
     this.log.step('Committing changes...');
-    
+
     const originalCwd = process.cwd();
     process.chdir(worktreePath);
 
     try {
       execSync('git add .', { stdio: 'inherit' });
-      
+
       const commitMessage = `${task.type}: ${task.description}
 
 ${task.originalInstruction}
@@ -672,7 +681,7 @@ Co-Authored-By: Claude <noreply@anthropic.com>`;
 
       execSync(`git commit -m "${commitMessage}"`, { stdio: 'inherit' });
       execSync(`git push -u origin ${task.branchName}`, { stdio: 'inherit' });
-      
+
       this.log.success('Changes committed and pushed');
     } finally {
       process.chdir(originalCwd);
@@ -771,35 +780,36 @@ Co-Authored-By: Claude <noreply@anthropic.com>`;
     try {
       // コード品質チェック
       const qualityChecks = await this.runQualityChecks(task.branchName);
-      
+
       // セキュリティスキャン
       const securityChecks = await this.runSecurityScan(task.branchName);
-      
+
       // パフォーマンステスト
       const performanceChecks = await this.runPerformanceTests(task.branchName);
 
       const reviewComments = [];
-      
+
       if (!qualityChecks.passed) {
         reviewComments.push(`❌ **Code Quality Issues:**\n${qualityChecks.issues.join('\n')}`);
       } else {
-        reviewComments.push(`✅ **Code Quality:** All checks passed`);
+        reviewComments.push('✅ **Code Quality:** All checks passed');
       }
 
       if (!securityChecks.passed) {
         reviewComments.push(`❌ **Security Issues:**\n${securityChecks.issues.join('\n')}`);
       } else {
-        reviewComments.push(`✅ **Security:** No issues found`);
+        reviewComments.push('✅ **Security:** No issues found');
       }
 
       if (!performanceChecks.passed) {
         reviewComments.push(`⚠️ **Performance:**\n${performanceChecks.issues.join('\n')}`);
       } else {
-        reviewComments.push(`✅ **Performance:** Within acceptable limits`);
+        reviewComments.push('✅ **Performance:** Within acceptable limits');
       }
 
-      const allChecksPassed = qualityChecks.passed && securityChecks.passed && performanceChecks.passed;
-      
+      const allChecksPassed =
+        qualityChecks.passed && securityChecks.passed && performanceChecks.passed;
+
       const reviewBody = `## Automated Review Results
 
 ${reviewComments.join('\n\n')}
@@ -819,7 +829,9 @@ ${allChecksPassed ? '✅ **APPROVED** - All automated checks passed' : '❌ **CH
         event: allChecksPassed ? 'APPROVE' : 'REQUEST_CHANGES'
       });
 
-      this.log.success(`Automated review completed: ${allChecksPassed ? 'APPROVED' : 'CHANGES REQUESTED'}`);
+      this.log.success(
+        `Automated review completed: ${allChecksPassed ? 'APPROVED' : 'CHANGES REQUESTED'}`
+      );
       return { approved: allChecksPassed, pr };
     } catch (error) {
       this.log.error(`Automated review failed: ${error.message}`);
@@ -830,14 +842,14 @@ ${allChecksPassed ? '✅ **APPROVED** - All automated checks passed' : '❌ **CH
   /**
    * コード品質チェック
    */
-  async runQualityChecks(branchName) {
+  async runQualityChecks(_branchName) {
     try {
       // ESLintやPrettierなどの品質チェックをシミュレート
       const issues = [];
-      
+
       // 実際の実装では、実際のlintツールを実行
       this.log.info('Running code quality checks...');
-      
+
       return {
         passed: true,
         issues
@@ -853,10 +865,10 @@ ${allChecksPassed ? '✅ **APPROVED** - All automated checks passed' : '❌ **CH
   /**
    * セキュリティスキャン
    */
-  async runSecurityScan(branchName) {
+  async runSecurityScan(_branchName) {
     try {
       this.log.info('Running security scan...');
-      
+
       // npm auditやセキュリティスキャンをシミュレート
       return {
         passed: true,
@@ -873,10 +885,10 @@ ${allChecksPassed ? '✅ **APPROVED** - All automated checks passed' : '❌ **CH
   /**
    * パフォーマンステスト
    */
-  async runPerformanceTests(branchName) {
+  async runPerformanceTests(_branchName) {
     try {
       this.log.info('Running performance tests...');
-      
+
       // パフォーマンステストをシミュレート
       return {
         passed: true,
@@ -979,12 +991,12 @@ ${allChecksPassed ? '✅ **APPROVED** - All automated checks passed' : '❌ **CH
       this.log.success(`✅ PR #${pr.number} merged successfully`);
       this.log.info(`📋 Merge SHA: ${mergeResult.data.sha}`);
       this.log.info(`🔗 Merged PR: ${pr.html_url}`);
-      
+
       return { success: true, sha: mergeResult.data.sha, mergeChecks };
     } catch (error) {
       // エラー詳細のログ改善
       this.log.error(`❌ Auto-merge failed: ${error.message}`);
-      
+
       // GitHub API固有のエラー処理
       if (error.status === 403) {
         this.log.error('🔒 Permission denied. Check GitHub token permissions.');
@@ -1000,7 +1012,7 @@ ${allChecksPassed ? '✅ **APPROVED** - All automated checks passed' : '❌ **CH
       } else if (error.status >= 500) {
         this.log.error('🌐 GitHub API server error. Please retry later.');
       }
-      
+
       this.log.info(`🔍 Error details: ${JSON.stringify(error.response?.data || error, null, 2)}`);
       return { success: false, reason: 'merge_error', error: error.message };
     }
@@ -1028,39 +1040,39 @@ Merged automatically by Auto Workflow System
    */
   async generateHTMLReport(workflowResult) {
     this.log.step('📄 Generating HTML workflow report...');
-    
+
     try {
       const reportData = {
         timestamp: new Date().toISOString(),
         workflow: workflowResult,
         summary: this.generateReportSummary(workflowResult)
       };
-      
+
       const htmlContent = this.generateHTMLContent(reportData);
-      
+
       // レポートディレクトリの作成
       const reportsDir = 'reports/workflow';
       if (!fs.existsSync(reportsDir)) {
         fs.mkdirSync(reportsDir, { recursive: true });
       }
-      
+
       // ファイル名の生成
       const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
       const reportFile = path.join(reportsDir, `workflow-report-${timestamp}.html`);
-      
+
       // HTMLファイルの書き込み
       fs.writeFileSync(reportFile, htmlContent);
-      
+
       // 最新レポートのシンボリックリンク作成
       const latestReportFile = path.join(reportsDir, 'latest.html');
       if (fs.existsSync(latestReportFile)) {
         fs.unlinkSync(latestReportFile);
       }
       fs.writeFileSync(latestReportFile, htmlContent);
-      
+
       this.log.success(`✅ HTML report generated: ${reportFile}`);
       this.log.info(`🔗 Latest report: ${latestReportFile}`);
-      
+
       return { success: true, reportFile, latestReportFile };
     } catch (error) {
       this.log.error(`❌ Failed to generate HTML report: ${error.message}`);
@@ -1081,24 +1093,24 @@ Merged automatically by Auto Workflow System
       merge: workflowResult.merged || false,
       issues: []
     };
-    
+
     // 問題点の特定
     if (!workflowResult.success) {
       summary.issues.push('Workflow execution failed');
     }
-    
+
     if (workflowResult.testResults && !workflowResult.testResults.success) {
       summary.issues.push('Test execution issues detected');
     }
-    
+
     if (workflowResult.testResults?.integration?.status === 'ambiguous') {
       summary.issues.push('Integration tests produced ambiguous results');
     }
-    
+
     if (workflowResult.mergeResult && !workflowResult.mergeResult.success) {
       summary.issues.push(`Auto-merge failed: ${workflowResult.mergeResult.reason}`);
     }
-    
+
     return summary;
   }
 
@@ -1107,7 +1119,7 @@ Merged automatically by Auto Workflow System
    */
   generateHTMLContent(reportData) {
     const { timestamp, workflow, summary } = reportData;
-    
+
     return `<!DOCTYPE html>
 <html lang="ja">
 <head>
@@ -1152,7 +1164,7 @@ Merged automatically by Auto Workflow System
             <h1>🚀 Workflow Execution Report</h1>
             <p>Generated on ${new Date(timestamp).toLocaleString('ja-JP')}</p>
         </div>
-        
+
         <div class="content">
             <div class="section">
                 <h2>📊 Executive Summary</h2>
@@ -1178,13 +1190,17 @@ Merged automatically by Auto Workflow System
                         </span>
                     </div>
                 </div>
-                
-                ${summary.issues.length > 0 ? `
+
+                ${
+  summary.issues.length > 0
+    ? `
                 <h3>⚠️ Issues Detected</h3>
                 <ul class="issues">
                     ${summary.issues.map(issue => `<li>❗ ${issue}</li>`).join('')}
                 </ul>
-                ` : ''}
+                `
+    : ''
+}
             </div>
 
             <div class="section">
@@ -1206,7 +1222,7 @@ Merged automatically by Auto Workflow System
                 </div>
             </div>
         </div>
-        
+
         <div class="footer">
             <p>Generated by Lightning Talk Circle Auto Workflow System</p>
             <p>🤖 Powered by Claude AI | 📅 ${timestamp}</p>
@@ -1236,27 +1252,35 @@ Merged automatically by Auto Workflow System
                 <span class="metric-value ${this.getStatusClass(unitStatus)}">${this.getStatusIcon(unitStatus)} ${unitStatus.toUpperCase()}</span>
             </div>
         </div>
-        
+
         <div class="card">
             <h3>🔗 Integration Tests</h3>
             <div class="metric">
                 <span>Status:</span>
                 <span class="metric-value ${this.getStatusClass(integrationStatus)}">${this.getStatusIcon(integrationStatus)} ${integrationStatus.toUpperCase()}</span>
             </div>
-            ${testResults.integration?.passed ? `
+            ${
+  testResults.integration?.passed
+    ? `
             <div class="metric">
                 <span>Passed:</span>
                 <span class="metric-value success">${testResults.integration.passed}</span>
             </div>
-            ` : ''}
-            ${testResults.integration?.failed ? `
+            `
+    : ''
+}
+            ${
+  testResults.integration?.failed
+    ? `
             <div class="metric">
                 <span>Failed:</span>
                 <span class="metric-value error">${testResults.integration.failed}</span>
             </div>
-            ` : ''}
+            `
+    : ''
+}
         </div>
-        
+
         <div class="card">
             <h3>📊 Coverage</h3>
             <div class="metric">
@@ -1264,7 +1288,7 @@ Merged automatically by Auto Workflow System
                 <span class="metric-value ${this.getStatusClass(coverageStatus)}">${this.getStatusIcon(coverageStatus)} ${coverageStatus.toUpperCase()}</span>
             </div>
         </div>
-        
+
         <div class="card">
             <h3>🐳 Environment</h3>
             <div class="metric">
@@ -1273,12 +1297,16 @@ Merged automatically by Auto Workflow System
                     ${testResults.environment?.docker === 'available' ? '✅' : '⚠️'} ${testResults.environment?.docker || 'unknown'}
                 </span>
             </div>
-            ${testResults.environment?.fallback ? `
+            ${
+  testResults.environment?.fallback
+    ? `
             <div class="metric">
                 <span>Fallback Used:</span>
                 <span class="metric-value warning">⚠️ Yes</span>
             </div>
-            ` : ''}
+            `
+    : ''
+}
         </div>
     `;
   }
@@ -1299,19 +1327,29 @@ Merged automatically by Auto Workflow System
                     ${mergeResult.success ? '✅ Successful' : '❌ Failed'}
                 </span>
             </div>
-            ${!mergeResult.success ? `
+            ${
+  !mergeResult.success
+    ? `
             <div class="metric">
                 <span>Reason:</span>
                 <span class="code">${mergeResult.reason}</span>
             </div>
-            ` : ''}
-            ${mergeResult.sha ? `
+            `
+    : ''
+}
+            ${
+  mergeResult.sha
+    ? `
             <div class="metric">
                 <span>Merge SHA:</span>
                 <span class="code">${mergeResult.sha}</span>
             </div>
-            ` : ''}
-            ${mergeResult.mergeChecks ? `
+            `
+    : ''
+}
+            ${
+  mergeResult.mergeChecks
+    ? `
             <h4>Merge Condition Checks</h4>
             <ul>
                 <li>Mergeable: ${mergeResult.mergeChecks.mergeable ? '✅' : '❌'}</li>
@@ -1319,7 +1357,9 @@ Merged automatically by Auto Workflow System
                 <li>PR State: ${mergeResult.mergeChecks.state}</li>
                 <li>Draft: ${mergeResult.mergeChecks.draft ? '❌' : '✅'}</li>
             </ul>
-            ` : ''}
+            `
+    : ''
+}
         </div>
     `;
   }
@@ -1329,10 +1369,14 @@ Merged automatically by Auto Workflow System
    */
   getStatusClass(status) {
     switch (status) {
-      case 'passed': return 'success';
-      case 'failed': return 'error';
-      case 'ambiguous': return 'warning';
-      default: return 'info';
+    case 'passed':
+      return 'success';
+    case 'failed':
+      return 'error';
+    case 'ambiguous':
+      return 'warning';
+    default:
+      return 'info';
     }
   }
 
@@ -1341,10 +1385,14 @@ Merged automatically by Auto Workflow System
    */
   getStatusIcon(status) {
     switch (status) {
-      case 'passed': return '✅';
-      case 'failed': return '❌';
-      case 'ambiguous': return '⚠️';
-      default: return 'ℹ️';
+    case 'passed':
+      return '✅';
+    case 'failed':
+      return '❌';
+    case 'ambiguous':
+      return '⚠️';
+    default:
+      return 'ℹ️';
     }
   }
   async cleanupWorktree(worktreePath, branchName, merged = false) {
@@ -1372,8 +1420,8 @@ Merged automatically by Auto Workflow System
   async executeWorkflow(instruction) {
     this.log.info(`🚀 Starting automated workflow for: "${instruction}"`);
     const workflowStartTime = Date.now();
-    
-    let workflowResult = {
+
+    const workflowResult = {
       success: false,
       task: null,
       pr: null,
@@ -1384,7 +1432,7 @@ Merged automatically by Auto Workflow System
       duration: 0,
       message: 'Workflow execution started'
     };
-    
+
     try {
       // 1. 指示を解析
       const task = this.parseInstruction(instruction);
@@ -1392,7 +1440,7 @@ Merged automatically by Auto Workflow System
       this.log.info(`📋 Task identified: ${task.type} - ${task.description}`);
 
       // 2. Worktreeを作成
-      const { worktreePath, worktreeName } = await this.createWorktree(task.branchName);
+      const { worktreePath } = await this.createWorktree(task.branchName);
 
       // 3. 開発タスクを実行
       await this.executeDevelopmentTask(task, worktreePath);
@@ -1401,12 +1449,12 @@ Merged automatically by Auto Workflow System
       this.log.step('🧪 Executing comprehensive test suite...');
       const testResults = await this.runAutomatedTests(worktreePath);
       workflowResult.testResults = testResults;
-      
+
       // テスト失敗時の対応
       if (!testResults.success) {
         const errorMessage = 'Automated tests failed or produced unacceptable results';
         this.log.error(`❌ ${errorMessage}`);
-        
+
         // 詳細なエラー分析
         if (testResults.unit?.status === 'failed') {
           this.log.error('🔬 Unit tests failed - critical issue detected');
@@ -1414,20 +1462,22 @@ Merged automatically by Auto Workflow System
         if (testResults.integration?.status === 'failed') {
           this.log.error('🔗 Integration tests failed - system integration issues');
         }
-        
+
         workflowResult.error = errorMessage;
         workflowResult.message = 'Workflow failed due to test failures';
-        
+
         // テスト失敗でもレポートは生成
         workflowResult.duration = Date.now() - workflowStartTime;
         await this.generateHTMLReport(workflowResult);
-        
+
         throw new Error(errorMessage);
       }
-      
+
       // テスト成功またはambiguousな結果での警告
       if (testResults.integration?.status === 'ambiguous') {
-        this.log.warning('⚠️  Integration tests produced ambiguous results, but proceeding with workflow');
+        this.log.warning(
+          '⚠️  Integration tests produced ambiguous results, but proceeding with workflow'
+        );
       }
 
       // 5. 変更をコミット
@@ -1447,7 +1497,7 @@ Merged automatically by Auto Workflow System
         mergeResult = await this.performAutoMerge(pr);
         workflowResult.mergeResult = mergeResult;
         workflowResult.merged = mergeResult.success;
-        
+
         if (mergeResult.success) {
           this.log.success('🎉 Auto-merge completed successfully!');
         } else {
@@ -1472,30 +1522,31 @@ Merged automatically by Auto Workflow System
       await this.generateHTMLReport(workflowResult);
 
       // 成功サマリー
-      this.log.success(`🎉 Workflow completed successfully!`);
-      this.log.info(`📊 Summary:`);
+      this.log.success('🎉 Workflow completed successfully!');
+      this.log.info('📊 Summary:');
       this.log.info(`   - Task: ${task.description}`);
       this.log.info(`   - PR: ${pr.html_url}`);
       this.log.info(`   - Auto-merged: ${workflowResult.merged ? '✅ Yes' : '⚠️ No'}`);
       this.log.info(`   - Duration: ${Math.round(workflowResult.duration / 1000)}s`);
-      this.log.info(`   - Test Status: ${testResults.success ? '✅ Passed' : '⚠️ Issues detected'}`);
-      
+      this.log.info(
+        `   - Test Status: ${testResults.success ? '✅ Passed' : '⚠️ Issues detected'}`
+      );
+
       if (testResults.integration?.status === 'ambiguous') {
         this.log.warning('⚠️  Note: Integration tests produced ambiguous results');
       }
 
       return workflowResult;
-
     } catch (error) {
       // エラー時の詳細ログ
       this.log.error(`❌ Workflow failed: ${error.message}`);
-      
+
       // 実行時間とエラー情報を記録
       workflowResult.duration = Date.now() - workflowStartTime;
       workflowResult.error = error.message;
       workflowResult.success = false;
       workflowResult.message = 'Workflow execution failed';
-      
+
       // エラー時でもHTMLレポートを生成
       try {
         await this.generateHTMLReport(workflowResult);
@@ -1503,7 +1554,7 @@ Merged automatically by Auto Workflow System
       } catch (reportError) {
         this.log.warning(`⚠️  Could not generate error report: ${reportError.message}`);
       }
-      
+
       // エラーサマリー
       this.log.error('❌ Workflow Failure Summary:');
       this.log.error(`   - Error: ${error.message}`);
@@ -1511,7 +1562,7 @@ Merged automatically by Auto Workflow System
       if (workflowResult.testResults) {
         this.log.error(`   - Test Status: ${workflowResult.testResults.success ? '✅' : '❌'}`);
       }
-      
+
       return workflowResult;
     }
   }
@@ -1519,8 +1570,8 @@ Merged automatically by Auto Workflow System
 
 // CLI実行部分
 if (import.meta.url === `file://${process.argv[1]}`) {
-  const instruction = process.argv[2];
-  
+  const [, , instruction] = process.argv;
+
   if (!instruction) {
     console.log(`
 Usage: node auto-workflow.js "<instruction>"
@@ -1535,9 +1586,10 @@ Examples:
   }
 
   const orchestrator = new AutoWorkflowOrchestrator();
-  orchestrator.executeWorkflow(instruction)
+  orchestrator
+    .executeWorkflow(instruction)
     .then(result => {
-      console.log('\n' + chalk.green('='.repeat(50)));
+      console.log(`\n${chalk.green('='.repeat(50))}`);
       console.log(chalk.green('WORKFLOW EXECUTION COMPLETE'));
       console.log(chalk.green('='.repeat(50)));
       process.exit(result.success ? 0 : 1);

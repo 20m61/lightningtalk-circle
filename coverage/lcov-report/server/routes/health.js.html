@@ -46,7 +46,7 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">0% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>0/63</span>
+                <span class='fraction'>0/62</span>
             </div>
         
             
@@ -311,12 +311,7 @@
 <a name='L246'></a><a href='#L246'>246</a>
 <a name='L247'></a><a href='#L247'>247</a>
 <a name='L248'></a><a href='#L248'>248</a>
-<a name='L249'></a><a href='#L249'>249</a>
-<a name='L250'></a><a href='#L250'>250</a>
-<a name='L251'></a><a href='#L251'>251</a>
-<a name='L252'></a><a href='#L252'>252</a>
-<a name='L253'></a><a href='#L253'>253</a>
-<a name='L254'></a><a href='#L254'>254</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L249'></a><a href='#L249'>249</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -439,8 +434,6 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -517,10 +510,6 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -543,6 +532,7 @@
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -582,254 +572,249 @@ const router = <span class="cstat-no" title="statement not covered" >express.Rou
 &nbsp;
 // Basic health check
 <span class="cstat-no" title="statement not covered" >router.get('/', <span class="fstat-no" title="function not covered" >as</span>ync (req, res) =&gt; {</span>
-<span class="cstat-no" title="statement not covered" >    try {</span>
-        const healthStatus = <span class="cstat-no" title="statement not covered" >await performHealthChecks();</span>
-        
-        const status = <span class="cstat-no" title="statement not covered" >healthStatus.overall === 'healthy' ? 200 : 503;</span>
-<span class="cstat-no" title="statement not covered" >        res.status(status).json(healthStatus);</span>
-    } catch (error) {
-<span class="cstat-no" title="statement not covered" >        console.error('Health check error:', error);</span>
-<span class="cstat-no" title="statement not covered" >        res.status(503).json({</span>
-            status: 'unhealthy',
-            error: 'Health check failed',
-            timestamp: new Date().toISOString()
-        });
-    }
+<span class="cstat-no" title="statement not covered" >  try {</span>
+    const healthStatus = <span class="cstat-no" title="statement not covered" >await performHealthChecks();</span>
+&nbsp;
+    const status = <span class="cstat-no" title="statement not covered" >healthStatus.overall === 'healthy' ? 200 : 503;</span>
+<span class="cstat-no" title="statement not covered" >    res.status(status).json(healthStatus);</span>
+  } catch (error) {
+<span class="cstat-no" title="statement not covered" >    console.error('Health check error:', error);</span>
+<span class="cstat-no" title="statement not covered" >    res.status(503).json({</span>
+      status: 'unhealthy',
+      error: 'Health check failed',
+      timestamp: new Date().toISOString()
+    });
+  }
 });
 &nbsp;
 // Detailed health check
 <span class="cstat-no" title="statement not covered" >router.get('/detailed', <span class="fstat-no" title="function not covered" >as</span>ync (req, res) =&gt; {</span>
-<span class="cstat-no" title="statement not covered" >    try {</span>
-        const healthStatus = <span class="cstat-no" title="statement not covered" >await performDetailedHealthChecks();</span>
-        
-        const status = <span class="cstat-no" title="statement not covered" >healthStatus.overall === 'healthy' ? 200 : 503;</span>
-<span class="cstat-no" title="statement not covered" >        res.status(status).json(healthStatus);</span>
-    } catch (error) {
-<span class="cstat-no" title="statement not covered" >        console.error('Detailed health check error:', error);</span>
-<span class="cstat-no" title="statement not covered" >        res.status(503).json({</span>
-            status: 'unhealthy',
-            error: 'Detailed health check failed',
-            timestamp: new Date().toISOString()
-        });
-    }
+<span class="cstat-no" title="statement not covered" >  try {</span>
+    const healthStatus = <span class="cstat-no" title="statement not covered" >await performDetailedHealthChecks();</span>
+&nbsp;
+    const status = <span class="cstat-no" title="statement not covered" >healthStatus.overall === 'healthy' ? 200 : 503;</span>
+<span class="cstat-no" title="statement not covered" >    res.status(status).json(healthStatus);</span>
+  } catch (error) {
+<span class="cstat-no" title="statement not covered" >    console.error('Detailed health check error:', error);</span>
+<span class="cstat-no" title="statement not covered" >    res.status(503).json({</span>
+      status: 'unhealthy',
+      error: 'Detailed health check failed',
+      timestamp: new Date().toISOString()
+    });
+  }
 });
 &nbsp;
 // Readiness probe (for Kubernetes/Docker)
 <span class="cstat-no" title="statement not covered" >router.get('/ready', <span class="fstat-no" title="function not covered" >as</span>ync (req, res) =&gt; {</span>
-<span class="cstat-no" title="statement not covered" >    try {</span>
-        const checks = <span class="cstat-no" title="statement not covered" >await performReadinessChecks();</span>
-        
-<span class="cstat-no" title="statement not covered" >        if (checks.ready) {</span>
-<span class="cstat-no" title="statement not covered" >            res.status(200).json({</span>
-                status: 'ready',
-                checks: checks.results,
-                timestamp: new Date().toISOString()
-            });
-        } else {
-<span class="cstat-no" title="statement not covered" >            res.status(503).json({</span>
-                status: 'not-ready',
-                checks: checks.results,
-                timestamp: new Date().toISOString()
-            });
-        }
-    } catch (error) {
-<span class="cstat-no" title="statement not covered" >        res.status(503).json({</span>
-            status: 'not-ready',
-            error: error.message,
-            timestamp: new Date().toISOString()
-        });
+<span class="cstat-no" title="statement not covered" >  try {</span>
+    const checks = <span class="cstat-no" title="statement not covered" >await performReadinessChecks();</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    if (checks.ready) {</span>
+<span class="cstat-no" title="statement not covered" >      res.status(200).json({</span>
+        status: 'ready',
+        checks: checks.results,
+        timestamp: new Date().toISOString()
+      });
+    } else {
+<span class="cstat-no" title="statement not covered" >      res.status(503).json({</span>
+        status: 'not-ready',
+        checks: checks.results,
+        timestamp: new Date().toISOString()
+      });
     }
+  } catch (error) {
+<span class="cstat-no" title="statement not covered" >    res.status(503).json({</span>
+      status: 'not-ready',
+      error: error.message,
+      timestamp: new Date().toISOString()
+    });
+  }
 });
 &nbsp;
 // Liveness probe (for Kubernetes/Docker)
 <span class="cstat-no" title="statement not covered" >router.get('/live', <span class="fstat-no" title="function not covered" >(r</span>eq, res) =&gt; {</span>
-<span class="cstat-no" title="statement not covered" >    res.status(200).json({</span>
-        status: 'alive',
-        timestamp: new Date().toISOString(),
-        uptime: process.uptime(),
-        pid: process.pid
-    });
+<span class="cstat-no" title="statement not covered" >  res.status(200).json({</span>
+    status: 'alive',
+    timestamp: new Date().toISOString(),
+    uptime: process.uptime(),
+    pid: process.pid
+  });
 });
 &nbsp;
 // Performance metrics
 <span class="cstat-no" title="statement not covered" >router.get('/metrics', <span class="fstat-no" title="function not covered" >as</span>ync (req, res) =&gt; {</span>
-<span class="cstat-no" title="statement not covered" >    try {</span>
-        const metrics = <span class="cstat-no" title="statement not covered" >await getPerformanceMetrics();</span>
-<span class="cstat-no" title="statement not covered" >        res.json(metrics);</span>
-    } catch (error) {
-<span class="cstat-no" title="statement not covered" >        res.status(500).json({</span>
-            error: 'Failed to get metrics',
-            message: error.message,
-            timestamp: new Date().toISOString()
-        });
-    }
+<span class="cstat-no" title="statement not covered" >  try {</span>
+    const metrics = <span class="cstat-no" title="statement not covered" >await getPerformanceMetrics();</span>
+<span class="cstat-no" title="statement not covered" >    res.json(metrics);</span>
+  } catch (error) {
+<span class="cstat-no" title="statement not covered" >    res.status(500).json({</span>
+      error: 'Failed to get metrics',
+      message: error.message,
+      timestamp: new Date().toISOString()
+    });
+  }
 });
 &nbsp;
 // Basic health checks
 async function <span class="fstat-no" title="function not covered" >performHealthChecks(</span>) {
-    const checks = <span class="cstat-no" title="statement not covered" >{</span>
-        app: { status: 'healthy', message: 'Application running' },
-        timestamp: new Date().toISOString(),
-        uptime: process.uptime(),
-        version: process.env.npm_package_version || '1.0.0',
-        environment: process.env.NODE_ENV || 'development'
+  const checks = <span class="cstat-no" title="statement not covered" >{</span>
+    app: { status: 'healthy', message: 'Application running' },
+    timestamp: new Date().toISOString(),
+    uptime: process.uptime(),
+    version: process.env.npm_package_version || '1.0.0',
+    environment: process.env.NODE_ENV || 'development'
+  };
+&nbsp;
+  // Check email service
+<span class="cstat-no" title="statement not covered" >  try {</span>
+    const emailHealth = <span class="cstat-no" title="statement not covered" >await EmailServiceFactory.testEmailConfiguration();</span>
+<span class="cstat-no" title="statement not covered" >    checks.email = emailHealth;</span>
+  } catch (error) {
+<span class="cstat-no" title="statement not covered" >    checks.email = {</span>
+      status: 'unhealthy',
+      error: error.message
     };
+  }
 &nbsp;
-    // Check email service
-<span class="cstat-no" title="statement not covered" >    try {</span>
-        const emailHealth = <span class="cstat-no" title="statement not covered" >await EmailServiceFactory.testEmailConfiguration();</span>
-<span class="cstat-no" title="statement not covered" >        checks.email = emailHealth;</span>
-    } catch (error) {
-<span class="cstat-no" title="statement not covered" >        checks.email = {</span>
-            status: 'unhealthy',
-            error: error.message
-        };
-    }
+  // Determine overall status
+  const services = <span class="cstat-no" title="statement not covered" >Object.keys(checks).filter(</span>
+<span class="fstat-no" title="function not covered" >    ke</span>y =&gt; <span class="cstat-no" title="statement not covered" >!['timestamp', 'uptime', 'version', 'environment'].includes(key)</span>
+  );
 &nbsp;
-    // Determine overall status
-    const services = <span class="cstat-no" title="statement not covered" >Object.keys(checks).filter(<span class="fstat-no" title="function not covered" >ke</span>y =&gt; </span>
-<span class="cstat-no" title="statement not covered" >        !['timestamp', 'uptime', 'version', 'environment'].includes(key)</span>
-    );
-    
-    const healthyServices = <span class="cstat-no" title="statement not covered" >services.filter(<span class="fstat-no" title="function not covered" >se</span>rvice =&gt; </span>
-<span class="cstat-no" title="statement not covered" >        checks[service].status === 'healthy'</span>
-    );
+  const healthyServices = <span class="cstat-no" title="statement not covered" >services.filter(<span class="fstat-no" title="function not covered" >se</span>rvice =&gt; <span class="cstat-no" title="statement not covered" >checks[service].status === 'healthy')</span>;</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >    checks.overall = healthyServices.length === services.length ? 'healthy' : 'degraded';</span>
-    
-<span class="cstat-no" title="statement not covered" >    return checks;</span>
+<span class="cstat-no" title="statement not covered" >  checks.overall = healthyServices.length === services.length ? 'healthy' : 'degraded';</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >  return checks;</span>
 }
 &nbsp;
 // Detailed health checks
 async function <span class="fstat-no" title="function not covered" >performDetailedHealthChecks(</span>) {
-    const basic = <span class="cstat-no" title="statement not covered" >await performHealthChecks();</span>
-    
-    // System information
-    const system = <span class="cstat-no" title="statement not covered" >{</span>
-        hostname: os.hostname(),
-        platform: os.platform(),
-        arch: os.arch(),
-        cpus: os.cpus().length,
-        totalMemory: os.totalmem(),
-        freeMemory: os.freemem(),
-        loadAverage: os.loadavg(),
-        nodeVersion: process.version
-    };
+  const basic = <span class="cstat-no" title="statement not covered" >await performHealthChecks();</span>
 &nbsp;
-    // Process information
-    const processInfo = <span class="cstat-no" title="statement not covered" >{</span>
-        pid: process.pid,
-        uptime: process.uptime(),
-        memoryUsage: process.memoryUsage(),
-        cpuUsage: process.cpuUsage()
-    };
+  // System information
+  const system = <span class="cstat-no" title="statement not covered" >{</span>
+    hostname: os.hostname(),
+    platform: os.platform(),
+    arch: os.arch(),
+    cpus: os.cpus().length,
+    totalMemory: os.totalmem(),
+    freeMemory: os.freemem(),
+    loadAverage: os.loadavg(),
+    nodeVersion: process.version
+  };
 &nbsp;
-    // Environment checks
-    const environment = <span class="cstat-no" title="statement not covered" >{</span>
-        nodeEnv: process.env.NODE_ENV,
-        port: process.env.PORT,
-        databaseType: process.env.DATABASE_TYPE,
-        emailEnabled: process.env.EMAIL_ENABLED,
-        emailProvider: process.env.EMAIL_PROVIDER
-    };
+  // Process information
+  const processInfo = <span class="cstat-no" title="statement not covered" >{</span>
+    pid: process.pid,
+    uptime: process.uptime(),
+    memoryUsage: process.memoryUsage(),
+    cpuUsage: process.cpuUsage()
+  };
 &nbsp;
-<span class="cstat-no" title="statement not covered" >    return {</span>
-        ...basic,
-        system,
-        process: processInfo,
-        environment
-    };
+  // Environment checks
+  const environment = <span class="cstat-no" title="statement not covered" >{</span>
+    nodeEnv: process.env.NODE_ENV,
+    port: process.env.PORT,
+    databaseType: process.env.DATABASE_TYPE,
+    emailEnabled: process.env.EMAIL_ENABLED,
+    emailProvider: process.env.EMAIL_PROVIDER
+  };
+&nbsp;
+<span class="cstat-no" title="statement not covered" >  return {</span>
+    ...basic,
+    system,
+    process: processInfo,
+    environment
+  };
 }
 &nbsp;
 // Readiness checks (for orchestration platforms)
 async function <span class="fstat-no" title="function not covered" >performReadinessChecks(</span>) {
-    const results = <span class="cstat-no" title="statement not covered" >{};</span>
-    let allReady = <span class="cstat-no" title="statement not covered" >true;</span>
+  const results = <span class="cstat-no" title="statement not covered" >{};</span>
+  let allReady = <span class="cstat-no" title="statement not covered" >true;</span>
 &nbsp;
-    // Check if email service is configured
-<span class="cstat-no" title="statement not covered" >    try {</span>
-        const emailValidation = <span class="cstat-no" title="statement not covered" >EmailServiceFactory.validateConfiguration();</span>
-<span class="cstat-no" title="statement not covered" >        results.email = {</span>
-            ready: emailValidation.valid,
-            provider: emailValidation.provider,
-            warnings: emailValidation.warnings,
-            errors: emailValidation.errors
-        };
-        
-<span class="cstat-no" title="statement not covered" >        if (!emailValidation.valid) {</span>
-<span class="cstat-no" title="statement not covered" >            allReady = false;</span>
-        }
-    } catch (error) {
-<span class="cstat-no" title="statement not covered" >        results.email = {</span>
-            ready: false,
-            error: error.message
-        };
-<span class="cstat-no" title="statement not covered" >        allReady = false;</span>
-    }
-&nbsp;
-    // Check environment variables
-    const requiredEnvVars = <span class="cstat-no" title="statement not covered" >[</span>
-        'NODE_ENV',
-        'JWT_SECRET',
-        'SESSION_SECRET'
-    ];
-&nbsp;
-    const missingEnvVars = <span class="cstat-no" title="statement not covered" >requiredEnvVars.filter(<span class="fstat-no" title="function not covered" >va</span>rName =&gt; <span class="cstat-no" title="statement not covered" >!process.env[varName])</span>;</span>
-<span class="cstat-no" title="statement not covered" >    results.environment = {</span>
-        ready: missingEnvVars.length === 0,
-        missing: missingEnvVars
+  // Check if email service is configured
+<span class="cstat-no" title="statement not covered" >  try {</span>
+    const emailValidation = <span class="cstat-no" title="statement not covered" >EmailServiceFactory.validateConfiguration();</span>
+<span class="cstat-no" title="statement not covered" >    results.email = {</span>
+      ready: emailValidation.valid,
+      provider: emailValidation.provider,
+      warnings: emailValidation.warnings,
+      errors: emailValidation.errors
     };
 &nbsp;
-<span class="cstat-no" title="statement not covered" >    if (missingEnvVars.length &gt; 0) {</span>
-<span class="cstat-no" title="statement not covered" >        allReady = false;</span>
+<span class="cstat-no" title="statement not covered" >    if (!emailValidation.valid) {</span>
+<span class="cstat-no" title="statement not covered" >      allReady = false;</span>
     }
-&nbsp;
-<span class="cstat-no" title="statement not covered" >    return {</span>
-        ready: allReady,
-        results
+  } catch (error) {
+<span class="cstat-no" title="statement not covered" >    results.email = {</span>
+      ready: false,
+      error: error.message
     };
+<span class="cstat-no" title="statement not covered" >    allReady = false;</span>
+  }
+&nbsp;
+  // Check environment variables
+  const requiredEnvVars = <span class="cstat-no" title="statement not covered" >['NODE_ENV', 'JWT_SECRET', 'SESSION_SECRET'];</span>
+&nbsp;
+  const missingEnvVars = <span class="cstat-no" title="statement not covered" >requiredEnvVars.filter(<span class="fstat-no" title="function not covered" >va</span>rName =&gt; <span class="cstat-no" title="statement not covered" >!process.env[varName])</span>;</span>
+<span class="cstat-no" title="statement not covered" >  results.environment = {</span>
+    ready: missingEnvVars.length === 0,
+    missing: missingEnvVars
+  };
+&nbsp;
+<span class="cstat-no" title="statement not covered" >  if (missingEnvVars.length &gt; 0) {</span>
+<span class="cstat-no" title="statement not covered" >    allReady = false;</span>
+  }
+&nbsp;
+<span class="cstat-no" title="statement not covered" >  return {</span>
+    ready: allReady,
+    results
+  };
 }
 &nbsp;
 // Performance metrics
 async function <span class="fstat-no" title="function not covered" >getPerformanceMetrics(</span>) {
-    const memUsage = <span class="cstat-no" title="statement not covered" >process.memoryUsage();</span>
-    const cpuUsage = <span class="cstat-no" title="statement not covered" >process.cpuUsage();</span>
-    
-<span class="cstat-no" title="statement not covered" >    return {</span>
-        timestamp: new Date().toISOString(),
-        uptime: process.uptime(),
-        memory: {
-            rss: memUsage.rss,
-            heapTotal: memUsage.heapTotal,
-            heapUsed: memUsage.heapUsed,
-            external: memUsage.external,
-            arrayBuffers: memUsage.arrayBuffers
-        },
-        cpu: {
-            user: cpuUsage.user,
-            system: cpuUsage.system
-        },
-        system: {
-            totalMemory: os.totalmem(),
-            freeMemory: os.freemem(),
-            loadAverage: os.loadavg(),
-            cpuCount: os.cpus().length
-        },
-        eventLoop: {
-            // Event loop lag would be measured here in a real implementation
-            lag: 0
-        }
-    };
+  const memUsage = <span class="cstat-no" title="statement not covered" >process.memoryUsage();</span>
+  const cpuUsage = <span class="cstat-no" title="statement not covered" >process.cpuUsage();</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >  return {</span>
+    timestamp: new Date().toISOString(),
+    uptime: process.uptime(),
+    memory: {
+      rss: memUsage.rss,
+      heapTotal: memUsage.heapTotal,
+      heapUsed: memUsage.heapUsed,
+      external: memUsage.external,
+      arrayBuffers: memUsage.arrayBuffers
+    },
+    cpu: {
+      user: cpuUsage.user,
+      system: cpuUsage.system
+    },
+    system: {
+      totalMemory: os.totalmem(),
+      freeMemory: os.freemem(),
+      loadAverage: os.loadavg(),
+      cpuCount: os.cpus().length
+    },
+    eventLoop: {
+      // Event loop lag would be measured here in a real implementation
+      lag: 0
+    }
+  };
 }
 &nbsp;
-export default router;</pre></td></tr></table></pre>
+export default router;
+&nbsp;</pre></td></tr></table></pre>
 
                 <div class='push'></div><!-- for sticky footer -->
             </div><!-- /wrapper -->
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2025-06-22T22:15:42.782Z
+                at 2025-06-23T06:20:12.641Z
             </div>
         <script src="../../prettify.js"></script>
         <script>

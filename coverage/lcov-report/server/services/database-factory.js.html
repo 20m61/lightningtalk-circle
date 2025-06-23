@@ -168,7 +168,8 @@
 <a name='L103'></a><a href='#L103'>103</a>
 <a name='L104'></a><a href='#L104'>104</a>
 <a name='L105'></a><a href='#L105'>105</a>
-<a name='L106'></a><a href='#L106'>106</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L106'></a><a href='#L106'>106</a>
+<a name='L107'></a><a href='#L107'>107</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -270,6 +271,7 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -282,110 +284,111 @@ import { DatabaseService } from './database.js';
 import { PostgreSQLDatabaseService } from './database-postgresql.js';
 &nbsp;
 export class DatabaseFactory {
-<span class="fstat-no" title="function not covered" >    st</span>atic create(options = <span class="branch-0 cbranch-no" title="branch not covered" >{})</span> {
-        const dbType = <span class="cstat-no" title="statement not covered" >options.type || process.env.DATABASE_TYPE || 'file';</span>
-        
-<span class="cstat-no" title="statement not covered" >        switch (dbType.toLowerCase()) {</span>
-            case 'postgresql':
-            case 'postgres':
-            case 'pg':
-<span class="cstat-no" title="statement not covered" >                console.log('🐘 Using PostgreSQL Database Service');</span>
-<span class="cstat-no" title="statement not covered" >                return new PostgreSQLDatabaseService();</span>
-                
-            case 'file':
-            case 'json':
-            default:
-<span class="cstat-no" title="statement not covered" >                console.log('📁 Using File-based Database Service');</span>
-<span class="cstat-no" title="statement not covered" >                return new DatabaseService();</span>
-        }
+<span class="fstat-no" title="function not covered" >  st</span>atic create(options = <span class="branch-0 cbranch-no" title="branch not covered" >{})</span> {
+    const dbType = <span class="cstat-no" title="statement not covered" >options.type || process.env.DATABASE_TYPE || 'file';</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    switch (dbType.toLowerCase()) {</span>
+      case 'postgresql':
+      case 'postgres':
+      case 'pg':
+<span class="cstat-no" title="statement not covered" >        console.log('🐘 Using PostgreSQL Database Service');</span>
+<span class="cstat-no" title="statement not covered" >        return new PostgreSQLDatabaseService();</span>
+&nbsp;
+      case 'file':
+      case 'json':
+      default:
+<span class="cstat-no" title="statement not covered" >        console.log('📁 Using File-based Database Service');</span>
+<span class="cstat-no" title="statement not covered" >        return new DatabaseService();</span>
     }
+  }
 &nbsp;
-<span class="fstat-no" title="function not covered" >    st</span>atic async createAndInitialize(options = <span class="branch-0 cbranch-no" title="branch not covered" >{})</span> {
-        const database = <span class="cstat-no" title="statement not covered" >this.create(options);</span>
-<span class="cstat-no" title="statement not covered" >        await database.initialize();</span>
-<span class="cstat-no" title="statement not covered" >        return database;</span>
-    }
+<span class="fstat-no" title="function not covered" >  st</span>atic async createAndInitialize(options = <span class="branch-0 cbranch-no" title="branch not covered" >{})</span> {
+    const database = <span class="cstat-no" title="statement not covered" >this.create(options);</span>
+<span class="cstat-no" title="statement not covered" >    await database.initialize();</span>
+<span class="cstat-no" title="statement not covered" >    return database;</span>
+  }
 &nbsp;
-<span class="fstat-no" title="function not covered" >    st</span>atic getSupportedTypes() {
-<span class="cstat-no" title="statement not covered" >        return [</span>
-            {
-                type: 'file',
-                name: 'File-based Database',
-                description: 'JSON file storage for development',
-                recommended: 'development'
-            },
-            {
-                type: 'postgresql',
-                name: 'PostgreSQL Database',
-                description: 'Production-grade relational database',
-                recommended: 'production'
-            }
-        ];
-    }
+<span class="fstat-no" title="function not covered" >  st</span>atic getSupportedTypes() {
+<span class="cstat-no" title="statement not covered" >    return [</span>
+      {
+        type: 'file',
+        name: 'File-based Database',
+        description: 'JSON file storage for development',
+        recommended: 'development'
+      },
+      {
+        type: 'postgresql',
+        name: 'PostgreSQL Database',
+        description: 'Production-grade relational database',
+        recommended: 'production'
+      }
+    ];
+  }
 &nbsp;
-<span class="fstat-no" title="function not covered" >    st</span>atic validateConfiguration(type = <span class="branch-0 cbranch-no" title="branch not covered" >null)</span> {
-        const dbType = <span class="cstat-no" title="statement not covered" >type || process.env.DATABASE_TYPE || 'file';</span>
-        const validation = <span class="cstat-no" title="statement not covered" >{</span>
-            type: dbType,
-            valid: true,
-            errors: [],
-            warnings: []
-        };
+<span class="fstat-no" title="function not covered" >  st</span>atic validateConfiguration(type = <span class="branch-0 cbranch-no" title="branch not covered" >null)</span> {
+    const dbType = <span class="cstat-no" title="statement not covered" >type || process.env.DATABASE_TYPE || 'file';</span>
+    const validation = <span class="cstat-no" title="statement not covered" >{</span>
+      type: dbType,
+      valid: true,
+      errors: [],
+      warnings: []
+    };
 &nbsp;
-<span class="cstat-no" title="statement not covered" >        switch (dbType.toLowerCase()) {</span>
-            case 'postgresql':
-            case 'postgres':
-            case 'pg':
-                // Check PostgreSQL configuration
-<span class="cstat-no" title="statement not covered" >                if (!process.env.DATABASE_URL) {</span>
-<span class="cstat-no" title="statement not covered" >                    validation.errors.push('DATABASE_URL is required for PostgreSQL');</span>
-<span class="cstat-no" title="statement not covered" >                    validation.valid = false;</span>
-                }
-&nbsp;
-                // Validate connection string format
-<span class="cstat-no" title="statement not covered" >                if (process.env.DATABASE_URL &amp;&amp; !process.env.DATABASE_URL.startsWith('postgresql://')) {</span>
-<span class="cstat-no" title="statement not covered" >                    validation.errors.push('DATABASE_URL must start with postgresql://');</span>
-<span class="cstat-no" title="statement not covered" >                    validation.valid = false;</span>
-                }
-&nbsp;
-                // Check pool configuration
-                const poolSize = <span class="cstat-no" title="statement not covered" >parseInt(process.env.DB_POOL_SIZE);</span>
-<span class="cstat-no" title="statement not covered" >                if (poolSize &amp;&amp; (poolSize &lt; 1 || poolSize &gt; 100)) {</span>
-<span class="cstat-no" title="statement not covered" >                    validation.warnings.push('DB_POOL_SIZE should be between 1 and 100');</span>
-                }
-&nbsp;
-<span class="cstat-no" title="statement not covered" >                break;</span>
-&nbsp;
-            case 'file':
-            case 'json':
-                // Check file permissions and directory
-<span class="cstat-no" title="statement not covered" >                try {</span>
-                    const dataDir = <span class="cstat-no" title="statement not covered" >process.env.DATABASE_FILE_DIR || './server/data';</span>
-                    // Additional file system checks can be added here
-<span class="cstat-no" title="statement not covered" >                    validation.warnings.push('File-based database is not recommended for production');</span>
-                } catch (error) {
-<span class="cstat-no" title="statement not covered" >                    validation.errors.push(`File system check failed: ${error.message}`);</span>
-<span class="cstat-no" title="statement not covered" >                    validation.valid = false;</span>
-                }
-<span class="cstat-no" title="statement not covered" >                break;</span>
-&nbsp;
-            default:
-<span class="cstat-no" title="statement not covered" >                validation.errors.push(`Unsupported database type: ${dbType}`);</span>
-<span class="cstat-no" title="statement not covered" >                validation.valid = false;</span>
+<span class="cstat-no" title="statement not covered" >    switch (dbType.toLowerCase()) {</span>
+      case 'postgresql':
+      case 'postgres':
+      case 'pg':
+        // Check PostgreSQL configuration
+<span class="cstat-no" title="statement not covered" >        if (!process.env.DATABASE_URL) {</span>
+<span class="cstat-no" title="statement not covered" >          validation.errors.push('DATABASE_URL is required for PostgreSQL');</span>
+<span class="cstat-no" title="statement not covered" >          validation.valid = false;</span>
         }
 &nbsp;
-<span class="cstat-no" title="statement not covered" >        return validation;</span>
+        // Validate connection string format
+<span class="cstat-no" title="statement not covered" >        if (process.env.DATABASE_URL &amp;&amp; !process.env.DATABASE_URL.startsWith('postgresql://')) {</span>
+<span class="cstat-no" title="statement not covered" >          validation.errors.push('DATABASE_URL must start with postgresql://');</span>
+<span class="cstat-no" title="statement not covered" >          validation.valid = false;</span>
+        }
+&nbsp;
+        // Check pool configuration
+        const poolSize = <span class="cstat-no" title="statement not covered" >parseInt(process.env.DB_POOL_SIZE);</span>
+<span class="cstat-no" title="statement not covered" >        if (poolSize &amp;&amp; (poolSize &lt; 1 || poolSize &gt; 100)) {</span>
+<span class="cstat-no" title="statement not covered" >          validation.warnings.push('DB_POOL_SIZE should be between 1 and 100');</span>
+        }
+&nbsp;
+<span class="cstat-no" title="statement not covered" >        break;</span>
+&nbsp;
+      case 'file':
+      case 'json':
+        // Check file permissions and directory
+<span class="cstat-no" title="statement not covered" >        try {</span>
+          const dataDir = <span class="cstat-no" title="statement not covered" >process.env.DATABASE_FILE_DIR || './server/data';</span>
+          // Additional file system checks can be added here
+<span class="cstat-no" title="statement not covered" >          validation.warnings.push('File-based database is not recommended for production');</span>
+        } catch (error) {
+<span class="cstat-no" title="statement not covered" >          validation.errors.push(`File system check failed: ${error.message}`);</span>
+<span class="cstat-no" title="statement not covered" >          validation.valid = false;</span>
+        }
+<span class="cstat-no" title="statement not covered" >        break;</span>
+&nbsp;
+      default:
+<span class="cstat-no" title="statement not covered" >        validation.errors.push(`Unsupported database type: ${dbType}`);</span>
+<span class="cstat-no" title="statement not covered" >        validation.valid = false;</span>
     }
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    return validation;</span>
+  }
 }
 &nbsp;
-export default DatabaseFactory;</pre></td></tr></table></pre>
+export default DatabaseFactory;
+&nbsp;</pre></td></tr></table></pre>
 
                 <div class='push'></div><!-- for sticky footer -->
             </div><!-- /wrapper -->
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2025-06-22T22:15:42.782Z
+                at 2025-06-23T06:20:12.641Z
             </div>
         <script src="../../prettify.js"></script>
         <script>

@@ -231,7 +231,10 @@
 <a name='L166'></a><a href='#L166'>166</a>
 <a name='L167'></a><a href='#L167'>167</a>
 <a name='L168'></a><a href='#L168'>168</a>
-<a name='L169'></a><a href='#L169'>169</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L169'></a><a href='#L169'>169</a>
+<a name='L170'></a><a href='#L170'>170</a>
+<a name='L171'></a><a href='#L171'>171</a>
+<a name='L172'></a><a href='#L172'>172</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -368,16 +371,6 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
@@ -388,9 +381,22 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -408,173 +414,176 @@ import { EmailService } from './email.js';
 import { ProductionEmailService } from './email-production.js';
 &nbsp;
 export class EmailServiceFactory {
-<span class="fstat-no" title="function not covered" >    st</span>atic create(options = <span class="branch-0 cbranch-no" title="branch not covered" >{})</span> {
-        const emailProvider = <span class="cstat-no" title="statement not covered" >options.provider || process.env.EMAIL_PROVIDER || 'simulation';</span>
-        const environment = <span class="cstat-no" title="statement not covered" >options.environment || process.env.NODE_ENV || 'development';</span>
-        
-        // Force production service for specific providers
-<span class="cstat-no" title="statement not covered" >        if (['sendgrid', 'ses'].includes(emailProvider)) {</span>
-<span class="cstat-no" title="statement not covered" >            console.log(`📧 Using Production Email Service (${emailProvider})`);</span>
-<span class="cstat-no" title="statement not covered" >            return new ProductionEmailService();</span>
-        }
-        
-        // Use production service in production environment
-<span class="cstat-no" title="statement not covered" >        if (environment === 'production' &amp;&amp; process.env.EMAIL_ENABLED === 'true') {</span>
-<span class="cstat-no" title="statement not covered" >            console.log('📧 Using Production Email Service (production mode)');</span>
-<span class="cstat-no" title="statement not covered" >            return new ProductionEmailService();</span>
-        }
-        
-        // Default to simulation service for development
-<span class="cstat-no" title="statement not covered" >        console.log('📧 Using Simulation Email Service (development mode)');</span>
-<span class="cstat-no" title="statement not covered" >        return new EmailService();</span>
+<span class="fstat-no" title="function not covered" >  st</span>atic create(options = <span class="branch-0 cbranch-no" title="branch not covered" >{})</span> {
+    const emailProvider = <span class="cstat-no" title="statement not covered" >options.provider || process.env.EMAIL_PROVIDER || 'simulation';</span>
+    const environment = <span class="cstat-no" title="statement not covered" >options.environment || process.env.NODE_ENV || 'development';</span>
+&nbsp;
+    // Force production service for specific providers
+<span class="cstat-no" title="statement not covered" >    if (['sendgrid', 'ses'].includes(emailProvider)) {</span>
+<span class="cstat-no" title="statement not covered" >      console.log(`📧 Using Production Email Service (${emailProvider})`);</span>
+<span class="cstat-no" title="statement not covered" >      return new ProductionEmailService();</span>
     }
 &nbsp;
-<span class="fstat-no" title="function not covered" >    st</span>atic async createAndInitialize(options = <span class="branch-0 cbranch-no" title="branch not covered" >{})</span> {
-        const emailService = <span class="cstat-no" title="statement not covered" >this.create(options);</span>
-        
-        // Wait for service to be ready if it has async initialization
-<span class="cstat-no" title="statement not covered" >        if (emailService.setupQueue &amp;&amp; typeof emailService.setupQueue === 'function') {</span>
-<span class="cstat-no" title="statement not covered" >            await new Promise(<span class="fstat-no" title="function not covered" >(r</span>esolve) =&gt; {</span>
-<span class="cstat-no" title="statement not covered" >                if (emailService.initialized) {</span>
-<span class="cstat-no" title="statement not covered" >                    resolve();</span>
-                } else {
-<span class="cstat-no" title="statement not covered" >                    emailService.once('ready', resolve);</span>
-                }
-            });
-        }
-        
-<span class="cstat-no" title="statement not covered" >        return emailService;</span>
+    // Use production service in production environment
+<span class="cstat-no" title="statement not covered" >    if (environment === 'production' &amp;&amp; process.env.EMAIL_ENABLED === 'true') {</span>
+<span class="cstat-no" title="statement not covered" >      console.log('📧 Using Production Email Service (production mode)');</span>
+<span class="cstat-no" title="statement not covered" >      return new ProductionEmailService();</span>
     }
 &nbsp;
-<span class="fstat-no" title="function not covered" >    st</span>atic getSupportedProviders() {
-<span class="cstat-no" title="statement not covered" >        return [</span>
-            {
-                provider: 'simulation',
-                name: 'Simulation Service',
-                description: 'Console logging for development',
-                recommended: 'development',
-                features: ['template-testing', 'console-output']
-            },
-            {
-                provider: 'sendgrid',
-                name: 'SendGrid',
-                description: 'Cloud email delivery platform',
-                recommended: 'production',
-                features: ['high-deliverability', 'analytics', 'templates', 'queue-support'],
-                requirements: ['SENDGRID_API_KEY']
-            },
-            {
-                provider: 'ses',
-                name: 'Amazon SES',
-                description: 'AWS Simple Email Service',
-                recommended: 'production',
-                features: ['cost-effective', 'aws-integration', 'high-volume'],
-                requirements: ['AWS_ACCESS_KEY_ID', 'AWS_SECRET_ACCESS_KEY', 'AWS_REGION']
-            }
-        ];
+    // Default to simulation service for development
+<span class="cstat-no" title="statement not covered" >    console.log('📧 Using Simulation Email Service (development mode)');</span>
+<span class="cstat-no" title="statement not covered" >    return new EmailService();</span>
+  }
+&nbsp;
+<span class="fstat-no" title="function not covered" >  st</span>atic async createAndInitialize(options = <span class="branch-0 cbranch-no" title="branch not covered" >{})</span> {
+    const emailService = <span class="cstat-no" title="statement not covered" >this.create(options);</span>
+&nbsp;
+    // Wait for service to be ready if it has async initialization
+<span class="cstat-no" title="statement not covered" >    if (emailService.setupQueue &amp;&amp; typeof emailService.setupQueue === 'function') {</span>
+<span class="cstat-no" title="statement not covered" >      await new Promise(<span class="fstat-no" title="function not covered" >re</span>solve =&gt; {</span>
+<span class="cstat-no" title="statement not covered" >        if (emailService.initialized) {</span>
+<span class="cstat-no" title="statement not covered" >          resolve();</span>
+        } else {
+<span class="cstat-no" title="statement not covered" >          emailService.once('ready', resolve);</span>
+        }
+      });
     }
 &nbsp;
-<span class="fstat-no" title="function not covered" >    st</span>atic validateConfiguration(provider = <span class="branch-0 cbranch-no" title="branch not covered" >null)</span> {
-        const emailProvider = <span class="cstat-no" title="statement not covered" >provider || process.env.EMAIL_PROVIDER || 'simulation';</span>
-        const validation = <span class="cstat-no" title="statement not covered" >{</span>
-            provider: emailProvider,
-            valid: true,
-            errors: [],
-            warnings: []
-        };
+<span class="cstat-no" title="statement not covered" >    return emailService;</span>
+  }
 &nbsp;
-<span class="cstat-no" title="statement not covered" >        switch (emailProvider) {</span>
-            case 'sendgrid':
-                // Check SendGrid configuration
-<span class="cstat-no" title="statement not covered" >                if (!process.env.SENDGRID_API_KEY) {</span>
-<span class="cstat-no" title="statement not covered" >                    validation.errors.push('SENDGRID_API_KEY is required for SendGrid provider');</span>
-<span class="cstat-no" title="statement not covered" >                    validation.valid = false;</span>
-                }
-                
-<span class="cstat-no" title="statement not covered" >                if (!process.env.EMAIL_FROM) {</span>
-<span class="cstat-no" title="statement not covered" >                    validation.warnings.push('EMAIL_FROM should be set for better deliverability');</span>
-                }
-                
-                // Validate API key format
-<span class="cstat-no" title="statement not covered" >                if (process.env.SENDGRID_API_KEY &amp;&amp; !process.env.SENDGRID_API_KEY.startsWith('SG.')) {</span>
-<span class="cstat-no" title="statement not covered" >                    validation.warnings.push('SendGrid API key should start with "SG."');</span>
-                }
-<span class="cstat-no" title="statement not covered" >                break;</span>
+<span class="fstat-no" title="function not covered" >  st</span>atic getSupportedProviders() {
+<span class="cstat-no" title="statement not covered" >    return [</span>
+      {
+        provider: 'simulation',
+        name: 'Simulation Service',
+        description: 'Console logging for development',
+        recommended: 'development',
+        features: ['template-testing', 'console-output']
+      },
+      {
+        provider: 'sendgrid',
+        name: 'SendGrid',
+        description: 'Cloud email delivery platform',
+        recommended: 'production',
+        features: ['high-deliverability', 'analytics', 'templates', 'queue-support'],
+        requirements: ['SENDGRID_API_KEY']
+      },
+      {
+        provider: 'ses',
+        name: 'Amazon SES',
+        description: 'AWS Simple Email Service',
+        recommended: 'production',
+        features: ['cost-effective', 'aws-integration', 'high-volume'],
+        requirements: ['AWS_ACCESS_KEY_ID', 'AWS_SECRET_ACCESS_KEY', 'AWS_REGION']
+      }
+    ];
+  }
 &nbsp;
-            case 'ses':
-                // Check AWS SES configuration
-                const requiredAwsVars = <span class="cstat-no" title="statement not covered" >['AWS_ACCESS_KEY_ID', 'AWS_SECRET_ACCESS_KEY'];</span>
-                const missingVars = <span class="cstat-no" title="statement not covered" >requiredAwsVars.filter(<span class="fstat-no" title="function not covered" >va</span>rName =&gt; <span class="cstat-no" title="statement not covered" >!process.env[varName])</span>;</span>
-                
-<span class="cstat-no" title="statement not covered" >                if (missingVars.length &gt; 0) {</span>
-<span class="cstat-no" title="statement not covered" >                    validation.errors.push(`Missing AWS credentials: ${missingVars.join(', ')}`);</span>
-<span class="cstat-no" title="statement not covered" >                    validation.valid = false;</span>
-                }
-                
-<span class="cstat-no" title="statement not covered" >                if (!process.env.AWS_REGION) {</span>
-<span class="cstat-no" title="statement not covered" >                    validation.warnings.push('AWS_REGION not set, defaulting to us-east-1');</span>
-                }
-<span class="cstat-no" title="statement not covered" >                break;</span>
+<span class="fstat-no" title="function not covered" >  st</span>atic validateConfiguration(provider = <span class="branch-0 cbranch-no" title="branch not covered" >null)</span> {
+    const emailProvider = <span class="cstat-no" title="statement not covered" >provider || process.env.EMAIL_PROVIDER || 'simulation';</span>
+    const validation = <span class="cstat-no" title="statement not covered" >{</span>
+      provider: emailProvider,
+      valid: true,
+      errors: [],
+      warnings: []
+    };
 &nbsp;
-            case 'simulation':
-                // Simulation mode warnings
-<span class="cstat-no" title="statement not covered" >                if (process.env.NODE_ENV === 'production') {</span>
-<span class="cstat-no" title="statement not covered" >                    validation.warnings.push('Using simulation mode in production environment');</span>
-                }
-<span class="cstat-no" title="statement not covered" >                break;</span>
-&nbsp;
-            default:
-<span class="cstat-no" title="statement not covered" >                validation.errors.push(`Unsupported email provider: ${emailProvider}`);</span>
-<span class="cstat-no" title="statement not covered" >                validation.valid = false;</span>
+<span class="cstat-no" title="statement not covered" >    switch (emailProvider) {</span>
+      case 'sendgrid':
+        // Check SendGrid configuration
+<span class="cstat-no" title="statement not covered" >        if (!process.env.SENDGRID_API_KEY) {</span>
+<span class="cstat-no" title="statement not covered" >          validation.errors.push('SENDGRID_API_KEY is required for SendGrid provider');</span>
+<span class="cstat-no" title="statement not covered" >          validation.valid = false;</span>
         }
 &nbsp;
-        // Check Redis configuration for queue support
-<span class="cstat-no" title="statement not covered" >        if (['sendgrid', 'ses'].includes(emailProvider)) {</span>
-<span class="cstat-no" title="statement not covered" >            if (!process.env.REDIS_URL) {</span>
-<span class="cstat-no" title="statement not covered" >                validation.warnings.push('REDIS_URL not set, email queue will use default Redis connection');</span>
-            }
+<span class="cstat-no" title="statement not covered" >        if (!process.env.EMAIL_FROM) {</span>
+<span class="cstat-no" title="statement not covered" >          validation.warnings.push('EMAIL_FROM should be set for better deliverability');</span>
         }
 &nbsp;
-        // Check general email configuration
-<span class="cstat-no" title="statement not covered" >        if (process.env.EMAIL_ENABLED === 'true' &amp;&amp; !process.env.EMAIL_FROM) {</span>
-<span class="cstat-no" title="statement not covered" >            validation.warnings.push('EMAIL_FROM should be set when email is enabled');</span>
+        // Validate API key format
+<span class="cstat-no" title="statement not covered" >        if (process.env.SENDGRID_API_KEY &amp;&amp; !process.env.SENDGRID_API_KEY.startsWith('SG.')) {</span>
+<span class="cstat-no" title="statement not covered" >          validation.warnings.push('SendGrid API key should start with "SG."');</span>
+        }
+<span class="cstat-no" title="statement not covered" >        break;</span>
+&nbsp;
+      case 'ses':
+        // Check AWS SES configuration
+        const requiredAwsVars = <span class="cstat-no" title="statement not covered" >['AWS_ACCESS_KEY_ID', 'AWS_SECRET_ACCESS_KEY'];</span>
+        const missingVars = <span class="cstat-no" title="statement not covered" >requiredAwsVars.filter(<span class="fstat-no" title="function not covered" >va</span>rName =&gt; <span class="cstat-no" title="statement not covered" >!process.env[varName])</span>;</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >        if (missingVars.length &gt; 0) {</span>
+<span class="cstat-no" title="statement not covered" >          validation.errors.push(`Missing AWS credentials: ${missingVars.join(', ')}`);</span>
+<span class="cstat-no" title="statement not covered" >          validation.valid = false;</span>
         }
 &nbsp;
-<span class="cstat-no" title="statement not covered" >        return validation;</span>
+<span class="cstat-no" title="statement not covered" >        if (!process.env.AWS_REGION) {</span>
+<span class="cstat-no" title="statement not covered" >          validation.warnings.push('AWS_REGION not set, defaulting to us-east-1');</span>
+        }
+<span class="cstat-no" title="statement not covered" >        break;</span>
+&nbsp;
+      case 'simulation':
+        // Simulation mode warnings
+<span class="cstat-no" title="statement not covered" >        if (process.env.NODE_ENV === 'production') {</span>
+<span class="cstat-no" title="statement not covered" >          validation.warnings.push('Using simulation mode in production environment');</span>
+        }
+<span class="cstat-no" title="statement not covered" >        break;</span>
+&nbsp;
+      default:
+<span class="cstat-no" title="statement not covered" >        validation.errors.push(`Unsupported email provider: ${emailProvider}`);</span>
+<span class="cstat-no" title="statement not covered" >        validation.valid = false;</span>
     }
 &nbsp;
-<span class="fstat-no" title="function not covered" >    st</span>atic async testEmailConfiguration(provider = <span class="branch-0 cbranch-no" title="branch not covered" >null)</span> {
-<span class="cstat-no" title="statement not covered" >        try {</span>
-            const emailService = <span class="cstat-no" title="statement not covered" >this.create({ provider });</span>
-            
-            // Perform health check if available
-<span class="cstat-no" title="statement not covered" >            if (emailService.healthCheck &amp;&amp; typeof emailService.healthCheck === 'function') {</span>
-<span class="cstat-no" title="statement not covered" >                return await emailService.healthCheck();</span>
-            }
-            
-<span class="cstat-no" title="statement not covered" >            return {</span>
-                status: 'healthy',
-                provider: provider || process.env.EMAIL_PROVIDER || 'simulation',
-                message: 'Email service created successfully'
-            };
-        } catch (error) {
-<span class="cstat-no" title="statement not covered" >            return {</span>
-                status: 'unhealthy',
-                provider: provider || process.env.EMAIL_PROVIDER || 'simulation',
-                error: error.message
-            };
-        }
+    // Check Redis configuration for queue support
+<span class="cstat-no" title="statement not covered" >    if (['sendgrid', 'ses'].includes(emailProvider)) {</span>
+<span class="cstat-no" title="statement not covered" >      if (!process.env.REDIS_URL) {</span>
+<span class="cstat-no" title="statement not covered" >        validation.warnings.push(</span>
+          'REDIS_URL not set, email queue will use default Redis connection'
+        );
+      }
     }
+&nbsp;
+    // Check general email configuration
+<span class="cstat-no" title="statement not covered" >    if (process.env.EMAIL_ENABLED === 'true' &amp;&amp; !process.env.EMAIL_FROM) {</span>
+<span class="cstat-no" title="statement not covered" >      validation.warnings.push('EMAIL_FROM should be set when email is enabled');</span>
+    }
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    return validation;</span>
+  }
+&nbsp;
+<span class="fstat-no" title="function not covered" >  st</span>atic async testEmailConfiguration(provider = <span class="branch-0 cbranch-no" title="branch not covered" >null)</span> {
+<span class="cstat-no" title="statement not covered" >    try {</span>
+      const emailService = <span class="cstat-no" title="statement not covered" >this.create({ provider });</span>
+&nbsp;
+      // Perform health check if available
+<span class="cstat-no" title="statement not covered" >      if (emailService.healthCheck &amp;&amp; typeof emailService.healthCheck === 'function') {</span>
+<span class="cstat-no" title="statement not covered" >        return await emailService.healthCheck();</span>
+      }
+&nbsp;
+<span class="cstat-no" title="statement not covered" >      return {</span>
+        status: 'healthy',
+        provider: provider || process.env.EMAIL_PROVIDER || 'simulation',
+        message: 'Email service created successfully'
+      };
+    } catch (error) {
+<span class="cstat-no" title="statement not covered" >      return {</span>
+        status: 'unhealthy',
+        provider: provider || process.env.EMAIL_PROVIDER || 'simulation',
+        error: error.message
+      };
+    }
+  }
 }
 &nbsp;
-export default EmailServiceFactory;</pre></td></tr></table></pre>
+export default EmailServiceFactory;
+&nbsp;</pre></td></tr></table></pre>
 
                 <div class='push'></div><!-- for sticky footer -->
             </div><!-- /wrapper -->
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2025-06-22T22:15:42.782Z
+                at 2025-06-23T06:20:12.641Z
             </div>
         <script src="../../prettify.js"></script>
         <script>

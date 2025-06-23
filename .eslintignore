@@ -55,3 +55,7 @@ wordpress/wp-content/uploads/
 
 # Gulp temp files
 gulp-temp/
+
+# ESLint ignore
+package.json
+package-lock.json

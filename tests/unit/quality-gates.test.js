@@ -1,23 +1,21 @@
 import { jest } from '@jest/globals';
-import { execSync } from 'child_process';
-import fs from 'fs';
-import path from 'path';
 
-// Mock dependencies
+// Mock dependencies (jest.mock は import より前に書く)
 jest.mock('child_process');
 jest.mock('fs');
 jest.mock('path');
 jest.mock('chalk', () => ({
-  blue: jest.fn((text) => text),
-  green: jest.fn((text) => text),
-  yellow: jest.fn((text) => text),
-  red: jest.fn((text) => text),
-  cyan: jest.fn((text) => text),
-  gray: jest.fn((text) => text),
-  white: jest.fn((text) => text)
+  blue: jest.fn(text => text),
+  green: jest.fn(text => text),
+  yellow: jest.fn(text => text),
+  red: jest.fn(text => text),
+  cyan: jest.fn(text => text),
+  gray: jest.fn(text => text),
+  white: jest.fn(text => text)
 }));
 
-// Import after mocking
+import { execSync } from 'child_process';
+import fs from 'fs';
 import QualityGateSystem from '../../scripts/quality-gates.js';
 
 describe('QualityGateSystem', () => {
@@ -47,7 +45,7 @@ describe('QualityGateSystem', () => {
         timeout: 600000,
         parallel: false
       });
-      
+
       expect(customGates.config.thresholds.coverage).toBe(90);
       expect(customGates.config.timeout).toBe(600000);
       expect(customGates.config.parallel).toBe(false);
@@ -55,7 +53,7 @@ describe('QualityGateSystem', () => {
   });
 
   describe('runUnitTests', () => {
-    it('should return successful result when tests pass', async () => {
+    it('should return successful result when tests pass', async() => {
       execSync.mockReturnValue('5 passing\n0 failing');
 
       const result = await qualityGates.runUnitTests();
@@ -66,7 +64,7 @@ describe('QualityGateSystem', () => {
       expect(result.details.failing).toBe(0);
     });
 
-    it('should return failed result when tests fail', async () => {
+    it('should return failed result when tests fail', async() => {
       execSync.mockReturnValue('3 passing\n2 failing');
 
       const result = await qualityGates.runUnitTests();
@@ -77,7 +75,7 @@ describe('QualityGateSystem', () => {
       expect(result.details.failing).toBe(2);
     });
 
-    it('should handle execution errors', async () => {
+    it('should handle execution errors', async() => {
       execSync.mockImplementation(() => {
         throw new Error('Test execution failed');
       });
@@ -91,7 +89,7 @@ describe('QualityGateSystem', () => {
   });
 
   describe('runIntegrationTests', () => {
-    it('should return successful result when integration tests pass', async () => {
+    it('should return successful result when integration tests pass', async() => {
       execSync.mockReturnValue('8 passing\n0 failing');
 
       const result = await qualityGates.runIntegrationTests();
@@ -102,7 +100,7 @@ describe('QualityGateSystem', () => {
       expect(result.details.failing).toBe(0);
     });
 
-    it('should skip when integration tests not configured', async () => {
+    it('should skip when integration tests not configured', async() => {
       execSync.mockImplementation(() => {
         const error = new Error('script not found');
         throw error;
@@ -115,7 +113,7 @@ describe('QualityGateSystem', () => {
       expect(result.details.skipped).toBe('Integration tests not configured');
     });
 
-    it('should handle other execution errors', async () => {
+    it('should handle other execution errors', async() => {
       execSync.mockImplementation(() => {
         throw new Error('Connection failed');
       });
@@ -129,7 +127,7 @@ describe('QualityGateSystem', () => {
   });
 
   describe('checkCodeCoverage', () => {
-    it('should return successful result when coverage meets threshold', async () => {
+    it('should return successful result when coverage meets threshold', async() => {
       execSync.mockReturnValue('All files      |   85.5   |');
 
       const result = await qualityGates.checkCodeCoverage();
@@ -140,7 +138,7 @@ describe('QualityGateSystem', () => {
       expect(result.details.threshold).toBe(80);
     });
 
-    it('should return failed result when coverage below threshold', async () => {
+    it('should return failed result when coverage below threshold', async() => {
       execSync.mockReturnValue('All files      |   75.2   |');
 
       const result = await qualityGates.checkCodeCoverage();
@@ -150,7 +148,7 @@ describe('QualityGateSystem', () => {
       expect(result.details.coverage).toBe(75.2);
     });
 
-    it('should handle execution errors', async () => {
+    it('should handle execution errors', async() => {
       execSync.mockImplementation(() => {
         throw new Error('Coverage tool failed');
       });
@@ -164,8 +162,8 @@ describe('QualityGateSystem', () => {
   });
 
   describe('checkCodeQuality', () => {
-    it('should return successful result when quality checks pass', async () => {
-      execSync.mockImplementation((cmd) => {
+    it('should return successful result when quality checks pass', async() => {
+      execSync.mockImplementation(cmd => {
         if (cmd.includes('eslint')) {
           // Mock successful ESLint execution
           return '';
@@ -176,9 +174,7 @@ describe('QualityGateSystem', () => {
         }
       });
 
-      fs.readFileSync.mockReturnValue(JSON.stringify([
-        { errorCount: 0, warningCount: 0 }
-      ]));
+      fs.readFileSync.mockReturnValue(JSON.stringify([{ errorCount: 0, warningCount: 0 }]));
 
       const result = await qualityGates.checkCodeQuality();
 
@@ -186,8 +182,8 @@ describe('QualityGateSystem', () => {
       expect(result.score).toBe(100);
     });
 
-    it('should handle ESLint errors', async () => {
-      execSync.mockImplementation((cmd) => {
+    it('should handle ESLint errors', async() => {
+      execSync.mockImplementation(cmd => {
         if (cmd.includes('eslint')) {
           throw new Error('ESLint failed');
         }
@@ -196,24 +192,26 @@ describe('QualityGateSystem', () => {
       const result = await qualityGates.checkCodeQuality();
 
       expect(result.passed).toBe(false);
-      expect(result.details.checks.some(check => 
-        check.name === 'ESLint' && !check.passed
-      )).toBe(true);
+      expect(result.details.checks.some(check => check.name === 'ESLint' && !check.passed)).toBe(
+        true
+      );
     });
   });
 
   describe('runSecurityScan', () => {
-    it('should return successful result when no security issues found', async () => {
-      execSync.mockReturnValue(JSON.stringify({
-        metadata: {
-          vulnerabilities: {
-            critical: 0,
-            high: 0,
-            moderate: 0,
-            low: 0
+    it('should return successful result when no security issues found', async() => {
+      execSync.mockReturnValue(
+        JSON.stringify({
+          metadata: {
+            vulnerabilities: {
+              critical: 0,
+              high: 0,
+              moderate: 0,
+              low: 0
+            }
           }
-        }
-      }));
+        })
+      );
 
       fs.existsSync.mockReturnValue(true);
       fs.readdirSync.mockReturnValue([]);
@@ -225,7 +223,7 @@ describe('QualityGateSystem', () => {
       expect(result.score).toBeGreaterThan(0);
     });
 
-    it('should handle security vulnerabilities', async () => {
+    it('should handle security vulnerabilities', async() => {
       execSync.mockImplementation(() => {
         const error = new Error('Vulnerabilities found');
         error.stdout = JSON.stringify({
@@ -246,9 +244,9 @@ describe('QualityGateSystem', () => {
       const result = await qualityGates.runSecurityScan();
 
       expect(result.passed).toBe(false);
-      expect(result.details.checks.some(check => 
-        check.name === 'npm audit' && !check.passed
-      )).toBe(true);
+      expect(result.details.checks.some(check => check.name === 'npm audit' && !check.passed)).toBe(
+        true
+      );
     });
   });
 
@@ -276,7 +274,7 @@ describe('QualityGateSystem', () => {
   });
 
   describe('runPerformanceTests', () => {
-    it('should return successful result when performance tests pass', async () => {
+    it('should return successful result when performance tests pass', async() => {
       execSync.mockReturnValue('average response time: 500ms');
 
       const result = await qualityGates.runPerformanceTests();
@@ -286,7 +284,7 @@ describe('QualityGateSystem', () => {
       expect(result.details.responseTime).toBe(500);
     });
 
-    it('should skip when performance tests not configured', async () => {
+    it('should skip when performance tests not configured', async() => {
       execSync.mockImplementation(() => {
         throw new Error('Performance tests not configured');
       });
@@ -300,14 +298,16 @@ describe('QualityGateSystem', () => {
   });
 
   describe('checkDependencies', () => {
-    it('should return successful result when dependencies are up to date', async () => {
+    it('should return successful result when dependencies are up to date', async() => {
       fs.existsSync.mockReturnValue(true);
-      fs.readFileSync.mockReturnValue(JSON.stringify({
-        name: 'test-project',
-        dependencies: { 'test-dep': '^1.0.0' }
-      }));
+      fs.readFileSync.mockReturnValue(
+        JSON.stringify({
+          name: 'test-project',
+          dependencies: { 'test-dep': '^1.0.0' }
+        })
+      );
 
-      execSync.mockImplementation((cmd) => {
+      execSync.mockImplementation(cmd => {
         if (cmd.includes('outdated')) {
           return '{}';
         }
@@ -322,7 +322,7 @@ describe('QualityGateSystem', () => {
       expect(result.score).toBe(100);
     });
 
-    it('should handle missing package.json', async () => {
+    it('should handle missing package.json', async() => {
       fs.existsSync.mockReturnValue(false);
 
       const result = await qualityGates.checkDependencies();
@@ -334,7 +334,7 @@ describe('QualityGateSystem', () => {
   });
 
   describe('analyzeBundleSize', () => {
-    it('should return successful result when bundle size is acceptable', async () => {
+    it('should return successful result when bundle size is acceptable', async() => {
       qualityGates.getBundleStats = jest.fn().mockReturnValue({
         totalSize: 1024 * 1024, // 1MB
         breakdown: { src: 1024 * 1024 }
@@ -347,7 +347,7 @@ describe('QualityGateSystem', () => {
       expect(result.details.totalSize).toBe(1024 * 1024);
     });
 
-    it('should handle bundle analysis errors', async () => {
+    it('should handle bundle analysis errors', async() => {
       qualityGates.getBundleStats = jest.fn().mockImplementation(() => {
         throw new Error('Bundle analysis failed');
       });
@@ -419,30 +419,29 @@ describe('QualityGateSystem', () => {
     describe('getRecommendations', () => {
       it('should return specific recommendations for known gates', () => {
         const recommendations = qualityGates.getRecommendations('Unit Tests');
-        
+
         expect(recommendations).toContain('Fix failing unit tests');
         expect(recommendations).toContain('Add tests for uncovered code paths');
       });
 
       it('should return default recommendation for unknown gates', () => {
         const recommendations = qualityGates.getRecommendations('Unknown Gate');
-        
+
         expect(recommendations).toContain('Review and fix identified issues');
       });
     });
   });
 
   describe('checkAccessibility', () => {
-    it('should return successful result when accessibility checks pass', async () => {
+    it('should return successful result when accessibility checks pass', async() => {
       qualityGates.getAllHTMLFiles = jest.fn().mockReturnValue(['test.html']);
       qualityGates.validateHTMLAccessibility = jest.fn().mockReturnValue([
         { name: 'Alt attributes', passed: true },
         { name: 'Form labels', passed: true }
       ]);
-      qualityGates.checkWCAGCompliance = jest.fn().mockReturnValue({
-        name: 'WCAG Compliance',
-        passed: true
-      });
+      qualityGates.checkWCAGCompliance = jest
+        .fn()
+        .mockReturnValue({ name: 'WCAG Compliance', passed: true });
 
       const result = await qualityGates.checkAccessibility();
 
@@ -450,16 +449,15 @@ describe('QualityGateSystem', () => {
       expect(result.score).toBe(100);
     });
 
-    it('should return failed result when accessibility issues found', async () => {
+    it('should return failed result when accessibility issues found', async() => {
       qualityGates.getAllHTMLFiles = jest.fn().mockReturnValue(['test.html']);
       qualityGates.validateHTMLAccessibility = jest.fn().mockReturnValue([
         { name: 'Alt attributes', passed: false },
         { name: 'Form labels', passed: true }
       ]);
-      qualityGates.checkWCAGCompliance = jest.fn().mockReturnValue({
-        name: 'WCAG Compliance',
-        passed: false
-      });
+      qualityGates.checkWCAGCompliance = jest
+        .fn()
+        .mockReturnValue({ name: 'WCAG Compliance', passed: false });
 
       const result = await qualityGates.checkAccessibility();
 
@@ -471,9 +469,9 @@ describe('QualityGateSystem', () => {
   describe('validateHTMLAccessibility', () => {
     it('should detect missing alt attributes', () => {
       const html = '<img src="test.jpg"><img src="test2.jpg" alt="test">';
-      
+
       const result = qualityGates.validateHTMLAccessibility(html, 'test.html');
-      
+
       const altCheck = result.find(check => check.name.includes('alt attributes'));
       expect(altCheck.passed).toBe(false);
       expect(altCheck.message).toContain('Found 1 img tags without alt attributes');
@@ -481,9 +479,9 @@ describe('QualityGateSystem', () => {
 
     it('should pass when all images have alt attributes', () => {
       const html = '<img src="test.jpg" alt="Test image"><img src="test2.jpg" alt="Another test">';
-      
+
       const result = qualityGates.validateHTMLAccessibility(html, 'test.html');
-      
+
       const altCheck = result.find(check => check.name.includes('alt attributes'));
       expect(altCheck.passed).toBe(true);
     });
@@ -491,13 +489,15 @@ describe('QualityGateSystem', () => {
     it('should validate heading structure', () => {
       const invalidHtml = '<h1>Title</h1><h3>Skipped h2</h3>';
       const validHtml = '<h1>Title</h1><h2>Subtitle</h2><h3>Section</h3>';
-      
+
       const invalidResult = qualityGates.validateHTMLAccessibility(invalidHtml, 'test.html');
       const validResult = qualityGates.validateHTMLAccessibility(validHtml, 'test.html');
-      
-      const invalidHeadingCheck = invalidResult.find(check => check.name.includes('Heading structure'));
+
+      const invalidHeadingCheck = invalidResult.find(check =>
+        check.name.includes('Heading structure')
+      );
       const validHeadingCheck = validResult.find(check => check.name.includes('Heading structure'));
-      
+
       expect(invalidHeadingCheck.passed).toBe(false);
       expect(validHeadingCheck.passed).toBe(true);
     });
@@ -506,7 +506,9 @@ describe('QualityGateSystem', () => {
   describe('checkWCAGCompliance', () => {
     it('should check interactive elements accessibility', () => {
       qualityGates.getAllHTMLFiles = jest.fn().mockReturnValue(['test.html']);
-      fs.readFileSync.mockReturnValue('<button>Click me</button><input type="text" aria-label="Name">');
+      fs.readFileSync.mockReturnValue(
+        '<button>Click me</button><input type="text" aria-label="Name">'
+      );
 
       const result = qualityGates.checkWCAGCompliance();
 
@@ -547,7 +549,9 @@ describe('QualityGateSystem', () => {
       expect(result.some(file => file.includes('node_modules'))).toBe(false);
     });
   });
-    it('should execute gate and return result with timing', async () => {
+
+  describe('executeGate', () => {
+    it('should execute gate and return result with timing', async() => {
       const mockGate = {
         name: 'Test Gate',
         runner: jest.fn().mockResolvedValue({
@@ -566,7 +570,7 @@ describe('QualityGateSystem', () => {
       expect(mockGate.runner).toHaveBeenCalled();
     });
 
-    it('should handle gate execution errors', async () => {
+    it('should handle gate execution errors', async() => {
       const mockGate = {
         name: 'Failing Gate',
         runner: jest.fn().mockRejectedValue(new Error('Gate failed'))
@@ -609,7 +613,7 @@ describe('QualityGateSystem', () => {
   describe('exportResults', () => {
     it('should export results to JSON file', () => {
       fs.writeFileSync.mockImplementation(() => {});
-      
+
       qualityGates.exportResults('custom-results.json');
 
       expect(fs.writeFileSync).toHaveBeenCalledWith(

@@ -404,7 +404,8 @@
 <a name='L339'></a><a href='#L339'>339</a>
 <a name='L340'></a><a href='#L340'>340</a>
 <a name='L341'></a><a href='#L341'>341</a>
-<a name='L342'></a><a href='#L342'>342</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L342'></a><a href='#L342'>342</a>
+<a name='L343'></a><a href='#L343'>343</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -736,6 +737,7 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -760,340 +762,341 @@ const suspiciousIPs = <span class="cstat-no" title="statement not covered" >new 
 /**
  * Custom key generator for more granular rate limiting
  */
-const customKeyGenerator = <span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" >(r</span>eq) =&gt; {</span>
-    // Combine IP with user agent for better fingerprinting
-    const userAgent = <span class="cstat-no" title="statement not covered" >req.get('User-Agent') || 'unknown';</span>
-    const forwarded = <span class="cstat-no" title="statement not covered" >req.get('X-Forwarded-For') || req.ip;</span>
-<span class="cstat-no" title="statement not covered" >    return `${forwarded}-${userAgent.substring(0, 50)}`;</span>
+const customKeyGenerator = <span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" >re</span>q =&gt; {</span>
+  // Combine IP with user agent for better fingerprinting
+  const userAgent = <span class="cstat-no" title="statement not covered" >req.get('User-Agent') || 'unknown';</span>
+  const forwarded = <span class="cstat-no" title="statement not covered" >req.get('X-Forwarded-For') || req.ip;</span>
+<span class="cstat-no" title="statement not covered" >  return `${forwarded}-${userAgent.substring(0, 50)}`;</span>
 };
 &nbsp;
 /**
  * Enhanced handler with security logging and adaptive measures
  */
-const createSecurityHandler = <span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" >(e</span>ndpoint) =&gt; {</span>
-<span class="cstat-no" title="statement not covered" >    return <span class="fstat-no" title="function not covered" >(r</span>eq, res) =&gt; {</span>
-        const key = <span class="cstat-no" title="statement not covered" >customKeyGenerator(req);</span>
-        const now = <span class="cstat-no" title="statement not covered" >Date.now();</span>
+const createSecurityHandler = <span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" >en</span>dpoint =&gt; {</span>
+<span class="cstat-no" title="statement not covered" >  return <span class="fstat-no" title="function not covered" >(r</span>eq, res) =&gt; {</span>
+    const key = <span class="cstat-no" title="statement not covered" >customKeyGenerator(req);</span>
+    const now = <span class="cstat-no" title="statement not covered" >Date.now();</span>
 &nbsp;
-        // Track failed attempts
-<span class="cstat-no" title="statement not covered" >        if (!attemptStore.has(key)) {</span>
-<span class="cstat-no" title="statement not covered" >            attemptStore.set(key, { count: 0, firstAttempt: now, lastAttempt: now });</span>
-        }
+    // Track failed attempts
+<span class="cstat-no" title="statement not covered" >    if (!attemptStore.has(key)) {</span>
+<span class="cstat-no" title="statement not covered" >      attemptStore.set(key, { count: 0, firstAttempt: now, lastAttempt: now });</span>
+    }
 &nbsp;
-        const attempts = <span class="cstat-no" title="statement not covered" >attemptStore.get(key);</span>
-<span class="cstat-no" title="statement not covered" >        attempts.count++;</span>
-<span class="cstat-no" title="statement not covered" >        attempts.lastAttempt = now;</span>
+    const attempts = <span class="cstat-no" title="statement not covered" >attemptStore.get(key);</span>
+<span class="cstat-no" title="statement not covered" >    attempts.count++;</span>
+<span class="cstat-no" title="statement not covered" >    attempts.lastAttempt = now;</span>
 &nbsp;
-        // Mark as suspicious after multiple rate limit hits
-<span class="cstat-no" title="statement not covered" >        if (attempts.count &gt; 5) {</span>
-<span class="cstat-no" title="statement not covered" >            suspiciousIPs.add(req.ip);</span>
-<span class="cstat-no" title="statement not covered" >            console.error('Suspicious activity detected:', {</span>
-                ip: req.ip,
-                userAgent: req.get('User-Agent'),
-                endpoint: endpoint,
-                attempts: attempts.count,
-                timeSpan: now - attempts.firstAttempt,
-                timestamp: new Date().toISOString()
-            });
-        }
+    // Mark as suspicious after multiple rate limit hits
+<span class="cstat-no" title="statement not covered" >    if (attempts.count &gt; 5) {</span>
+<span class="cstat-no" title="statement not covered" >      suspiciousIPs.add(req.ip);</span>
+<span class="cstat-no" title="statement not covered" >      console.error('Suspicious activity detected:', {</span>
+        ip: req.ip,
+        userAgent: req.get('User-Agent'),
+        endpoint,
+        attempts: attempts.count,
+        timeSpan: now - attempts.firstAttempt,
+        timestamp: new Date().toISOString()
+      });
+    }
 &nbsp;
-        // Clean old entries (older than 1 hour)
-<span class="cstat-no" title="statement not covered" >        if (now - attempts.firstAttempt &gt; 3600000) {</span>
-<span class="cstat-no" title="statement not covered" >            attemptStore.delete(key);</span>
-        }
+    // Clean old entries (older than 1 hour)
+<span class="cstat-no" title="statement not covered" >    if (now - attempts.firstAttempt &gt; 3600000) {</span>
+<span class="cstat-no" title="statement not covered" >      attemptStore.delete(key);</span>
+    }
 &nbsp;
-        // Log rate limit hit
-<span class="cstat-no" title="statement not covered" >        console.warn('Rate limit exceeded:', {</span>
-            ip: req.ip,
-            userAgent: req.get('User-Agent'),
-            endpoint: endpoint,
-            method: req.method,
-            url: req.originalUrl,
-            totalAttempts: attempts.count,
-            timestamp: new Date().toISOString()
-        });
+    // Log rate limit hit
+<span class="cstat-no" title="statement not covered" >    console.warn('Rate limit exceeded:', {</span>
+      ip: req.ip,
+      userAgent: req.get('User-Agent'),
+      endpoint,
+      method: req.method,
+      url: req.originalUrl,
+      totalAttempts: attempts.count,
+      timestamp: new Date().toISOString()
+    });
 &nbsp;
-<span class="cstat-no" title="statement not covered" >        res.status(429).json({</span>
-            success: false,
-            message: 'Rate limit exceeded',
-            endpoint: endpoint,
-            retryAfter: 3600,
-            timestamp: new Date().toISOString()
-        });
-    };
+<span class="cstat-no" title="statement not covered" >    res.status(429).json({</span>
+      success: false,
+      message: 'Rate limit exceeded',
+      endpoint,
+      retryAfter: 3600,
+      timestamp: new Date().toISOString()
+    });
+  };
 };
 &nbsp;
 /**
  * Progressive delay for repeated requests
  */
 const createSlowDown = <span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" >(d</span>elayAfter, delayMs) =&gt; {</span>
-<span class="cstat-no" title="statement not covered" >    return slowDown({</span>
-        windowMs: 15 * 60 * 1000, // 15 minutes
-        delayAfter: delayAfter,
-        delayMs: delayMs,
-        maxDelayMs: 20000, // Max 20 second delay
-        keyGenerator: customKeyGenerator,
-        skip: <span class="fstat-no" title="function not covered" >(r</span>eq) =&gt; {
-            // Skip delay for health checks
-<span class="cstat-no" title="statement not covered" >            return req.url.includes('/health');</span>
-        }
-    });
+<span class="cstat-no" title="statement not covered" >  return slowDown({</span>
+    windowMs: 15 * 60 * 1000, // 15 minutes
+    delayAfter,
+    delayMs,
+    maxDelayMs: 20000, // Max 20 second delay
+    keyGenerator: customKeyGenerator,
+    skip: <span class="fstat-no" title="function not covered" >re</span>q =&gt; {
+      // Skip delay for health checks
+<span class="cstat-no" title="statement not covered" >      return req.url.includes('/health');</span>
+    }
+  });
 };
 &nbsp;
 /**
  * Endpoint-specific rate limiters
  */
 export const endpointLimiters = <span class="cstat-no" title="statement not covered" >{</span>
-    // Authentication endpoints (very strict)
-    auth: rateLimit({
-        windowMs: 15 * 60 * 1000, // 15 minutes
-        max: 5,
-        keyGenerator: customKeyGenerator,
-        handler: createSecurityHandler('auth'),
-        standardHeaders: true,
-        legacyHeaders: false
-    }),
+  // Authentication endpoints (very strict)
+  auth: rateLimit({
+    windowMs: 15 * 60 * 1000, // 15 minutes
+    max: 5,
+    keyGenerator: customKeyGenerator,
+    handler: createSecurityHandler('auth'),
+    standardHeaders: true,
+    legacyHeaders: false
+  }),
 &nbsp;
-    // Registration endpoints
-    registration: rateLimit({
-        windowMs: 60 * 60 * 1000, // 1 hour
-        max: 5,
-        keyGenerator: customKeyGenerator,
-        handler: createSecurityHandler('registration'),
-        standardHeaders: true,
-        legacyHeaders: false
-    }),
+  // Registration endpoints
+  registration: rateLimit({
+    windowMs: 60 * 60 * 1000, // 1 hour
+    max: 5,
+    keyGenerator: customKeyGenerator,
+    handler: createSecurityHandler('registration'),
+    standardHeaders: true,
+    legacyHeaders: false
+  }),
 &nbsp;
-    // Email endpoints
-    email: rateLimit({
-        windowMs: 60 * 60 * 1000, // 1 hour
-        max: 10,
-        keyGenerator: customKeyGenerator,
-        handler: createSecurityHandler('email'),
-        standardHeaders: true,
-        legacyHeaders: false
-    }),
+  // Email endpoints
+  email: rateLimit({
+    windowMs: 60 * 60 * 1000, // 1 hour
+    max: 10,
+    keyGenerator: customKeyGenerator,
+    handler: createSecurityHandler('email'),
+    standardHeaders: true,
+    legacyHeaders: false
+  }),
 &nbsp;
-    // File upload endpoints
-    upload: rateLimit({
-        windowMs: 60 * 60 * 1000, // 1 hour
-        max: 20,
-        keyGenerator: customKeyGenerator,
-        handler: createSecurityHandler('upload'),
-        standardHeaders: true,
-        legacyHeaders: false
-    }),
+  // File upload endpoints
+  upload: rateLimit({
+    windowMs: 60 * 60 * 1000, // 1 hour
+    max: 20,
+    keyGenerator: customKeyGenerator,
+    handler: createSecurityHandler('upload'),
+    standardHeaders: true,
+    legacyHeaders: false
+  }),
 &nbsp;
-    // Search endpoints
-    search: rateLimit({
-        windowMs: 5 * 60 * 1000, // 5 minutes
-        max: 100,
-        keyGenerator: customKeyGenerator,
-        handler: createSecurityHandler('search'),
-        standardHeaders: true,
-        legacyHeaders: false
-    }),
+  // Search endpoints
+  search: rateLimit({
+    windowMs: 5 * 60 * 1000, // 5 minutes
+    max: 100,
+    keyGenerator: customKeyGenerator,
+    handler: createSecurityHandler('search'),
+    standardHeaders: true,
+    legacyHeaders: false
+  }),
 &nbsp;
-    // API creation endpoints (POST/PUT/DELETE)
-    creation: rateLimit({
-        windowMs: 15 * 60 * 1000, // 15 minutes
-        max: 30,
-        keyGenerator: customKeyGenerator,
-        handler: createSecurityHandler('creation'),
-        standardHeaders: true,
-        legacyHeaders: false
-    }),
+  // API creation endpoints (POST/PUT/DELETE)
+  creation: rateLimit({
+    windowMs: 15 * 60 * 1000, // 15 minutes
+    max: 30,
+    keyGenerator: customKeyGenerator,
+    handler: createSecurityHandler('creation'),
+    standardHeaders: true,
+    legacyHeaders: false
+  }),
 &nbsp;
-    // Admin endpoints
-    admin: rateLimit({
-        windowMs: 10 * 60 * 1000, // 10 minutes
-        max: 50,
-        keyGenerator: customKeyGenerator,
-        handler: createSecurityHandler('admin'),
-        standardHeaders: true,
-        legacyHeaders: false
-    }),
+  // Admin endpoints
+  admin: rateLimit({
+    windowMs: 10 * 60 * 1000, // 10 minutes
+    max: 50,
+    keyGenerator: customKeyGenerator,
+    handler: createSecurityHandler('admin'),
+    standardHeaders: true,
+    legacyHeaders: false
+  }),
 &nbsp;
-    // WordPress integration endpoints
-    wordpress: rateLimit({
-        windowMs: 60 * 60 * 1000, // 1 hour
-        max: 30,
-        keyGenerator: customKeyGenerator,
-        handler: createSecurityHandler('wordpress'),
-        standardHeaders: true,
-        legacyHeaders: false
-    }),
+  // WordPress integration endpoints
+  wordpress: rateLimit({
+    windowMs: 60 * 60 * 1000, // 1 hour
+    max: 30,
+    keyGenerator: customKeyGenerator,
+    handler: createSecurityHandler('wordpress'),
+    standardHeaders: true,
+    legacyHeaders: false
+  }),
 &nbsp;
-    // General API endpoints
-    api: rateLimit({
-        windowMs: 15 * 60 * 1000, // 15 minutes
-        max: 100,
-        keyGenerator: customKeyGenerator,
-        handler: createSecurityHandler('api'),
-        standardHeaders: true,
-        legacyHeaders: false
-    })
+  // General API endpoints
+  api: rateLimit({
+    windowMs: 15 * 60 * 1000, // 15 minutes
+    max: 100,
+    keyGenerator: customKeyGenerator,
+    handler: createSecurityHandler('api'),
+    standardHeaders: true,
+    legacyHeaders: false
+  })
 };
 &nbsp;
 /**
  * Progressive slow-down middleware
  */
 export const progressiveSlowDown = <span class="cstat-no" title="statement not covered" >{</span>
-    // Slow down after 20 requests
-    light: createSlowDown(20, 500),
-    
-    // Slow down after 10 requests
-    medium: createSlowDown(10, 1000),
-    
-    // Slow down after 5 requests
-    heavy: createSlowDown(5, 2000)
+  // Slow down after 20 requests
+  light: createSlowDown(20, 500),
+&nbsp;
+  // Slow down after 10 requests
+  medium: createSlowDown(10, 1000),
+&nbsp;
+  // Slow down after 5 requests
+  heavy: createSlowDown(5, 2000)
 };
 &nbsp;
 /**
  * Adaptive rate limiting based on request patterns
  */
 export const adaptiveRateLimit = <span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" >(r</span>eq, res, next) =&gt; {</span>
-    const ip = <span class="cstat-no" title="statement not covered" >req.ip;</span>
-    const key = <span class="cstat-no" title="statement not covered" >customKeyGenerator(req);</span>
-    
-    // Check if IP is marked as suspicious
-<span class="cstat-no" title="statement not covered" >    if (suspiciousIPs.has(ip)) {</span>
-        // Apply stricter limits for suspicious IPs
-        const strictLimiter = <span class="cstat-no" title="statement not covered" >rateLimit({</span>
-            windowMs: 60 * 60 * 1000, // 1 hour
-            max: 10, // Very low limit
-            keyGenerator: <span class="fstat-no" title="function not covered" >()</span> =&gt; <span class="cstat-no" title="statement not covered" >key,</span>
-            handler: createSecurityHandler('suspicious'),
-            standardHeaders: true,
-            legacyHeaders: false
-        });
-        
-<span class="cstat-no" title="statement not covered" >        return strictLimiter(req, res, next);</span>
-    }
-    
-<span class="cstat-no" title="statement not covered" >    next();</span>
+  const { ip } = <span class="cstat-no" title="statement not covered" >req;</span>
+  const key = <span class="cstat-no" title="statement not covered" >customKeyGenerator(req);</span>
+&nbsp;
+  // Check if IP is marked as suspicious
+<span class="cstat-no" title="statement not covered" >  if (suspiciousIPs.has(ip)) {</span>
+    // Apply stricter limits for suspicious IPs
+    const strictLimiter = <span class="cstat-no" title="statement not covered" >rateLimit({</span>
+      windowMs: 60 * 60 * 1000, // 1 hour
+      max: 10, // Very low limit
+      keyGenerator: <span class="fstat-no" title="function not covered" >()</span> =&gt; <span class="cstat-no" title="statement not covered" >key,</span>
+      handler: createSecurityHandler('suspicious'),
+      standardHeaders: true,
+      legacyHeaders: false
+    });
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    return strictLimiter(req, res, next);</span>
+  }
+&nbsp;
+<span class="cstat-no" title="statement not covered" >  next();</span>
 };
 &nbsp;
 /**
  * DDoS protection middleware
  */
 export const ddosProtection = <span class="cstat-no" title="statement not covered" >rateLimit({</span>
-    windowMs: 1 * 60 * 1000, // 1 minute
-    max: 200, // Allow up to 200 requests per minute per IP
-    keyGenerator: <span class="fstat-no" title="function not covered" >(r</span>eq) =&gt; <span class="cstat-no" title="statement not covered" >req.ip,</span>
-    handler: <span class="fstat-no" title="function not covered" >(r</span>eq, res) =&gt; {
-<span class="cstat-no" title="statement not covered" >        console.error('Potential DDoS attack detected:', {</span>
-            ip: req.ip,
-            userAgent: req.get('User-Agent'),
-            timestamp: new Date().toISOString()
-        });
-        
-<span class="cstat-no" title="statement not covered" >        res.status(429).json({</span>
-            success: false,
-            message: 'Too many requests - potential DDoS detected',
-            timestamp: new Date().toISOString()
-        });
-    },
-    standardHeaders: true,
-    legacyHeaders: false
+  windowMs: 1 * 60 * 1000, // 1 minute
+  max: 200, // Allow up to 200 requests per minute per IP
+  keyGenerator: <span class="fstat-no" title="function not covered" >re</span>q =&gt; <span class="cstat-no" title="statement not covered" >req.ip,</span>
+  handler: <span class="fstat-no" title="function not covered" >(r</span>eq, res) =&gt; {
+<span class="cstat-no" title="statement not covered" >    console.error('Potential DDoS attack detected:', {</span>
+      ip: req.ip,
+      userAgent: req.get('User-Agent'),
+      timestamp: new Date().toISOString()
+    });
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    res.status(429).json({</span>
+      success: false,
+      message: 'Too many requests - potential DDoS detected',
+      timestamp: new Date().toISOString()
+    });
+  },
+  standardHeaders: true,
+  legacyHeaders: false
 });
 &nbsp;
 /**
  * Conditional rate limiting based on request type
  */
 export const conditionalRateLimit = <span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" >(r</span>eq, res, next) =&gt; {</span>
-    const method = <span class="cstat-no" title="statement not covered" >req.method;</span>
-    const path = <span class="cstat-no" title="statement not covered" >req.path;</span>
-    
-    // Apply different limits based on operation type
-<span class="cstat-no" title="statement not covered" >    if (method === 'GET' &amp;&amp; path.includes('/health')) {</span>
-        // No limits for health checks
-<span class="cstat-no" title="statement not covered" >        return next();</span>
-    }
-    
-<span class="cstat-no" title="statement not covered" >    if (method === 'POST' &amp;&amp; path.includes('/register')) {</span>
-<span class="cstat-no" title="statement not covered" >        return endpointLimiters.registration(req, res, next);</span>
-    }
-    
-<span class="cstat-no" title="statement not covered" >    if (method === 'POST' &amp;&amp; path.includes('/email')) {</span>
-<span class="cstat-no" title="statement not covered" >        return endpointLimiters.email(req, res, next);</span>
-    }
-    
-<span class="cstat-no" title="statement not covered" >    if (['POST', 'PUT', 'DELETE'].includes(method)) {</span>
-<span class="cstat-no" title="statement not covered" >        return endpointLimiters.creation(req, res, next);</span>
-    }
-    
-    // Default to general API limits
-<span class="cstat-no" title="statement not covered" >    return endpointLimiters.api(req, res, next);</span>
+  const { method } = <span class="cstat-no" title="statement not covered" >req;</span>
+  const { path } = <span class="cstat-no" title="statement not covered" >req;</span>
+&nbsp;
+  // Apply different limits based on operation type
+<span class="cstat-no" title="statement not covered" >  if (method === 'GET' &amp;&amp; path.includes('/health')) {</span>
+    // No limits for health checks
+<span class="cstat-no" title="statement not covered" >    return next();</span>
+  }
+&nbsp;
+<span class="cstat-no" title="statement not covered" >  if (method === 'POST' &amp;&amp; path.includes('/register')) {</span>
+<span class="cstat-no" title="statement not covered" >    return endpointLimiters.registration(req, res, next);</span>
+  }
+&nbsp;
+<span class="cstat-no" title="statement not covered" >  if (method === 'POST' &amp;&amp; path.includes('/email')) {</span>
+<span class="cstat-no" title="statement not covered" >    return endpointLimiters.email(req, res, next);</span>
+  }
+&nbsp;
+<span class="cstat-no" title="statement not covered" >  if (['POST', 'PUT', 'DELETE'].includes(method)) {</span>
+<span class="cstat-no" title="statement not covered" >    return endpointLimiters.creation(req, res, next);</span>
+  }
+&nbsp;
+  // Default to general API limits
+<span class="cstat-no" title="statement not covered" >  return endpointLimiters.api(req, res, next);</span>
 };
 &nbsp;
 /**
  * Rate limit monitoring and reporting
  */
 export const rateLimitMonitor = <span class="cstat-no" title="statement not covered" >{</span>
-    getStats: <span class="fstat-no" title="function not covered" >()</span> =&gt; {
-<span class="cstat-no" title="statement not covered" >        return {</span>
-            totalAttempts: attemptStore.size,
-            suspiciousIPs: suspiciousIPs.size,
-            suspiciousIPsList: Array.from(suspiciousIPs),
-            recentAttempts: Array.from(attemptStore.entries())
-                .filter(<span class="fstat-no" title="function not covered" >([</span>_, data]) =&gt; <span class="cstat-no" title="statement not covered" >Date.now() - data.lastAttempt &lt; 3600000)</span>
-                .map(<span class="fstat-no" title="function not covered" >([</span>key, data]) =&gt; (<span class="cstat-no" title="statement not covered" >{</span>
-                    key: key.substring(0, 50),
-                    attempts: data.count,
-                    timeSpan: Date.now() - data.firstAttempt
-                })),
-            timestamp: new Date().toISOString()
-        };
-    },
-    
-    clearSuspicious: <span class="fstat-no" title="function not covered" >()</span> =&gt; {
-<span class="cstat-no" title="statement not covered" >        suspiciousIPs.clear();</span>
-<span class="cstat-no" title="statement not covered" >        console.log('Suspicious IPs list cleared');</span>
-    },
-    
-    addToSuspicious: <span class="fstat-no" title="function not covered" >(i</span>p) =&gt; {
-<span class="cstat-no" title="statement not covered" >        suspiciousIPs.add(ip);</span>
-<span class="cstat-no" title="statement not covered" >        console.warn('IP added to suspicious list:', ip);</span>
-    }
+  getStats: <span class="fstat-no" title="function not covered" >()</span> =&gt; {
+<span class="cstat-no" title="statement not covered" >    return {</span>
+      totalAttempts: attemptStore.size,
+      suspiciousIPs: suspiciousIPs.size,
+      suspiciousIPsList: Array.from(suspiciousIPs),
+      recentAttempts: Array.from(attemptStore.entries())
+        .filter(<span class="fstat-no" title="function not covered" >([</span>_, data]) =&gt; <span class="cstat-no" title="statement not covered" >Date.now() - data.lastAttempt &lt; 3600000)</span>
+        .map(<span class="fstat-no" title="function not covered" >([</span>key, data]) =&gt; (<span class="cstat-no" title="statement not covered" >{</span>
+          key: key.substring(0, 50),
+          attempts: data.count,
+          timeSpan: Date.now() - data.firstAttempt
+        })),
+      timestamp: new Date().toISOString()
+    };
+  },
+&nbsp;
+  clearSuspicious: <span class="fstat-no" title="function not covered" >()</span> =&gt; {
+<span class="cstat-no" title="statement not covered" >    suspiciousIPs.clear();</span>
+<span class="cstat-no" title="statement not covered" >    console.log('Suspicious IPs list cleared');</span>
+  },
+&nbsp;
+  addToSuspicious: <span class="fstat-no" title="function not covered" >ip</span> =&gt; {
+<span class="cstat-no" title="statement not covered" >    suspiciousIPs.add(ip);</span>
+<span class="cstat-no" title="statement not covered" >    console.warn('IP added to suspicious list:', ip);</span>
+  }
 };
 &nbsp;
 /**
  * Cleanup middleware to prevent memory leaks
  */
 export const cleanupRateLimit = <span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" >()</span> =&gt; {</span>
-    const now = <span class="cstat-no" title="statement not covered" >Date.now();</span>
-    const oneHourAgo = <span class="cstat-no" title="statement not covered" >now - 3600000;</span>
-    
-    // Clean old attempt records
-<span class="cstat-no" title="statement not covered" >    for (const [key, data] of attemptStore.entries()) {</span>
-<span class="cstat-no" title="statement not covered" >        if (data.lastAttempt &lt; oneHourAgo) {</span>
-<span class="cstat-no" title="statement not covered" >            attemptStore.delete(key);</span>
-        }
+  const now = <span class="cstat-no" title="statement not covered" >Date.now();</span>
+  const oneHourAgo = <span class="cstat-no" title="statement not covered" >now - 3600000;</span>
+&nbsp;
+  // Clean old attempt records
+<span class="cstat-no" title="statement not covered" >  for (const [key, data] of attemptStore.entries()) {</span>
+<span class="cstat-no" title="statement not covered" >    if (data.lastAttempt &lt; oneHourAgo) {</span>
+<span class="cstat-no" title="statement not covered" >      attemptStore.delete(key);</span>
     }
-    
-<span class="cstat-no" title="statement not covered" >    console.log('Rate limit cleanup completed');</span>
+  }
+&nbsp;
+<span class="cstat-no" title="statement not covered" >  console.log('Rate limit cleanup completed');</span>
 };
 &nbsp;
 // Run cleanup every 30 minutes
 <span class="cstat-no" title="statement not covered" >setInterval(cleanupRateLimit, 30 * 60 * 1000);</span>
 &nbsp;
 export default {
-    endpointLimiters,
-    progressiveSlowDown,
-    adaptiveRateLimit,
-    ddosProtection,
-    conditionalRateLimit,
-    rateLimitMonitor,
-    cleanupRateLimit
-};</pre></td></tr></table></pre>
+  endpointLimiters,
+  progressiveSlowDown,
+  adaptiveRateLimit,
+  ddosProtection,
+  conditionalRateLimit,
+  rateLimitMonitor,
+  cleanupRateLimit
+};
+&nbsp;</pre></td></tr></table></pre>
 
                 <div class='push'></div><!-- for sticky footer -->
             </div><!-- /wrapper -->
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2025-06-22T22:15:42.782Z
+                at 2025-06-23T06:20:12.641Z
             </div>
         <script src="../../prettify.js"></script>
         <script>

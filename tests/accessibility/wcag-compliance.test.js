@@ -3,35 +3,35 @@
  * アクセシビリティ準拠テストスイート
  */
 
-const { chromium } = require('playwright');
-const AxeBuilder = require('@axe-core/playwright').default;
+import AxeBuilder from '@axe-core/playwright';
+import { chromium } from 'playwright';
 
 describe('WCAG 2.1 AA Compliance Tests', () => {
   let browser;
   let page;
 
-  beforeAll(async () => {
+  beforeAll(async() => {
     browser = await chromium.launch();
   });
 
-  beforeEach(async () => {
+  beforeEach(async() => {
     page = await browser.newPage();
   });
 
-  afterEach(async () => {
+  afterEach(async() => {
     await page.close();
   });
 
-  afterAll(async () => {
+  afterAll(async() => {
     await browser.close();
   });
 
   describe('Homepage Accessibility', () => {
-    beforeEach(async () => {
+    beforeEach(async() => {
       await page.goto('http://localhost:3000');
     });
 
-    test('should not have any accessibility violations', async () => {
+    test('should not have any accessibility violations', async() => {
       const accessibilityScanResults = await new AxeBuilder({ page })
         .withTags(['wcag2a', 'wcag2aa', 'wcag21aa'])
         .analyze();
@@ -39,7 +39,7 @@ describe('WCAG 2.1 AA Compliance Tests', () => {
       expect(accessibilityScanResults.violations).toEqual([]);
     });
 
-    test('should have proper heading hierarchy', async () => {
+    test('should have proper heading hierarchy', async() => {
       const headings = await page.$$eval('h1, h2, h3, h4, h5, h6', elements =>
         elements.map(el => ({
           tag: el.tagName.toLowerCase(),
@@ -60,7 +60,7 @@ describe('WCAG 2.1 AA Compliance Tests', () => {
       });
     });
 
-    test('should have proper alt attributes for images', async () => {
+    test('should have proper alt attributes for images', async() => {
       const images = await page.$$eval('img', elements =>
         elements.map(img => ({
           src: img.src,
@@ -78,7 +78,7 @@ describe('WCAG 2.1 AA Compliance Tests', () => {
       });
     });
 
-    test('should have proper form labels', async () => {
+    test('should have proper form labels', async() => {
       const formControls = await page.$$eval('input, select, textarea', elements =>
         elements.map(control => ({
           id: control.id,
@@ -99,13 +99,13 @@ describe('WCAG 2.1 AA Compliance Tests', () => {
       });
     });
 
-    test('should have sufficient color contrast', async () => {
+    test('should have sufficient color contrast', async() => {
       const results = await new AxeBuilder({ page }).withTags(['cat.color']).analyze();
 
       expect(results.violations).toEqual([]);
     });
 
-    test('should have keyboard navigation support', async () => {
+    test('should have keyboard navigation support', async() => {
       // Tabキーで移動可能な要素をテスト
       const focusableElements = await page.$$eval(
         'a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])',
@@ -122,11 +122,11 @@ describe('WCAG 2.1 AA Compliance Tests', () => {
   });
 
   describe('Form Accessibility', () => {
-    beforeEach(async () => {
+    beforeEach(async() => {
       await page.goto('http://localhost:3000/events/register');
     });
 
-    test('should have proper form validation messages', async () => {
+    test('should have proper form validation messages', async() => {
       // 必須フィールドをテスト
       const submitButton = await page.$('button[type="submit"], input[type="submit"]');
       if (submitButton) {
@@ -151,7 +151,7 @@ describe('WCAG 2.1 AA Compliance Tests', () => {
       }
     });
 
-    test('should mark required fields appropriately', async () => {
+    test('should mark required fields appropriately', async() => {
       const requiredFields = await page.$$eval('[required]', elements =>
         elements.map(field => ({
           id: field.id,
@@ -171,11 +171,11 @@ describe('WCAG 2.1 AA Compliance Tests', () => {
   });
 
   describe('Navigation Accessibility', () => {
-    beforeEach(async () => {
+    beforeEach(async() => {
       await page.goto('http://localhost:3000');
     });
 
-    test('should have proper landmark roles', async () => {
+    test('should have proper landmark roles', async() => {
       const landmarks = await page.$$eval(
         'header, nav, main, aside, footer, [role="banner"], [role="navigation"], [role="main"], [role="complementary"], [role="contentinfo"]',
         elements =>
@@ -194,7 +194,7 @@ describe('WCAG 2.1 AA Compliance Tests', () => {
       expect(navLandmarks.length).toBeGreaterThanOrEqual(1);
     });
 
-    test('should have skip links', async () => {
+    test('should have skip links', async() => {
       const skipLinks = await page.$$eval(
         '.skip-link, a[href^="#main"], a[href^="#content"]',
         elements =>
@@ -215,7 +215,7 @@ describe('WCAG 2.1 AA Compliance Tests', () => {
       }
     });
 
-    test('should have proper focus management', async () => {
+    test('should have proper focus management', async() => {
       // フォーカス順序のテスト
       const focusableElements = await page.$$(
         'a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])'
@@ -243,7 +243,7 @@ describe('WCAG 2.1 AA Compliance Tests', () => {
   });
 
   describe('Modal Accessibility', () => {
-    test('should have proper modal accessibility when opened', async () => {
+    test('should have proper modal accessibility when opened', async() => {
       await page.goto('http://localhost:3000');
 
       // モーダルを開くトリガーを探す
@@ -268,6 +268,7 @@ describe('WCAG 2.1 AA Compliance Tests', () => {
 
           if (focusableInModal.length > 1) {
             // 最初の要素にフォーカスが当たっているか
+            // eslint-disable-next-line prefer-destructuring
             const firstElement = focusableInModal[0];
             const isFirstFocused = await page.evaluate(
               el => document.activeElement === el,
@@ -298,7 +299,7 @@ describe('WCAG 2.1 AA Compliance Tests', () => {
   });
 
   describe('Dynamic Content Accessibility', () => {
-    test('should announce dynamic content changes', async () => {
+    test('should announce dynamic content changes', async() => {
       await page.goto('http://localhost:3000');
 
       // ライブリージョンの存在確認
@@ -331,12 +332,12 @@ describe('WCAG 2.1 AA Compliance Tests', () => {
   });
 
   describe('Mobile Accessibility', () => {
-    beforeEach(async () => {
+    beforeEach(async() => {
       await page.setViewportSize({ width: 375, height: 667 }); // iPhone サイズ
       await page.goto('http://localhost:3000');
     });
 
-    test('should have proper touch target sizes', async () => {
+    test('should have proper touch target sizes', async() => {
       const touchTargets = await page.$$eval(
         'button, a, input, select, textarea, [onclick], [role="button"]',
         elements =>
@@ -360,7 +361,7 @@ describe('WCAG 2.1 AA Compliance Tests', () => {
       });
     });
 
-    test('should have responsive design without horizontal scroll', async () => {
+    test('should have responsive design without horizontal scroll', async() => {
       const bodyOverflow = await page.evaluate(() => {
         const { body } = document;
         const computedStyle = window.getComputedStyle(body);
@@ -377,7 +378,7 @@ describe('WCAG 2.1 AA Compliance Tests', () => {
   });
 
   describe('Reduced Motion Compliance', () => {
-    test('should respect prefers-reduced-motion', async () => {
+    test('should respect prefers-reduced-motion', async() => {
       await page.emulateMedia({ reducedMotion: 'reduce' });
       await page.goto('http://localhost:3000');
 
@@ -415,7 +416,7 @@ describe('WCAG 2.1 AA Compliance Tests', () => {
   });
 
   describe('High Contrast Mode', () => {
-    test('should support high contrast mode', async () => {
+    test('should support high contrast mode', async() => {
       await page.emulateMedia({ colorScheme: 'dark', forcedColors: 'active' });
       await page.goto('http://localhost:3000');
 
@@ -441,7 +442,7 @@ describe('WCAG 2.1 AA Compliance Tests', () => {
 });
 
 // ヘルパー関数
-function calculateColorContrast(color1, color2) {
+export function calculateColorContrast(color1, color2) {
   // 簡易的なカラーコントラスト計算
   // 実際のテストではより正確な計算が必要
   const rgb1 = color1.match(/\d+/g).map(Number);
@@ -455,7 +456,3 @@ function calculateColorContrast(color1, color2) {
 
   return (brightest + 0.05) / (darkest + 0.05);
 }
-
-module.exports = {
-  calculateColorContrast
-};

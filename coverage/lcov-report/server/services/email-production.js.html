@@ -46,7 +46,7 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">0% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>0/107</span>
+                <span class='fraction'>0/108</span>
             </div>
         
             
@@ -667,7 +667,10 @@
 <a name='L602'></a><a href='#L602'>602</a>
 <a name='L603'></a><a href='#L603'>603</a>
 <a name='L604'></a><a href='#L604'>604</a>
-<a name='L605'></a><a href='#L605'>605</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L605'></a><a href='#L605'>605</a>
+<a name='L606'></a><a href='#L606'>606</a>
+<a name='L607'></a><a href='#L607'>607</a>
+<a name='L608'></a><a href='#L608'>608</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -798,7 +801,6 @@
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -867,6 +869,7 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -1207,7 +1210,9 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -1263,6 +1268,7 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -1282,238 +1288,238 @@ import Redis from 'redis';
 import { EventEmitter } from 'events';
 &nbsp;
 export class ProductionEmailService extends EventEmitter {
-<span class="fstat-no" title="function not covered" >    co</span>nstructor() {
-<span class="cstat-no" title="statement not covered" >        super();</span>
-<span class="cstat-no" title="statement not covered" >        this.enabled = process.env.EMAIL_ENABLED !== 'false';</span>
-<span class="cstat-no" title="statement not covered" >        this.provider = process.env.EMAIL_PROVIDER || 'sendgrid';</span>
-<span class="cstat-no" title="statement not covered" >        this.from = process.env.EMAIL_FROM || 'noreply@lightningtalk.example.com';</span>
-<span class="cstat-no" title="statement not covered" >        this.redisUrl = process.env.REDIS_URL || 'redis://localhost:6379';</span>
-        
-<span class="cstat-no" title="statement not covered" >        this.templates = this.initializeTemplates();</span>
-<span class="cstat-no" title="statement not covered" >        this.queue = null;</span>
-<span class="cstat-no" title="statement not covered" >        this.initialized = false;</span>
-        
-<span class="cstat-no" title="statement not covered" >        if (this.enabled) {</span>
-<span class="cstat-no" title="statement not covered" >            this.setupEmailProvider();</span>
-<span class="cstat-no" title="statement not covered" >            this.setupQueue();</span>
-        }
+<span class="fstat-no" title="function not covered" >  co</span>nstructor() {
+<span class="cstat-no" title="statement not covered" >    super();</span>
+<span class="cstat-no" title="statement not covered" >    this.enabled = process.env.EMAIL_ENABLED !== 'false';</span>
+<span class="cstat-no" title="statement not covered" >    this.provider = process.env.EMAIL_PROVIDER || 'sendgrid';</span>
+<span class="cstat-no" title="statement not covered" >    this.from = process.env.EMAIL_FROM || 'noreply@lightningtalk.example.com';</span>
+<span class="cstat-no" title="statement not covered" >    this.redisUrl = process.env.REDIS_URL || 'redis://localhost:6379';</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    this.templates = this.initializeTemplates();</span>
+<span class="cstat-no" title="statement not covered" >    this.queue = null;</span>
+<span class="cstat-no" title="statement not covered" >    this.initialized = false;</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    if (this.enabled) {</span>
+<span class="cstat-no" title="statement not covered" >      this.setupEmailProvider();</span>
+<span class="cstat-no" title="statement not covered" >      this.setupQueue();</span>
+    }
+  }
+&nbsp;
+<span class="fstat-no" title="function not covered" >  as</span>ync setupEmailProvider() {
+<span class="cstat-no" title="statement not covered" >    switch (this.provider) {</span>
+      case 'sendgrid':
+<span class="cstat-no" title="statement not covered" >        await this.setupSendGrid();</span>
+<span class="cstat-no" title="statement not covered" >        break;</span>
+      case 'ses':
+<span class="cstat-no" title="statement not covered" >        await this.setupAWSSES();</span>
+<span class="cstat-no" title="statement not covered" >        break;</span>
+      default:
+<span class="cstat-no" title="statement not covered" >        throw new Error(`Unsupported email provider: ${this.provider}`);</span>
+    }
+  }
+&nbsp;
+<span class="fstat-no" title="function not covered" >  as</span>ync setupSendGrid() {
+    const apiKey = <span class="cstat-no" title="statement not covered" >process.env.SENDGRID_API_KEY;</span>
+<span class="cstat-no" title="statement not covered" >    if (!apiKey) {</span>
+<span class="cstat-no" title="statement not covered" >      throw new Error('SENDGRID_API_KEY is required for SendGrid provider');</span>
     }
 &nbsp;
-<span class="fstat-no" title="function not covered" >    as</span>ync setupEmailProvider() {
-<span class="cstat-no" title="statement not covered" >        switch (this.provider) {</span>
-            case 'sendgrid':
-<span class="cstat-no" title="statement not covered" >                await this.setupSendGrid();</span>
-<span class="cstat-no" title="statement not covered" >                break;</span>
-            case 'ses':
-<span class="cstat-no" title="statement not covered" >                await this.setupAWSSES();</span>
-<span class="cstat-no" title="statement not covered" >                break;</span>
-            default:
-<span class="cstat-no" title="statement not covered" >                throw new Error(`Unsupported email provider: ${this.provider}`);</span>
+<span class="cstat-no" title="statement not covered" >    sgMail.setApiKey(apiKey);</span>
+&nbsp;
+    // Test API key validity
+<span class="cstat-no" title="statement not covered" >    try {</span>
+<span class="cstat-no" title="statement not covered" >      await sgMail.send({</span>
+        to: this.from,
+        from: this.from,
+        subject: 'API Test',
+        text: 'Test email',
+        mailSettings: {
+          sandboxMode: {
+            enable: true
+          }
         }
+      });
+<span class="cstat-no" title="statement not covered" >      console.log('📧 SendGrid Email service initialized');</span>
+    } catch (error) {
+<span class="cstat-no" title="statement not covered" >      console.error('❌ SendGrid setup failed:', error.message);</span>
+<span class="cstat-no" title="statement not covered" >      throw error;</span>
+    }
+  }
+&nbsp;
+<span class="fstat-no" title="function not covered" >  as</span>ync setupAWSSES() {
+    // AWS SES implementation would go here
+    // For now, we'll prepare the structure
+    const region = <span class="cstat-no" title="statement not covered" >process.env.AWS_REGION || 'us-east-1';</span>
+    const accessKeyId = <span class="cstat-no" title="statement not covered" >process.env.AWS_ACCESS_KEY_ID;</span>
+    const secretAccessKey = <span class="cstat-no" title="statement not covered" >process.env.AWS_SECRET_ACCESS_KEY;</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    if (!accessKeyId || !secretAccessKey) {</span>
+<span class="cstat-no" title="statement not covered" >      throw new Error('AWS credentials are required for SES provider');</span>
     }
 &nbsp;
-<span class="fstat-no" title="function not covered" >    as</span>ync setupSendGrid() {
-        const apiKey = <span class="cstat-no" title="statement not covered" >process.env.SENDGRID_API_KEY;</span>
-<span class="cstat-no" title="statement not covered" >        if (!apiKey) {</span>
-<span class="cstat-no" title="statement not covered" >            throw new Error('SENDGRID_API_KEY is required for SendGrid provider');</span>
+<span class="cstat-no" title="statement not covered" >    console.log('📧 AWS SES Email service initialized');</span>
+  }
+&nbsp;
+<span class="fstat-no" title="function not covered" >  as</span>ync setupQueue() {
+<span class="cstat-no" title="statement not covered" >    try {</span>
+      // Create Redis connection for queue
+      const redisClient = <span class="cstat-no" title="statement not covered" >Redis.createClient({</span>
+        url: this.redisUrl
+      });
+&nbsp;
+<span class="cstat-no" title="statement not covered" >      await redisClient.connect();</span>
+&nbsp;
+      // Create email queue
+<span class="cstat-no" title="statement not covered" >      this.queue = new Queue('email processing', this.redisUrl, {</span>
+        defaultJobOptions: {
+          attempts: 3,
+          backoff: {
+            type: 'exponential',
+            delay: 2000
+          },
+          removeOnComplete: 100,
+          removeOnFail: 50
+        },
+        settings: {
+          stalledInterval: 30000,
+          maxStalledCount: 1
         }
-        
-<span class="cstat-no" title="statement not covered" >        sgMail.setApiKey(apiKey);</span>
-        
-        // Test API key validity
-<span class="cstat-no" title="statement not covered" >        try {</span>
-<span class="cstat-no" title="statement not covered" >            await sgMail.send({</span>
-                to: this.from,
-                from: this.from,
-                subject: 'API Test',
-                text: 'Test email',
-                mailSettings: {
-                    sandboxMode: {
-                        enable: true
-                    }
-                }
-            });
-<span class="cstat-no" title="statement not covered" >            console.log('📧 SendGrid Email service initialized');</span>
-        } catch (error) {
-<span class="cstat-no" title="statement not covered" >            console.error('❌ SendGrid setup failed:', error.message);</span>
-<span class="cstat-no" title="statement not covered" >            throw error;</span>
-        }
+      });
+&nbsp;
+      // Process email jobs
+<span class="cstat-no" title="statement not covered" >      this.queue.process('send', this.processEmailJob.bind(this));</span>
+&nbsp;
+      // Queue event handlers
+<span class="cstat-no" title="statement not covered" >      this.queue.on('completed', <span class="fstat-no" title="function not covered" >jo</span>b =&gt; {</span>
+<span class="cstat-no" title="statement not covered" >        console.log(`📧 Email job ${job.id} completed`);</span>
+<span class="cstat-no" title="statement not covered" >        this.emit('emailSent', { jobId: job.id, email: job.data.to });</span>
+      });
+&nbsp;
+<span class="cstat-no" title="statement not covered" >      this.queue.on('failed', <span class="fstat-no" title="function not covered" >(j</span>ob, err) =&gt; {</span>
+<span class="cstat-no" title="statement not covered" >        console.error(`❌ Email job ${job.id} failed:`, err.message);</span>
+<span class="cstat-no" title="statement not covered" >        this.emit('emailFailed', { jobId: job.id, email: job.data.to, error: err.message });</span>
+      });
+&nbsp;
+<span class="cstat-no" title="statement not covered" >      this.queue.on('stalled', <span class="fstat-no" title="function not covered" >jo</span>b =&gt; {</span>
+<span class="cstat-no" title="statement not covered" >        console.warn(`⚠️ Email job ${job.id} stalled`);</span>
+      });
+&nbsp;
+<span class="cstat-no" title="statement not covered" >      console.log('🔄 Email queue system initialized');</span>
+<span class="cstat-no" title="statement not covered" >      this.initialized = true;</span>
+<span class="cstat-no" title="statement not covered" >      this.emit('ready');</span>
+    } catch (error) {
+<span class="cstat-no" title="statement not covered" >      console.error('❌ Email queue setup failed:', error);</span>
+<span class="cstat-no" title="statement not covered" >      throw error;</span>
+    }
+  }
+&nbsp;
+<span class="fstat-no" title="function not covered" >  as</span>ync processEmailJob(job) {
+    const { emailData, templateData } = <span class="cstat-no" title="statement not covered" >job.data;</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    try {</span>
+<span class="cstat-no" title="statement not covered" >      await this.sendEmailDirect(emailData, templateData);</span>
+<span class="cstat-no" title="statement not covered" >      return { success: true, timestamp: new Date().toISOString() };</span>
+    } catch (error) {
+<span class="cstat-no" title="statement not covered" >      console.error('Email sending failed:', error);</span>
+<span class="cstat-no" title="statement not covered" >      throw error;</span>
+    }
+  }
+&nbsp;
+<span class="fstat-no" title="function not covered" >  as</span>ync sendEmailDirect(emailData, templateData = <span class="branch-0 cbranch-no" title="branch not covered" >{})</span> {
+    const html = <span class="cstat-no" title="statement not covered" >this.renderTemplate(emailData.template, templateData);</span>
+&nbsp;
+    const mailData = <span class="cstat-no" title="statement not covered" >{</span>
+      to: emailData.to,
+      from: emailData.from || this.from,
+      subject: emailData.subject,
+      text: this.htmlToText(html),
+      html,
+      categories: emailData.categories || ['lightning-talk'],
+      customArgs: {
+        eventId: templateData.eventId,
+        participantId: templateData.participantId,
+        emailType: emailData.template
+      }
+    };
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    switch (this.provider) {</span>
+      case 'sendgrid':
+<span class="cstat-no" title="statement not covered" >        return await sgMail.send(mailData);</span>
+      case 'ses':
+<span class="cstat-no" title="statement not covered" >        return await this.sendWithSES(mailData);</span>
+      default:
+<span class="cstat-no" title="statement not covered" >        throw new Error(`Unknown email provider: ${this.provider}`);</span>
+    }
+  }
+&nbsp;
+  // Queue-based email sending (recommended for production)
+<span class="fstat-no" title="function not covered" >  as</span>ync sendEmail(emailType, to, templateData = <span class="branch-0 cbranch-no" title="branch not covered" >{},</span> options = <span class="branch-0 cbranch-no" title="branch not covered" >{})</span> {
+<span class="cstat-no" title="statement not covered" >    if (!this.enabled) {</span>
+<span class="cstat-no" title="statement not covered" >      console.log(`📧 [DISABLED] ${emailType} email to: ${to}`);</span>
+<span class="cstat-no" title="statement not covered" >      return { success: true, simulated: true };</span>
     }
 &nbsp;
-<span class="fstat-no" title="function not covered" >    as</span>ync setupAWSSES() {
-        // AWS SES implementation would go here
-        // For now, we'll prepare the structure
-        const region = <span class="cstat-no" title="statement not covered" >process.env.AWS_REGION || 'us-east-1';</span>
-        const accessKeyId = <span class="cstat-no" title="statement not covered" >process.env.AWS_ACCESS_KEY_ID;</span>
-        const secretAccessKey = <span class="cstat-no" title="statement not covered" >process.env.AWS_SECRET_ACCESS_KEY;</span>
-        
-<span class="cstat-no" title="statement not covered" >        if (!accessKeyId || !secretAccessKey) {</span>
-<span class="cstat-no" title="statement not covered" >            throw new Error('AWS credentials are required for SES provider');</span>
-        }
-        
-<span class="cstat-no" title="statement not covered" >        console.log('📧 AWS SES Email service initialized');</span>
+    const template = <span class="cstat-no" title="statement not covered" >this.templates[emailType];</span>
+<span class="cstat-no" title="statement not covered" >    if (!template) {</span>
+<span class="cstat-no" title="statement not covered" >      throw new Error(`Unknown email template: ${emailType}`);</span>
     }
 &nbsp;
-<span class="fstat-no" title="function not covered" >    as</span>ync setupQueue() {
-<span class="cstat-no" title="statement not covered" >        try {</span>
-            // Create Redis connection for queue
-            const redisClient = <span class="cstat-no" title="statement not covered" >Redis.createClient({</span>
-                url: this.redisUrl
-            });
-            
-<span class="cstat-no" title="statement not covered" >            await redisClient.connect();</span>
-            
-            // Create email queue
-<span class="cstat-no" title="statement not covered" >            this.queue = new Queue('email processing', this.redisUrl, {</span>
-                defaultJobOptions: {
-                    attempts: 3,
-                    backoff: {
-                        type: 'exponential',
-                        delay: 2000,
-                    },
-                    removeOnComplete: 100,
-                    removeOnFail: 50,
-                },
-                settings: {
-                    stalledInterval: 30000,
-                    maxStalledCount: 1,
-                }
-            });
+    const jobData = <span class="cstat-no" title="statement not covered" >{</span>
+      emailData: {
+        to,
+        subject: template.subject,
+        template: emailType,
+        categories: [`lightning-talk-${emailType}`]
+      },
+      templateData
+    };
 &nbsp;
-            // Process email jobs
-<span class="cstat-no" title="statement not covered" >            this.queue.process('send', this.processEmailJob.bind(this));</span>
-            
-            // Queue event handlers
-<span class="cstat-no" title="statement not covered" >            this.queue.on('completed', <span class="fstat-no" title="function not covered" >(j</span>ob) =&gt; {</span>
-<span class="cstat-no" title="statement not covered" >                console.log(`📧 Email job ${job.id} completed`);</span>
-<span class="cstat-no" title="statement not covered" >                this.emit('emailSent', { jobId: job.id, email: job.data.to });</span>
-            });
+    // Add to queue with priority and delay options
+    const job = <span class="cstat-no" title="statement not covered" >await this.queue.add('send', jobData, {</span>
+      priority: options.priority || 0,
+      delay: options.delay || 0,
+      attempts: options.attempts || 3,
+      jobId:
+        options.jobId || `${emailType}-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`
+    });
 &nbsp;
-<span class="cstat-no" title="statement not covered" >            this.queue.on('failed', <span class="fstat-no" title="function not covered" >(j</span>ob, err) =&gt; {</span>
-<span class="cstat-no" title="statement not covered" >                console.error(`❌ Email job ${job.id} failed:`, err.message);</span>
-<span class="cstat-no" title="statement not covered" >                this.emit('emailFailed', { jobId: job.id, email: job.data.to, error: err.message });</span>
-            });
+<span class="cstat-no" title="statement not covered" >    console.log(`📧 Email job queued: ${job.id} (${emailType} to ${to})`);</span>
+<span class="cstat-no" title="statement not covered" >    return { jobId: job.id, queued: true };</span>
+  }
 &nbsp;
-<span class="cstat-no" title="statement not covered" >            this.queue.on('stalled', <span class="fstat-no" title="function not covered" >(j</span>ob) =&gt; {</span>
-<span class="cstat-no" title="statement not covered" >                console.warn(`⚠️ Email job ${job.id} stalled`);</span>
-            });
-&nbsp;
-<span class="cstat-no" title="statement not covered" >            console.log('🔄 Email queue system initialized');</span>
-<span class="cstat-no" title="statement not covered" >            this.initialized = true;</span>
-<span class="cstat-no" title="statement not covered" >            this.emit('ready');</span>
-            
-        } catch (error) {
-<span class="cstat-no" title="statement not covered" >            console.error('❌ Email queue setup failed:', error);</span>
-<span class="cstat-no" title="statement not covered" >            throw error;</span>
-        }
+  // Template rendering
+<span class="fstat-no" title="function not covered" >  re</span>nderTemplate(templateType, data) {
+    const template = <span class="cstat-no" title="statement not covered" >this.templates[templateType];</span>
+<span class="cstat-no" title="statement not covered" >    if (!template) {</span>
+<span class="cstat-no" title="statement not covered" >      throw new Error(`Template not found: ${templateType}`);</span>
     }
 &nbsp;
-<span class="fstat-no" title="function not covered" >    as</span>ync processEmailJob(job) {
-        const { emailData, templateData } = <span class="cstat-no" title="statement not covered" >job.data;</span>
-        
-<span class="cstat-no" title="statement not covered" >        try {</span>
-<span class="cstat-no" title="statement not covered" >            await this.sendEmailDirect(emailData, templateData);</span>
-<span class="cstat-no" title="statement not covered" >            return { success: true, timestamp: new Date().toISOString() };</span>
-        } catch (error) {
-<span class="cstat-no" title="statement not covered" >            console.error('Email sending failed:', error);</span>
-<span class="cstat-no" title="statement not covered" >            throw error;</span>
-        }
-    }
+    let html = <span class="cstat-no" title="statement not covered" >template.template;</span>
 &nbsp;
-<span class="fstat-no" title="function not covered" >    as</span>ync sendEmailDirect(emailData, templateData = <span class="branch-0 cbranch-no" title="branch not covered" >{})</span> {
-        const html = <span class="cstat-no" title="statement not covered" >this.renderTemplate(emailData.template, templateData);</span>
-        
-        const mailData = <span class="cstat-no" title="statement not covered" >{</span>
-            to: emailData.to,
-            from: emailData.from || this.from,
-            subject: emailData.subject,
-            text: this.htmlToText(html),
-            html: html,
-            categories: emailData.categories || ['lightning-talk'],
-            customArgs: {
-                eventId: templateData.eventId,
-                participantId: templateData.participantId,
-                emailType: emailData.template
-            }
-        };
+    // Simple template variable replacement
+<span class="cstat-no" title="statement not covered" >    Object.keys(data).forEach(<span class="fstat-no" title="function not covered" >ke</span>y =&gt; {</span>
+      const regex = <span class="cstat-no" title="statement not covered" >new RegExp(`{{${key}}}`, 'g');</span>
+<span class="cstat-no" title="statement not covered" >      html = html.replace(regex, data[key] || '');</span>
+    });
 &nbsp;
-<span class="cstat-no" title="statement not covered" >        switch (this.provider) {</span>
-            case 'sendgrid':
-<span class="cstat-no" title="statement not covered" >                return await sgMail.send(mailData);</span>
-            case 'ses':
-<span class="cstat-no" title="statement not covered" >                return await this.sendWithSES(mailData);</span>
-            default:
-<span class="cstat-no" title="statement not covered" >                throw new Error(`Unknown email provider: ${this.provider}`);</span>
-        }
-    }
+<span class="cstat-no" title="statement not covered" >    return html;</span>
+  }
 &nbsp;
-    // Queue-based email sending (recommended for production)
-<span class="fstat-no" title="function not covered" >    as</span>ync sendEmail(emailType, to, templateData = <span class="branch-0 cbranch-no" title="branch not covered" >{},</span> options = <span class="branch-0 cbranch-no" title="branch not covered" >{})</span> {
-<span class="cstat-no" title="statement not covered" >        if (!this.enabled) {</span>
-<span class="cstat-no" title="statement not covered" >            console.log(`📧 [DISABLED] ${emailType} email to: ${to}`);</span>
-<span class="cstat-no" title="statement not covered" >            return { success: true, simulated: true };</span>
-        }
+<span class="fstat-no" title="function not covered" >  ht</span>mlToText(html) {
+    // Simple HTML to text conversion
+<span class="cstat-no" title="statement not covered" >    return html</span>
+      .replace(/&lt;style[^&gt;]*&gt;.*?&lt;\/style&gt;/gi, '')
+      .replace(/&lt;script[^&gt;]*&gt;.*?&lt;\/script&gt;/gi, '')
+      .replace(/&lt;[^&gt;]+&gt;/g, '')
+      .replace(/\s+/g, ' ')
+      .trim();
+  }
 &nbsp;
-        const template = <span class="cstat-no" title="statement not covered" >this.templates[emailType];</span>
-<span class="cstat-no" title="statement not covered" >        if (!template) {</span>
-<span class="cstat-no" title="statement not covered" >            throw new Error(`Unknown email template: ${emailType}`);</span>
-        }
-&nbsp;
-        const jobData = <span class="cstat-no" title="statement not covered" >{</span>
-            emailData: {
-                to,
-                subject: template.subject,
-                template: emailType,
-                categories: [`lightning-talk-${emailType}`]
-            },
-            templateData
-        };
-&nbsp;
-        // Add to queue with priority and delay options
-        const job = <span class="cstat-no" title="statement not covered" >await this.queue.add('send', jobData, {</span>
-            priority: options.priority || 0,
-            delay: options.delay || 0,
-            attempts: options.attempts || 3,
-            jobId: options.jobId || `${emailType}-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`
-        });
-&nbsp;
-<span class="cstat-no" title="statement not covered" >        console.log(`📧 Email job queued: ${job.id} (${emailType} to ${to})`);</span>
-<span class="cstat-no" title="statement not covered" >        return { jobId: job.id, queued: true };</span>
-    }
-&nbsp;
-    // Template rendering
-<span class="fstat-no" title="function not covered" >    re</span>nderTemplate(templateType, data) {
-        const template = <span class="cstat-no" title="statement not covered" >this.templates[templateType];</span>
-<span class="cstat-no" title="statement not covered" >        if (!template) {</span>
-<span class="cstat-no" title="statement not covered" >            throw new Error(`Template not found: ${templateType}`);</span>
-        }
-&nbsp;
-        let html = <span class="cstat-no" title="statement not covered" >template.template;</span>
-        
-        // Simple template variable replacement
-<span class="cstat-no" title="statement not covered" >        Object.keys(data).forEach(<span class="fstat-no" title="function not covered" >ke</span>y =&gt; {</span>
-            const regex = <span class="cstat-no" title="statement not covered" >new RegExp(`{{${key}}}`, 'g');</span>
-<span class="cstat-no" title="statement not covered" >            html = html.replace(regex, data[key] || '');</span>
-        });
-&nbsp;
-<span class="cstat-no" title="statement not covered" >        return html;</span>
-    }
-&nbsp;
-<span class="fstat-no" title="function not covered" >    ht</span>mlToText(html) {
-        // Simple HTML to text conversion
-<span class="cstat-no" title="statement not covered" >        return html</span>
-            .replace(/&lt;style[^&gt;]*&gt;.*?&lt;\/style&gt;/gi, '')
-            .replace(/&lt;script[^&gt;]*&gt;.*?&lt;\/script&gt;/gi, '')
-            .replace(/&lt;[^&gt;]+&gt;/g, '')
-            .replace(/\s+/g, ' ')
-            .trim();
-    }
-&nbsp;
-<span class="fstat-no" title="function not covered" >    in</span>itializeTemplates() {
-<span class="cstat-no" title="statement not covered" >        return {</span>
-            registrationConfirmation: {
-                subject: '🎉 ライトニングトーク参加登録完了 - {{eventTitle}}',
-                template: `
+<span class="fstat-no" title="function not covered" >  in</span>itializeTemplates() {
+<span class="cstat-no" title="statement not covered" >    return {</span>
+      registrationConfirmation: {
+        subject: '🎉 ライトニングトーク参加登録完了 - {{eventTitle}}',
+        template: `
                     &lt;!DOCTYPE html&gt;
                     &lt;html&gt;
                     &lt;head&gt;
@@ -1568,10 +1574,10 @@ export class ProductionEmailService extends EventEmitter {
                     &lt;/body&gt;
                     &lt;/html&gt;
                 `
-            },
-            speakerConfirmation: {
-                subject: '🎤 Lightning Talk発表申込み受付完了 - {{talkTitle}}',
-                template: `
+      },
+      speakerConfirmation: {
+        subject: '🎤 Lightning Talk発表申込み受付完了 - {{talkTitle}}',
+        template: `
                     &lt;!DOCTYPE html&gt;
                     &lt;html&gt;
                     &lt;head&gt;
@@ -1627,10 +1633,10 @@ export class ProductionEmailService extends EventEmitter {
                     &lt;/body&gt;
                     &lt;/html&gt;
                 `
-            },
-            eventReminder: {
-                subject: '⚡ 明日開催！{{eventTitle}} - 開催リマインダー',
-                template: `
+      },
+      eventReminder: {
+        subject: '⚡ 明日開催！{{eventTitle}} - 開催リマインダー',
+        template: `
                     &lt;!DOCTYPE html&gt;
                     &lt;html&gt;
                     &lt;head&gt;
@@ -1685,10 +1691,10 @@ export class ProductionEmailService extends EventEmitter {
                     &lt;/body&gt;
                     &lt;/html&gt;
                 `
-            },
-            eventCancellation: {
-                subject: '⚠️ 【重要】{{eventTitle}} 中止のお知らせ',
-                template: `
+      },
+      eventCancellation: {
+        subject: '⚠️ 【重要】{{eventTitle}} 中止のお知らせ',
+        template: `
                     &lt;!DOCTYPE html&gt;
                     &lt;html&gt;
                     &lt;head&gt;
@@ -1731,10 +1737,10 @@ export class ProductionEmailService extends EventEmitter {
                     &lt;/body&gt;
                     &lt;/html&gt;
                 `
-            },
-            feedbackRequest: {
-                subject: '💭 {{eventTitle}} 感想・フィードバックのお願い',
-                template: `
+      },
+      feedbackRequest: {
+        subject: '💭 {{eventTitle}} 感想・フィードバックのお願い',
+        template: `
                     &lt;!DOCTYPE html&gt;
                     &lt;html&gt;
                     &lt;head&gt;
@@ -1787,102 +1793,105 @@ export class ProductionEmailService extends EventEmitter {
                     &lt;/body&gt;
                     &lt;/html&gt;
                 `
-            }
-        };
+      }
+    };
+  }
+&nbsp;
+  // Bulk email operations
+<span class="fstat-no" title="function not covered" >  as</span>ync sendBulkEmail(emailType, recipients, templateData = <span class="branch-0 cbranch-no" title="branch not covered" >{},</span> options = <span class="branch-0 cbranch-no" title="branch not covered" >{})</span> {
+    const jobs = <span class="cstat-no" title="statement not covered" >[];</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    for (const recipient of recipients) {</span>
+      const individualData = <span class="cstat-no" title="statement not covered" >{ ...templateData, ...recipient };</span>
+      const job = <span class="cstat-no" title="statement not covered" >await this.sendEmail(emailType, recipient.email, individualData, {</span>
+        ...options,
+        jobId: `bulk-${emailType}-${recipient.id || Date.now()}`
+      });
+<span class="cstat-no" title="statement not covered" >      jobs.push(job);</span>
     }
 &nbsp;
-    // Bulk email operations
-<span class="fstat-no" title="function not covered" >    as</span>ync sendBulkEmail(emailType, recipients, templateData = <span class="branch-0 cbranch-no" title="branch not covered" >{},</span> options = <span class="branch-0 cbranch-no" title="branch not covered" >{})</span> {
-        const jobs = <span class="cstat-no" title="statement not covered" >[];</span>
-        
-<span class="cstat-no" title="statement not covered" >        for (const recipient of recipients) {</span>
-            const individualData = <span class="cstat-no" title="statement not covered" >{ ...templateData, ...recipient };</span>
-            const job = <span class="cstat-no" title="statement not covered" >await this.sendEmail(emailType, recipient.email, individualData, {</span>
-                ...options,
-                jobId: `bulk-${emailType}-${recipient.id || Date.now()}`
-            });
-<span class="cstat-no" title="statement not covered" >            jobs.push(job);</span>
-        }
+<span class="cstat-no" title="statement not covered" >    console.log(`📧 Bulk email queued: ${jobs.length} emails (${emailType})`);</span>
+<span class="cstat-no" title="statement not covered" >    return { jobs, count: jobs.length };</span>
+  }
 &nbsp;
-<span class="cstat-no" title="statement not covered" >        console.log(`📧 Bulk email queued: ${jobs.length} emails (${emailType})`);</span>
-<span class="cstat-no" title="statement not covered" >        return { jobs, count: jobs.length };</span>
+  // Queue management
+<span class="fstat-no" title="function not covered" >  as</span>ync getQueueStats() {
+<span class="cstat-no" title="statement not covered" >    if (!this.queue) {</span>
+<span class="cstat-no" title="statement not covered" >      return null;</span>
     }
 &nbsp;
-    // Queue management
-<span class="fstat-no" title="function not covered" >    as</span>ync getQueueStats() {
-<span class="cstat-no" title="statement not covered" >        if (!this.queue) <span class="cstat-no" title="statement not covered" >return null;</span></span>
-        
-        const [waiting, active, completed, failed] = <span class="cstat-no" title="statement not covered" >await Promise.all([</span>
-            this.queue.getWaiting(),
-            this.queue.getActive(),
-            this.queue.getCompleted(),
-            this.queue.getFailed()
-        ]);
+    const [waiting, active, completed, failed] = <span class="cstat-no" title="statement not covered" >await Promise.all([</span>
+      this.queue.getWaiting(),
+      this.queue.getActive(),
+      this.queue.getCompleted(),
+      this.queue.getFailed()
+    ]);
 &nbsp;
-<span class="cstat-no" title="statement not covered" >        return {</span>
-            waiting: waiting.length,
-            active: active.length,
-            completed: completed.length,
-            failed: failed.length,
-            total: waiting.length + active.length + completed.length + failed.length
-        };
-    }
+<span class="cstat-no" title="statement not covered" >    return {</span>
+      waiting: waiting.length,
+      active: active.length,
+      completed: completed.length,
+      failed: failed.length,
+      total: waiting.length + active.length + completed.length + failed.length
+    };
+  }
 &nbsp;
-<span class="fstat-no" title="function not covered" >    as</span>ync pauseQueue() {
-<span class="cstat-no" title="statement not covered" >        await this.queue.pause();</span>
-<span class="cstat-no" title="statement not covered" >        console.log('⏸️ Email queue paused');</span>
-    }
+<span class="fstat-no" title="function not covered" >  as</span>ync pauseQueue() {
+<span class="cstat-no" title="statement not covered" >    await this.queue.pause();</span>
+<span class="cstat-no" title="statement not covered" >    console.log('⏸️ Email queue paused');</span>
+  }
 &nbsp;
-<span class="fstat-no" title="function not covered" >    as</span>ync resumeQueue() {
-<span class="cstat-no" title="statement not covered" >        await this.queue.resume();</span>
-<span class="cstat-no" title="statement not covered" >        console.log('▶️ Email queue resumed');</span>
-    }
+<span class="fstat-no" title="function not covered" >  as</span>ync resumeQueue() {
+<span class="cstat-no" title="statement not covered" >    await this.queue.resume();</span>
+<span class="cstat-no" title="statement not covered" >    console.log('▶️ Email queue resumed');</span>
+  }
 &nbsp;
-<span class="fstat-no" title="function not covered" >    as</span>ync retryFailedJobs() {
-        const failed = <span class="cstat-no" title="statement not covered" >await this.queue.getFailed();</span>
-<span class="cstat-no" title="statement not covered" >        for (const job of failed) {</span>
-<span class="cstat-no" title="statement not covered" >            await job.retry();</span>
-        }
-<span class="cstat-no" title="statement not covered" >        console.log(`🔄 Retrying ${failed.length} failed email jobs`);</span>
+<span class="fstat-no" title="function not covered" >  as</span>ync retryFailedJobs() {
+    const failed = <span class="cstat-no" title="statement not covered" >await this.queue.getFailed();</span>
+<span class="cstat-no" title="statement not covered" >    for (const job of failed) {</span>
+<span class="cstat-no" title="statement not covered" >      await job.retry();</span>
     }
+<span class="cstat-no" title="statement not covered" >    console.log(`🔄 Retrying ${failed.length} failed email jobs`);</span>
+  }
 &nbsp;
-    // Cleanup
-<span class="fstat-no" title="function not covered" >    as</span>ync close() {
-<span class="cstat-no" title="statement not covered" >        if (this.queue) {</span>
-<span class="cstat-no" title="statement not covered" >            await this.queue.close();</span>
-<span class="cstat-no" title="statement not covered" >            console.log('📧 Email service closed');</span>
-        }
+  // Cleanup
+<span class="fstat-no" title="function not covered" >  as</span>ync close() {
+<span class="cstat-no" title="statement not covered" >    if (this.queue) {</span>
+<span class="cstat-no" title="statement not covered" >      await this.queue.close();</span>
+<span class="cstat-no" title="statement not covered" >      console.log('📧 Email service closed');</span>
     }
+  }
 &nbsp;
-    // Health check
-<span class="fstat-no" title="function not covered" >    as</span>ync healthCheck() {
-<span class="cstat-no" title="statement not covered" >        try {</span>
-            const stats = <span class="cstat-no" title="statement not covered" >await this.getQueueStats();</span>
-<span class="cstat-no" title="statement not covered" >            return {</span>
-                status: 'healthy',
-                provider: this.provider,
-                enabled: this.enabled,
-                queue: stats,
-                timestamp: new Date().toISOString()
-            };
-        } catch (error) {
-<span class="cstat-no" title="statement not covered" >            return {</span>
-                status: 'unhealthy',
-                error: error.message,
-                timestamp: new Date().toISOString()
-            };
-        }
+  // Health check
+<span class="fstat-no" title="function not covered" >  as</span>ync healthCheck() {
+<span class="cstat-no" title="statement not covered" >    try {</span>
+      const stats = <span class="cstat-no" title="statement not covered" >await this.getQueueStats();</span>
+<span class="cstat-no" title="statement not covered" >      return {</span>
+        status: 'healthy',
+        provider: this.provider,
+        enabled: this.enabled,
+        queue: stats,
+        timestamp: new Date().toISOString()
+      };
+    } catch (error) {
+<span class="cstat-no" title="statement not covered" >      return {</span>
+        status: 'unhealthy',
+        error: error.message,
+        timestamp: new Date().toISOString()
+      };
     }
+  }
 }
 &nbsp;
-export default ProductionEmailService;</pre></td></tr></table></pre>
+export default ProductionEmailService;
+&nbsp;</pre></td></tr></table></pre>
 
                 <div class='push'></div><!-- for sticky footer -->
             </div><!-- /wrapper -->
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2025-06-22T22:15:42.782Z
+                at 2025-06-23T06:20:12.641Z
             </div>
         <script src="../../prettify.js"></script>
         <script>

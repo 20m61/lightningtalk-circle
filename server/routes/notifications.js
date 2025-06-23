@@ -1,13 +1,10 @@
-/**
- * 通知機能のAPIルート
- * SSE (Server-Sent Events) エンドポイントとWebSocket管理
- */
+import express from 'express';
+import notificationService from '../services/notificationService.js';
+import { logger } from '../middleware/logger.js';
+import { body, query, validationResult } from 'express-validator';
+import { v4 as uuidv4 } from 'uuid';
 
-const express = require('express');
 const router = express.Router();
-const notificationService = require('../services/notificationService');
-const logger = require('../middleware/logger');
-const { body, query, validationResult } = require('express-validator');
 
 /**
  * SSE (Server-Sent Events) エンドポイント
@@ -60,14 +57,8 @@ router.post(
         notificationService.broadcastToTopic(topic, event, notificationData);
       }
 
-      res.json({
-        success: true,
-        message: 'Notification sent successfully',
-        event,
-        topic
-      });
-
-      logger.info(`Manual notification sent: ${event} to ${topic}`);
+      res.json({ success: true });
+      logger.info(`Notification sent: ${event}`);
     } catch (error) {
       logger.error('Failed to send notification:', error);
       res.status(500).json({ error: 'Failed to send notification' });
@@ -385,18 +376,17 @@ router.post(
       };
 
       if (type === 'sse' || type === 'both') {
-        notificationService.broadcastSSE({
-          id: require('uuid').v4(),
+        notificationService.broadcast('test_notification', {
+          id: uuidv4(),
           event: 'test_notification',
           data: testMessage,
           topic: 'all',
           timestamp: new Date().toISOString()
         });
       }
-
       if (type === 'websocket' || type === 'both') {
         notificationService.broadcastWebSocket({
-          id: require('uuid').v4(),
+          id: uuidv4(),
           event: 'test_notification',
           data: testMessage,
           topic: 'all',
@@ -445,4 +435,4 @@ router.get('/health', (req, res) => {
   }
 });
 
-module.exports = router;
+export default router;

@@ -540,7 +540,16 @@
 <a name='L475'></a><a href='#L475'>475</a>
 <a name='L476'></a><a href='#L476'>476</a>
 <a name='L477'></a><a href='#L477'>477</a>
-<a name='L478'></a><a href='#L478'>478</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L478'></a><a href='#L478'>478</a>
+<a name='L479'></a><a href='#L479'>479</a>
+<a name='L480'></a><a href='#L480'>480</a>
+<a name='L481'></a><a href='#L481'>481</a>
+<a name='L482'></a><a href='#L482'>482</a>
+<a name='L483'></a><a href='#L483'>483</a>
+<a name='L484'></a><a href='#L484'>484</a>
+<a name='L485'></a><a href='#L485'>485</a>
+<a name='L486'></a><a href='#L486'>486</a>
+<a name='L487'></a><a href='#L487'>487</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -560,6 +569,7 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
@@ -723,15 +733,21 @@
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
@@ -846,6 +862,7 @@
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
@@ -1010,6 +1027,7 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -1028,68 +1046,69 @@ const { Pool } = <span class="cstat-no" title="statement not covered" >pkg;</spa
 import { EventEmitter } from 'events';
 &nbsp;
 export class PostgreSQLDatabaseService extends EventEmitter {
-<span class="fstat-no" title="function not covered" >    co</span>nstructor() {
-<span class="cstat-no" title="statement not covered" >        super();</span>
-<span class="cstat-no" title="statement not covered" >        this.pool = null;</span>
-<span class="cstat-no" title="statement not covered" >        this.initialized = false;</span>
-<span class="cstat-no" title="statement not covered" >        this.connectionString = process.env.DATABASE_URL || </span>
-            `postgresql://${process.env.DB_USER || 'postgres'}:${process.env.DB_PASSWORD || 'password'}@${process.env.DB_HOST || 'localhost'}:${process.env.DB_PORT || 5432}/${process.env.DB_NAME || 'lightningtalk'}`;
+<span class="fstat-no" title="function not covered" >  co</span>nstructor() {
+<span class="cstat-no" title="statement not covered" >    super();</span>
+<span class="cstat-no" title="statement not covered" >    this.pool = null;</span>
+<span class="cstat-no" title="statement not covered" >    this.initialized = false;</span>
+<span class="cstat-no" title="statement not covered" >    this.connectionString =</span>
+      process.env.DATABASE_URL ||
+      `postgresql://${process.env.DB_USER || 'postgres'}:${process.env.DB_PASSWORD || 'password'}@${process.env.DB_HOST || 'localhost'}:${process.env.DB_PORT || 5432}/${process.env.DB_NAME || 'lightningtalk'}`;
+  }
+&nbsp;
+<span class="fstat-no" title="function not covered" >  as</span>ync initialize() {
+<span class="cstat-no" title="statement not covered" >    try {</span>
+      // Initialize connection pool
+<span class="cstat-no" title="statement not covered" >      this.pool = new Pool({</span>
+        connectionString: this.connectionString,
+        max: 20,
+        idleTimeoutMillis: 30000,
+        connectionTimeoutMillis: 2000
+      });
+&nbsp;
+      // Test connection
+      const client = <span class="cstat-no" title="statement not covered" >await this.pool.connect();</span>
+<span class="cstat-no" title="statement not covered" >      console.log('📦 PostgreSQL connection established');</span>
+<span class="cstat-no" title="statement not covered" >      client.release();</span>
+&nbsp;
+      // Run migrations
+<span class="cstat-no" title="statement not covered" >      await this.runMigrations();</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >      this.initialized = true;</span>
+<span class="cstat-no" title="statement not covered" >      this.emit('ready');</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >      console.log('🚀 PostgreSQL Database service initialized');</span>
+    } catch (error) {
+<span class="cstat-no" title="statement not covered" >      console.error('❌ Database initialization failed:', error);</span>
+<span class="cstat-no" title="statement not covered" >      throw error;</span>
     }
+  }
 &nbsp;
-<span class="fstat-no" title="function not covered" >    as</span>ync initialize() {
-<span class="cstat-no" title="statement not covered" >        try {</span>
-            // Initialize connection pool
-<span class="cstat-no" title="statement not covered" >            this.pool = new Pool({</span>
-                connectionString: this.connectionString,
-                max: 20,
-                idleTimeoutMillis: 30000,
-                connectionTimeoutMillis: 2000,
-            });
+<span class="fstat-no" title="function not covered" >  as</span>ync runMigrations() {
+    const client = <span class="cstat-no" title="statement not covered" >await this.pool.connect();</span>
 &nbsp;
-            // Test connection
-            const client = <span class="cstat-no" title="statement not covered" >await this.pool.connect();</span>
-<span class="cstat-no" title="statement not covered" >            console.log('📦 PostgreSQL connection established');</span>
-<span class="cstat-no" title="statement not covered" >            client.release();</span>
+<span class="cstat-no" title="statement not covered" >    try {</span>
+<span class="cstat-no" title="statement not covered" >      await client.query('BEGIN');</span>
 &nbsp;
-            // Run migrations
-<span class="cstat-no" title="statement not covered" >            await this.runMigrations();</span>
+      // Create tables if they don't exist
+<span class="cstat-no" title="statement not covered" >      await this.createTables(client);</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >            this.initialized = true;</span>
-<span class="cstat-no" title="statement not covered" >            this.emit('ready');</span>
-            
-<span class="cstat-no" title="statement not covered" >            console.log('🚀 PostgreSQL Database service initialized');</span>
-        } catch (error) {
-<span class="cstat-no" title="statement not covered" >            console.error('❌ Database initialization failed:', error);</span>
-<span class="cstat-no" title="statement not covered" >            throw error;</span>
-        }
+      // Create indexes
+<span class="cstat-no" title="statement not covered" >      await this.createIndexes(client);</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >      await client.query('COMMIT');</span>
+<span class="cstat-no" title="statement not covered" >      console.log('✅ Database migrations completed');</span>
+    } catch (error) {
+<span class="cstat-no" title="statement not covered" >      await client.query('ROLLBACK');</span>
+<span class="cstat-no" title="statement not covered" >      console.error('❌ Migration failed:', error);</span>
+<span class="cstat-no" title="statement not covered" >      throw error;</span>
+    } finally {
+<span class="cstat-no" title="statement not covered" >      client.release();</span>
     }
+  }
 &nbsp;
-<span class="fstat-no" title="function not covered" >    as</span>ync runMigrations() {
-        const client = <span class="cstat-no" title="statement not covered" >await this.pool.connect();</span>
-        
-<span class="cstat-no" title="statement not covered" >        try {</span>
-<span class="cstat-no" title="statement not covered" >            await client.query('BEGIN');</span>
-&nbsp;
-            // Create tables if they don't exist
-<span class="cstat-no" title="statement not covered" >            await this.createTables(client);</span>
-            
-            // Create indexes
-<span class="cstat-no" title="statement not covered" >            await this.createIndexes(client);</span>
-&nbsp;
-<span class="cstat-no" title="statement not covered" >            await client.query('COMMIT');</span>
-<span class="cstat-no" title="statement not covered" >            console.log('✅ Database migrations completed');</span>
-        } catch (error) {
-<span class="cstat-no" title="statement not covered" >            await client.query('ROLLBACK');</span>
-<span class="cstat-no" title="statement not covered" >            console.error('❌ Migration failed:', error);</span>
-<span class="cstat-no" title="statement not covered" >            throw error;</span>
-        } finally {
-<span class="cstat-no" title="statement not covered" >            client.release();</span>
-        }
-    }
-&nbsp;
-<span class="fstat-no" title="function not covered" >    as</span>ync createTables(client) {
-        // Events table
-<span class="cstat-no" title="statement not covered" >        await client.query(`</span>
+<span class="fstat-no" title="function not covered" >  as</span>ync createTables(client) {
+    // Events table
+<span class="cstat-no" title="statement not covered" >    await client.query(`</span>
             CREATE TABLE IF NOT EXISTS events (
                 id SERIAL PRIMARY KEY,
                 title VARCHAR(255) NOT NULL,
@@ -1111,8 +1130,8 @@ export class PostgreSQLDatabaseService extends EventEmitter {
             );
         `);
 &nbsp;
-        // Participants table
-<span class="cstat-no" title="statement not covered" >        await client.query(`</span>
+    // Participants table
+<span class="cstat-no" title="statement not covered" >    await client.query(`</span>
             CREATE TABLE IF NOT EXISTS participants (
                 id SERIAL PRIMARY KEY,
                 event_id INTEGER REFERENCES events(id) ON DELETE CASCADE,
@@ -1130,8 +1149,8 @@ export class PostgreSQLDatabaseService extends EventEmitter {
             );
         `);
 &nbsp;
-        // Talks table
-<span class="cstat-no" title="statement not covered" >        await client.query(`</span>
+    // Talks table
+<span class="cstat-no" title="statement not covered" >    await client.query(`</span>
             CREATE TABLE IF NOT EXISTS talks (
                 id SERIAL PRIMARY KEY,
                 event_id INTEGER REFERENCES events(id) ON DELETE CASCADE,
@@ -1149,8 +1168,8 @@ export class PostgreSQLDatabaseService extends EventEmitter {
             );
         `);
 &nbsp;
-        // Settings table
-<span class="cstat-no" title="statement not covered" >        await client.query(`</span>
+    // Settings table
+<span class="cstat-no" title="statement not covered" >    await client.query(`</span>
             CREATE TABLE IF NOT EXISTS settings (
                 key VARCHAR(255) PRIMARY KEY,
                 value JSONB,
@@ -1159,8 +1178,8 @@ export class PostgreSQLDatabaseService extends EventEmitter {
             );
         `);
 &nbsp;
-        // Analytics table
-<span class="cstat-no" title="statement not covered" >        await client.query(`</span>
+    // Analytics table
+<span class="cstat-no" title="statement not covered" >    await client.query(`</span>
             CREATE TABLE IF NOT EXISTS analytics (
                 id SERIAL PRIMARY KEY,
                 event_type VARCHAR(100) NOT NULL,
@@ -1173,8 +1192,8 @@ export class PostgreSQLDatabaseService extends EventEmitter {
             );
         `);
 &nbsp;
-        // Update triggers for updated_at
-<span class="cstat-no" title="statement not covered" >        await client.query(`</span>
+    // Update triggers for updated_at
+<span class="cstat-no" title="statement not covered" >    await client.query(`</span>
             CREATE OR REPLACE FUNCTION update_updated_at_column()
             RETURNS TRIGGER AS $$
             BEGIN
@@ -1184,213 +1203,220 @@ export class PostgreSQLDatabaseService extends EventEmitter {
             $$ language 'plpgsql';
         `);
 &nbsp;
-        const tables = <span class="cstat-no" title="statement not covered" >['events', 'talks'];</span>
-<span class="cstat-no" title="statement not covered" >        for (const table of tables) {</span>
-<span class="cstat-no" title="statement not covered" >            await client.query(`</span>
+    const tables = <span class="cstat-no" title="statement not covered" >['events', 'talks'];</span>
+<span class="cstat-no" title="statement not covered" >    for (const table of tables) {</span>
+<span class="cstat-no" title="statement not covered" >      await client.query(`</span>
                 DROP TRIGGER IF EXISTS update_${table}_updated_at ON ${table};
                 CREATE TRIGGER update_${table}_updated_at 
                     BEFORE UPDATE ON ${table} 
                     FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
             `);
-        }
     }
+  }
 &nbsp;
-<span class="fstat-no" title="function not covered" >    as</span>ync createIndexes(client) {
-        // Performance indexes
-<span class="cstat-no" title="statement not covered" >        await client.query('CREATE INDEX IF NOT EXISTS idx_events_date ON events(date);');</span>
-<span class="cstat-no" title="statement not covered" >        await client.query('CREATE INDEX IF NOT EXISTS idx_events_status ON events(status);');</span>
-<span class="cstat-no" title="statement not covered" >        await client.query('CREATE INDEX IF NOT EXISTS idx_participants_event_id ON participants(event_id);');</span>
-<span class="cstat-no" title="statement not covered" >        await client.query('CREATE INDEX IF NOT EXISTS idx_participants_email ON participants(email);');</span>
-<span class="cstat-no" title="statement not covered" >        await client.query('CREATE INDEX IF NOT EXISTS idx_talks_event_id ON talks(event_id);');</span>
-<span class="cstat-no" title="statement not covered" >        await client.query('CREATE INDEX IF NOT EXISTS idx_talks_status ON talks(status);');</span>
-<span class="cstat-no" title="statement not covered" >        await client.query('CREATE INDEX IF NOT EXISTS idx_analytics_event_type ON analytics(event_type);');</span>
-<span class="cstat-no" title="statement not covered" >        await client.query('CREATE INDEX IF NOT EXISTS idx_analytics_created_at ON analytics(created_at);');</span>
-    }
+<span class="fstat-no" title="function not covered" >  as</span>ync createIndexes(client) {
+    // Performance indexes
+<span class="cstat-no" title="statement not covered" >    await client.query('CREATE INDEX IF NOT EXISTS idx_events_date ON events(date);');</span>
+<span class="cstat-no" title="statement not covered" >    await client.query('CREATE INDEX IF NOT EXISTS idx_events_status ON events(status);');</span>
+<span class="cstat-no" title="statement not covered" >    await client.query(</span>
+      'CREATE INDEX IF NOT EXISTS idx_participants_event_id ON participants(event_id);'
+    );
+<span class="cstat-no" title="statement not covered" >    await client.query('CREATE INDEX IF NOT EXISTS idx_participants_email ON participants(email);');</span>
+<span class="cstat-no" title="statement not covered" >    await client.query('CREATE INDEX IF NOT EXISTS idx_talks_event_id ON talks(event_id);');</span>
+<span class="cstat-no" title="statement not covered" >    await client.query('CREATE INDEX IF NOT EXISTS idx_talks_status ON talks(status);');</span>
+<span class="cstat-no" title="statement not covered" >    await client.query(</span>
+      'CREATE INDEX IF NOT EXISTS idx_analytics_event_type ON analytics(event_type);'
+    );
+<span class="cstat-no" title="statement not covered" >    await client.query(</span>
+      'CREATE INDEX IF NOT EXISTS idx_analytics_created_at ON analytics(created_at);'
+    );
+  }
 &nbsp;
-    // Events operations
-<span class="fstat-no" title="function not covered" >    as</span>ync createEvent(eventData) {
-        const client = <span class="cstat-no" title="statement not covered" >await this.pool.connect();</span>
-<span class="cstat-no" title="statement not covered" >        try {</span>
-            const query = <span class="cstat-no" title="statement not covered" >`</span>
+  // Events operations
+<span class="fstat-no" title="function not covered" >  as</span>ync createEvent(eventData) {
+    const client = <span class="cstat-no" title="statement not covered" >await this.pool.connect();</span>
+<span class="cstat-no" title="statement not covered" >    try {</span>
+      const query = <span class="cstat-no" title="statement not covered" >`</span>
                 INSERT INTO events (title, description, date, end_date, venue_name, venue_address, 
                                   capacity, online, online_url, max_talks, talk_duration)
                 VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)
                 RETURNING *;
             `;
-            const values = <span class="cstat-no" title="statement not covered" >[</span>
-                eventData.title,
-                eventData.description,
-                eventData.date,
-                eventData.endDate,
-                eventData.venue?.name,
-                eventData.venue?.address,
-                eventData.venue?.capacity || 50,
-                eventData.venue?.online || false,
-                eventData.venue?.onlineUrl,
-                eventData.maxTalks || 20,
-                eventData.talkDuration || 5
-            ];
-            
-            const result = <span class="cstat-no" title="statement not covered" >await client.query(query, values);</span>
-<span class="cstat-no" title="statement not covered" >            return result.rows[0];</span>
-        } finally {
-<span class="cstat-no" title="statement not covered" >            client.release();</span>
-        }
+      const values = <span class="cstat-no" title="statement not covered" >[</span>
+        eventData.title,
+        eventData.description,
+        eventData.date,
+        eventData.endDate,
+        eventData.venue?.name,
+        eventData.venue?.address,
+        eventData.venue?.capacity || 50,
+        eventData.venue?.online || false,
+        eventData.venue?.onlineUrl,
+        eventData.maxTalks || 20,
+        eventData.talkDuration || 5
+      ];
+&nbsp;
+      const result = <span class="cstat-no" title="statement not covered" >await client.query(query, values);</span>
+<span class="cstat-no" title="statement not covered" >      return result.rows[0];</span>
+    } finally {
+<span class="cstat-no" title="statement not covered" >      client.release();</span>
     }
+  }
 &nbsp;
-<span class="fstat-no" title="function not covered" >    as</span>ync getEvents(filters = <span class="branch-0 cbranch-no" title="branch not covered" >{})</span> {
-        const client = <span class="cstat-no" title="statement not covered" >await this.pool.connect();</span>
-<span class="cstat-no" title="statement not covered" >        try {</span>
-            let query = <span class="cstat-no" title="statement not covered" >'SELECT * FROM events';</span>
-            const conditions = <span class="cstat-no" title="statement not covered" >[];</span>
-            const values = <span class="cstat-no" title="statement not covered" >[];</span>
+<span class="fstat-no" title="function not covered" >  as</span>ync getEvents(filters = <span class="branch-0 cbranch-no" title="branch not covered" >{})</span> {
+    const client = <span class="cstat-no" title="statement not covered" >await this.pool.connect();</span>
+<span class="cstat-no" title="statement not covered" >    try {</span>
+      let query = <span class="cstat-no" title="statement not covered" >'SELECT * FROM events';</span>
+      const conditions = <span class="cstat-no" title="statement not covered" >[];</span>
+      const values = <span class="cstat-no" title="statement not covered" >[];</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >            if (filters.status) {</span>
-<span class="cstat-no" title="statement not covered" >                conditions.push(`status = $${values.length + 1}`);</span>
-<span class="cstat-no" title="statement not covered" >                values.push(filters.status);</span>
-            }
+<span class="cstat-no" title="statement not covered" >      if (filters.status) {</span>
+<span class="cstat-no" title="statement not covered" >        conditions.push(`status = $${values.length + 1}`);</span>
+<span class="cstat-no" title="statement not covered" >        values.push(filters.status);</span>
+      }
 &nbsp;
-<span class="cstat-no" title="statement not covered" >            if (filters.future) {</span>
-<span class="cstat-no" title="statement not covered" >                conditions.push(`date &gt; NOW()`);</span>
-            }
+<span class="cstat-no" title="statement not covered" >      if (filters.future) {</span>
+<span class="cstat-no" title="statement not covered" >        conditions.push('date &gt; NOW()');</span>
+      }
 &nbsp;
-<span class="cstat-no" title="statement not covered" >            if (conditions.length &gt; 0) {</span>
-<span class="cstat-no" title="statement not covered" >                query += ' WHERE ' + conditions.join(' AND ');</span>
-            }
+<span class="cstat-no" title="statement not covered" >      if (conditions.length &gt; 0) {</span>
+<span class="cstat-no" title="statement not covered" >        query += ` WHERE ${conditions.join(' AND ')}`;</span>
+      }
 &nbsp;
-<span class="cstat-no" title="statement not covered" >            query += ' ORDER BY date DESC';</span>
+<span class="cstat-no" title="statement not covered" >      query += ' ORDER BY date DESC';</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >            if (filters.limit) {</span>
-<span class="cstat-no" title="statement not covered" >                query += ` LIMIT $${values.length + 1}`;</span>
-<span class="cstat-no" title="statement not covered" >                values.push(filters.limit);</span>
-            }
+<span class="cstat-no" title="statement not covered" >      if (filters.limit) {</span>
+<span class="cstat-no" title="statement not covered" >        query += ` LIMIT $${values.length + 1}`;</span>
+<span class="cstat-no" title="statement not covered" >        values.push(filters.limit);</span>
+      }
 &nbsp;
-            const result = <span class="cstat-no" title="statement not covered" >await client.query(query, values);</span>
-<span class="cstat-no" title="statement not covered" >            return result.rows;</span>
-        } finally {
-<span class="cstat-no" title="statement not covered" >            client.release();</span>
-        }
+      const result = <span class="cstat-no" title="statement not covered" >await client.query(query, values);</span>
+<span class="cstat-no" title="statement not covered" >      return result.rows;</span>
+    } finally {
+<span class="cstat-no" title="statement not covered" >      client.release();</span>
     }
+  }
 &nbsp;
-<span class="fstat-no" title="function not covered" >    as</span>ync getEventById(id) {
-        const client = <span class="cstat-no" title="statement not covered" >await this.pool.connect();</span>
-<span class="cstat-no" title="statement not covered" >        try {</span>
-            const result = <span class="cstat-no" title="statement not covered" >await client.query('SELECT * FROM events WHERE id = $1', [id]);</span>
-<span class="cstat-no" title="statement not covered" >            return result.rows[0] || null;</span>
-        } finally {
-<span class="cstat-no" title="statement not covered" >            client.release();</span>
-        }
+<span class="fstat-no" title="function not covered" >  as</span>ync getEventById(id) {
+    const client = <span class="cstat-no" title="statement not covered" >await this.pool.connect();</span>
+<span class="cstat-no" title="statement not covered" >    try {</span>
+      const result = <span class="cstat-no" title="statement not covered" >await client.query('SELECT * FROM events WHERE id = $1', [id]);</span>
+<span class="cstat-no" title="statement not covered" >      return result.rows[0] || null;</span>
+    } finally {
+<span class="cstat-no" title="statement not covered" >      client.release();</span>
     }
+  }
 &nbsp;
-<span class="fstat-no" title="function not covered" >    as</span>ync updateEvent(id, updates) {
-        const client = <span class="cstat-no" title="statement not covered" >await this.pool.connect();</span>
-<span class="cstat-no" title="statement not covered" >        try {</span>
-            const fields = <span class="cstat-no" title="statement not covered" >Object.keys(updates);</span>
-            const values = <span class="cstat-no" title="statement not covered" >Object.values(updates);</span>
-            const setClause = <span class="cstat-no" title="statement not covered" >fields.map(<span class="fstat-no" title="function not covered" >(f</span>ield, index) =&gt; <span class="cstat-no" title="statement not covered" >`${field} = $${index + 2}`)</span>.join(', ');</span>
-            
-            const query = <span class="cstat-no" title="statement not covered" >`UPDATE events SET ${setClause} WHERE id = $1 RETURNING *`;</span>
-            const result = <span class="cstat-no" title="statement not covered" >await client.query(query, [id, ...values]);</span>
-<span class="cstat-no" title="statement not covered" >            return result.rows[0];</span>
-        } finally {
-<span class="cstat-no" title="statement not covered" >            client.release();</span>
-        }
+<span class="fstat-no" title="function not covered" >  as</span>ync updateEvent(id, updates) {
+    const client = <span class="cstat-no" title="statement not covered" >await this.pool.connect();</span>
+<span class="cstat-no" title="statement not covered" >    try {</span>
+      const fields = <span class="cstat-no" title="statement not covered" >Object.keys(updates);</span>
+      const values = <span class="cstat-no" title="statement not covered" >Object.values(updates);</span>
+      const setClause = <span class="cstat-no" title="statement not covered" >fields.map(<span class="fstat-no" title="function not covered" >(f</span>ield, index) =&gt; <span class="cstat-no" title="statement not covered" >`${field} = $${index + 2}`)</span>.join(', ');</span>
+&nbsp;
+      const query = <span class="cstat-no" title="statement not covered" >`UPDATE events SET ${setClause} WHERE id = $1 RETURNING *`;</span>
+      const result = <span class="cstat-no" title="statement not covered" >await client.query(query, [id, ...values]);</span>
+<span class="cstat-no" title="statement not covered" >      return result.rows[0];</span>
+    } finally {
+<span class="cstat-no" title="statement not covered" >      client.release();</span>
     }
+  }
 &nbsp;
-    // Participants operations
-<span class="fstat-no" title="function not covered" >    as</span>ync registerParticipant(participantData) {
-        const client = <span class="cstat-no" title="statement not covered" >await this.pool.connect();</span>
-<span class="cstat-no" title="statement not covered" >        try {</span>
-            const query = <span class="cstat-no" title="statement not covered" >`</span>
+  // Participants operations
+<span class="fstat-no" title="function not covered" >  as</span>ync registerParticipant(participantData) {
+    const client = <span class="cstat-no" title="statement not covered" >await this.pool.connect();</span>
+<span class="cstat-no" title="statement not covered" >    try {</span>
+      const query = <span class="cstat-no" title="statement not covered" >`</span>
                 INSERT INTO participants (event_id, name, email, participation_type, 
                                         online_participation, emergency_contact, 
                                         dietary_restrictions, accessibility_needs)
                 VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
                 RETURNING *;
             `;
-            const values = <span class="cstat-no" title="statement not covered" >[</span>
-                participantData.eventId,
-                participantData.name,
-                participantData.email,
-                participantData.participationType || 'listener',
-                participantData.onlineParticipation || false,
-                participantData.emergencyContact,
-                participantData.dietaryRestrictions,
-                participantData.accessibilityNeeds
-            ];
-            
-            const result = <span class="cstat-no" title="statement not covered" >await client.query(query, values);</span>
-<span class="cstat-no" title="statement not covered" >            return result.rows[0];</span>
-        } catch (error) {
-<span class="cstat-no" title="statement not covered" >            if (error.code === '23505') { // Unique violation</span>
-<span class="cstat-no" title="statement not covered" >                throw new Error('Email already registered for this event');</span>
-            }
-<span class="cstat-no" title="statement not covered" >            throw error;</span>
-        } finally {
-<span class="cstat-no" title="statement not covered" >            client.release();</span>
-        }
-    }
+      const values = <span class="cstat-no" title="statement not covered" >[</span>
+        participantData.eventId,
+        participantData.name,
+        participantData.email,
+        participantData.participationType || 'listener',
+        participantData.onlineParticipation || false,
+        participantData.emergencyContact,
+        participantData.dietaryRestrictions,
+        participantData.accessibilityNeeds
+      ];
 &nbsp;
-<span class="fstat-no" title="function not covered" >    as</span>ync getParticipantsByEvent(eventId) {
-        const client = <span class="cstat-no" title="statement not covered" >await this.pool.connect();</span>
-<span class="cstat-no" title="statement not covered" >        try {</span>
-            const result = <span class="cstat-no" title="statement not covered" >await client.query(</span>
-                'SELECT * FROM participants WHERE event_id = $1 ORDER BY registration_date DESC',
-                [eventId]
-            );
-<span class="cstat-no" title="statement not covered" >            return result.rows;</span>
-        } finally {
-<span class="cstat-no" title="statement not covered" >            client.release();</span>
-        }
+      const result = <span class="cstat-no" title="statement not covered" >await client.query(query, values);</span>
+<span class="cstat-no" title="statement not covered" >      return result.rows[0];</span>
+    } catch (error) {
+<span class="cstat-no" title="statement not covered" >      if (error.code === '23505') {</span>
+        // Unique violation
+<span class="cstat-no" title="statement not covered" >        throw new Error('Email already registered for this event');</span>
+      }
+<span class="cstat-no" title="statement not covered" >      throw error;</span>
+    } finally {
+<span class="cstat-no" title="statement not covered" >      client.release();</span>
     }
+  }
 &nbsp;
-    // Talks operations
-<span class="fstat-no" title="function not covered" >    as</span>ync submitTalk(talkData) {
-        const client = <span class="cstat-no" title="statement not covered" >await this.pool.connect();</span>
-<span class="cstat-no" title="statement not covered" >        try {</span>
-            const query = <span class="cstat-no" title="statement not covered" >`</span>
+<span class="fstat-no" title="function not covered" >  as</span>ync getParticipantsByEvent(eventId) {
+    const client = <span class="cstat-no" title="statement not covered" >await this.pool.connect();</span>
+<span class="cstat-no" title="statement not covered" >    try {</span>
+      const result = <span class="cstat-no" title="statement not covered" >await client.query(</span>
+        'SELECT * FROM participants WHERE event_id = $1 ORDER BY registration_date DESC',
+        [eventId]
+      );
+<span class="cstat-no" title="statement not covered" >      return result.rows;</span>
+    } finally {
+<span class="cstat-no" title="statement not covered" >      client.release();</span>
+    }
+  }
+&nbsp;
+  // Talks operations
+<span class="fstat-no" title="function not covered" >  as</span>ync submitTalk(talkData) {
+    const client = <span class="cstat-no" title="statement not covered" >await this.pool.connect();</span>
+<span class="cstat-no" title="statement not covered" >    try {</span>
+      const query = <span class="cstat-no" title="statement not covered" >`</span>
                 INSERT INTO talks (event_id, participant_id, title, description, category, duration)
                 VALUES ($1, $2, $3, $4, $5, $6)
                 RETURNING *;
             `;
-            const values = <span class="cstat-no" title="statement not covered" >[</span>
-                talkData.eventId,
-                talkData.participantId,
-                talkData.title,
-                talkData.description,
-                talkData.category,
-                talkData.duration || 5
-            ];
-            
-            const result = <span class="cstat-no" title="statement not covered" >await client.query(query, values);</span>
-<span class="cstat-no" title="statement not covered" >            return result.rows[0];</span>
-        } finally {
-<span class="cstat-no" title="statement not covered" >            client.release();</span>
-        }
-    }
+      const values = <span class="cstat-no" title="statement not covered" >[</span>
+        talkData.eventId,
+        talkData.participantId,
+        talkData.title,
+        talkData.description,
+        talkData.category,
+        talkData.duration || 5
+      ];
 &nbsp;
-<span class="fstat-no" title="function not covered" >    as</span>ync getTalksByEvent(eventId) {
-        const client = <span class="cstat-no" title="statement not covered" >await this.pool.connect();</span>
-<span class="cstat-no" title="statement not covered" >        try {</span>
-            const query = <span class="cstat-no" title="statement not covered" >`</span>
+      const result = <span class="cstat-no" title="statement not covered" >await client.query(query, values);</span>
+<span class="cstat-no" title="statement not covered" >      return result.rows[0];</span>
+    } finally {
+<span class="cstat-no" title="statement not covered" >      client.release();</span>
+    }
+  }
+&nbsp;
+<span class="fstat-no" title="function not covered" >  as</span>ync getTalksByEvent(eventId) {
+    const client = <span class="cstat-no" title="statement not covered" >await this.pool.connect();</span>
+<span class="cstat-no" title="statement not covered" >    try {</span>
+      const query = <span class="cstat-no" title="statement not covered" >`</span>
                 SELECT t.*, p.name as speaker_name, p.email as speaker_email
                 FROM talks t
                 JOIN participants p ON t.participant_id = p.id
                 WHERE t.event_id = $1
                 ORDER BY t.order_position, t.created_at
             `;
-            const result = <span class="cstat-no" title="statement not covered" >await client.query(query, [eventId]);</span>
-<span class="cstat-no" title="statement not covered" >            return result.rows;</span>
-        } finally {
-<span class="cstat-no" title="statement not covered" >            client.release();</span>
-        }
+      const result = <span class="cstat-no" title="statement not covered" >await client.query(query, [eventId]);</span>
+<span class="cstat-no" title="statement not covered" >      return result.rows;</span>
+    } finally {
+<span class="cstat-no" title="statement not covered" >      client.release();</span>
     }
+  }
 &nbsp;
-    // Settings operations
-<span class="fstat-no" title="function not covered" >    as</span>ync setSetting(key, value, description = <span class="branch-0 cbranch-no" title="branch not covered" >null)</span> {
-        const client = <span class="cstat-no" title="statement not covered" >await this.pool.connect();</span>
-<span class="cstat-no" title="statement not covered" >        try {</span>
-            const query = <span class="cstat-no" title="statement not covered" >`</span>
+  // Settings operations
+<span class="fstat-no" title="function not covered" >  as</span>ync setSetting(key, value, description = <span class="branch-0 cbranch-no" title="branch not covered" >null)</span> {
+    const client = <span class="cstat-no" title="statement not covered" >await this.pool.connect();</span>
+<span class="cstat-no" title="statement not covered" >    try {</span>
+      const query = <span class="cstat-no" title="statement not covered" >`</span>
                 INSERT INTO settings (key, value, description)
                 VALUES ($1, $2, $3)
                 ON CONFLICT (key) DO UPDATE SET 
@@ -1399,109 +1425,110 @@ export class PostgreSQLDatabaseService extends EventEmitter {
                     updated_at = NOW()
                 RETURNING *;
             `;
-            const result = <span class="cstat-no" title="statement not covered" >await client.query(query, [key, JSON.stringify(value), description]);</span>
-<span class="cstat-no" title="statement not covered" >            return result.rows[0];</span>
-        } finally {
-<span class="cstat-no" title="statement not covered" >            client.release();</span>
-        }
+      const result = <span class="cstat-no" title="statement not covered" >await client.query(query, [key, JSON.stringify(value), description]);</span>
+<span class="cstat-no" title="statement not covered" >      return result.rows[0];</span>
+    } finally {
+<span class="cstat-no" title="statement not covered" >      client.release();</span>
     }
+  }
 &nbsp;
-<span class="fstat-no" title="function not covered" >    as</span>ync getSetting(key) {
-        const client = <span class="cstat-no" title="statement not covered" >await this.pool.connect();</span>
-<span class="cstat-no" title="statement not covered" >        try {</span>
-            const result = <span class="cstat-no" title="statement not covered" >await client.query('SELECT * FROM settings WHERE key = $1', [key]);</span>
-<span class="cstat-no" title="statement not covered" >            return result.rows[0] ? JSON.parse(result.rows[0].value) : null;</span>
-        } finally {
-<span class="cstat-no" title="statement not covered" >            client.release();</span>
-        }
+<span class="fstat-no" title="function not covered" >  as</span>ync getSetting(key) {
+    const client = <span class="cstat-no" title="statement not covered" >await this.pool.connect();</span>
+<span class="cstat-no" title="statement not covered" >    try {</span>
+      const result = <span class="cstat-no" title="statement not covered" >await client.query('SELECT * FROM settings WHERE key = $1', [key]);</span>
+<span class="cstat-no" title="statement not covered" >      return result.rows[0] ? JSON.parse(result.rows[0].value) : null;</span>
+    } finally {
+<span class="cstat-no" title="statement not covered" >      client.release();</span>
     }
+  }
 &nbsp;
-    // Analytics operations
-<span class="fstat-no" title="function not covered" >    as</span>ync logEvent(eventType, eventData, metadata = <span class="branch-0 cbranch-no" title="branch not covered" >{})</span> {
-        const client = <span class="cstat-no" title="statement not covered" >await this.pool.connect();</span>
-<span class="cstat-no" title="statement not covered" >        try {</span>
-            const query = <span class="cstat-no" title="statement not covered" >`</span>
+  // Analytics operations
+<span class="fstat-no" title="function not covered" >  as</span>ync logEvent(eventType, eventData, metadata = <span class="branch-0 cbranch-no" title="branch not covered" >{})</span> {
+    const client = <span class="cstat-no" title="statement not covered" >await this.pool.connect();</span>
+<span class="cstat-no" title="statement not covered" >    try {</span>
+      const query = <span class="cstat-no" title="statement not covered" >`</span>
                 INSERT INTO analytics (event_type, event_data, user_id, session_id, ip_address, user_agent)
                 VALUES ($1, $2, $3, $4, $5, $6)
                 RETURNING id;
             `;
-            const values = <span class="cstat-no" title="statement not covered" >[</span>
-                eventType,
-                JSON.stringify(eventData),
-                metadata.userId,
-                metadata.sessionId,
-                metadata.ipAddress,
-                metadata.userAgent
-            ];
-            
-            const result = <span class="cstat-no" title="statement not covered" >await client.query(query, values);</span>
-<span class="cstat-no" title="statement not covered" >            return result.rows[0].id;</span>
-        } finally {
-<span class="cstat-no" title="statement not covered" >            client.release();</span>
-        }
-    }
+      const values = <span class="cstat-no" title="statement not covered" >[</span>
+        eventType,
+        JSON.stringify(eventData),
+        metadata.userId,
+        metadata.sessionId,
+        metadata.ipAddress,
+        metadata.userAgent
+      ];
 &nbsp;
-    // Transaction support
-<span class="fstat-no" title="function not covered" >    as</span>ync transaction(callback) {
-        const client = <span class="cstat-no" title="statement not covered" >await this.pool.connect();</span>
-<span class="cstat-no" title="statement not covered" >        try {</span>
-<span class="cstat-no" title="statement not covered" >            await client.query('BEGIN');</span>
-            const result = <span class="cstat-no" title="statement not covered" >await callback(client);</span>
-<span class="cstat-no" title="statement not covered" >            await client.query('COMMIT');</span>
-<span class="cstat-no" title="statement not covered" >            return result;</span>
-        } catch (error) {
-<span class="cstat-no" title="statement not covered" >            await client.query('ROLLBACK');</span>
-<span class="cstat-no" title="statement not covered" >            throw error;</span>
-        } finally {
-<span class="cstat-no" title="statement not covered" >            client.release();</span>
-        }
+      const result = <span class="cstat-no" title="statement not covered" >await client.query(query, values);</span>
+<span class="cstat-no" title="statement not covered" >      return result.rows[0].id;</span>
+    } finally {
+<span class="cstat-no" title="statement not covered" >      client.release();</span>
     }
+  }
 &nbsp;
-    // Connection management
-<span class="fstat-no" title="function not covered" >    as</span>ync waitForConnection() {
-<span class="cstat-no" title="statement not covered" >        if (!this.initialized) {</span>
-<span class="cstat-no" title="statement not covered" >            return new Promise(<span class="fstat-no" title="function not covered" >(r</span>esolve) =&gt; {</span>
-<span class="cstat-no" title="statement not covered" >                this.once('ready', resolve);</span>
-            });
-        }
+  // Transaction support
+<span class="fstat-no" title="function not covered" >  as</span>ync transaction(callback) {
+    const client = <span class="cstat-no" title="statement not covered" >await this.pool.connect();</span>
+<span class="cstat-no" title="statement not covered" >    try {</span>
+<span class="cstat-no" title="statement not covered" >      await client.query('BEGIN');</span>
+      const result = <span class="cstat-no" title="statement not covered" >await callback(client);</span>
+<span class="cstat-no" title="statement not covered" >      await client.query('COMMIT');</span>
+<span class="cstat-no" title="statement not covered" >      return result;</span>
+    } catch (error) {
+<span class="cstat-no" title="statement not covered" >      await client.query('ROLLBACK');</span>
+<span class="cstat-no" title="statement not covered" >      throw error;</span>
+    } finally {
+<span class="cstat-no" title="statement not covered" >      client.release();</span>
     }
+  }
 &nbsp;
-<span class="fstat-no" title="function not covered" >    as</span>ync close() {
-<span class="cstat-no" title="statement not covered" >        if (this.pool) {</span>
-<span class="cstat-no" title="statement not covered" >            await this.pool.end();</span>
-<span class="cstat-no" title="statement not covered" >            console.log('📦 PostgreSQL connection pool closed');</span>
-        }
+  // Connection management
+<span class="fstat-no" title="function not covered" >  as</span>ync waitForConnection() {
+<span class="cstat-no" title="statement not covered" >    if (!this.initialized) {</span>
+<span class="cstat-no" title="statement not covered" >      return new Promise(<span class="fstat-no" title="function not covered" >re</span>solve =&gt; {</span>
+<span class="cstat-no" title="statement not covered" >        this.once('ready', resolve);</span>
+      });
     }
+  }
 &nbsp;
-    // Health check
-<span class="fstat-no" title="function not covered" >    as</span>ync healthCheck() {
-<span class="cstat-no" title="statement not covered" >        try {</span>
-            const client = <span class="cstat-no" title="statement not covered" >await this.pool.connect();</span>
-            const result = <span class="cstat-no" title="statement not covered" >await client.query('SELECT NOW()');</span>
-<span class="cstat-no" title="statement not covered" >            client.release();</span>
-<span class="cstat-no" title="statement not covered" >            return {</span>
-                status: 'healthy',
-                timestamp: result.rows[0].now,
-                poolSize: this.pool.totalCount,
-                activeConnections: this.pool.totalCount - this.pool.idleCount
-            };
-        } catch (error) {
-<span class="cstat-no" title="statement not covered" >            return {</span>
-                status: 'unhealthy',
-                error: error.message
-            };
-        }
+<span class="fstat-no" title="function not covered" >  as</span>ync close() {
+<span class="cstat-no" title="statement not covered" >    if (this.pool) {</span>
+<span class="cstat-no" title="statement not covered" >      await this.pool.end();</span>
+<span class="cstat-no" title="statement not covered" >      console.log('📦 PostgreSQL connection pool closed');</span>
     }
+  }
+&nbsp;
+  // Health check
+<span class="fstat-no" title="function not covered" >  as</span>ync healthCheck() {
+<span class="cstat-no" title="statement not covered" >    try {</span>
+      const client = <span class="cstat-no" title="statement not covered" >await this.pool.connect();</span>
+      const result = <span class="cstat-no" title="statement not covered" >await client.query('SELECT NOW()');</span>
+<span class="cstat-no" title="statement not covered" >      client.release();</span>
+<span class="cstat-no" title="statement not covered" >      return {</span>
+        status: 'healthy',
+        timestamp: result.rows[0].now,
+        poolSize: this.pool.totalCount,
+        activeConnections: this.pool.totalCount - this.pool.idleCount
+      };
+    } catch (error) {
+<span class="cstat-no" title="statement not covered" >      return {</span>
+        status: 'unhealthy',
+        error: error.message
+      };
+    }
+  }
 }
 &nbsp;
-export default PostgreSQLDatabaseService;</pre></td></tr></table></pre>
+export default PostgreSQLDatabaseService;
+&nbsp;</pre></td></tr></table></pre>
 
                 <div class='push'></div><!-- for sticky footer -->
             </div><!-- /wrapper -->
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2025-06-22T22:15:42.782Z
+                at 2025-06-23T06:20:12.641Z
             </div>
         <script src="../../prettify.js"></script>
         <script>
