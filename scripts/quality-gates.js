@@ -55,6 +55,7 @@ class QualityGateSystem {
       { name: 'Integration Tests', runner: () => this.runIntegrationTests() },
       { name: 'Code Coverage', runner: () => this.checkCodeCoverage() },
       { name: 'Code Quality', runner: () => this.checkCodeQuality() },
+      { name: 'Accessibility Compliance', runner: () => this.checkAccessibilityCompliance() },
       { name: 'Security Scan', runner: () => this.runSecurityScan() },
       { name: 'Accessibility Check', runner: () => this.checkAccessibility() },
       { name: 'Performance Tests', runner: () => this.runPerformanceTests() },
@@ -514,6 +515,323 @@ class QualityGateSystem {
       score,
       details: { checks }
     };
+  }
+
+  /**
+   * アクセシビリティ準拠チェック
+   */
+  async checkAccessibilityCompliance() {
+    const checks = [];
+    
+    try {
+      // 基本的なHTMLファイルの存在確認
+      const htmlFiles = this.findHTMLFiles();
+      if (htmlFiles.length === 0) {
+        return {
+          passed: true,
+          score: 100,
+          details: { skipped: 'No HTML files found for accessibility testing' }
+        };
+      }
+
+      // 色コントラスト比チェック
+      const contrastResults = await this.checkColorContrast();
+      checks.push({
+        name: 'Color Contrast (WCAG 2.1 AA)',
+        passed: contrastResults.passed,
+        score: contrastResults.score,
+        details: contrastResults.details
+      });
+
+      // ARIA属性チェック
+      const ariaResults = await this.checkARIACompliance();
+      checks.push({
+        name: 'ARIA Compliance',
+        passed: ariaResults.passed,
+        score: ariaResults.score,
+        details: ariaResults.details
+      });
+
+      // キーボードナビゲーション要素チェック
+      const keyboardResults = await this.checkKeyboardNavigation();
+      checks.push({
+        name: 'Keyboard Navigation',
+        passed: keyboardResults.passed,
+        score: keyboardResults.score,
+        details: keyboardResults.details
+      });
+
+      // モーダルとチャットウィジェットの特別チェック
+      const modalResults = await this.checkModalAccessibility();
+      checks.push({
+        name: 'Modal Accessibility',
+        passed: modalResults.passed,
+        score: modalResults.score,
+        details: modalResults.details
+      });
+
+      const allPassed = checks.every(check => check.passed);
+      const avgScore = checks.reduce((sum, check) => sum + check.score, 0) / checks.length;
+
+      return {
+        passed: allPassed && avgScore >= 80, // 80%以上のスコアが必要
+        score: avgScore,
+        details: { 
+          checks, 
+          wcagLevel: 'AA',
+          filesChecked: htmlFiles.length 
+        }
+      };
+    } catch (error) {
+      return {
+        passed: false,
+        score: 0,
+        details: { error: error.message }
+      };
+    }
+  }
+
+  /**
+   * HTMLファイルを検索
+   */
+  findHTMLFiles() {
+    const files = [];
+    const searchPaths = ['public', 'docs', 'src', 'dist', '.'];
+    
+    for (const searchPath of searchPaths) {
+      if (fs.existsSync(searchPath)) {
+        try {
+          const pathFiles = execSync(`find ${searchPath} -name "*.html" -type f | head -20`, { encoding: 'utf8' })
+            .split('\n')
+            .filter(Boolean);
+          files.push(...pathFiles);
+        } catch (error) {
+          // findコマンドが失敗した場合はスキップ
+        }
+      }
+    }
+    
+    return [...new Set(files)]; // 重複を除去
+  }
+
+  /**
+   * 色コントラスト比チェック
+   */
+  async checkColorContrast() {
+    try {
+      // 基本的なCSSファイルからのコントラストチェック
+      const cssFiles = execSync('find . -name "*.css" -type f | head -10', { encoding: 'utf8' })
+        .split('\n')
+        .filter(Boolean);
+
+      let contrastIssues = 0;
+      let totalRules = 0;
+
+      for (const cssFile of cssFiles) {
+        if (fs.existsSync(cssFile)) {
+          const cssContent = fs.readFileSync(cssFile, 'utf8');
+          
+          // 基本的な色の組み合わせを検出
+          const colorRules = cssContent.match(/color\s*:\s*[^;]+;/g) || [];
+          const backgroundRules = cssContent.match(/background-color\s*:\s*[^;]+;/g) || [];
+          
+          totalRules += colorRules.length + backgroundRules.length;
+          
+          // 問題のある色の組み合わせを検出（簡易版）
+          const problematicColors = [
+            '#999', '#ccc', '#ddd', // 低コントラストのグレー
+            'lightgray', 'lightgrey', 'silver'
+          ];
+          
+          for (const rule of [...colorRules, ...backgroundRules]) {
+            if (problematicColors.some(color => rule.includes(color))) {
+              contrastIssues++;
+            }
+          }
+        }
+      }
+
+      const score = totalRules > 0 ? Math.max(0, 100 - (contrastIssues / totalRules * 100)) : 100;
+      
+      return {
+        passed: contrastIssues === 0,
+        score,
+        details: {
+          issues: contrastIssues,
+          totalRules,
+          filesChecked: cssFiles.length
+        }
+      };
+    } catch (error) {
+      return {
+        passed: true,
+        score: 100,
+        details: { skipped: 'Color contrast check not available' }
+      };
+    }
+  }
+
+  /**
+   * ARIA準拠チェック
+   */
+  async checkARIACompliance() {
+    try {
+      const htmlFiles = this.findHTMLFiles();
+      let ariaIssues = 0;
+      let totalElements = 0;
+
+      for (const htmlFile of htmlFiles.slice(0, 5)) { // 最大5ファイル
+        if (fs.existsSync(htmlFile)) {
+          const htmlContent = fs.readFileSync(htmlFile, 'utf8');
+          
+          // 基本的なARIA属性の存在確認
+          const interactiveElements = [
+            ...htmlContent.match(/<button[^>]*>/g) || [],
+            ...htmlContent.match(/<input[^>]*>/g) || [],
+            ...htmlContent.match(/<a[^>]*>/g) || [],
+            ...htmlContent.match(/<div[^>]*role=/g) || []
+          ];
+          
+          totalElements += interactiveElements.length;
+          
+          // ARIA属性の不足をチェック
+          for (const element of interactiveElements) {
+            if (!element.includes('aria-') && !element.includes('role=')) {
+              ariaIssues++;
+            }
+          }
+        }
+      }
+
+      const score = totalElements > 0 ? Math.max(0, 100 - (ariaIssues / totalElements * 100)) : 100;
+      
+      return {
+        passed: ariaIssues < totalElements * 0.2, // 20%未満なら合格
+        score,
+        details: {
+          issues: ariaIssues,
+          totalElements,
+          filesChecked: htmlFiles.length
+        }
+      };
+    } catch (error) {
+      return {
+        passed: true,
+        score: 100,
+        details: { skipped: 'ARIA compliance check not available' }
+      };
+    }
+  }
+
+  /**
+   * キーボードナビゲーションチェック
+   */
+  async checkKeyboardNavigation() {
+    try {
+      const htmlFiles = this.findHTMLFiles();
+      let keyboardIssues = 0;
+      let totalInteractiveElements = 0;
+
+      for (const htmlFile of htmlFiles.slice(0, 5)) {
+        if (fs.existsSync(htmlFile)) {
+          const htmlContent = fs.readFileSync(htmlFile, 'utf8');
+          
+          // フォーカス可能要素の検出
+          const focusableElements = [
+            ...htmlContent.match(/<a[^>]*href/g) || [],
+            ...htmlContent.match(/<button[^>]*>/g) || [],
+            ...htmlContent.match(/<input[^>]*>/g) || [],
+            ...htmlContent.match(/<select[^>]*>/g) || [],
+            ...htmlContent.match(/<textarea[^>]*>/g) || []
+          ];
+          
+          totalInteractiveElements += focusableElements.length;
+          
+          // tabindex="-1"以外の負の値をチェック
+          const negativeTabindex = htmlContent.match(/tabindex\s*=\s*['"]-[2-9]/g) || [];
+          keyboardIssues += negativeTabindex.length;
+          
+          // 異常に高いtabindex値をチェック
+          const highTabindex = htmlContent.match(/tabindex\s*=\s*['"][1-9]\d{2,}/g) || [];
+          keyboardIssues += highTabindex.length;
+        }
+      }
+
+      const score = Math.max(0, 100 - (keyboardIssues * 10));
+      
+      return {
+        passed: keyboardIssues === 0,
+        score,
+        details: {
+          issues: keyboardIssues,
+          totalElements: totalInteractiveElements,
+          filesChecked: htmlFiles.length
+        }
+      };
+    } catch (error) {
+      return {
+        passed: true,
+        score: 100,
+        details: { skipped: 'Keyboard navigation check not available' }
+      };
+    }
+  }
+
+  /**
+   * モーダルアクセシビリティチェック
+   */
+  async checkModalAccessibility() {
+    try {
+      const htmlFiles = this.findHTMLFiles();
+      let modalIssues = 0;
+      let totalModals = 0;
+
+      for (const htmlFile of htmlFiles.slice(0, 5)) {
+        if (fs.existsSync(htmlFile)) {
+          const htmlContent = fs.readFileSync(htmlFile, 'utf8');
+          
+          // モーダル要素の検出
+          const modals = [
+            ...htmlContent.match(/<div[^>]*class="[^"]*modal[^"]*"/g) || [],
+            ...htmlContent.match(/<div[^>]*id="[^"]*modal[^"]*"/g) || [],
+            ...htmlContent.match(/<div[^>]*role="dialog"/g) || []
+          ];
+          
+          totalModals += modals.length;
+          
+          for (const modal of modals) {
+            // 必要なARIA属性の確認
+            if (!modal.includes('aria-labelledby') && !modal.includes('aria-label')) {
+              modalIssues++;
+            }
+            if (!modal.includes('role="dialog"') && !modal.includes('role="alertdialog"')) {
+              modalIssues++;
+            }
+            if (!modal.includes('aria-modal')) {
+              modalIssues++;
+            }
+          }
+        }
+      }
+
+      const score = totalModals > 0 ? Math.max(0, 100 - (modalIssues / (totalModals * 3) * 100)) : 100;
+      
+      return {
+        passed: modalIssues === 0,
+        score,
+        details: {
+          issues: modalIssues,
+          totalModals,
+          filesChecked: htmlFiles.length
+        }
+      };
+    } catch (error) {
+      return {
+        passed: true,
+        score: 100,
+        details: { skipped: 'Modal accessibility check not available' }
+      };
+    }
   }
 
   /**

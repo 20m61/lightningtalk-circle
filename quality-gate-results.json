@@ -1,0 +1,32 @@
+{
+  "timestamp": "2025-06-22T23:45:04.742Z",
+  "config": {
+    "thresholds": {
+      "coverage": 80,
+      "complexity": 10,
+      "duplication": 3,
+      "maintainability": "A"
+    },
+    "timeout": 300000,
+    "parallel": false,
+    "exitOnFailure": true
+  },
+  "results": {
+    "gates": [
+      {
+        "name": "Unit Tests",
+        "passed": false,
+        "score": 0,
+        "details": {
+          "error": "Command failed: npm run test:unit 2>&1"
+        },
+        "duration": 146
+      }
+    ],
+    "overall": {
+      "passed": false,
+      "score": 0,
+      "duration": 146
+    }
+  }
+}
