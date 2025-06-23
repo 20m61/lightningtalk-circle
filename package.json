@@ -100,7 +100,7 @@
     "terser-webpack-plugin": "^5.3.0",
     "webpack": "^5.88.0",
     "webpack-cli": "^5.1.0",
-    "webpack-dev-server": "^4.15.0"
+    "webpack-dev-server": "^5.2.1"
   },
   "eslintConfig": {
     "extends": [
