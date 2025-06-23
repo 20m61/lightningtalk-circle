@@ -49,11 +49,13 @@ wp-config.php
 
 # Node.js dependencies
 node_modules/
-package-lock.json
 
 # Build outputs (except for dist which we want to track)
 .tmp/
 *.log
+
+# Jest cache
+.jest-cache/
 
 # Storybook
 *storybook.log
