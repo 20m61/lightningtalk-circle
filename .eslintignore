@@ -1,0 +1,57 @@
+# Dependencies
+node_modules/
+
+# Build outputs
+dist/
+build/
+coverage/
+.jest-cache/
+
+# WordPress vendor assets
+wordpress/lightningtalk-child/assets/js/vendor/
+public/js/vendor/
+
+# Modern WordPress build outputs
+lightningtalk-modern/packages/*/dist/
+lightningtalk-modern/packages/*/build/
+lightningtalk-modern/packages/*/.next/
+lightningtalk-modern/packages/*/out/
+
+# Storybook build
+storybook-static/
+
+# Cache directories
+.cache/
+.tmp/
+.temp/
+
+# Log files
+*.log
+logs/
+
+# Environment files
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Database files
+*.db
+*.sqlite
+*.sqlite3
+
+# Archive files
+*.zip
+*.tar
+*.tar.gz
+
+# Documentation build outputs
+docs/_build/
+docs/dist/
+
+# WordPress uploads
+wordpress/wp-content/uploads/
+
+# Gulp temp files
+gulp-temp/

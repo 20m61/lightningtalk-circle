@@ -1,0 +1,449 @@
+f0f0d730ddfe2885a3b5db2a0203d737
+/* istanbul ignore next */
+function cov_2lo15ry8oj() {
+  var path = "/home/ec2-user/workspace/lightningtalk-circle/server/websocket.js";
+  var hash = "c02047dac550eda392266cfa21cf70d3cc9a0300";
+  var global = new Function("return this")();
+  var gcv = "__coverage__";
+  var coverageData = {
+    path: "/home/ec2-user/workspace/lightningtalk-circle/server/websocket.js",
+    statementMap: {
+      "0": {
+        start: {
+          line: 14,
+          column: 14
+        },
+        end: {
+          line: 18,
+          column: 4
+        }
+      },
+      "1": {
+        start: {
+          line: 20,
+          column: 2
+        },
+        end: {
+          line: 20,
+          column: 46
+        }
+      },
+      "2": {
+        start: {
+          line: 23,
+          column: 2
+        },
+        end: {
+          line: 23,
+          column: 42
+        }
+      },
+      "3": {
+        start: {
+          line: 26,
+          column: 2
+        },
+        end: {
+          line: 33,
+          column: 5
+        }
+      },
+      "4": {
+        start: {
+          line: 27,
+          column: 21
+        },
+        end: {
+          line: 27,
+          column: 49
+        }
+      },
+      "5": {
+        start: {
+          line: 28,
+          column: 4
+        },
+        end: {
+          line: 28,
+          column: 57
+        }
+      },
+      "6": {
+        start: {
+          line: 30,
+          column: 4
+        },
+        end: {
+          line: 32,
+          column: 7
+        }
+      },
+      "7": {
+        start: {
+          line: 31,
+          column: 6
+        },
+        end: {
+          line: 31,
+          column: 63
+        }
+      },
+      "8": {
+        start: {
+          line: 35,
+          column: 2
+        },
+        end: {
+          line: 37,
+          column: 5
+        }
+      },
+      "9": {
+        start: {
+          line: 36,
+          column: 4
+        },
+        end: {
+          line: 36,
+          column: 43
+        }
+      },
+      "10": {
+        start: {
+          line: 39,
+          column: 2
+        },
+        end: {
+          line: 41,
+          column: 5
+        }
+      },
+      "11": {
+        start: {
+          line: 40,
+          column: 4
+        },
+        end: {
+          line: 40,
+          column: 51
+        }
+      },
+      "12": {
+        start: {
+          line: 44,
+          column: 2
+        },
+        end: {
+          line: 47,
+          column: 12
+        }
+      },
+      "13": {
+        start: {
+          line: 45,
+          column: 18
+        },
+        end: {
+          line: 45,
+          column: 58
+        }
+      },
+      "14": {
+        start: {
+          line: 46,
+          column: 4
+        },
+        end: {
+          line: 46,
+          column: 73
+        }
+      },
+      "15": {
+        start: {
+          line: 49,
+          column: 2
+        },
+        end: {
+          line: 49,
+          column: 13
+        }
+      }
+    },
+    fnMap: {
+      "0": {
+        name: "setupWebSocketServer",
+        decl: {
+          start: {
+            line: 13,
+            column: 16
+          },
+          end: {
+            line: 13,
+            column: 36
+          }
+        },
+        loc: {
+          start: {
+            line: 13,
+            column: 45
+          },
+          end: {
+            line: 50,
+            column: 1
+          }
+        },
+        line: 13
+      },
+      "1": {
+        name: "(anonymous_1)",
+        decl: {
+          start: {
+            line: 26,
+            column: 23
+          },
+          end: {
+            line: 26,
+            column: 24
+          }
+        },
+        loc: {
+          start: {
+            line: 26,
+            column: 40
+          },
+          end: {
+            line: 33,
+            column: 3
+          }
+        },
+        line: 26
+      },
+      "2": {
+        name: "(anonymous_2)",
+        decl: {
+          start: {
+            line: 30,
+            column: 19
+          },
+          end: {
+            line: 30,
+            column: 20
+          }
+        },
+        loc: {
+          start: {
+            line: 30,
+            column: 30
+          },
+          end: {
+            line: 32,
+            column: 5
+          }
+        },
+        line: 30
+      },
+      "3": {
+        name: "(anonymous_3)",
+        decl: {
+          start: {
+            line: 35,
+            column: 18
+          },
+          end: {
+            line: 35,
+            column: 19
+          }
+        },
+        loc: {
+          start: {
+            line: 35,
+            column: 24
+          },
+          end: {
+            line: 37,
+            column: 3
+          }
+        },
+        line: 35
+      },
+      "4": {
+        name: "(anonymous_4)",
+        decl: {
+          start: {
+            line: 39,
+            column: 18
+          },
+          end: {
+            line: 39,
+            column: 19
+          }
+        },
+        loc: {
+          start: {
+            line: 39,
+            column: 29
+          },
+          end: {
+            line: 41,
+            column: 3
+          }
+        },
+        line: 39
+      },
+      "5": {
+        name: "(anonymous_5)",
+        decl: {
+          start: {
+            line: 44,
+            column: 14
+          },
+          end: {
+            line: 44,
+            column: 15
+          }
+        },
+        loc: {
+          start: {
+            line: 44,
+            column: 20
+          },
+          end: {
+            line: 47,
+            column: 3
+          }
+        },
+        line: 44
+      }
+    },
+    branchMap: {},
+    s: {
+      "0": 0,
+      "1": 0,
+      "2": 0,
+      "3": 0,
+      "4": 0,
+      "5": 0,
+      "6": 0,
+      "7": 0,
+      "8": 0,
+      "9": 0,
+      "10": 0,
+      "11": 0,
+      "12": 0,
+      "13": 0,
+      "14": 0,
+      "15": 0
+    },
+    f: {
+      "0": 0,
+      "1": 0,
+      "2": 0,
+      "3": 0,
+      "4": 0,
+      "5": 0
+    },
+    b: {},
+    _coverageSchema: "1a1c01bbd47fc00a2c39e90264f33305004495a9",
+    hash: "c02047dac550eda392266cfa21cf70d3cc9a0300"
+  };
+  var coverage = global[gcv] || (global[gcv] = {});
+  if (!coverage[path] || coverage[path].hash !== hash) {
+    coverage[path] = coverageData;
+  }
+  var actualCoverage = coverage[path];
+  {
+    // @ts-ignore
+    cov_2lo15ry8oj = function () {
+      return actualCoverage;
+    };
+  }
+  return actualCoverage;
+}
+cov_2lo15ry8oj();
+/**
+ * WebSocket Server Setup
+ * WebSocketサーバーの設定とNotificationServiceとの統合
+ */
+
+import { WebSocketServer } from 'ws';
+import { logger } from './middleware/logger.js';
+import notificationService from './services/notificationService.js';
+
+/**
+ * WebSocketサーバーの設定
+ */
+export function setupWebSocketServer(server) {
+  /* istanbul ignore next */
+  cov_2lo15ry8oj().f[0]++;
+  const wss =
+  /* istanbul ignore next */
+  (cov_2lo15ry8oj().s[0]++, new WebSocketServer({
+    server,
+    path: '/ws',
+    clientTracking: true
+  }));
+  /* istanbul ignore next */
+  cov_2lo15ry8oj().s[1]++;
+  logger.info('WebSocket server initialized');
+
+  // NotificationServiceにWebSocketサーバーを設定
+  /* istanbul ignore next */
+  cov_2lo15ry8oj().s[2]++;
+  notificationService.setupWebSocket(wss);
+
+  // WebSocketサーバーイベント
+  /* istanbul ignore next */
+  cov_2lo15ry8oj().s[3]++;
+  wss.on('connection', (ws, request) => {
+    /* istanbul ignore next */
+    cov_2lo15ry8oj().f[1]++;
+    const clientIP =
+    /* istanbul ignore next */
+    (cov_2lo15ry8oj().s[4]++, request.socket.remoteAddress);
+    /* istanbul ignore next */
+    cov_2lo15ry8oj().s[5]++;
+    logger.info(`WebSocket connection from ${clientIP}`);
+    /* istanbul ignore next */
+    cov_2lo15ry8oj().s[6]++;
+    ws.on('error', error => {
+      /* istanbul ignore next */
+      cov_2lo15ry8oj().f[2]++;
+      cov_2lo15ry8oj().s[7]++;
+      logger.error(`WebSocket error from ${clientIP}:`, error);
+    });
+  });
+  /* istanbul ignore next */
+  cov_2lo15ry8oj().s[8]++;
+  wss.on('close', () => {
+    /* istanbul ignore next */
+    cov_2lo15ry8oj().f[3]++;
+    cov_2lo15ry8oj().s[9]++;
+    logger.info('WebSocket server closed');
+  });
+  /* istanbul ignore next */
+  cov_2lo15ry8oj().s[10]++;
+  wss.on('error', error => {
+    /* istanbul ignore next */
+    cov_2lo15ry8oj().f[4]++;
+    cov_2lo15ry8oj().s[11]++;
+    logger.error('WebSocket server error:', error);
+  });
+
+  // サーバー統計の定期ログ出力
+  /* istanbul ignore next */
+  cov_2lo15ry8oj().s[12]++;
+  setInterval(() => {
+    /* istanbul ignore next */
+    cov_2lo15ry8oj().f[5]++;
+    const stats =
+    /* istanbul ignore next */
+    (cov_2lo15ry8oj().s[13]++, notificationService.getConnectionStats());
+    /* istanbul ignore next */
+    cov_2lo15ry8oj().s[14]++;
+    logger.info(`WebSocket stats: ${stats.wsClients} connected clients`);
+  }, 60000); // 1分ごと
+  /* istanbul ignore next */
+  cov_2lo15ry8oj().s[15]++;
+  return wss;
+}
+//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJuYW1lcyI6WyJjb3ZfMmxvMTVyeThvaiIsImFjdHVhbENvdmVyYWdlIiwiV2ViU29ja2V0U2VydmVyIiwibG9nZ2VyIiwibm90aWZpY2F0aW9uU2VydmljZSIsInNldHVwV2ViU29ja2V0U2VydmVyIiwic2VydmVyIiwiZiIsIndzcyIsInMiLCJwYXRoIiwiY2xpZW50VHJhY2tpbmciLCJpbmZvIiwic2V0dXBXZWJTb2NrZXQiLCJvbiIsIndzIiwicmVxdWVzdCIsImNsaWVudElQIiwic29ja2V0IiwicmVtb3RlQWRkcmVzcyIsImVycm9yIiwic2V0SW50ZXJ2YWwiLCJzdGF0cyIsImdldENvbm5lY3Rpb25TdGF0cyIsIndzQ2xpZW50cyJdLCJzb3VyY2VzIjpbIndlYnNvY2tldC5qcyJdLCJzb3VyY2VzQ29udGVudCI6WyIvKipcbiAqIFdlYlNvY2tldCBTZXJ2ZXIgU2V0dXBcbiAqIFdlYlNvY2tldOOCteODvOODkOODvOOBruioreWumuOBqE5vdGlmaWNhdGlvblNlcnZpY2Xjgajjga7ntbHlkIhcbiAqL1xuXG5pbXBvcnQgeyBXZWJTb2NrZXRTZXJ2ZXIgfSBmcm9tICd3cyc7XG5pbXBvcnQgeyBsb2dnZXIgfSBmcm9tICcuL21pZGRsZXdhcmUvbG9nZ2VyLmpzJztcbmltcG9ydCBub3RpZmljYXRpb25TZXJ2aWNlIGZyb20gJy4vc2VydmljZXMvbm90aWZpY2F0aW9uU2VydmljZS5qcyc7XG5cbi8qKlxuICogV2ViU29ja2V044K144O844OQ44O844Gu6Kit5a6aXG4gKi9cbmV4cG9ydCBmdW5jdGlvbiBzZXR1cFdlYlNvY2tldFNlcnZlcihzZXJ2ZXIpIHtcbiAgY29uc3Qgd3NzID0gbmV3IFdlYlNvY2tldFNlcnZlcih7IFxuICAgIHNlcnZlcixcbiAgICBwYXRoOiAnL3dzJyxcbiAgICBjbGllbnRUcmFja2luZzogdHJ1ZVxuICB9KTtcblxuICBsb2dnZXIuaW5mbygnV2ViU29ja2V0IHNlcnZlciBpbml0aWFsaXplZCcpO1xuXG4gIC8vIE5vdGlmaWNhdGlvblNlcnZpY2XjgatXZWJTb2NrZXTjgrXjg7zjg5Djg7zjgpLoqK3lrppcbiAgbm90aWZpY2F0aW9uU2VydmljZS5zZXR1cFdlYlNvY2tldCh3c3MpO1xuXG4gIC8vIFdlYlNvY2tldOOCteODvOODkOODvOOCpOODmeODs+ODiFxuICB3c3Mub24oJ2Nvbm5lY3Rpb24nLCAod3MsIHJlcXVlc3QpID0+IHtcbiAgICBjb25zdCBjbGllbnRJUCA9IHJlcXVlc3Quc29ja2V0LnJlbW90ZUFkZHJlc3M7XG4gICAgbG9nZ2VyLmluZm8oYFdlYlNvY2tldCBjb25uZWN0aW9uIGZyb20gJHtjbGllbnRJUH1gKTtcblxuICAgIHdzLm9uKCdlcnJvcicsIChlcnJvcikgPT4ge1xuICAgICAgbG9nZ2VyLmVycm9yKGBXZWJTb2NrZXQgZXJyb3IgZnJvbSAke2NsaWVudElQfTpgLCBlcnJvcik7XG4gICAgfSk7XG4gIH0pO1xuXG4gIHdzcy5vbignY2xvc2UnLCAoKSA9PiB7XG4gICAgbG9nZ2VyLmluZm8oJ1dlYlNvY2tldCBzZXJ2ZXIgY2xvc2VkJyk7XG4gIH0pO1xuXG4gIHdzcy5vbignZXJyb3InLCAoZXJyb3IpID0+IHtcbiAgICBsb2dnZXIuZXJyb3IoJ1dlYlNvY2tldCBzZXJ2ZXIgZXJyb3I6JywgZXJyb3IpO1xuICB9KTtcblxuICAvLyDjgrXjg7zjg5Djg7zntbHoqIjjga7lrprmnJ/jg63jgrDlh7rliptcbiAgc2V0SW50ZXJ2YWwoKCkgPT4ge1xuICAgIGNvbnN0IHN0YXRzID0gbm90aWZpY2F0aW9uU2VydmljZS5nZXRDb25uZWN0aW9uU3RhdHMoKTtcbiAgICBsb2dnZXIuaW5mbyhgV2ViU29ja2V0IHN0YXRzOiAke3N0YXRzLndzQ2xpZW50c30gY29ubmVjdGVkIGNsaWVudHNgKTtcbiAgfSwgNjAwMDApOyAvLyAx5YiG44GU44GoXG5cbiAgcmV0dXJuIHdzcztcbn0iXSwibWFwcGluZ3MiOiI7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7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

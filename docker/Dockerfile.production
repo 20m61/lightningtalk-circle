@@ -1,0 +1,70 @@
+# Lightning Talk Circle - Production Dockerfile
+FROM node:20-alpine AS builder
+
+# Install build dependencies
+RUN apk add --no-cache python3 make g++ git
+
+WORKDIR /app
+
+# Copy package files
+COPY package*.json ./
+COPY babel.config.js jest.config.js ./
+
+# Install dependencies
+RUN npm ci --only=production && npm cache clean --force
+
+# Copy source code
+COPY . .
+
+# Build WordPress theme and application assets
+RUN npm run wp:build && npm run build:theme
+
+# Production stage
+FROM node:20-alpine AS production
+
+# Install runtime dependencies
+RUN apk add --no-cache \
+    curl \
+    postgresql-client \
+    redis \
+    tini
+
+# Create app user
+RUN addgroup -g 1001 -S nodejs && \
+    adduser -S nodejs -u 1001
+
+WORKDIR /app
+
+# Copy built application from builder stage
+COPY --from=builder --chown=nodejs:nodejs /app/node_modules ./node_modules
+COPY --from=builder --chown=nodejs:nodejs /app/server ./server
+COPY --from=builder --chown=nodejs:nodejs /app/public ./public
+COPY --from=builder --chown=nodejs:nodejs /app/scripts ./scripts
+COPY --from=builder --chown=nodejs:nodejs /app/package.json ./
+COPY --from=builder --chown=nodejs:nodejs /app/lightningtalk-child-theme.zip ./
+
+# Copy WordPress built assets
+COPY --from=builder --chown=nodejs:nodejs /app/wordpress ./wordpress
+
+# Copy configuration files
+COPY --from=builder --chown=nodejs:nodejs /app/docker/docker-compose.production.yml ./docker-compose.yml
+
+# Create necessary directories
+RUN mkdir -p /app/data/events /app/data/participants /app/logs /app/backups && \
+    chown -R nodejs:nodejs /app/data /app/logs /app/backups
+
+# Switch to non-root user
+USER nodejs
+
+# Health check
+HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
+    CMD curl -f http://localhost:${PORT:-3000}/api/health || exit 1
+
+# Expose port
+EXPOSE 3000
+
+# Use tini as entrypoint for proper signal handling
+ENTRYPOINT ["/sbin/tini", "--"]
+
+# Start the application
+CMD ["node", "server/app.js"]

@@ -17,6 +17,12 @@ if (!defined('ABSPATH')) {
 define('LIGHTNINGTALK_CHILD_VERSION', '1.0.0');
 
 /**
+ * 必要なファイルを読み込む
+ */
+require_once get_stylesheet_directory() . '/shortcodes.php';
+require_once get_stylesheet_directory() . '/cocoon-compatibility.php';
+
+/**
  * 親テーマと子テーマのスタイルシートを適切に読み込む
  */
 function lightningtalk_enqueue_styles() {
@@ -535,8 +541,8 @@ function lightningtalk_enqueue_admin_assets($hook) {
             )
         ));
         
-        // jQuery UI CSS
-        wp_enqueue_style('jquery-ui-css', 'https://code.jquery.com/ui/1.13.2/themes/ui-lightness/jquery-ui.css');
+        // jQuery UI CSS (locally bundled)
+        wp_enqueue_style('jquery-ui-css', get_stylesheet_directory_uri() . '/assets/dist/css/jquery-ui.min.css', array(), LIGHTNINGTALK_CHILD_VERSION);
     }
 }
 add_action('admin_enqueue_scripts', 'lightningtalk_enqueue_admin_assets');
@@ -599,3 +605,250 @@ function lightningtalk_cocoon_integration() {
     }
 }
 add_action('wp_enqueue_scripts', 'lightningtalk_cocoon_integration', 20);
+
+/**
+ * テーマ有効化時の初期化処理
+ */
+function lightningtalk_theme_activation() {
+    // パーマリンクをフラッシュして新しい投稿タイプのURLを有効化
+    flush_rewrite_rules();
+    
+    // デフォルト設定を追加
+    lightningtalk_set_default_settings();
+    
+    // サンプルコンテンツのインポートオプション
+    if (get_option('lightningtalk_import_sample_content', true)) {
+        lightningtalk_import_sample_content();
+    }
+}
+add_action('after_switch_theme', 'lightningtalk_theme_activation');
+
+/**
+ * デフォルト設定を設定
+ */
+function lightningtalk_set_default_settings() {
+    // テーマカスタマイザーのデフォルト値を設定
+    if (!get_theme_mod('lightningtalk_api_url')) {
+        set_theme_mod('lightningtalk_api_url', home_url('/wp-json/lightningtalk/v1/'));
+    }
+    
+    // Lightning Talk設定のデフォルト値
+    $default_settings = array(
+        'lightningtalk_enable_registration' => true,
+        'lightningtalk_enable_talk_submission' => true,
+        'lightningtalk_enable_email_notifications' => true,
+        'lightningtalk_max_participants' => 50,
+        'lightningtalk_talk_time_limit' => 5,
+        'lightningtalk_registration_deadline' => ''
+    );
+    
+    foreach ($default_settings as $key => $value) {
+        if (get_option($key) === false) {
+            add_option($key, $value);
+        }
+    }
+}
+
+/**
+ * サンプルコンテンツのインポート
+ */
+function lightningtalk_import_sample_content() {
+    // 既存のイベントがある場合はスキップ
+    $existing_events = get_posts(array(
+        'post_type' => 'lt_event',
+        'numberposts' => 1
+    ));
+    
+    if (!empty($existing_events)) {
+        return;
+    }
+    
+    // サンプルイベントを作成
+    $sample_event_id = wp_insert_post(array(
+        'post_title' => 'Lightning Talk Circle 第1回',
+        'post_content' => '初回のLightning Talk Circleイベントです。お気軽にご参加ください！',
+        'post_status' => 'publish',
+        'post_type' => 'lt_event',
+        'meta_input' => array(
+            'event_date' => date('Y-m-d H:i:s', strtotime('+1 month')),
+            'venue_name' => 'オンライン開催',
+            'venue_address' => '',
+            'online_url' => 'https://meet.google.com/xxx-xxxx-xxx',
+            'capacity' => 30,
+            'event_status' => 'open',
+            'registration_deadline' => date('Y-m-d H:i:s', strtotime('+3 weeks')),
+            'talk_time_limit' => 5
+        )
+    ));
+    
+    if ($sample_event_id && !is_wp_error($sample_event_id)) {
+        // デフォルトイベントIDを設定
+        set_theme_mod('lightningtalk_default_event_id', $sample_event_id);
+        
+        // サンプル発表カテゴリーを作成
+        $categories = array('技術', 'ビジネス', 'その他');
+        foreach ($categories as $category) {
+            $term_result = wp_insert_term($category, 'lt_talk_category');
+            if (is_wp_error($term_result)) {
+                error_log('Lightning Talk: カテゴリー作成エラー - ' . $category . ': ' . $term_result->get_error_message());
+            }
+        }
+    } elseif (is_wp_error($sample_event_id)) {
+        error_log('Lightning Talk: サンプルイベント作成エラー: ' . $sample_event_id->get_error_message());
+    }
+}
+
+/**
+ * テーマ無効化時のクリーンアップ（オプション）
+ */
+function lightningtalk_theme_deactivation() {
+    // パーマリンクをフラッシュ
+    flush_rewrite_rules();
+    
+    // 注意: ここでは投稿データを削除しない
+    // ユーザーがテーマを再度有効化した際にデータが復元されるように
+}
+
+/**
+ * セキュリティ強化
+ */
+function lightningtalk_security_headers() {
+    // REST API セキュリティヘッダー
+    if (is_admin() || (defined('REST_REQUEST') && REST_REQUEST)) {
+        header('X-Content-Type-Options: nosniff');
+        header('X-Frame-Options: SAMEORIGIN');
+        header('Referrer-Policy: strict-origin-when-cross-origin');
+    }
+}
+add_action('init', 'lightningtalk_security_headers');
+
+/**
+ * REST API レート制限
+ */
+function lightningtalk_rest_api_rate_limit($result, $request, $route) {
+    if (strpos($route, '/lightningtalk/v1/') === 0) {
+        // プロキシ対応のIP検出実装
+        $client_ip = '';
+        if (!empty($_SERVER['HTTP_X_FORWARDED_FOR'])) {
+            $ips = explode(',', $_SERVER['HTTP_X_FORWARDED_FOR']);
+            $client_ip = trim($ips[0]);
+        } elseif (!empty($_SERVER['HTTP_X_REAL_IP'])) {
+            $client_ip = $_SERVER['HTTP_X_REAL_IP'];
+        } elseif (!empty($_SERVER['HTTP_CLIENT_IP'])) {
+            $client_ip = $_SERVER['HTTP_CLIENT_IP'];
+        } else {
+            $client_ip = $_SERVER['REMOTE_ADDR'];
+        }
+        
+        $transient_key = 'lt_rate_limit_' . md5($client_ip);
+        $requests = get_transient($transient_key);
+        
+        if ($requests === false) {
+            set_transient($transient_key, 1, MINUTE_IN_SECONDS);
+        } elseif ($requests >= 100) { // 1分間に100リクエストまで
+            return new WP_Error('rest_rate_limit', '短時間に大量のリクエストが検出されました。しばらく時間をおいてからお試しください。', array('status' => 429));
+        } else {
+            set_transient($transient_key, $requests + 1, MINUTE_IN_SECONDS);
+        }
+    }
+    
+    return $result;
+}
+add_filter('rest_pre_dispatch', 'lightningtalk_rest_api_rate_limit', 10, 3);
+
+/**
+ * パフォーマンス最適化
+ */
+function lightningtalk_performance_optimization() {
+    // 不要なWordPress機能を無効化
+    remove_action('wp_head', 'wp_generator');
+    remove_action('wp_head', 'wlwmanifest_link');
+    remove_action('wp_head', 'rsd_link');
+    
+    // 絵文字スクリプトを無効化（必要に応じて）
+    remove_action('wp_head', 'print_emoji_detection_script', 7);
+    remove_action('wp_print_styles', 'print_emoji_styles');
+    
+    // Lightning Talk関連ページでのみアセットを読み込む最適化
+    if (!is_admin() && !lightningtalk_is_lt_page()) {
+        wp_dequeue_style('lightningtalk-main-style');
+        wp_dequeue_script('lightningtalk-main-script');
+    }
+}
+add_action('init', 'lightningtalk_performance_optimization');
+
+/**
+ * Lightning Talk関連ページの判定
+ */
+function lightningtalk_is_lt_page() {
+    global $post;
+    
+    // キャッシュチェック
+    static $cache = array();
+    $cache_key = isset($post->ID) ? 'post_' . $post->ID : 'global_' . md5(serialize($_SERVER['REQUEST_URI']));
+    
+    if (isset($cache[$cache_key])) {
+        return $cache[$cache_key];
+    }
+    
+    $is_lt_page = false;
+    
+    // カスタム投稿タイプページ
+    if (is_singular(array('lt_event', 'lt_talk', 'lt_participant'))) {
+        $is_lt_page = true;
+    }
+    
+    // Lightning Talk専用ページテンプレート
+    elseif (is_page_template('page-lightning-talk.php')) {
+        $is_lt_page = true;
+    }
+    
+    // ショートコードが含まれるページ（最も重い処理なので最後に）
+    elseif (isset($post->post_content)) {
+        // 主要なショートコードのみチェック
+        $lt_shortcodes = array('lightning_talk_event', 'lightning_talk_registration', 'lightning_talk_talks');
+        foreach ($lt_shortcodes as $shortcode) {
+            if (has_shortcode($post->post_content, $shortcode)) {
+                $is_lt_page = true;
+                break;
+            }
+        }
+    }
+    
+    // 結果をキャッシュ
+    $cache[$cache_key] = $is_lt_page;
+    
+    return $is_lt_page;
+}
+
+/**
+ * 入力値のサニタイゼーション強化
+ */
+function lightningtalk_sanitize_input($input, $type = 'text') {
+    switch ($type) {
+        case 'email':
+            return sanitize_email($input);
+        case 'url':
+            return esc_url_raw($input);
+        case 'html':
+            return wp_kses_post($input);
+        case 'text':
+        default:
+            return sanitize_text_field($input);
+    }
+}
+
+/**
+ * 管理画面のカスタムCSS
+ */
+function lightningtalk_admin_custom_css() {
+    echo '<style>
+        .lt-event .inside { padding: 20px; }
+        .lt-meta-box .form-table th { width: 150px; }
+        .lt-meta-box .form-table td { padding: 10px; }
+        .lt-status-active { color: #46b450; font-weight: bold; }
+        .lt-status-closed { color: #dc3232; font-weight: bold; }
+        .lt-admin-notice { background: linear-gradient(45deg, #ff6b6b, #ffd93d); color: white; border: none; }
+    </style>';
+}
+add_action('admin_head', 'lightningtalk_admin_custom_css');

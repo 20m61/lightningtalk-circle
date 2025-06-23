@@ -1,0 +1,63 @@
+# Dependencies
+node_modules/
+
+# Build outputs
+dist/
+build/
+coverage/
+.jest-cache/
+storybook-static/
+
+# WordPress vendor assets
+wordpress/lightningtalk-child/assets/js/vendor/
+public/js/vendor/
+
+# Modern WordPress build outputs
+lightningtalk-modern/packages/*/dist/
+lightningtalk-modern/packages/*/build/
+lightningtalk-modern/packages/*/.next/
+lightningtalk-modern/packages/*/out/
+
+# Generated files
+*.min.js
+*.min.css
+*.bundle.js
+*.bundle.css
+
+# Cache and temporary files
+.cache/
+.tmp/
+.temp/
+gulp-temp/
+
+# Log files
+*.log
+logs/
+
+# Database files
+*.db
+*.sqlite
+*.sqlite3
+
+# Archive files
+*.zip
+*.tar
+*.tar.gz
+
+# WordPress specific
+wordpress/wp-content/uploads/
+wordpress/wp-content/cache/
+wordpress/wp-content/plugins/
+wordpress/wp-content/themes/cocoon-master/
+wordpress/wp-content/themes/cocoon-child-master/
+
+# Environment and config files that shouldn't be formatted
+.env*
+*.pem
+*.key
+*.crt
+
+# Documentation that might have specific formatting
+CHANGELOG.md
+LICENSE
+*.lock
