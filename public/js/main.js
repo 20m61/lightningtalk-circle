@@ -716,7 +716,7 @@ class LightningTalkApp {
         let response = '';
         
         if (lowerMessage.includes('会場') || lowerMessage.includes('場所')) {
-            response = '会場は新宿某所です。詳細は6月20日に確定予定です。地図リンクからご確認ください 📍';
+            response = '会場は西新宿8-14-19 小林第二ビル8階です。地図リンクからご確認ください 📍';
         } else if (lowerMessage.includes('時間') || lowerMessage.includes('何時')) {
             response = 'イベントは6月25日（水）19:00からです。オンライン参加の方は18:30から入室可能です ⏰';
         } else if (lowerMessage.includes('参加') || lowerMessage.includes('申込')) {
