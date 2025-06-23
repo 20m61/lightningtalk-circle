@@ -5,9 +5,10 @@
  * 環境変数から認証情報を読み込んでWordPressサイトにデプロイします
  */
 
-const fs = require('fs');
-const path = require('path');
-require('dotenv').config();
+import fs from 'fs';
+import path from 'path';
+import dotenv from 'dotenv';
+dotenv.config();
 
 // 必要なモジュール
 let FormData, fetch;

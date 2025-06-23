@@ -4,9 +4,11 @@
  * WordPress テーマアップロード支援スクリプト
  */
 
-require('dotenv').config();
-const fs = require('fs');
-const path = require('path');
+import dotenv from 'dotenv';
+import fs from 'fs';
+import path from 'path';
+
+dotenv.config();
 
 async function uploadThemeGuide() {
     console.log('📤 Lightning Talk Child Theme アップロードガイド');
