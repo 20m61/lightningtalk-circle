@@ -12,33 +12,27 @@
     "dev:admin": "cd packages/admin-panel && npm run dev",
     "dev:storybook": "cd packages/components && npm run storybook",
     "dev:wordpress": "docker-compose up wordpress mysql",
-    
     "build": "npm run build:components && npm run build:theme && npm run build:admin",
     "build:components": "cd packages/components && npm run build-storybook",
-    "build:theme": "cd packages/theme && npm run build", 
+    "build:theme": "cd packages/theme && npm run build",
     "build:admin": "cd packages/admin-panel && npm run build",
-    
     "test": "npm run test:unit && npm run test:integration && npm run test:e2e",
     "test:unit": "vitest run",
     "test:integration": "vitest run tests/integration",
     "test:e2e": "playwright test",
     "test:visual": "cd packages/components && npm run test:visual",
     "test:watch": "vitest",
-    
     "lint": "eslint packages/*/src --ext .ts,.tsx,.js,.jsx,.php",
     "lint:fix": "npm run lint -- --fix",
     "type-check": "tsc --noEmit",
     "format": "prettier --write \"packages/*/src/**/*.{ts,tsx,js,jsx,css,scss,md}\"",
-    
     "wp:up": "docker-compose up -d",
     "wp:down": "docker-compose down",
     "wp:reset": "docker-compose down -v && docker-compose up -d",
     "wp:logs": "docker-compose logs -f wordpress",
     "wp:cli": "docker-compose exec wordpress wp",
-    
-    "theme:package": "cd packages/theme && npm run package",
+    "theme:package": "cd packages/theme && npm run build && npm run package",
     "theme:deploy": "cd packages/theme && npm run deploy",
-    
     "postinstall": "husky install"
   },
   "devDependencies": {

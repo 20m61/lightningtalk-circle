@@ -3,18 +3,30 @@ name: CI/CD Pipeline
 on:
   push:
     branches: [main, develop]
+    tags: ["v*"]
   pull_request:
     branches: [main]
+  workflow_dispatch:
+    inputs:
+      release_type:
+        description: "Release type"
+        required: true
+        default: "patch"
+        type: choice
+        options:
+          - patch
+          - minor
+          - major
 
 env:
-  NODE_VERSION: '20'
+  NODE_VERSION: "20"
   REGISTRY: ghcr.io
   IMAGE_NAME: ${{ github.repository }}
 
 jobs:
   test:
     runs-on: ubuntu-latest
-    
+
     services:
       postgres:
         image: postgres:15
@@ -28,7 +40,7 @@ jobs:
           --health-retries 5
         ports:
           - 5432:5432
-      
+
       redis:
         image: redis:7-alpine
         options: >-
@@ -47,7 +59,7 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
-          cache: 'npm'
+          cache: "npm"
 
       - name: Install dependencies
         run: npm ci
@@ -116,7 +128,7 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
-          cache: 'npm'
+          cache: "npm"
 
       - name: Install dependencies
         run: npm ci
@@ -147,7 +159,7 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
-          cache: 'npm'
+          cache: "npm"
 
       - name: Install dependencies
         run: npm ci
@@ -236,10 +248,350 @@ jobs:
           echo "Staging deployment failed"
           exit 1
 
+  quality-gates:
+    runs-on: ubuntu-latest
+    needs: [test, security]
+    outputs:
+      quality-passed: ${{ steps.quality.outputs.passed }}
+      coverage-percentage: ${{ steps.coverage.outputs.percentage }}
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: "npm"
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run quality gates
+        id: quality
+        run: |
+          npm run quality:workflow
+          QUALITY_RESULT=$?
+          if [ $QUALITY_RESULT -eq 0 ]; then
+            echo "passed=true" >> $GITHUB_OUTPUT
+          else
+            echo "passed=false" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Extract coverage percentage
+        id: coverage
+        run: |
+          if [ -f coverage/coverage-summary.json ]; then
+            COVERAGE=$(cat coverage/coverage-summary.json | jq -r '.total.lines.pct')
+            echo "percentage=$COVERAGE" >> $GITHUB_OUTPUT
+          else
+            echo "percentage=0" >> $GITHUB_OUTPUT
+          fi
+
+  versioning:
+    runs-on: ubuntu-latest
+    needs: [test, security, quality-gates]
+    if: github.ref == 'refs/heads/main' && needs.quality-gates.outputs.quality-passed == 'true'
+    outputs:
+      new-version: ${{ steps.version.outputs.new-version }}
+      should-release: ${{ steps.version.outputs.should-release }}
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: "npm"
+
+      - name: Configure Git
+        run: |
+          git config --global user.email "action@github.com"
+          git config --global user.name "GitHub Action"
+
+      - name: Determine version bump
+        id: version
+        run: |
+          # Get the latest tag
+          LATEST_TAG=$(git describe --tags --abbrev=0 2>/dev/null || echo "v0.0.0")
+          echo "Latest tag: $LATEST_TAG"
+
+          # Determine version bump type
+          BUMP_TYPE="patch"
+          if [ "${{ github.event.inputs.release_type }}" != "" ]; then
+            BUMP_TYPE="${{ github.event.inputs.release_type }}"
+          else
+            # Analyze commit messages for automatic version bump
+            COMMITS=$(git log $LATEST_TAG..HEAD --pretty=format:"%s")
+            if echo "$COMMITS" | grep -q "BREAKING CHANGE\|feat!"; then
+              BUMP_TYPE="major"
+            elif echo "$COMMITS" | grep -q "feat:"; then
+              BUMP_TYPE="minor"
+            fi
+          fi
+
+          echo "Bump type: $BUMP_TYPE"
+
+          # Calculate new version
+          CURRENT_VERSION=${LATEST_TAG#v}
+          IFS='.' read -ra VERSION_PARTS <<< "$CURRENT_VERSION"
+          MAJOR=${VERSION_PARTS[0]}
+          MINOR=${VERSION_PARTS[1]}
+          PATCH=${VERSION_PARTS[2]}
+
+          case $BUMP_TYPE in
+            major)
+              MAJOR=$((MAJOR + 1))
+              MINOR=0
+              PATCH=0
+              ;;
+            minor)
+              MINOR=$((MINOR + 1))
+              PATCH=0
+              ;;
+            patch)
+              PATCH=$((PATCH + 1))
+              ;;
+          esac
+
+          NEW_VERSION="v$MAJOR.$MINOR.$PATCH"
+          echo "New version: $NEW_VERSION"
+
+          # Check if there are changes to release
+          COMMITS_COUNT=$(git rev-list $LATEST_TAG..HEAD --count 2>/dev/null || echo "1")
+          SHOULD_RELEASE="false"
+          if [ "$COMMITS_COUNT" -gt "0" ] || [ "${{ github.event.inputs.release_type }}" != "" ]; then
+            SHOULD_RELEASE="true"
+          fi
+
+          echo "new-version=$NEW_VERSION" >> $GITHUB_OUTPUT
+          echo "should-release=$SHOULD_RELEASE" >> $GITHUB_OUTPUT
+          echo "commits-count=$COMMITS_COUNT" >> $GITHUB_OUTPUT
+
+      - name: Update package.json version
+        if: steps.version.outputs.should-release == 'true'
+        run: |
+          NEW_VERSION="${{ steps.version.outputs.new-version }}"
+          npm version ${NEW_VERSION#v} --no-git-tag-version
+
+          # Update lightningtalk-modern package.json
+          if [ -f "lightningtalk-modern/package.json" ]; then
+            cd lightningtalk-modern
+            npm version ${NEW_VERSION#v} --no-git-tag-version
+            cd ..
+          fi
+
+      - name: Create and push tag
+        if: steps.version.outputs.should-release == 'true'
+        run: |
+          NEW_VERSION="${{ steps.version.outputs.new-version }}"
+          git add package.json lightningtalk-modern/package.json
+          git commit -m "chore: bump version to $NEW_VERSION"
+          git tag -a $NEW_VERSION -m "Release $NEW_VERSION"
+          git push origin main
+          git push origin $NEW_VERSION
+
+  build-release:
+    runs-on: ubuntu-latest
+    needs: [build, versioning]
+    if: needs.versioning.outputs.should-release == 'true'
+    outputs:
+      theme-zip: ${{ steps.build-theme.outputs.zip-path }}
+      static-zip: ${{ steps.build-static.outputs.zip-path }}
+      modern-theme-zip: ${{ steps.build-modern.outputs.zip-path }}
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ needs.versioning.outputs.new-version }}
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: "npm"
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build WordPress Theme
+        id: build-theme
+        run: |
+          node scripts/build-theme.js
+          THEME_ZIP=$(ls dist/themes/lightningtalk-child_*.zip | head -1)
+          echo "zip-path=$THEME_ZIP" >> $GITHUB_OUTPUT
+          echo "Theme ZIP: $THEME_ZIP"
+
+      - name: Build Static Site
+        id: build-static
+        run: |
+          # Create static site ZIP
+          zip -r "dist/lightningtalk-static_${{ needs.versioning.outputs.new-version }}.zip" public/ -x "*.map"
+          STATIC_ZIP="dist/lightningtalk-static_${{ needs.versioning.outputs.new-version }}.zip"
+          echo "zip-path=$STATIC_ZIP" >> $GITHUB_OUTPUT
+          echo "Static ZIP: $STATIC_ZIP"
+
+      - name: Build Modern Theme
+        id: build-modern
+        run: |
+          cd lightningtalk-modern
+          npm ci
+          npm run build
+          npm run theme:package
+          MODERN_ZIP=$(ls packages/theme/dist/*.zip | head -1)
+          cp "$MODERN_ZIP" "../dist/lightningtalk-modern_${{ needs.versioning.outputs.new-version }}.zip"
+          MODERN_ZIP_DEST="../dist/lightningtalk-modern_${{ needs.versioning.outputs.new-version }}.zip"
+          echo "zip-path=$MODERN_ZIP_DEST" >> $GITHUB_OUTPUT
+          echo "Modern Theme ZIP: $MODERN_ZIP_DEST"
+          cd ..
+
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: release-packages-${{ needs.versioning.outputs.new-version }}
+          path: |
+            dist/*.zip
+            dist/builds/*.json
+            dist/builds/*.md
+          retention-days: 30
+
+  create-release:
+    runs-on: ubuntu-latest
+    needs: [versioning, build-release]
+    if: needs.versioning.outputs.should-release == 'true'
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ needs.versioning.outputs.new-version }}
+
+      - name: Download build artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: release-packages-${{ needs.versioning.outputs.new-version }}
+          path: ./dist
+
+      - name: Generate Release Notes
+        id: release-notes
+        run: |
+          NEW_VERSION="${{ needs.versioning.outputs.new-version }}"
+          PREVIOUS_TAG=$(git describe --tags --abbrev=0 $NEW_VERSION^ 2>/dev/null || echo "")
+
+          # Create release notes
+          cat > release-notes.md << 'EOF'
+          # 🚀 Lightning Talk Circle ${{ needs.versioning.outputs.new-version }}
+
+          ## 📦 パッケージ内容
+
+          ### WordPress テーマ
+          - **lightningtalk-child**: Cocoon ベースの子テーマ
+          - **lightningtalk-modern**: 次世代TypeScript/React テーマ
+
+          ### スタンドアロン
+          - **lightningtalk-static**: 静的HTML版（サーバー不要）
+
+          ## ✨ 新機能・改善
+          EOF
+
+          # Add commit messages since last tag
+          if [ -n "$PREVIOUS_TAG" ]; then
+            echo "" >> release-notes.md
+            git log $PREVIOUS_TAG..$NEW_VERSION --pretty=format:"- %s" --no-merges >> release-notes.md
+          fi
+
+          cat >> release-notes.md << 'EOF'
+
+          ## 📋 インストール方法
+
+          ### WordPress テーマ
+          1. `lightningtalk-child_*.zip` をダウンロード
+          2. WordPress管理画面 > 外観 > テーマ > 新規追加 > テーマのアップロード
+          3. ZIPファイルをアップロードして有効化
+
+          ### 静的サイト
+          1. `lightningtalk-static_*.zip` をダウンロード
+          2. Webサーバーにファイルを展開
+          3. `index.html` にアクセス
+
+          ## 🔧 必要環境
+          - **WordPress**: 6.0+ (PHP 8.0+)
+          - **Modern Theme**: Node.js 18+
+          - **Static**: 任意のWebサーバー
+
+          ## 📚 ドキュメント
+          - [セットアップガイド](https://github.com/${{ github.repository }}/blob/main/README.md)
+          - [開発ガイド](https://github.com/${{ github.repository }}/blob/main/docs/)
+          EOF
+
+      - name: Create GitHub Release
+        uses: actions/create-release@v1
+        id: create-release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ needs.versioning.outputs.new-version }}
+          release_name: Lightning Talk Circle ${{ needs.versioning.outputs.new-version }}
+          body_path: ./release-notes.md
+          draft: false
+          prerelease: false
+
+      - name: Upload WordPress Child Theme
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create-release.outputs.upload_url }}
+          asset_path: ${{ needs.build-release.outputs.theme-zip }}
+          asset_name: lightningtalk-child-theme_${{ needs.versioning.outputs.new-version }}.zip
+          asset_content_type: application/zip
+
+      - name: Upload Static Site
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create-release.outputs.upload_url }}
+          asset_path: ${{ needs.build-release.outputs.static-zip }}
+          asset_name: lightningtalk-static_${{ needs.versioning.outputs.new-version }}.zip
+          asset_content_type: application/zip
+
+      - name: Upload Modern Theme
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create-release.outputs.upload_url }}
+          asset_path: ${{ needs.build-release.outputs.modern-theme-zip }}
+          asset_name: lightningtalk-modern-theme_${{ needs.versioning.outputs.new-version }}.zip
+          asset_content_type: application/zip
+
+      - name: Notify Release
+        if: always()
+        env:
+          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK_URL }}
+        run: |
+          if [ "${{ job.status }}" == "success" ]; then
+            curl -X POST -H 'Content-type: application/json' \
+              --data "{\"text\":\"🎉 Lightning Talk Circle ${{ needs.versioning.outputs.new-version }} リリース完了！\\n📦 GitHub Releases: https://github.com/${{ github.repository }}/releases/tag/${{ needs.versioning.outputs.new-version }}\"}" \
+              $SLACK_WEBHOOK || true
+          else
+            curl -X POST -H 'Content-type: application/json' \
+              --data "{\"text\":\"❌ Lightning Talk Circle ${{ needs.versioning.outputs.new-version }} リリース失敗\"}" \
+              $SLACK_WEBHOOK || true
+          fi
+
   deploy-production:
     runs-on: ubuntu-latest
-    needs: build
-    if: github.ref == 'refs/heads/main'
+    needs: [build, create-release]
+    if: github.ref == 'refs/heads/main' && needs.create-release.result == 'success'
     environment: production
 
     steps:
@@ -284,7 +636,7 @@ jobs:
           done
           echo "Production deployment failed"
           exit 1
-          
+
       - name: Notify deployment
         if: always()
         env:
@@ -314,7 +666,7 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
-          cache: 'npm'
+          cache: "npm"
 
       - name: Install dependencies
         run: npm ci
