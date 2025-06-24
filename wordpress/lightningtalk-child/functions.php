@@ -14,7 +14,7 @@ if (!defined('ABSPATH')) {
 /**
  * 子テーマのバージョン
  */
-define('LIGHTNINGTALK_CHILD_VERSION', '1.0.0');
+define('LIGHTNINGTALK_CHILD_VERSION', '1.0.1');
 
 /**
  * 必要なファイルを読み込む
