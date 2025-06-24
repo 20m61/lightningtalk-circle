@@ -22,6 +22,309 @@ define('LIGHTNINGTALK_CHILD_VERSION', '1.0.0');
 require_once get_stylesheet_directory() . '/shortcodes.php';
 require_once get_stylesheet_directory() . '/cocoon-compatibility.php';
 
+// 管理画面機能を読み込む
+if (is_admin()) {
+    require_once get_stylesheet_directory() . '/includes/admin-dashboard.php';
+    require_once get_stylesheet_directory() . '/includes/webhook-handler.php';
+    require_once get_stylesheet_directory() . '/includes/api-integration.php';
+    new LightningTalk_Admin_Dashboard();
+    new LightningTalk_Webhook_Handler();
+    new LightningTalk_API_Integration();
+}
+
+/**
+ * カスタム投稿タイプの登録
+ */
+function lightningtalk_register_post_types() {
+    // イベント投稿タイプ
+    register_post_type('lt_event', array(
+        'labels' => array(
+            'name' => __('イベント', 'lightningtalk-child'),
+            'singular_name' => __('イベント', 'lightningtalk-child'),
+            'add_new' => __('新規追加', 'lightningtalk-child'),
+            'add_new_item' => __('新規イベントを追加', 'lightningtalk-child'),
+            'edit_item' => __('イベントを編集', 'lightningtalk-child'),
+            'new_item' => __('新規イベント', 'lightningtalk-child'),
+            'view_item' => __('イベントを表示', 'lightningtalk-child'),
+            'search_items' => __('イベントを検索', 'lightningtalk-child'),
+            'not_found' => __('イベントが見つかりません', 'lightningtalk-child'),
+            'not_found_in_trash' => __('ゴミ箱にイベントはありません', 'lightningtalk-child'),
+        ),
+        'public' => true,
+        'publicly_queryable' => true,
+        'show_ui' => true,
+        'show_in_menu' => true,
+        'query_var' => true,
+        'rewrite' => array('slug' => 'events'),
+        'capability_type' => 'post',
+        'has_archive' => true,
+        'hierarchical' => false,
+        'menu_position' => 5,
+        'menu_icon' => 'dashicons-calendar-alt',
+        'supports' => array('title', 'editor', 'thumbnail', 'excerpt', 'custom-fields'),
+        'show_in_rest' => true,
+        'rest_base' => 'lt_events',
+    ));
+    
+    // 発表投稿タイプ
+    register_post_type('lt_talk', array(
+        'labels' => array(
+            'name' => __('発表', 'lightningtalk-child'),
+            'singular_name' => __('発表', 'lightningtalk-child'),
+            'add_new' => __('新規追加', 'lightningtalk-child'),
+            'add_new_item' => __('新規発表を追加', 'lightningtalk-child'),
+            'edit_item' => __('発表を編集', 'lightningtalk-child'),
+            'new_item' => __('新規発表', 'lightningtalk-child'),
+            'view_item' => __('発表を表示', 'lightningtalk-child'),
+            'search_items' => __('発表を検索', 'lightningtalk-child'),
+            'not_found' => __('発表が見つかりません', 'lightningtalk-child'),
+            'not_found_in_trash' => __('ゴミ箱に発表はありません', 'lightningtalk-child'),
+        ),
+        'public' => true,
+        'publicly_queryable' => true,
+        'show_ui' => true,
+        'show_in_menu' => true,
+        'query_var' => true,
+        'rewrite' => array('slug' => 'talks'),
+        'capability_type' => 'post',
+        'has_archive' => true,
+        'hierarchical' => false,
+        'menu_position' => 6,
+        'menu_icon' => 'dashicons-microphone',
+        'supports' => array('title', 'editor', 'author', 'thumbnail', 'excerpt', 'custom-fields'),
+        'show_in_rest' => true,
+        'rest_base' => 'lt_talks',
+    ));
+    
+    // 参加者投稿タイプ
+    register_post_type('lt_participant', array(
+        'labels' => array(
+            'name' => __('参加者', 'lightningtalk-child'),
+            'singular_name' => __('参加者', 'lightningtalk-child'),
+            'add_new' => __('新規追加', 'lightningtalk-child'),
+            'add_new_item' => __('新規参加者を追加', 'lightningtalk-child'),
+            'edit_item' => __('参加者を編集', 'lightningtalk-child'),
+            'new_item' => __('新規参加者', 'lightningtalk-child'),
+            'view_item' => __('参加者を表示', 'lightningtalk-child'),
+            'search_items' => __('参加者を検索', 'lightningtalk-child'),
+            'not_found' => __('参加者が見つかりません', 'lightningtalk-child'),
+            'not_found_in_trash' => __('ゴミ箱に参加者はありません', 'lightningtalk-child'),
+        ),
+        'public' => false,
+        'publicly_queryable' => false,
+        'show_ui' => true,
+        'show_in_menu' => true,
+        'query_var' => false,
+        'capability_type' => 'post',
+        'has_archive' => false,
+        'hierarchical' => false,
+        'menu_position' => 7,
+        'menu_icon' => 'dashicons-groups',
+        'supports' => array('title', 'custom-fields'),
+        'show_in_rest' => true,
+        'rest_base' => 'lt_participants',
+    ));
+}
+add_action('init', 'lightningtalk_register_post_types');
+
+/**
+ * カスタムタクソノミーの登録
+ */
+function lightningtalk_register_taxonomies() {
+    // 発表カテゴリー
+    register_taxonomy('lt_talk_category', 'lt_talk', array(
+        'labels' => array(
+            'name' => __('発表カテゴリー', 'lightningtalk-child'),
+            'singular_name' => __('発表カテゴリー', 'lightningtalk-child'),
+            'search_items' => __('カテゴリーを検索', 'lightningtalk-child'),
+            'all_items' => __('すべてのカテゴリー', 'lightningtalk-child'),
+            'parent_item' => __('親カテゴリー', 'lightningtalk-child'),
+            'parent_item_colon' => __('親カテゴリー:', 'lightningtalk-child'),
+            'edit_item' => __('カテゴリーを編集', 'lightningtalk-child'),
+            'update_item' => __('カテゴリーを更新', 'lightningtalk-child'),
+            'add_new_item' => __('新規カテゴリーを追加', 'lightningtalk-child'),
+            'new_item_name' => __('新規カテゴリー名', 'lightningtalk-child'),
+            'menu_name' => __('カテゴリー', 'lightningtalk-child'),
+        ),
+        'hierarchical' => true,
+        'public' => true,
+        'show_ui' => true,
+        'show_admin_column' => true,
+        'query_var' => true,
+        'rewrite' => array('slug' => 'talk-category'),
+        'show_in_rest' => true,
+    ));
+}
+add_action('init', 'lightningtalk_register_taxonomies');
+
+/**
+ * イベント用メタボックスの追加
+ */
+function lightningtalk_add_event_metaboxes() {
+    add_meta_box(
+        'lt_event_details',
+        __('イベント詳細', 'lightningtalk-child'),
+        'lightningtalk_event_details_callback',
+        'lt_event',
+        'normal',
+        'high'
+    );
+    
+    add_meta_box(
+        'lt_event_venue',
+        __('会場情報', 'lightningtalk-child'),
+        'lightningtalk_event_venue_callback',
+        'lt_event',
+        'normal',
+        'default'
+    );
+    
+    add_meta_box(
+        'lt_event_registration',
+        __('参加登録設定', 'lightningtalk-child'),
+        'lightningtalk_event_registration_callback',
+        'lt_event',
+        'side',
+        'default'
+    );
+}
+add_action('add_meta_boxes', 'lightningtalk_add_event_metaboxes');
+
+/**
+ * イベント詳細メタボックスのコールバック
+ */
+function lightningtalk_event_details_callback($post) {
+    wp_nonce_field('lightningtalk_event_details', 'lightningtalk_event_details_nonce');
+    
+    $event_date = get_post_meta($post->ID, 'event_date', true);
+    $event_time = get_post_meta($post->ID, 'event_time', true);
+    $event_status = get_post_meta($post->ID, 'event_status', true);
+    $event_format = get_post_meta($post->ID, 'event_format', true);
+    ?>
+    <table class="form-table">
+        <tr>
+            <th><label for="event_date"><?php _e('開催日', 'lightningtalk-child'); ?></label></th>
+            <td><input type="date" id="event_date" name="event_date" value="<?php echo esc_attr($event_date); ?>" class="regular-text" /></td>
+        </tr>
+        <tr>
+            <th><label for="event_time"><?php _e('開催時間', 'lightningtalk-child'); ?></label></th>
+            <td><input type="time" id="event_time" name="event_time" value="<?php echo esc_attr($event_time); ?>" class="regular-text" /></td>
+        </tr>
+        <tr>
+            <th><label for="event_status"><?php _e('ステータス', 'lightningtalk-child'); ?></label></th>
+            <td>
+                <select id="event_status" name="event_status">
+                    <option value="upcoming" <?php selected($event_status, 'upcoming'); ?>><?php _e('開催予定', 'lightningtalk-child'); ?></option>
+                    <option value="ongoing" <?php selected($event_status, 'ongoing'); ?>><?php _e('開催中', 'lightningtalk-child'); ?></option>
+                    <option value="completed" <?php selected($event_status, 'completed'); ?>><?php _e('終了', 'lightningtalk-child'); ?></option>
+                    <option value="cancelled" <?php selected($event_status, 'cancelled'); ?>><?php _e('中止', 'lightningtalk-child'); ?></option>
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <th><label for="event_format"><?php _e('開催形式', 'lightningtalk-child'); ?></label></th>
+            <td>
+                <select id="event_format" name="event_format">
+                    <option value="offline" <?php selected($event_format, 'offline'); ?>><?php _e('オフライン', 'lightningtalk-child'); ?></option>
+                    <option value="online" <?php selected($event_format, 'online'); ?>><?php _e('オンライン', 'lightningtalk-child'); ?></option>
+                    <option value="hybrid" <?php selected($event_format, 'hybrid'); ?>><?php _e('ハイブリッド', 'lightningtalk-child'); ?></option>
+                </select>
+            </td>
+        </tr>
+    </table>
+    <?php
+}
+
+/**
+ * 会場情報メタボックスのコールバック
+ */
+function lightningtalk_event_venue_callback($post) {
+    $venue_name = get_post_meta($post->ID, 'venue_name', true);
+    $venue_address = get_post_meta($post->ID, 'venue_address', true);
+    $online_url = get_post_meta($post->ID, 'online_url', true);
+    $map_url = get_post_meta($post->ID, 'map_url', true);
+    ?>
+    <table class="form-table">
+        <tr>
+            <th><label for="venue_name"><?php _e('会場名', 'lightningtalk-child'); ?></label></th>
+            <td><input type="text" id="venue_name" name="venue_name" value="<?php echo esc_attr($venue_name); ?>" class="large-text" /></td>
+        </tr>
+        <tr>
+            <th><label for="venue_address"><?php _e('住所', 'lightningtalk-child'); ?></label></th>
+            <td><input type="text" id="venue_address" name="venue_address" value="<?php echo esc_attr($venue_address); ?>" class="large-text" /></td>
+        </tr>
+        <tr>
+            <th><label for="online_url"><?php _e('オンラインURL', 'lightningtalk-child'); ?></label></th>
+            <td><input type="url" id="online_url" name="online_url" value="<?php echo esc_url($online_url); ?>" class="large-text" /></td>
+        </tr>
+        <tr>
+            <th><label for="map_url"><?php _e('地図URL', 'lightningtalk-child'); ?></label></th>
+            <td><input type="url" id="map_url" name="map_url" value="<?php echo esc_url($map_url); ?>" class="large-text" /></td>
+        </tr>
+    </table>
+    <?php
+}
+
+/**
+ * 参加登録設定メタボックスのコールバック
+ */
+function lightningtalk_event_registration_callback($post) {
+    $capacity = get_post_meta($post->ID, 'capacity', true);
+    $registration_deadline = get_post_meta($post->ID, 'registration_deadline', true);
+    $allow_guest = get_post_meta($post->ID, 'allow_guest', true);
+    ?>
+    <p>
+        <label for="capacity"><?php _e('定員', 'lightningtalk-child'); ?></label><br>
+        <input type="number" id="capacity" name="capacity" value="<?php echo esc_attr($capacity); ?>" class="small-text" min="1" />
+    </p>
+    <p>
+        <label for="registration_deadline"><?php _e('申込締切', 'lightningtalk-child'); ?></label><br>
+        <input type="datetime-local" id="registration_deadline" name="registration_deadline" value="<?php echo esc_attr($registration_deadline); ?>" />
+    </p>
+    <p>
+        <label>
+            <input type="checkbox" id="allow_guest" name="allow_guest" value="1" <?php checked($allow_guest, '1'); ?> />
+            <?php _e('飛び入り参加を許可', 'lightningtalk-child'); ?>
+        </label>
+    </p>
+    <?php
+}
+
+/**
+ * イベントメタデータの保存
+ */
+function lightningtalk_save_event_metadata($post_id) {
+    // ノンスチェック
+    if (!isset($_POST['lightningtalk_event_details_nonce']) || 
+        !wp_verify_nonce($_POST['lightningtalk_event_details_nonce'], 'lightningtalk_event_details')) {
+        return;
+    }
+    
+    // 自動保存の場合は何もしない
+    if (defined('DOING_AUTOSAVE') && DOING_AUTOSAVE) {
+        return;
+    }
+    
+    // 権限チェック
+    if (!current_user_can('edit_post', $post_id)) {
+        return;
+    }
+    
+    // メタデータの保存
+    $fields = array(
+        'event_date', 'event_time', 'event_status', 'event_format',
+        'venue_name', 'venue_address', 'online_url', 'map_url',
+        'capacity', 'registration_deadline', 'allow_guest'
+    );
+    
+    foreach ($fields as $field) {
+        if (isset($_POST[$field])) {
+            update_post_meta($post_id, $field, sanitize_text_field($_POST[$field]));
+        }
+    }
+}
+add_action('save_post_lt_event', 'lightningtalk_save_event_metadata');
+
 /**
  * 親テーマと子テーマのスタイルシートを適切に読み込む
  */
@@ -42,15 +345,43 @@ function lightningtalk_enqueue_styles() {
         LIGHTNINGTALK_CHILD_VERSION
     );
     
-    // Lightning Talkメインスタイル（ビルド後）
+    // Lightning Talkフロントエンドスタイル
     wp_enqueue_style(
-        'lightningtalk-main-style',
-        get_stylesheet_directory_uri() . '/assets/dist/css/lightningtalk.min.css',
+        'lightningtalk-frontend-style',
+        get_stylesheet_directory_uri() . '/assets/css/lightningtalk-frontend.css',
         array('lightningtalk-child-style'),
         LIGHTNINGTALK_CHILD_VERSION
     );
 }
 add_action('wp_enqueue_scripts', 'lightningtalk_enqueue_styles');
+
+/**
+ * フロントエンド用のJavaScriptを読み込む
+ */
+function lightningtalk_enqueue_scripts() {
+    // Lightning Talkフロントエンドスクリプト
+    wp_enqueue_script(
+        'lightningtalk-frontend',
+        get_stylesheet_directory_uri() . '/assets/js/lightningtalk-frontend.js',
+        array('jquery'),
+        LIGHTNINGTALK_CHILD_VERSION,
+        true
+    );
+    
+    // Ajax設定をローカライズ
+    wp_localize_script('lightningtalk-frontend', 'lightningtalkFrontend', array(
+        'ajaxUrl' => admin_url('admin-ajax.php'),
+        'nonce' => wp_create_nonce('lightningtalk_frontend_nonce'),
+        'eventId' => get_theme_mod('lightningtalk_default_event_id', 1),
+        'strings' => array(
+            'registrationSuccess' => __('参加登録が完了しました！', 'lightningtalk-child'),
+            'registrationError' => __('登録エラーが発生しました。', 'lightningtalk-child'),
+            'alreadyVoted' => __('既に投票済みです！', 'lightningtalk-child'),
+            'thankYou' => __('投票ありがとうございます！', 'lightningtalk-child')
+        )
+    ));
+}
+add_action('wp_enqueue_scripts', 'lightningtalk_enqueue_scripts');
 
 /**
  * Lightning TalkのJavaScriptファイルを読み込む
@@ -500,10 +831,135 @@ function lightningtalk_participants_page() {
 }
 
 /**
+ * Ajax処理: 参加登録
+ */
+function lightningtalk_ajax_register_participant() {
+    // ノンス検証
+    if (!wp_verify_nonce($_POST['nonce'], 'lightningtalk_frontend_nonce')) {
+        wp_die('セキュリティチェックに失敗しました。');
+    }
+    
+    // 必須フィールドの検証
+    $required_fields = array('name', 'email', 'participation_type', 'event_id');
+    foreach ($required_fields as $field) {
+        if (empty($_POST[$field])) {
+            wp_send_json_error(array('message' => $field . 'は必須です。'));
+        }
+    }
+    
+    // 参加者データの保存
+    $participant_data = array(
+        'post_title' => sanitize_text_field($_POST['name']),
+        'post_type' => 'lt_participant',
+        'post_status' => 'publish',
+        'meta_input' => array(
+            'email' => sanitize_email($_POST['email']),
+            'participation_type' => sanitize_text_field($_POST['participation_type']),
+            'event_id' => intval($_POST['event_id']),
+            'organization' => sanitize_text_field($_POST['organization']),
+            'emergency_contact' => sanitize_text_field($_POST['emergency_contact']),
+            'marketing_consent' => isset($_POST['marketing_consent']) ? 1 : 0,
+            'registration_date' => current_time('mysql')
+        )
+    );
+    
+    $participant_id = wp_insert_post($participant_data);
+    
+    if ($participant_id) {
+        // 確認メール送信
+        lightningtalk_send_confirmation_email($participant_id);
+        
+        wp_send_json_success(array(
+            'message' => '参加登録が完了しました！',
+            'participant_id' => $participant_id
+        ));
+    } else {
+        wp_send_json_error(array('message' => '登録に失敗しました。'));
+    }
+}
+add_action('wp_ajax_lt_register_participant', 'lightningtalk_ajax_register_participant');
+add_action('wp_ajax_nopriv_lt_register_participant', 'lightningtalk_ajax_register_participant');
+
+/**
+ * Ajax処理: 参加者数取得
+ */
+function lightningtalk_ajax_get_participant_count() {
+    if (!wp_verify_nonce($_POST['nonce'], 'lightningtalk_frontend_nonce')) {
+        wp_die('セキュリティチェックに失敗しました。');
+    }
+    
+    $event_id = intval($_POST['event_id']);
+    
+    $count = get_posts(array(
+        'post_type' => 'lt_participant',
+        'post_status' => 'publish',
+        'numberposts' => -1,
+        'meta_query' => array(
+            array(
+                'key' => 'event_id',
+                'value' => $event_id,
+                'compare' => '='
+            )
+        ),
+        'fields' => 'ids'
+    ));
+    
+    wp_send_json_success(array('count' => count($count)));
+}
+add_action('wp_ajax_lt_get_participant_count', 'lightningtalk_ajax_get_participant_count');
+add_action('wp_ajax_nopriv_lt_get_participant_count', 'lightningtalk_ajax_get_participant_count');
+
+/**
+ * 確認メール送信関数の改良版
+ */
+function lightningtalk_send_confirmation_email($participant_id) {
+    $participant = get_post($participant_id);
+    $email = get_post_meta($participant_id, 'email', true);
+    $event_id = get_post_meta($participant_id, 'event_id', true);
+    $event = get_post($event_id);
+    
+    if (!$participant || !$email || !$event) {
+        return false;
+    }
+    
+    $event_date = get_post_meta($event_id, 'event_date', true);
+    $venue_name = get_post_meta($event_id, 'venue_name', true);
+    $participation_type = get_post_meta($participant_id, 'participation_type', true);
+    
+    $subject = sprintf('[%s] 参加登録確認', get_bloginfo('name'));
+    
+    $message = sprintf(
+        "%s 様\n\n" .
+        "%s への参加登録を承りました。\n\n" .
+        "【イベント詳細】\n" .
+        "イベント名: %s\n" .
+        "開催日: %s\n" .
+        "会場: %s\n" .
+        "参加方法: %s\n\n" .
+        "当日はお気をつけてお越しください。\n\n" .
+        "詳細: %s\n\n" .
+        "%s",
+        $participant->post_title,
+        $event->post_title,
+        $event->post_title,
+        $event_date ? date('Y年m月d日', strtotime($event_date)) : '未定',
+        $venue_name ?: '未定',
+        $participation_type === 'online' ? 'オンライン参加' : '現地参加',
+        get_permalink($event_id),
+        get_bloginfo('name')
+    );
+    
+    $headers = array('Content-Type: text/plain; charset=UTF-8');
+    
+    return wp_mail($email, $subject, $message, $headers);
+}
+
+/**
  * 追加機能を読み込み
  */
-require_once get_stylesheet_directory() . '/shortcodes.php';
-require_once get_stylesheet_directory() . '/cocoon-compatibility.php';
+// 重複を避けるため、コメントアウト
+// require_once get_stylesheet_directory() . '/shortcodes.php';
+// require_once get_stylesheet_directory() . '/cocoon-compatibility.php';
 
 /**
  * WordPress管理画面用のスクリプトとスタイルを読み込み
