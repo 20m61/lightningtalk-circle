@@ -145,14 +145,14 @@ describe('Issue Validator', () => {
   });
 
   describe('Custom Matchers', () => {
-    it('should use custom toBeValidIssue matcher', () => {
+    it('should validate issue using custom validation', () => {
       const validIssue = issueFixtures.valid.feature;
-      expect(validIssue).toBeValidIssue();
+      expect(() => validateIssue(validIssue)).not.toThrow();
     });
 
-    it('should fail custom matcher for invalid issue', () => {
+    it('should fail validation for invalid issue', () => {
       const invalidIssue = issueFixtures.invalid.missingTitle;
-      expect(invalidIssue).not.toBeValidIssue();
+      expect(() => validateIssue(invalidIssue)).toThrow();
     });
   });
 });

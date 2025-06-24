@@ -4,22 +4,22 @@
  */
 
 const request = require('supertest');
-const { expect } = require('chai');
+const { expect } = require('@jest/globals');
 const { app } = require('../../server/app');
-const multiEventService = require('../../server/services/multiEventService');
+const _multiEventService = require('../../server/services/multiEventService');
 const { DatabaseService } = require('../../server/services/database');
 
 describe('Multi-Event Management Integration Tests', () => {
   let server;
   let database;
 
-  before(async () => {
+  beforeAll(async () => {
     server = app.listen(0);
     database = DatabaseService.getInstance();
     await database.initialize();
   });
 
-  after(async () => {
+  afterAll(async () => {
     await database.close();
     server.close();
   });

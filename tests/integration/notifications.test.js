@@ -4,7 +4,7 @@
  */
 
 const request = require('supertest');
-const { expect } = require('chai');
+const { expect } = require('@jest/globals');
 const WebSocket = require('ws');
 const EventSource = require('eventsource');
 const { app } = require('../../server/app');
@@ -14,13 +14,13 @@ describe('Realtime Notifications Integration Tests', () => {
   let server;
   let baseURL;
 
-  before(async () => {
+  beforeAll(async () => {
     server = app.listen(0); // ランダムポート
     const { port } = server.address();
     baseURL = `http://localhost:${port}`;
   });
 
-  after(done => {
+  afterAll(done => {
     notificationService.shutdown();
     server.close(done);
   });
@@ -572,6 +572,6 @@ describe('Realtime Notifications Integration Tests', () => {
 });
 
 // ヘルパー関数
-function delay(ms) {
+function _delay(ms) {
   return new Promise(resolve => setTimeout(resolve, ms));
 }

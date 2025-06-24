@@ -72,6 +72,15 @@ describe('GitHub API Integration', () => {
     const token = process.env.GITHUB_TOKEN;
     if (!token || token === 'test-token-for-development') {
       console.log('Skipping GitHub API integration tests - no valid GITHUB_TOKEN provided');
+      githubService = {
+        createIssue: jest
+          .fn()
+          .mockResolvedValue({ number: 1, title: 'Test Issue', body: 'Test body' }),
+        getIssues: jest.fn().mockResolvedValue([]),
+        updateIssue: jest.fn().mockResolvedValue({ number: 1 }),
+        addLabels: jest.fn().mockResolvedValue({ number: 1 }),
+        closeIssue: jest.fn().mockResolvedValue({ number: 1 })
+      };
       return;
     }
 

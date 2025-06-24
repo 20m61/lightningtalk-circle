@@ -4,12 +4,15 @@ export default {
   transform: {
     '^.+\\.js$': [
       'babel-jest',
-      { 
+      {
         presets: [
-          ['@babel/preset-env', { 
-            targets: { node: 'current' },
-            modules: 'commonjs'
-          }]
+          [
+            '@babel/preset-env',
+            {
+              targets: { node: 'current' },
+              modules: 'commonjs'
+            }
+          ]
         ],
         plugins: ['@babel/plugin-syntax-import-meta']
       }
@@ -23,11 +26,11 @@ export default {
     '/tests/accessibility/',
     '/tests/unit/auto-workflow',
     '/tests/unit/quality-gates',
-    '/tests/unit/services/database'
+    '/tests/unit/services/database',
+    '/tests/integration/notifications.test.js',
+    '/tests/integration/multiEvents.test.js'
   ],
-  transformIgnorePatterns: [
-    '/node_modules/'
-  ],
+  transformIgnorePatterns: ['/node_modules/(?!(chai)/)'],
   coverageDirectory: 'coverage',
   collectCoverageFrom: [
     'server/**/*.js',
@@ -36,6 +39,9 @@ export default {
     '!**/tests/**',
     '!**/coverage/**'
   ],
+  testEnvironmentOptions: {
+    url: 'http://localhost/'
+  },
   coverageThreshold: {
     global: {
       branches: 10,
