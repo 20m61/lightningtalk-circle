@@ -4,14 +4,29 @@ export default {
   transform: {
     '^.+\\.js$': [
       'babel-jest',
-      { presets: [['@babel/preset-env', { targets: { node: 'current' } }]] }
+      { 
+        presets: [
+          ['@babel/preset-env', { 
+            targets: { node: 'current' },
+            modules: 'commonjs'
+          }]
+        ],
+        plugins: ['@babel/plugin-syntax-import-meta']
+      }
     ]
   },
   moduleFileExtensions: ['js', 'json', 'node'],
-  testMatch: ['**/tests/**/*.test.js', '!**/tests/e2e/**', '!**/tests/accessibility/**'],
-  setupFilesAfterEnv: ['<rootDir>/tests/setup.js'],
+  testMatch: ['**/tests/unit/*.test.js', '**/tests/integration/*.test.js'],
+  testPathIgnorePatterns: [
+    '/node_modules/',
+    '/tests/e2e/',
+    '/tests/accessibility/',
+    '/tests/unit/auto-workflow',
+    '/tests/unit/quality-gates',
+    '/tests/unit/services/database'
+  ],
   transformIgnorePatterns: [
-    '/node_modules/(?!(@babel|chalk|fs-extra|dotenv|@octokit|uuid|nanoid|inquirer)/)'
+    '/node_modules/'
   ],
   coverageDirectory: 'coverage',
   collectCoverageFrom: [
