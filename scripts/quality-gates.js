@@ -46,7 +46,7 @@ class QualityGateSystem {
    */
   async runAllGates() {
     const startTime = Date.now();
-    
+
     this.log.info('🚀 Starting Quality Gate Assessment...');
     console.log(chalk.gray('─'.repeat(60)));
 
@@ -80,7 +80,7 @@ class QualityGateSystem {
    * 品質ゲートを並列実行
    */
   async runGatesInParallel(gates) {
-    const promises = gates.map(async (gate) => {
+    const promises = gates.map(async(gate) => {
       try {
         const result = await this.executeGate(gate);
         this.results.gates.push(result);
@@ -105,7 +105,7 @@ class QualityGateSystem {
       try {
         const result = await this.executeGate(gate);
         this.results.gates.push(result);
-        
+
         // クリティカルなゲートで失敗した場合は即座に停止
         if (!result.passed && this.isCriticalGate(gate.name)) {
           this.log.error(`Critical gate failed: ${gate.name}. Stopping execution.`);
@@ -132,9 +132,9 @@ class QualityGateSystem {
     try {
       const result = await gate.runner();
       const duration = Date.now() - startTime;
-      
+
       this.log.success(`${gate.name} completed in ${duration}ms`);
-      
+
       return {
         name: gate.name,
         passed: result.passed,
@@ -145,7 +145,7 @@ class QualityGateSystem {
     } catch (error) {
       const duration = Date.now() - startTime;
       this.log.error(`${gate.name} failed: ${error.message}`);
-      
+
       return {
         name: gate.name,
         passed: false,
@@ -160,17 +160,17 @@ class QualityGateSystem {
    */
   async runUnitTests() {
     try {
-      const output = execSync('npm run test:unit 2>&1', { 
+      const output = execSync('npm run test:unit 2>&1', {
         encoding: 'utf8',
-        timeout: this.config.timeout 
+        timeout: this.config.timeout
       });
-      
+
       const passMatch = output.match(/(\d+) passing/);
       const failMatch = output.match(/(\d+) failing/);
-      
+
       const passing = passMatch ? parseInt(passMatch[1]) : 0;
       const failing = failMatch ? parseInt(failMatch[1]) : 0;
-      
+
       const passed = failing === 0;
       const score = passing / (passing + failing) * 100;
 
@@ -197,17 +197,17 @@ class QualityGateSystem {
    */
   async runIntegrationTests() {
     try {
-      const output = execSync('npm run test:integration 2>&1', { 
+      const output = execSync('npm run test:integration 2>&1', {
         encoding: 'utf8',
-        timeout: this.config.timeout 
+        timeout: this.config.timeout
       });
-      
+
       const passMatch = output.match(/(\d+) passing/);
       const failMatch = output.match(/(\d+) failing/);
-      
+
       const passing = passMatch ? parseInt(passMatch[1]) : 0;
       const failing = failMatch ? parseInt(failMatch[1]) : 0;
-      
+
       const passed = failing === 0;
       const score = passing / (passing + failing) * 100;
 
@@ -225,7 +225,7 @@ class QualityGateSystem {
           details: { skipped: 'Integration tests not configured' }
         };
       }
-      
+
       return {
         passed: false,
         score: 0,
@@ -239,15 +239,15 @@ class QualityGateSystem {
    */
   async checkCodeCoverage() {
     try {
-      const output = execSync('npm run test:coverage 2>&1', { 
+      const output = execSync('npm run test:coverage 2>&1', {
         encoding: 'utf8',
-        timeout: this.config.timeout 
+        timeout: this.config.timeout
       });
-      
+
       // カバレッジ率を解析
       const coverageMatch = output.match(/All files\s+\|\s+([\d.]+)/);
       const coverage = coverageMatch ? parseFloat(coverageMatch[1]) : 0;
-      
+
       const passed = coverage >= this.config.thresholds.coverage;
       const score = Math.min(coverage, 100);
 
@@ -277,14 +277,14 @@ class QualityGateSystem {
 
     // ESLint チェック
     try {
-      execSync('npx eslint src/ --format=json --output-file=quality-report.json', { 
-        encoding: 'utf8' 
+      execSync('npx eslint src/ --format=json --output-file=quality-report.json', {
+        encoding: 'utf8'
       });
-      
+
       const eslintReport = JSON.parse(fs.readFileSync('quality-report.json', 'utf8'));
       const errorCount = eslintReport.reduce((sum, file) => sum + file.errorCount, 0);
       const warningCount = eslintReport.reduce((sum, file) => sum + file.warningCount, 0);
-      
+
       qualityChecks.push({
         name: 'ESLint',
         passed: errorCount === 0,
@@ -335,10 +335,10 @@ class QualityGateSystem {
     try {
       const auditOutput = execSync('npm audit --json', { encoding: 'utf8' });
       const auditData = JSON.parse(auditOutput);
-      
+
       const highVulns = auditData.metadata?.vulnerabilities?.high || 0;
       const criticalVulns = auditData.metadata?.vulnerabilities?.critical || 0;
-      
+
       securityChecks.push({
         name: 'npm audit',
         passed: criticalVulns === 0 && highVulns === 0,
@@ -351,7 +351,7 @@ class QualityGateSystem {
       try {
         const auditData = JSON.parse(error.stdout);
         const criticalVulns = auditData.metadata?.vulnerabilities?.critical || 0;
-        
+
         securityChecks.push({
           name: 'npm audit',
           passed: criticalVulns === 0,
@@ -386,21 +386,21 @@ class QualityGateSystem {
    */
   checkSecurityPatterns() {
     const issues = [];
-    
+
     try {
       // ハードコードされた秘密情報をチェック
       const files = this.getAllJSFiles('src/');
-      
+
       for (const file of files) {
         const content = fs.readFileSync(file, 'utf8');
-        
+
         // 危険なパターンをチェック
         const patterns = [
           { pattern: /password\s*=\s*['"][^'"]+['"]/, message: 'Hardcoded password detected' },
           { pattern: /api[_-]?key\s*=\s*['"][^'"]+['"]/, message: 'Hardcoded API key detected' },
           { pattern: /secret\s*=\s*['"][^'"]+['"]/, message: 'Hardcoded secret detected' }
         ];
-        
+
         for (const { pattern, message } of patterns) {
           if (pattern.test(content)) {
             issues.push(`${file}: ${message}`);
@@ -423,15 +423,15 @@ class QualityGateSystem {
    */
   async runPerformanceTests() {
     try {
-      const output = execSync('npm run test:perf 2>&1', { 
+      const output = execSync('npm run test:perf 2>&1', {
         encoding: 'utf8',
-        timeout: this.config.timeout 
+        timeout: this.config.timeout
       });
-      
+
       // パフォーマンステストの結果を解析
       const responseTimeMatch = output.match(/average response time: ([\d.]+)ms/i);
       const responseTime = responseTimeMatch ? parseFloat(responseTimeMatch[1]) : null;
-      
+
       const passed = !responseTime || responseTime < 1000; // 1秒以下
       const score = responseTime ? Math.max(0, 100 - (responseTime / 10)) : 100;
 
@@ -476,7 +476,7 @@ class QualityGateSystem {
       const outdatedOutput = execSync('npm outdated --json', { encoding: 'utf8' });
       const outdated = JSON.parse(outdatedOutput);
       const outdatedCount = Object.keys(outdated).length;
-      
+
       checks.push({
         name: 'Outdated packages',
         passed: outdatedCount === 0,
@@ -522,7 +522,7 @@ class QualityGateSystem {
    */
   async checkAccessibilityCompliance() {
     const checks = [];
-    
+
     try {
       // 基本的なHTMLファイルの存在確認
       const htmlFiles = this.findHTMLFiles();
@@ -576,10 +576,10 @@ class QualityGateSystem {
       return {
         passed: allPassed && avgScore >= 80, // 80%以上のスコアが必要
         score: avgScore,
-        details: { 
-          checks, 
+        details: {
+          checks,
           wcagLevel: 'AA',
-          filesChecked: htmlFiles.length 
+          filesChecked: htmlFiles.length
         }
       };
     } catch (error) {
@@ -597,7 +597,7 @@ class QualityGateSystem {
   findHTMLFiles() {
     const files = [];
     const searchPaths = ['public', 'docs', 'src', 'dist', '.'];
-    
+
     for (const searchPath of searchPaths) {
       if (fs.existsSync(searchPath)) {
         try {
@@ -610,7 +610,7 @@ class QualityGateSystem {
         }
       }
     }
-    
+
     return [...new Set(files)]; // 重複を除去
   }
 
@@ -630,19 +630,19 @@ class QualityGateSystem {
       for (const cssFile of cssFiles) {
         if (fs.existsSync(cssFile)) {
           const cssContent = fs.readFileSync(cssFile, 'utf8');
-          
+
           // 基本的な色の組み合わせを検出
           const colorRules = cssContent.match(/color\s*:\s*[^;]+;/g) || [];
           const backgroundRules = cssContent.match(/background-color\s*:\s*[^;]+;/g) || [];
-          
+
           totalRules += colorRules.length + backgroundRules.length;
-          
+
           // 問題のある色の組み合わせを検出（簡易版）
           const problematicColors = [
             '#999', '#ccc', '#ddd', // 低コントラストのグレー
             'lightgray', 'lightgrey', 'silver'
           ];
-          
+
           for (const rule of [...colorRules, ...backgroundRules]) {
             if (problematicColors.some(color => rule.includes(color))) {
               contrastIssues++;
@@ -652,7 +652,7 @@ class QualityGateSystem {
       }
 
       const score = totalRules > 0 ? Math.max(0, 100 - (contrastIssues / totalRules * 100)) : 100;
-      
+
       return {
         passed: contrastIssues === 0,
         score,
@@ -683,7 +683,7 @@ class QualityGateSystem {
       for (const htmlFile of htmlFiles.slice(0, 5)) { // 最大5ファイル
         if (fs.existsSync(htmlFile)) {
           const htmlContent = fs.readFileSync(htmlFile, 'utf8');
-          
+
           // 基本的なARIA属性の存在確認
           const interactiveElements = [
             ...htmlContent.match(/<button[^>]*>/g) || [],
@@ -691,9 +691,9 @@ class QualityGateSystem {
             ...htmlContent.match(/<a[^>]*>/g) || [],
             ...htmlContent.match(/<div[^>]*role=/g) || []
           ];
-          
+
           totalElements += interactiveElements.length;
-          
+
           // ARIA属性の不足をチェック
           for (const element of interactiveElements) {
             if (!element.includes('aria-') && !element.includes('role=')) {
@@ -704,7 +704,7 @@ class QualityGateSystem {
       }
 
       const score = totalElements > 0 ? Math.max(0, 100 - (ariaIssues / totalElements * 100)) : 100;
-      
+
       return {
         passed: ariaIssues < totalElements * 0.2, // 20%未満なら合格
         score,
@@ -735,7 +735,7 @@ class QualityGateSystem {
       for (const htmlFile of htmlFiles.slice(0, 5)) {
         if (fs.existsSync(htmlFile)) {
           const htmlContent = fs.readFileSync(htmlFile, 'utf8');
-          
+
           // フォーカス可能要素の検出
           const focusableElements = [
             ...htmlContent.match(/<a[^>]*href/g) || [],
@@ -744,13 +744,13 @@ class QualityGateSystem {
             ...htmlContent.match(/<select[^>]*>/g) || [],
             ...htmlContent.match(/<textarea[^>]*>/g) || []
           ];
-          
+
           totalInteractiveElements += focusableElements.length;
-          
+
           // tabindex="-1"以外の負の値をチェック
           const negativeTabindex = htmlContent.match(/tabindex\s*=\s*['"]-[2-9]/g) || [];
           keyboardIssues += negativeTabindex.length;
-          
+
           // 異常に高いtabindex値をチェック
           const highTabindex = htmlContent.match(/tabindex\s*=\s*['"][1-9]\d{2,}/g) || [];
           keyboardIssues += highTabindex.length;
@@ -758,7 +758,7 @@ class QualityGateSystem {
       }
 
       const score = Math.max(0, 100 - (keyboardIssues * 10));
-      
+
       return {
         passed: keyboardIssues === 0,
         score,
@@ -789,16 +789,16 @@ class QualityGateSystem {
       for (const htmlFile of htmlFiles.slice(0, 5)) {
         if (fs.existsSync(htmlFile)) {
           const htmlContent = fs.readFileSync(htmlFile, 'utf8');
-          
+
           // モーダル要素の検出
           const modals = [
             ...htmlContent.match(/<div[^>]*class="[^"]*modal[^"]*"/g) || [],
             ...htmlContent.match(/<div[^>]*id="[^"]*modal[^"]*"/g) || [],
             ...htmlContent.match(/<div[^>]*role="dialog"/g) || []
           ];
-          
+
           totalModals += modals.length;
-          
+
           for (const modal of modals) {
             // 必要なARIA属性の確認
             if (!modal.includes('aria-labelledby') && !modal.includes('aria-label')) {
@@ -815,7 +815,7 @@ class QualityGateSystem {
       }
 
       const score = totalModals > 0 ? Math.max(0, 100 - (modalIssues / (totalModals * 3) * 100)) : 100;
-      
+
       return {
         passed: modalIssues === 0,
         score,
@@ -843,7 +843,7 @@ class QualityGateSystem {
     try {
       // HTML ファイルのアクセシビリティをチェック
       const htmlFiles = this.getAllHTMLFiles('.');
-      
+
       for (const file of htmlFiles) {
         const content = fs.readFileSync(file, 'utf8');
         const checks = this.validateHTMLAccessibility(content, file);
@@ -863,7 +863,7 @@ class QualityGateSystem {
     }
 
     const allPassed = accessibilityChecks.every(check => check.passed);
-    const score = accessibilityChecks.length > 0 ? 
+    const score = accessibilityChecks.length > 0 ?
       accessibilityChecks.filter(check => check.passed).length / accessibilityChecks.length * 100 : 100;
 
     return {
@@ -878,7 +878,7 @@ class QualityGateSystem {
    */
   validateHTMLAccessibility(content, fileName) {
     const issues = [];
-    
+
     // img タグの alt 属性チェック
     const imgWithoutAlt = content.match(/<img(?![^>]*\salt\s*=)/gi);
     if (imgWithoutAlt) {
@@ -915,9 +915,9 @@ class QualityGateSystem {
     const headings = content.match(/<h[1-6][^>]*>/gi) || [];
     const headingLevels = headings.map(h => parseInt(h.match(/h(\d)/i)[1]));
     let headingStructureValid = true;
-    
+
     for (let i = 1; i < headingLevels.length; i++) {
-      if (headingLevels[i] > headingLevels[i-1] + 1) {
+      if (headingLevels[i] > headingLevels[i - 1] + 1) {
         headingStructureValid = false;
         break;
       }
@@ -926,8 +926,8 @@ class QualityGateSystem {
     issues.push({
       name: `${fileName}: Heading structure`,
       passed: headingStructureValid,
-      message: headingStructureValid ? 
-        'Heading structure is logical' : 
+      message: headingStructureValid ?
+        'Heading structure is logical' :
         'Heading structure may skip levels'
     });
 
@@ -936,8 +936,8 @@ class QualityGateSystem {
     issues.push({
       name: `${fileName}: Color contrast`,
       passed: !hasLowContrastColors,
-      message: hasLowContrastColors ? 
-        'Potential color contrast issues detected' : 
+      message: hasLowContrastColors ?
+        'Potential color contrast issues detected' :
         'No obvious color contrast issues'
     });
 
@@ -949,7 +949,7 @@ class QualityGateSystem {
    */
   checkWCAGCompliance() {
     const wcagIssues = [];
-    
+
     // キーボードナビゲーション要素のチェック
     const htmlFiles = this.getAllHTMLFiles('.');
     let totalInteractiveElements = 0;
@@ -957,7 +957,7 @@ class QualityGateSystem {
 
     for (const file of htmlFiles) {
       const content = fs.readFileSync(file, 'utf8');
-      
+
       // フォーカス可能要素のチェック
       const interactiveElements = content.match(/<(button|input|select|textarea|a)[^>]*>/gi) || [];
       totalInteractiveElements += interactiveElements.length;
@@ -967,7 +967,7 @@ class QualityGateSystem {
       accessibleInteractiveElements += Math.min(accessibleElements.length, interactiveElements.length);
     }
 
-    const accessibilityRatio = totalInteractiveElements > 0 ? 
+    const accessibilityRatio = totalInteractiveElements > 0 ?
       accessibleInteractiveElements / totalInteractiveElements : 1;
 
     wcagIssues.push({
@@ -1009,7 +1009,7 @@ class QualityGateSystem {
         }
       }
     }
-    
+
     return false;
   }
 
@@ -1017,28 +1017,28 @@ class QualityGateSystem {
    * HTML ファイルを取得
    */
   getAllHTMLFiles(dir) {
-    if (!fs.existsSync(dir)) return [];
-    
+    if (!fs.existsSync(dir)) {return [];}
+
     const files = [];
     const items = fs.readdirSync(dir, { withFileTypes: true });
-    
+
     for (const item of items) {
       const itemPath = path.join(dir, item.name);
-      
+
       if (item.isDirectory() && !item.name.startsWith('.') && item.name !== 'node_modules') {
         files.push(...this.getAllHTMLFiles(itemPath));
       } else if (item.name.endsWith('.html')) {
         files.push(itemPath);
       }
     }
-    
+
     return files;
   }
   async analyzeBundleSize() {
     try {
       // webpack-bundle-analyzer や類似ツールを想定
       const stats = this.getBundleStats();
-      
+
       const sizeThreshold = 2 * 1024 * 1024; // 2MB
       const passed = stats.totalSize < sizeThreshold;
       const score = Math.max(0, 100 - (stats.totalSize / sizeThreshold * 100));
@@ -1067,7 +1067,7 @@ class QualityGateSystem {
   getBundleStats() {
     // 実際の実装では webpack-bundle-analyzer の結果を使用
     const srcSize = this.getDirectorySize('src/');
-    
+
     return {
       totalSize: srcSize,
       breakdown: {
@@ -1081,21 +1081,21 @@ class QualityGateSystem {
    * ディレクトリサイズを取得
    */
   getDirectorySize(dir) {
-    if (!fs.existsSync(dir)) return 0;
-    
+    if (!fs.existsSync(dir)) {return 0;}
+
     let totalSize = 0;
     const files = fs.readdirSync(dir, { withFileTypes: true });
-    
+
     for (const file of files) {
       const filePath = path.join(dir, file.name);
-      
+
       if (file.isDirectory()) {
         totalSize += this.getDirectorySize(filePath);
       } else {
         totalSize += fs.statSync(filePath).size;
       }
     }
-    
+
     return totalSize;
   }
 
@@ -1103,21 +1103,21 @@ class QualityGateSystem {
    * JavaScript ファイルを取得
    */
   getAllJSFiles(dir) {
-    if (!fs.existsSync(dir)) return [];
-    
+    if (!fs.existsSync(dir)) {return [];}
+
     const files = [];
     const items = fs.readdirSync(dir, { withFileTypes: true });
-    
+
     for (const item of items) {
       const itemPath = path.join(dir, item.name);
-      
+
       if (item.isDirectory()) {
         files.push(...this.getAllJSFiles(itemPath));
       } else if (item.name.endsWith('.js') || item.name.endsWith('.ts')) {
         files.push(itemPath);
       }
     }
-    
+
     return files;
   }
 
@@ -1162,7 +1162,7 @@ class QualityGateSystem {
    * 結果を表示
    */
   displayResults() {
-    console.log(chalk.cyan('\n' + '='.repeat(60)));
+    console.log(chalk.cyan(`\n${'='.repeat(60)}`));
     console.log(chalk.cyan('🏆 QUALITY GATE ASSESSMENT RESULTS'));
     console.log(chalk.cyan('='.repeat(60)));
 
@@ -1172,9 +1172,9 @@ class QualityGateSystem {
       const status = gate.passed ? chalk.green('✅ PASS') : chalk.red('❌ FAIL');
       const score = gate.score ? chalk.blue(`${Math.round(gate.score)}%`) : '';
       const duration = chalk.gray(`${gate.duration}ms`);
-      
+
       console.log(`   ${status} ${chalk.white(gate.name.padEnd(20))} ${score} ${duration}`);
-      
+
       if (gate.error) {
         console.log(chalk.red(`       Error: ${gate.error}`));
       }
@@ -1182,18 +1182,18 @@ class QualityGateSystem {
 
     // 全体結果
     console.log(chalk.white('\n🎯 Overall Assessment:'));
-    const overallStatus = this.results.overall.passed ? 
-      chalk.green('✅ ALL GATES PASSED') : 
+    const overallStatus = this.results.overall.passed ?
+      chalk.green('✅ ALL GATES PASSED') :
       chalk.red('❌ SOME GATES FAILED');
-    
+
     console.log(`   Status: ${overallStatus}`);
-    console.log(`   Score: ${chalk.blue(Math.round(this.results.overall.score) + '%')}`);
-    console.log(`   Duration: ${chalk.gray(this.results.overall.duration + 'ms')}`);
+    console.log(`   Score: ${chalk.blue(`${Math.round(this.results.overall.score)}%`)}`);
+    console.log(`   Duration: ${chalk.gray(`${this.results.overall.duration}ms`)}`);
 
     // 推奨アクション
     this.displayRecommendations();
 
-    console.log(chalk.cyan('\n' + '='.repeat(60)));
+    console.log(chalk.cyan(`\n${'='.repeat(60)}`));
   }
 
   /**
@@ -1201,18 +1201,18 @@ class QualityGateSystem {
    */
   displayRecommendations() {
     const failedGates = this.results.gates.filter(gate => !gate.passed);
-    
+
     if (failedGates.length === 0) {
       console.log(chalk.green('\n🎉 All quality gates passed! Ready for deployment.'));
       return;
     }
 
     console.log(chalk.yellow('\n💡 Recommended Actions:'));
-    
+
     for (const gate of failedGates) {
       const recommendations = this.getRecommendations(gate.name);
       console.log(chalk.yellow(`   ${gate.name}:`));
-      
+
       for (const rec of recommendations) {
         console.log(chalk.gray(`     • ${rec}`));
       }
@@ -1302,11 +1302,11 @@ if (import.meta.url === `file://${process.argv[1]}`) {
   };
 
   const qualityGates = new QualityGateSystem(options);
-  
+
   qualityGates.runAllGates()
     .then(results => {
       qualityGates.exportResults();
-      
+
       if (options.exitOnFailure && !results.overall.passed) {
         process.exit(1);
       }

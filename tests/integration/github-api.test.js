@@ -75,11 +75,32 @@ describe('GitHub API Integration', () => {
       githubService = {
         createIssue: jest
           .fn()
-          .mockResolvedValue({ number: 1, title: 'Test Issue', body: 'Test body' }),
+          .mockImplementation((issueData) => {
+            if (!issueData.title || issueData.title.trim() === '') {
+              return Promise.reject(new Error('Title is required'));
+            }
+            return Promise.resolve({ 
+              number: 1, 
+              title: issueData.title, 
+              body: issueData.body || issueData.description, 
+              state: 'open' 
+            });
+          }),
         getIssues: jest.fn().mockResolvedValue([]),
-        updateIssue: jest.fn().mockResolvedValue({ number: 1 }),
-        addLabels: jest.fn().mockResolvedValue({ number: 1 }),
-        closeIssue: jest.fn().mockResolvedValue({ number: 1 })
+        updateIssue: jest.fn().mockImplementation((issueNumber, updates) => Promise.resolve({ 
+          number: issueNumber, 
+          title: updates.title || 'Updated Title', 
+          body: updates.body || 'Updated Body',
+          state: updates.state || 'open'
+        })),
+        addLabelsToIssue: jest.fn().mockResolvedValue([
+          { name: 'test-label' },
+          { name: 'integration-test' }
+        ]),
+        closeIssue: jest.fn().mockResolvedValue({ 
+          number: 1, 
+          state: 'closed' 
+        })
       };
       return;
     }
@@ -126,7 +147,10 @@ describe('GitHub API Integration', () => {
       const createdIssue = await githubService.createIssue(testIssue);
       createdIssues.push(createdIssue.number);
 
-      expect(createdIssue).toHaveGitHubIssueStructure();
+      expect(createdIssue).toHaveProperty('number');
+      expect(createdIssue).toHaveProperty('title');
+      expect(createdIssue).toHaveProperty('body');
+      expect(createdIssue).toHaveProperty('state');
       expect(createdIssue.title).toBe(testIssue.title);
       expect(createdIssue.body).toBe(testIssue.body || testIssue.description);
       expect(createdIssue.state).toBe('open');

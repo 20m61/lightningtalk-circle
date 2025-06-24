@@ -28,7 +28,7 @@ class WorkflowCLI {
       .option('-a, --auto-merge', 'Enable auto-merge after successful review')
       .option('-p, --parallel', 'Run tests in parallel')
       .option('--dry-run', 'Show what would be done without executing')
-      .action(async (instruction, options) => {
+      .action(async(instruction, options) => {
         await this.executeInstruction(instruction, options);
       });
 
@@ -37,7 +37,7 @@ class WorkflowCLI {
       .command('analyze <instruction>')
       .description('Analyze an instruction without executing')
       .option('-o, --output <file>', 'Output analysis to file')
-      .action(async (instruction, options) => {
+      .action(async(instruction, options) => {
         await this.analyzeInstruction(instruction, options);
       });
 
@@ -48,7 +48,7 @@ class WorkflowCLI {
       .option('-c, --coverage <number>', 'Coverage threshold', '80')
       .option('-p, --parallel', 'Run checks in parallel')
       .option('--export <file>', 'Export results to file')
-      .action(async (options) => {
+      .action(async(options) => {
         await this.runQualityCheck(options);
       });
 
@@ -56,7 +56,7 @@ class WorkflowCLI {
     program
       .command('status')
       .description('Show workflow status and active branches')
-      .action(async () => {
+      .action(async() => {
         await this.showStatus();
       });
 
@@ -65,7 +65,7 @@ class WorkflowCLI {
       .command('interactive')
       .alias('i')
       .description('Start interactive workflow mode')
-      .action(async () => {
+      .action(async() => {
         await this.startInteractiveMode();
       });
 
@@ -74,7 +74,7 @@ class WorkflowCLI {
       .command('history')
       .description('Show workflow execution history')
       .option('-n, --count <number>', 'Number of entries to show', '10')
-      .action(async (options) => {
+      .action(async(options) => {
         await this.showHistory(options);
       });
 
@@ -93,7 +93,7 @@ class WorkflowCLI {
       console.log(chalk.blue('📋 Step 1: Analyzing instruction...'));
       const dispatcher = new InstructionDispatcher();
       const analysis = dispatcher.analyzeInstruction(instruction);
-      
+
       if (options.dryRun) {
         dispatcher.displayAnalysis(analysis);
         console.log(chalk.yellow('\n🔍 DRY RUN MODE - No changes will be made'));
@@ -103,12 +103,12 @@ class WorkflowCLI {
       // 2. ワークフローを実行
       console.log(chalk.blue('\n⚙️  Step 2: Executing workflow...'));
       const orchestrator = new AutoWorkflowOrchestrator();
-      
+
       // 設定を適用
       if (options.autoMerge) {
         process.env.AUTO_MERGE = 'true';
       }
-      
+
       const result = await orchestrator.executeWorkflow(instruction);
 
       // 3. 結果をレポート
@@ -130,9 +130,9 @@ class WorkflowCLI {
   async analyzeInstruction(instruction, options) {
     const dispatcher = new InstructionDispatcher();
     const analysis = dispatcher.analyzeInstruction(instruction);
-    
+
     dispatcher.displayAnalysis(analysis);
-    
+
     if (options.output) {
       dispatcher.exportAnalysis(analysis, options.output);
     }
@@ -167,17 +167,17 @@ class WorkflowCLI {
     console.log(chalk.white('\n🌳 Git Status:'));
     try {
       const { execSync } = await import('child_process');
-      
+
       const currentBranch = execSync('git branch --show-current', { encoding: 'utf8' }).trim();
       console.log(`   Current Branch: ${chalk.green(currentBranch)}`);
-      
+
       const status = execSync('git status --porcelain', { encoding: 'utf8' });
       if (status.trim()) {
         console.log(`   Working Directory: ${chalk.yellow('Modified files present')}`);
       } else {
         console.log(`   Working Directory: ${chalk.green('Clean')}`);
       }
-      
+
       // Worktree一覧
       try {
         const worktrees = execSync('git worktree list', { encoding: 'utf8' });
@@ -230,7 +230,7 @@ class WorkflowCLI {
    */
   async startInteractiveMode() {
     const { default: inquirer } = await import('inquirer');
-    
+
     console.log(chalk.cyan('🎯 Interactive Workflow Mode'));
     console.log(chalk.gray('Type "exit" to quit\n'));
 
@@ -276,52 +276,52 @@ class WorkflowCLI {
     const { default: inquirer } = await import('inquirer');
 
     switch (action) {
-      case 'execute':
-        const { instruction } = await inquirer.prompt([
-          {
-            type: 'input',
-            name: 'instruction',
-            message: 'Enter your development instruction:',
-            validate: input => input.trim().length > 0 || 'Instruction cannot be empty'
-          }
-        ]);
+    case 'execute':
+      const { instruction } = await inquirer.prompt([
+        {
+          type: 'input',
+          name: 'instruction',
+          message: 'Enter your development instruction:',
+          validate: input => input.trim().length > 0 || 'Instruction cannot be empty'
+        }
+      ]);
 
-        const { autoMerge } = await inquirer.prompt([
-          {
-            type: 'confirm',
-            name: 'autoMerge',
-            message: 'Enable auto-merge?',
-            default: false
-          }
-        ]);
+      const { autoMerge } = await inquirer.prompt([
+        {
+          type: 'confirm',
+          name: 'autoMerge',
+          message: 'Enable auto-merge?',
+          default: false
+        }
+      ]);
 
-        await this.executeInstruction(instruction, { autoMerge });
-        break;
+      await this.executeInstruction(instruction, { autoMerge });
+      break;
 
-      case 'analyze':
-        const { analyzeInstruction } = await inquirer.prompt([
-          {
-            type: 'input',
-            name: 'analyzeInstruction',
-            message: 'Enter instruction to analyze:',
-            validate: input => input.trim().length > 0 || 'Instruction cannot be empty'
-          }
-        ]);
+    case 'analyze':
+      const { analyzeInstruction } = await inquirer.prompt([
+        {
+          type: 'input',
+          name: 'analyzeInstruction',
+          message: 'Enter instruction to analyze:',
+          validate: input => input.trim().length > 0 || 'Instruction cannot be empty'
+        }
+      ]);
 
-        await this.analyzeInstruction(analyzeInstruction, {});
-        break;
+      await this.analyzeInstruction(analyzeInstruction, {});
+      break;
 
-      case 'quality':
-        await this.runQualityCheck({ parallel: true });
-        break;
+    case 'quality':
+      await this.runQualityCheck({ parallel: true });
+      break;
 
-      case 'status':
-        await this.showStatus();
-        break;
+    case 'status':
+      await this.showStatus();
+      break;
 
-      case 'history':
-        await this.showHistory({ count: 10 });
-        break;
+    case 'history':
+      await this.showHistory({ count: 10 });
+      break;
     }
 
     // 続行確認
@@ -362,30 +362,30 @@ class WorkflowCLI {
    */
   async showHistory(options) {
     const historyFile = '.workflow-history.json';
-    
+
     try {
       const { readFileSync } = await import('fs');
       const history = JSON.parse(readFileSync(historyFile, 'utf8'));
-      
+
       console.log(chalk.cyan('📜 Workflow Execution History'));
       console.log(chalk.gray('─'.repeat(50)));
-      
+
       const count = parseInt(options.count);
       const entries = history.slice(-count).reverse();
-      
+
       for (const entry of entries) {
         const status = entry.result.success ? chalk.green('✅ SUCCESS') : chalk.red('❌ FAILED');
         const date = new Date(entry.timestamp).toLocaleDateString();
-        
+
         console.log(`\n${status} ${chalk.gray(date)}`);
         console.log(`   Instruction: ${chalk.white(entry.instruction)}`);
         console.log(`   Task Type: ${chalk.blue(entry.analysis.taskType)}`);
-        
+
         if (entry.result.pr) {
           console.log(`   PR: ${chalk.blue(entry.result.pr.html_url)}`);
         }
       }
-      
+
     } catch (error) {
       console.log(chalk.gray('No execution history found'));
     }
@@ -396,33 +396,33 @@ class WorkflowCLI {
    */
   async recordExecution(instruction, analysis, result) {
     const historyFile = '.workflow-history.json';
-    
+
     try {
       const { readFileSync, writeFileSync } = await import('fs');
-      
+
       let history = [];
       try {
         history = JSON.parse(readFileSync(historyFile, 'utf8'));
       } catch (error) {
         // ファイルが存在しない場合は新規作成
       }
-      
+
       const entry = {
         timestamp: new Date().toISOString(),
         instruction,
         analysis,
         result
       };
-      
+
       history.push(entry);
-      
+
       // 最新100件のみ保持
       if (history.length > 100) {
         history = history.slice(-100);
       }
-      
+
       writeFileSync(historyFile, JSON.stringify(history, null, 2));
-      
+
     } catch (error) {
       console.warn(chalk.yellow('Warning: Could not save execution history'));
     }

@@ -2,15 +2,15 @@
 
 /**
  * GitHub Issue Creation Script
- * 
- * This script programmatically creates GitHub issues from the structured data 
+ *
+ * This script programmatically creates GitHub issues from the structured data
  * in the issues-data.json file. It can be run locally or in GitHub Actions.
- * 
+ *
  * Prerequisites:
  * - Node.js installed (v14.x or later)
  * - GitHub Personal Access Token with 'repo' scope (for local use)
  * - npm packages: @octokit/rest, dotenv, chalk
- * 
+ *
  * Setup:
  * 1. npm install @octokit/rest dotenv chalk
  * 2. Create a .env file with GITHUB_TOKEN=your_personal_access_token (for local use)
@@ -85,12 +85,12 @@ async function createIssues(categoryFilter = null) {
     if (!fs.existsSync(ISSUES_DATA_PATH)) {
       throw new Error(`Data file not found: ${ISSUES_DATA_PATH}. Check that the file exists and the path is correct.`);
     }
-    
+
     // Load issues data
     const issuesData = JSON.parse(fs.readFileSync(ISSUES_DATA_PATH, 'utf8'));
-    
+
     log(chalk.blue('Starting issue creation process...'));
-    
+
     // Map category argument to data structure
     const categoryMap = {
       'infrastructure': 'infrastructure_foundation_issues',
@@ -107,7 +107,7 @@ async function createIssues(categoryFilter = null) {
         await createIssue(issue, 'Infrastructure/Foundation');
       }
     }
-    
+
     // Create core feature issues
     if (!categoryFilter || categoryFilter === 'core') {
       log(chalk.blue('\n--- Creating Core Feature Issues ---'));
@@ -116,7 +116,7 @@ async function createIssues(categoryFilter = null) {
         await createIssue(issue, 'Core Feature');
       }
     }
-    
+
     // Create enhancement/optimization issues
     if (!categoryFilter || categoryFilter === 'enhancement') {
       log(chalk.blue('\n--- Creating Enhancement/Optimization Issues ---'));
@@ -125,7 +125,7 @@ async function createIssues(categoryFilter = null) {
         await createIssue(issue, 'Enhancement/Optimization');
       }
     }
-    
+
     // Create compliance/maintenance issues
     if (!categoryFilter || categoryFilter === 'compliance') {
       log(chalk.blue('\n--- Creating Compliance/Maintenance Issues ---'));
@@ -134,10 +134,10 @@ async function createIssues(categoryFilter = null) {
         await createIssue(issue, 'Compliance/Maintenance');
       }
     }
-    
+
     log(chalk.green('\nIssue creation completed!'));
     printSummary();
-    
+
   } catch (error) {
     log(chalk.red(`Error creating issues: ${error.message}`));
     setGitHubActionsFailed(error.message);
@@ -157,14 +157,14 @@ async function createIssue(issue, category) {
       body: issue.body,
       labels: issue.labels
     });
-    
+
     log(chalk.green(`✓ Created issue #${response.data.number}: ${issue.title}`));
     stats.created++;
     return response.data;
   } catch (error) {
     log(chalk.red(`✗ Failed to create issue "${issue.title}": ${error.message}`));
     stats.failed++;
-    
+
     // Don't throw the error, just log it and continue with other issues
     if (isGitHubActions) {
       console.log(`::warning::Failed to create issue "${issue.title}": ${error.message}`);
@@ -183,31 +183,31 @@ async function verifyExistingIssues() {
       state: 'all',
       per_page: 100
     });
-    
+
     if (issues.data.length > 0) {
       log(chalk.yellow(`Found ${issues.data.length} existing issues.`));
-      
+
       // If in GitHub Actions, we'll proceed automatically
       if (isGitHubActions) {
         log('Running in GitHub Actions, proceeding with issue creation...');
         return true;
       }
-      
+
       // If in interactive environment, prompt for confirmation
       const proceed = await promptUser('Do you want to proceed with creating new issues? (y/n) ');
       return proceed.toLowerCase() === 'y';
     }
-    
+
     return true;
   } catch (error) {
     log(chalk.red(`Error checking existing issues: ${error.message}`));
-    
+
     if (isGitHubActions) {
       // In GitHub Actions, we'll log the error and continue
       console.log(`::warning::Error checking existing issues: ${error.message}`);
       return true;
     }
-    
+
     return false;
   }
 }
@@ -220,7 +220,7 @@ function promptUser(question) {
   if (isGitHubActions) {
     return Promise.resolve('y');
   }
-  
+
   // Using dynamic import for readline
   return import('readline').then(readline => {
     const rl = readline.createInterface({
@@ -244,15 +244,15 @@ function printSummary() {
   log('\n--- Issue Creation Summary ---');
   log(`Total issues: ${stats.total}`);
   log(chalk.green(`Created: ${stats.created}`));
-  
+
   if (stats.failed > 0) {
     log(chalk.red(`Failed: ${stats.failed}`));
   }
-  
+
   if (stats.skipped > 0) {
     log(chalk.yellow(`Skipped: ${stats.skipped}`));
   }
-  
+
   if (isGitHubActions) {
     const summary = `
 ## Issue Creation Summary
@@ -264,7 +264,7 @@ function printSummary() {
 | Failed | ${stats.failed} |
 | Skipped | ${stats.skipped} |
 `;
-    
+
     // Write to GitHub Actions summary
     const summaryPath = process.env.GITHUB_STEP_SUMMARY;
     if (summaryPath) {
@@ -274,7 +274,7 @@ function printSummary() {
         console.log(`::warning::Could not write to summary: ${error.message}`);
       }
     }
-    
+
     // Set output if any issues failed
     if (stats.failed > 0) {
       console.log(`::warning::${stats.failed} issues failed to create`);
@@ -304,7 +304,7 @@ function setGitHubActionsFailed(message) {
 async function main() {
   log(chalk.blue('GitHub Issue Creation Script'));
   log(chalk.blue('============================'));
-  
+
   // Verify GitHub token
   if (!process.env.GITHUB_TOKEN) {
     log(chalk.red('Error: GITHUB_TOKEN environment variable is not set.'));
@@ -312,7 +312,7 @@ async function main() {
     setGitHubActionsFailed('GITHUB_TOKEN environment variable is not set');
     process.exit(1);
   }
-  
+
   // Verify data file exists
   if (!fs.existsSync(ISSUES_DATA_PATH)) {
     log(chalk.red(`Error: Data file not found: ${ISSUES_DATA_PATH}`));
@@ -320,11 +320,11 @@ async function main() {
     setGitHubActionsFailed(`Data file not found: ${ISSUES_DATA_PATH}`);
     process.exit(1);
   }
-  
+
   // Check for category filter
   let categoryFilter = null;
   const validCategories = ['infrastructure', 'core', 'enhancement', 'compliance'];
-  
+
   if (process.argv.length > 2) {
     const requestedCategory = process.argv[2].toLowerCase();
     if (validCategories.includes(requestedCategory)) {
@@ -335,10 +335,10 @@ async function main() {
       log(chalk.yellow(`Valid categories are: ${validCategories.join(', ')}`));
     }
   }
-  
+
   // Check for existing issues
   const shouldProceed = await verifyExistingIssues();
-  
+
   if (shouldProceed) {
     await createIssues(categoryFilter);
   } else {

@@ -12,7 +12,7 @@ class InstructionDispatcher {
   constructor() {
     this.patterns = this.loadPatterns();
     this.context = this.loadContext();
-    
+
     this.log = {
       info: (msg) => console.log(chalk.blue('📋'), msg),
       success: (msg) => console.log(chalk.green('✅'), msg),
@@ -38,7 +38,7 @@ class InstructionDispatcher {
         estimatedHours: 4
       },
 
-      // バグ修正パターン  
+      // バグ修正パターン
       bugfix: {
         keywords: ['fix', 'resolve', 'repair', 'debug', 'solve'],
         patterns: [
@@ -164,16 +164,16 @@ class InstructionDispatcher {
       // package.jsonから技術スタックを推測
       if (fs.existsSync('package.json')) {
         const packageData = JSON.parse(fs.readFileSync('package.json', 'utf8'));
-        
+
         if (packageData.dependencies) {
           const deps = Object.keys(packageData.dependencies);
-          
-          if (deps.includes('react')) context.frameworks.push('React');
-          if (deps.includes('vue')) context.frameworks.push('Vue');
-          if (deps.includes('angular')) context.frameworks.push('Angular');
-          if (deps.includes('express')) context.frameworks.push('Express');
-          if (deps.includes('fastify')) context.frameworks.push('Fastify');
-          if (deps.includes('next')) context.frameworks.push('Next.js');
+
+          if (deps.includes('react')) {context.frameworks.push('React');}
+          if (deps.includes('vue')) {context.frameworks.push('Vue');}
+          if (deps.includes('angular')) {context.frameworks.push('Angular');}
+          if (deps.includes('express')) {context.frameworks.push('Express');}
+          if (deps.includes('fastify')) {context.frameworks.push('Fastify');}
+          if (deps.includes('next')) {context.frameworks.push('Next.js');}
         }
       }
 
@@ -229,7 +229,7 @@ class InstructionDispatcher {
         const match = instruction.match(pattern);
         if (match) {
           const confidence = this.calculateConfidence(instruction, config, match);
-          
+
           if (confidence > bestConfidence) {
             bestConfidence = confidence;
             bestMatch = {
@@ -267,10 +267,10 @@ class InstructionDispatcher {
 
     // キーワードの存在をチェック
     const lowerInstruction = instruction.toLowerCase();
-    const keywordMatches = config.keywords.filter(keyword => 
+    const keywordMatches = config.keywords.filter(keyword =>
       lowerInstruction.includes(keyword.toLowerCase())
     ).length;
-    
+
     confidence += (keywordMatches / config.keywords.length) * 0.3;
 
     // マッチした部分の長さ
@@ -300,12 +300,12 @@ class InstructionDispatcher {
    */
   inferTaskType(instruction) {
     const lowerInstruction = instruction.toLowerCase();
-    
+
     const typeScores = {};
-    
+
     for (const [type, config] of Object.entries(this.patterns)) {
       typeScores[type] = 0;
-      
+
       for (const keyword of config.keywords) {
         if (lowerInstruction.includes(keyword.toLowerCase())) {
           typeScores[type] += 1;
@@ -325,10 +325,10 @@ class InstructionDispatcher {
   enrichWithContext(analysis) {
     // 関連ファイルの推測
     analysis.relatedFiles = this.suggestRelatedFiles(analysis);
-    
+
     // 前提条件の特定
     analysis.prerequisites = this.identifyPrerequisites(analysis);
-    
+
     // 改善提案
     analysis.suggestions = this.generateSuggestions(analysis);
   }
@@ -358,18 +358,18 @@ class InstructionDispatcher {
 
     // タスクタイプベースの候補
     switch (analysis.taskType) {
-      case 'feature':
-        files.push('src/features/', 'src/components/');
-        break;
-      case 'bugfix':
-        files.push('src/', 'tests/');
-        break;
-      case 'docs':
-        files.push('docs/', 'README.md');
-        break;
-      case 'test':
-        files.push('tests/', 'src/**/*.test.js');
-        break;
+    case 'feature':
+      files.push('src/features/', 'src/components/');
+      break;
+    case 'bugfix':
+      files.push('src/', 'tests/');
+      break;
+    case 'docs':
+      files.push('docs/', 'README.md');
+      break;
+    case 'test':
+      files.push('tests/', 'src/**/*.test.js');
+      break;
     }
 
     return [...new Set(files)]; // 重複除去
@@ -415,25 +415,25 @@ class InstructionDispatcher {
 
     // タスクタイプ別の提案
     switch (analysis.taskType) {
-      case 'feature':
-        suggestions.push('Consider writing tests alongside the feature');
-        suggestions.push('Update documentation after implementation');
-        break;
-      
-      case 'bugfix':
-        suggestions.push('Add regression tests to prevent future occurrences');
-        suggestions.push('Consider if this indicates a larger architectural issue');
-        break;
+    case 'feature':
+      suggestions.push('Consider writing tests alongside the feature');
+      suggestions.push('Update documentation after implementation');
+      break;
 
-      case 'refactor':
-        suggestions.push('Ensure comprehensive test coverage before refactoring');
-        suggestions.push('Consider performance benchmarks');
-        break;
+    case 'bugfix':
+      suggestions.push('Add regression tests to prevent future occurrences');
+      suggestions.push('Consider if this indicates a larger architectural issue');
+      break;
 
-      case 'docs':
-        suggestions.push('Include code examples and usage scenarios');
-        suggestions.push('Consider adding diagrams for complex concepts');
-        break;
+    case 'refactor':
+      suggestions.push('Ensure comprehensive test coverage before refactoring');
+      suggestions.push('Consider performance benchmarks');
+      break;
+
+    case 'docs':
+      suggestions.push('Include code examples and usage scenarios');
+      suggestions.push('Consider adding diagrams for complex concepts');
+      break;
     }
 
     // 優先度別の提案
@@ -455,7 +455,7 @@ class InstructionDispatcher {
    * 分析結果をフォーマットして表示
    */
   displayAnalysis(analysis) {
-    console.log(chalk.cyan('\n' + '='.repeat(60)));
+    console.log(chalk.cyan(`\n${'='.repeat(60)}`));
     console.log(chalk.cyan('📋 INSTRUCTION ANALYSIS REPORT'));
     console.log(chalk.cyan('='.repeat(60)));
 
@@ -466,8 +466,8 @@ class InstructionDispatcher {
     console.log(`   Task Type: ${this.getTaskTypeEmoji(analysis.taskType)} ${chalk.bold(analysis.taskType.toUpperCase())}`);
     console.log(`   Description: ${chalk.green(analysis.description)}`);
     console.log(`   Priority: ${this.getPriorityEmoji(analysis.priority)} ${chalk.bold(analysis.priority.toUpperCase())}`);
-    console.log(`   Estimated Hours: ${chalk.yellow(analysis.estimatedHours + 'h')}`);
-    console.log(`   Confidence: ${chalk.blue(Math.round(analysis.confidence * 100) + '%')}`);
+    console.log(`   Estimated Hours: ${chalk.yellow(`${analysis.estimatedHours}h`)}`);
+    console.log(`   Confidence: ${chalk.blue(`${Math.round(analysis.confidence * 100)}%`)}`);
 
     if (analysis.prerequisites.length > 0) {
       console.log(chalk.white('\n⚠️  Prerequisites:'));
@@ -493,7 +493,7 @@ class InstructionDispatcher {
       });
     }
 
-    console.log(chalk.cyan('\n' + '='.repeat(60)));
+    console.log(chalk.cyan(`\n${'='.repeat(60)}`));
   }
 
   /**
@@ -567,9 +567,9 @@ Examples:
 
   const dispatcher = new InstructionDispatcher();
   const analysis = dispatcher.analyzeInstruction(instruction);
-  
+
   dispatcher.displayAnalysis(analysis);
-  
+
   if (outputPath) {
     dispatcher.exportAnalysis(analysis, outputPath);
   }
