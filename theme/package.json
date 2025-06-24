@@ -1,0 +1,29 @@
+{
+  "name": "lightningtalk-circle-static-theme",
+  "version": "1.2.0",
+  "description": "Lightning Talk Circle - Static HTML Theme for Events",
+  "main": "index.html",
+  "scripts": {
+    "build": "npm run build:css && npm run build:html && npm run build:assets",
+    "build:css": "npm run minify:css",
+    "build:html": "npm run minify:html",
+    "build:assets": "npm run copy:assets",
+    "minify:css": "cleancss -o dist/style.min.css style.css",
+    "minify:html": "html-minifier --collapse-whitespace --remove-comments --minify-css true --minify-js true -o dist/index.html index.html && html-minifier --collapse-whitespace --remove-comments --minify-css true --minify-js true -o dist/registration-form.html registration-form.html",
+    "copy:assets": "mkdir -p dist && cp -r *.md dist/",
+    "serve": "python3 -m http.server 8000",
+    "serve:dist": "cd dist && python3 -m http.server 8000"
+  },
+  "keywords": [
+    "lightning-talk",
+    "event",
+    "conference",
+    "presentation"
+  ],
+  "author": "Lightning Talk Team",
+  "license": "MIT",
+  "devDependencies": {
+    "clean-css-cli": "^5.6.2",
+    "html-minifier": "^4.0.0"
+  }
+}

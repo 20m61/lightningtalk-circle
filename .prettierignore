@@ -70,3 +70,14 @@ LICENSE
 .prettierignore
 .eslintignore
 .gitignore
+
+# Static theme directory - contains various file types
+theme/deploy.sh
+theme/robots.txt
+theme/sitemap.xml
+theme/*.sql
+*.sql
+
+# PHP files in WordPress child theme
+wordpress/lightningtalk-child/*.php
+wordpress/lightningtalk-child/**/*.php

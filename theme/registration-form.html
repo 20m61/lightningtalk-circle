@@ -1,0 +1,386 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>参加・発表申込み | 第1回 なんでもライトニングトーク</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@400;700;900&family=Noto+Sans+JP:wght@400;500;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="style.min.css" />
+
+    <!-- PWA Manifest -->
+    <link rel="manifest" href="manifest.json" />
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="/favicon.png" />
+
+    <!-- Theme color for mobile browsers -->
+    <meta name="theme-color" content="#1E3A8A" />
+
+    <!-- SEO Meta Tags -->
+    <meta
+      name="description"
+      content="第1回なんでもライトニングトークの参加・発表申込みフォーム。会場参加・オンライン参加どちらもOK！"
+    />
+    <link rel="canonical" href="https://lightning-talk-event.jp/registration-form.html" />
+    <meta name="robots" content="index, follow" />
+    <style>
+      .form-container {
+        max-width: 600px;
+        margin: 0 auto;
+        padding: var(--lt-space-2xl) var(--lt-space-md);
+      }
+
+      .form-group {
+        margin-bottom: var(--lt-space-lg);
+      }
+
+      .form-label {
+        display: block;
+        font-weight: 600;
+        color: var(--lt-secondary);
+        margin-bottom: var(--lt-space-xs);
+      }
+
+      .form-input,
+      .form-select,
+      .form-textarea {
+        width: 100%;
+        padding: var(--lt-space-sm);
+        border: 2px solid #e5e7eb;
+        border-radius: 8px;
+        font-size: 1rem;
+        font-family: inherit;
+        transition: border-color 0.3s ease;
+      }
+
+      .form-input:focus,
+      .form-select:focus,
+      .form-textarea:focus {
+        outline: none;
+        border-color: var(--lt-accent);
+      }
+
+      .form-textarea {
+        min-height: 120px;
+        resize: vertical;
+      }
+
+      .form-radio-group {
+        display: flex;
+        gap: var(--lt-space-lg);
+        margin-top: var(--lt-space-sm);
+      }
+
+      .form-radio-label {
+        display: flex;
+        align-items: center;
+        gap: var(--lt-space-xs);
+        cursor: pointer;
+      }
+
+      .form-radio-label input[type='radio'] {
+        width: 20px;
+        height: 20px;
+        cursor: pointer;
+      }
+
+      .form-help {
+        font-size: 0.875rem;
+        color: #6b7280;
+        margin-top: var(--lt-space-xs);
+      }
+
+      .form-section {
+        background: #f9fafb;
+        padding: var(--lt-space-lg);
+        border-radius: 12px;
+        margin-bottom: var(--lt-space-lg);
+      }
+
+      .form-section-title {
+        font-size: 1.25rem;
+        color: var(--lt-secondary);
+        margin-bottom: var(--lt-space-md);
+        display: flex;
+        align-items: center;
+        gap: var(--lt-space-sm);
+      }
+
+      .required {
+        color: #ef4444;
+      }
+
+      .optional-field {
+        display: none;
+      }
+
+      .optional-field.show {
+        display: block;
+        animation: slideDown 0.3s ease-out;
+      }
+
+      @keyframes slideDown {
+        from {
+          opacity: 0;
+          transform: translateY(-10px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .submit-button {
+        width: 100%;
+        padding: var(--lt-space-md);
+        font-size: 1.125rem;
+        margin-top: var(--lt-space-lg);
+      }
+
+      .success-message {
+        background: #d1fae5;
+        color: #065f46;
+        padding: var(--lt-space-md);
+        border-radius: 8px;
+        margin-bottom: var(--lt-space-lg);
+        display: none;
+      }
+
+      .error-message {
+        background: #fee2e2;
+        color: #991b1b;
+        padding: var(--lt-space-md);
+        border-radius: 8px;
+        margin-bottom: var(--lt-space-lg);
+        display: none;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Header -->
+    <header style="background-color: var(--lt-secondary); padding: var(--lt-space-md) 0">
+      <div class="lt-container">
+        <a
+          href="index.html"
+          style="
+            color: var(--lt-white);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: var(--lt-space-sm);
+          "
+        >
+          <span style="font-size: 1.5rem">⚡</span>
+          <span style="font-weight: 700">第1回 なんでもライトニングトーク</span>
+        </a>
+      </div>
+    </header>
+
+    <!-- Form Container -->
+    <div class="form-container">
+      <h1 class="lt-text-center" style="margin-bottom: var(--lt-space-lg)">
+        <span class="lt-lightning-effect">参加・発表申込みフォーム</span>
+      </h1>
+
+      <!-- Success/Error Messages -->
+      <div class="success-message" id="successMessage">
+        ✅ 申込みが完了しました！確認メールをお送りしましたのでご確認ください。
+      </div>
+      <div class="error-message" id="errorMessage">
+        ❌ 申込みに失敗しました。もう一度お試しください。
+      </div>
+
+      <form id="registrationForm">
+        <!-- Basic Information Section -->
+        <div class="form-section">
+          <h2 class="form-section-title"><span>👤</span> 基本情報</h2>
+
+          <div class="form-group">
+            <label class="form-label" for="name"> お名前 <span class="required">*</span> </label>
+            <input type="text" id="name" name="name" class="form-input" required />
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="email">
+              メールアドレス <span class="required">*</span>
+            </label>
+            <input type="email" id="email" name="email" class="form-input" required />
+            <p class="form-help">確認メールをお送りします</p>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label"> 参加形式 <span class="required">*</span> </label>
+            <div class="form-radio-group">
+              <label class="form-radio-label">
+                <input type="radio" name="attendance" value="in-person" required />
+                <span>会場参加</span>
+              </label>
+              <label class="form-radio-label">
+                <input type="radio" name="attendance" value="online" required />
+                <span>オンライン参加</span>
+              </label>
+            </div>
+          </div>
+        </div>
+
+        <!-- Presentation Section -->
+        <div class="form-section">
+          <h2 class="form-section-title"><span>🎤</span> 発表について</h2>
+
+          <div class="form-group">
+            <label class="form-label">
+              発表を希望されますか？ <span class="required">*</span>
+            </label>
+            <div class="form-radio-group">
+              <label class="form-radio-label">
+                <input
+                  type="radio"
+                  name="presenter"
+                  value="yes"
+                  required
+                  onchange="togglePresentationFields(true)"
+                />
+                <span>はい（発表したい）</span>
+              </label>
+              <label class="form-radio-label">
+                <input
+                  type="radio"
+                  name="presenter"
+                  value="no"
+                  required
+                  onchange="togglePresentationFields(false)"
+                />
+                <span>いいえ（観覧のみ）</span>
+              </label>
+            </div>
+          </div>
+
+          <!-- Optional fields for presenters -->
+          <div id="presentationFields" class="optional-field">
+            <div class="form-group">
+              <label class="form-label" for="talkTitle">
+                発表タイトル <span class="required">*</span>
+              </label>
+              <input type="text" id="talkTitle" name="talkTitle" class="form-input" />
+              <p class="form-help">仮タイトルでもOKです</p>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="talkCategory"> カテゴリー </label>
+              <select id="talkCategory" name="talkCategory" class="form-select">
+                <option value="">選択してください</option>
+                <option value="tech">💻 プログラミング・技術</option>
+                <option value="art">🎨 趣味・アート・創作</option>
+                <option value="book">📚 読書・学習体験</option>
+                <option value="travel">🌍 旅行・文化</option>
+                <option value="food">🍳 料理・グルメ</option>
+                <option value="game">🕹️ ゲーム・エンタメ</option>
+                <option value="lifehack">💡 ライフハック</option>
+                <option value="pet">🐱 ペット・動物</option>
+                <option value="plant">🌱 園芸・植物</option>
+                <option value="sports">🏃‍♂️ 健康・スポーツ</option>
+                <option value="music">🎵 音楽・パフォーマンス</option>
+                <option value="other">❓ その他</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="talkDescription"> 発表内容の概要 </label>
+              <textarea
+                id="talkDescription"
+                name="talkDescription"
+                class="form-textarea"
+                placeholder="どんな内容を話す予定か、簡単に教えてください（任意）"
+              ></textarea>
+            </div>
+          </div>
+        </div>
+
+        <!-- Additional Information -->
+        <div class="form-section">
+          <h2 class="form-section-title"><span>💬</span> その他</h2>
+
+          <div class="form-group">
+            <label class="form-label" for="comments"> ご質問・ご要望など </label>
+            <textarea
+              id="comments"
+              name="comments"
+              class="form-textarea"
+              placeholder="アレルギー情報、アクセシビリティのご要望など、お気軽にご記入ください"
+            ></textarea>
+          </div>
+        </div>
+
+        <!-- Submit Button -->
+        <button type="submit" class="lt-button lt-button-primary submit-button">
+          <span class="lt-lightning-effect">申込みを送信する</span>
+        </button>
+      </form>
+    </div>
+
+    <!-- Footer -->
+    <footer
+      style="
+        background-color: var(--lt-secondary);
+        color: var(--lt-white);
+        padding: var(--lt-space-lg) 0;
+        text-align: center;
+        margin-top: var(--lt-space-2xl);
+      "
+    >
+      <div class="lt-container">
+        <p style="font-size: 0.875rem; opacity: 0.8">
+          © 2025 Lightning Talk Event. All rights reserved.
+        </p>
+      </div>
+    </footer>
+
+    <script>
+      // Toggle presentation fields
+      function togglePresentationFields(show) {
+        const fields = document.getElementById('presentationFields');
+        const titleInput = document.getElementById('talkTitle');
+
+        if (show) {
+          fields.classList.add('show');
+          titleInput.setAttribute('required', 'required');
+        } else {
+          fields.classList.remove('show');
+          titleInput.removeAttribute('required');
+        }
+      }
+
+      // Form submission
+      document.getElementById('registrationForm').addEventListener('submit', function (e) {
+        e.preventDefault();
+
+        // Hide previous messages
+        document.getElementById('successMessage').style.display = 'none';
+        document.getElementById('errorMessage').style.display = 'none';
+
+        // Collect form data
+        const formData = new FormData(this);
+        const data = {};
+        for (let [key, value] of formData.entries()) {
+          data[key] = value;
+        }
+
+        // Simulate API call
+        console.log('Form submission:', data);
+
+        // Show success message (in real implementation, this would be after API response)
+        setTimeout(() => {
+          document.getElementById('successMessage').style.display = 'block';
+          this.reset();
+          togglePresentationFields(false);
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        }, 500);
+      });
+    </script>
+  </body>
+</html>

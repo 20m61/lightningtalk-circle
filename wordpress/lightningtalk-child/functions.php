@@ -33,6 +33,16 @@ function lightningtalk_enqueue_assets() {
         LIGHTNINGTALK_VERSION
     );
     
+    // ランディングページ専用CSS（フロントページのみ）
+    if (is_front_page()) {
+        wp_enqueue_style(
+            'lightningtalk-landing',
+            get_stylesheet_directory_uri() . '/assets/css/landing-page.css',
+            array('lightningtalk-main'),
+            LIGHTNINGTALK_VERSION
+        );
+    }
+    
     // jQuery（WordPress標準）
     wp_enqueue_script('jquery');
     
@@ -44,6 +54,33 @@ function lightningtalk_enqueue_assets() {
         LIGHTNINGTALK_VERSION,
         true
     );
+    
+    // ランディングページ専用JavaScript（フロントページのみ）
+    if (is_front_page()) {
+        wp_enqueue_script(
+            'lightningtalk-landing',
+            get_stylesheet_directory_uri() . '/assets/js/landing-page.js',
+            array('jquery', 'lightningtalk-main'),
+            LIGHTNINGTALK_VERSION,
+            true
+        );
+        
+        // AOS (Animate On Scroll) ライブラリ
+        wp_enqueue_script(
+            'aos',
+            'https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js',
+            array(),
+            '2.3.4',
+            true
+        );
+        
+        wp_enqueue_style(
+            'aos-css',
+            'https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css',
+            array(),
+            '2.3.4'
+        );
+    }
     
     // AJAX用のlocalize
     wp_localize_script('lightningtalk-main', 'lightningtalk_ajax', array(
@@ -959,6 +996,24 @@ function lightningtalk_custom_column_content($column, $post_id) {
     }
 }
 add_action('manage_posts_custom_column', 'lightningtalk_custom_column_content', 10, 2);
+
+// =============================================================================
+// ランディングページ用ショートコード
+// =============================================================================
+
+// 統計表示ショートコード
+function lightning_talk_stats_shortcode($atts) {
+    $args = shortcode_atts(array(
+        'type' => 'all',
+        'format' => 'grid',
+        'class' => ''
+    ), $atts);
+    
+    ob_start();
+    include get_stylesheet_directory() . '/templates/shortcode-stats.php';
+    return ob_get_clean();
+}
+add_shortcode('lightning_talk_stats', 'lightning_talk_stats_shortcode');
 
 // デフォルトタクソノミータームの追加
 function lightningtalk_add_default_terms() {
