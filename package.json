@@ -45,7 +45,12 @@
     "build:theme:reset": "node scripts/clean-dist.js reset",
     "clean:dist": "node scripts/clean-dist.js",
     "dist:analyze": "node scripts/clean-dist.js analyze",
-    "user-authentication": "echo \"Running user authentication\""
+    "user-authentication": "echo \"Running user authentication\"",
+    "build:theme-packages": "cd theme && ./deploy.sh",
+    "release:auto": "./scripts/build-and-release.sh",
+    "release:auto:patch": "./scripts/build-and-release.sh patch",
+    "release:auto:minor": "./scripts/build-and-release.sh minor",
+    "release:auto:major": "./scripts/build-and-release.sh major"
   },
   "dependencies": {
     "@octokit/rest": "^20.1.2",

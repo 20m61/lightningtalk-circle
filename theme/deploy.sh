@@ -73,21 +73,29 @@ RewriteCond %{HTTPS} off
 RewriteRule ^(.*)$ https://%{HTTP_HOST}/$1 [R=301,L]
 EOF
 
-# Create deployment archive
-echo "📦 Creating deployment archive..."
+# Create deployment archives
+echo "📦 Creating deployment archives..."
 cd dist
-tar -czf ../lightningtalk-circle-static-theme-v1.2.0.tar.gz .
+
+# Create tar.gz archive
+tar -czf ../lightningtalk-circle-static-theme-v1.3.0.tar.gz .
+
+# Create zip archive
+zip -r ../lightningtalk-circle-static-theme-v1.3.0.zip .
+
 cd ..
 
 echo ""
 echo "✅ Deployment preparation complete!"
 echo ""
 echo "📁 Files ready in: ./dist/"
-echo "📦 Archive created: ./lightningtalk-circle-static-theme-v1.2.0.tar.gz"
+echo "📦 Archives created:"
+echo "   - ./lightningtalk-circle-static-theme-v1.3.0.tar.gz"
+echo "   - ./lightningtalk-circle-static-theme-v1.3.0.zip"
 echo ""
 echo "🚀 Next steps:"
 echo "   1. Upload contents of ./dist/ to your web server"
-echo "   2. Or extract lightning-talk-theme-v1.0.0.tar.gz on your server"
+echo "   2. Or extract lightningtalk-circle-static-theme-v1.3.0.zip on your server"
 echo "   3. Ensure your server points to index.html as the default"
 echo "   4. Test both pages and form functionality"
 echo ""
