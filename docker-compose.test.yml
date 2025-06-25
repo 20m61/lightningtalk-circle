@@ -1,59 +1,35 @@
-version: '3.8'
-
 services:
-  wordpress-test:
-    image: wordpress:6.4-php8.2-apache
-    container_name: lt-wordpress-test
+  wordpress:
+    image: wordpress:latest
+    container_name: lt_wordpress_test
     restart: unless-stopped
     ports:
       - "8080:80"
     environment:
-      WORDPRESS_DB_HOST: mysql-test
-      WORDPRESS_DB_USER: wordpress
-      WORDPRESS_DB_PASSWORD: wordpress_password
-      WORDPRESS_DB_NAME: wordpress_test
-      WORDPRESS_DEBUG: 1
-      WORDPRESS_CONFIG_EXTRA: |
-        define('WP_DEBUG', true);
-        define('WP_DEBUG_LOG', true);
-        define('WP_DEBUG_DISPLAY', false);
-        define('SCRIPT_DEBUG', true);
+      WORDPRESS_DB_HOST: db:3306
+      WORDPRESS_DB_USER: root
+      WORDPRESS_DB_PASSWORD: root_password
+      WORDPRESS_DB_NAME: wordpress
     volumes:
-      - wordpress_test_data:/var/www/html
-      - ./lightningtalk-child-theme.zip:/tmp/lightningtalk-child-theme.zip
-      - ./lightningtalk-safe-test.zip:/tmp/lightningtalk-safe-test.zip
-      - ./cocoon-master.zip:/tmp/cocoon-master.zip:ro
+      - wordpress_data:/var/www/html
+      - ./dist/lightningtalk-wordpress-theme-v1.3.0.zip:/tmp/theme.zip
     depends_on:
-      - mysql-test
+      - db
 
-  mysql-test:
+  db:
     image: mysql:8.0
-    container_name: lt-mysql-test
+    container_name: lt_mysql_test
     restart: unless-stopped
     environment:
-      MYSQL_DATABASE: wordpress_test
-      MYSQL_USER: wordpress
-      MYSQL_PASSWORD: wordpress_password
+      MYSQL_DATABASE: wordpress
       MYSQL_ROOT_PASSWORD: root_password
     volumes:
-      - mysql_test_data:/var/lib/mysql
-
-  wordpress-cli:
-    image: wordpress:cli-php8.2
-    container_name: lt-wp-cli
-    depends_on:
-      - wordpress-test
-      - mysql-test
-    environment:
-      WORDPRESS_DB_HOST: mysql-test
-      WORDPRESS_DB_USER: wordpress
-      WORDPRESS_DB_PASSWORD: wordpress_password
-      WORDPRESS_DB_NAME: wordpress_test
-    volumes:
-      - wordpress_test_data:/var/www/html
-    profiles:
-      - cli
+      - db_data:/var/lib/mysql
+    command: 
+      - '--default-authentication-plugin=mysql_native_password'
+      - '--character-set-server=utf8mb4'
+      - '--collation-server=utf8mb4_unicode_ci'
 
 volumes:
-  wordpress_test_data:
-  mysql_test_data:
+  wordpress_data:
+  db_data:

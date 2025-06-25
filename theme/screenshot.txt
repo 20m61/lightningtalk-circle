@@ -1,0 +1,6 @@
+# Theme Screenshot Placeholder
+# WordPress themes require a screenshot.png file (1200x900px)
+# This would show a preview of the Lightning Talk theme with:
+# - Blue background (#1e3a8a)
+# - Golden lightning bolt and "Lightning Talk" text
+# - Theme version and branding
