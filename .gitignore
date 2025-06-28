@@ -65,6 +65,7 @@ storybook-static
 /archive/
 
 # Environment files
+.env
 .env.local
 .env.development.local
 .env.test.local
@@ -81,3 +82,12 @@ storybook-static
 .DS_Store
 Thumbs.db
 reports/
+
+# CDK generated files
+cdk/cdk.out/
+cdk/lib/**/*.js
+cdk/lib/**/*.d.ts
+cdk/bin/*.js
+cdk/bin/*.d.ts
+cdk.out/
+cdk.context.json
