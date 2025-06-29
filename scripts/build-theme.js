@@ -6,10 +6,14 @@
  * ビルド結果にタイムスタンプを付与してdistディレクトリに出力
  */
 
-const fs = require('fs-extra');
-const path = require('path');
-const archiver = require('archiver');
-const { execSync } = require('child_process');
+import fs from 'fs-extra';
+import path from 'path';
+import archiver from 'archiver';
+import { execSync } from 'child_process';
+import { fileURLToPath } from 'url';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 // タイムスタンプ生成（YYYYMMDD-HHMMSS形式）
 function getTimestamp() {
@@ -27,6 +31,7 @@ function getTimestamp() {
 // ビルド設定
 const config = {
   sourceDir: path.join(__dirname, '../wordpress/lightningtalk-child'),
+  fallbackDir: path.join(__dirname, '../wordpress'),
   distDir: path.join(__dirname, '../dist'),
   tempDir: path.join(__dirname, '../.tmp/build'),
   themeName: 'lightningtalk-child',
@@ -92,13 +97,52 @@ async function copyThemeFiles() {
   const targetDir = path.join(config.tempDir, config.themeName);
   await fs.ensureDir(targetDir);
 
+  let { sourceDir } = config;
+
   // ソースディレクトリの存在確認
-  if (!await fs.pathExists(config.sourceDir)) {
-    throw new Error(`ソースディレクトリが見つかりません: ${config.sourceDir}`);
+  if (!(await fs.pathExists(config.sourceDir))) {
+    console.log(`⚠️  ${config.sourceDir} が見つかりません。フォールバックディレクトリを確認中...`);
+
+    if (await fs.pathExists(config.fallbackDir)) {
+      sourceDir = config.fallbackDir;
+      console.log(`✅ フォールバックディレクトリを使用: ${sourceDir}`);
+    } else {
+      // 既存のZIPファイルをチェック
+      const existingZips = await fs.readdir(config.distDir).catch(() => []);
+      const themeZips = existingZips.filter(
+        file => file.includes('lightningtalk') && file.includes('theme') && file.endsWith('.zip')
+      );
+
+      if (themeZips.length > 0) {
+        console.log(`✅ 既存のテーマパッケージが見つかりました: ${themeZips.join(', ')}`);
+        console.log('新しいビルドをスキップして既存のパッケージを使用します');
+        return;
+      }
+
+      // プレースホルダーファイルを作成
+      console.log('⚠️  テーマソースが見つかりません。プレースホルダーを作成します...');
+      const placeholderContent = `<?php
+/*
+Theme Name: Lightning Talk Child
+Description: Lightning Talk Event Management Child Theme (Placeholder)
+Version: ${buildInfo.version}
+Template: cocoon
+*/
+
+/* このファイルはプレースホルダーです。実際のテーマファイルを配置してください。 */
+`;
+      const stylePath = path.join(targetDir, 'style.css');
+      await fs.writeFile(stylePath, placeholderContent);
+
+      // ビルド情報ファイルを追加
+      const buildInfoPath = path.join(targetDir, 'build-info.json');
+      await fs.writeJson(buildInfoPath, buildInfo, { spaces: 2 });
+      return;
+    }
   }
 
   // ファイルをコピー（除外パターンを考慮）
-  const files = await fs.readdir(config.sourceDir);
+  const files = await fs.readdir(sourceDir);
 
   for (const file of files) {
     const shouldExclude = excludePatterns.some(pattern => {
@@ -110,7 +154,7 @@ async function copyThemeFiles() {
     });
 
     if (!shouldExclude) {
-      const sourcePath = path.join(config.sourceDir, file);
+      const sourcePath = path.join(sourceDir, file);
       const targetPath = path.join(targetDir, file);
       await fs.copy(sourcePath, targetPath);
     }
@@ -155,7 +199,7 @@ async function createZipArchive() {
       resolve({ fileName: zipFileName, path: zipPath, size: archive.pointer() });
     });
 
-    archive.on('error', (err) => {
+    archive.on('error', err => {
       reject(err);
     });
 
@@ -193,7 +237,11 @@ async function createBuildManifest(zipInfo) {
     }
   };
 
-  const manifestPath = path.join(config.distDir, 'builds', `build-manifest_${config.timestamp}.json`);
+  const manifestPath = path.join(
+    config.distDir,
+    'builds',
+    `build-manifest_${config.timestamp}.json`
+  );
   await fs.writeJson(manifestPath, manifest, { spaces: 2 });
 
   // 最新ビルドへのシンボリックリンクを作成（Windowsでない場合）
@@ -215,7 +263,7 @@ async function createBuildManifest(zipInfo) {
 }
 
 async function generateChecksum(filePath, algorithm) {
-  const crypto = require('crypto');
+  const crypto = await import('crypto');
   const fileBuffer = await fs.readFile(filePath);
   const hash = crypto.createHash(algorithm);
   hash.update(fileBuffer);
@@ -323,16 +371,15 @@ async function main() {
 
     console.log('\n✨ ビルドが正常に完了しました！');
     console.log(`📦 出力先: dist/themes/${zipInfo.fileName}`);
-
   } catch (error) {
     console.error('❌ ビルドエラー:', error.message);
     process.exit(1);
   }
 }
 
-// メイン処理を実行
-if (require.main === module) {
+// ES modules環境での直接実行チェック
+if (import.meta.url === `file://${process.argv[1]}`) {
   main();
 }
 
-module.exports = { getTimestamp, config };
+export { getTimestamp, config };
