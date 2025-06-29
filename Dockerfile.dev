@@ -1,4 +1,4 @@
-FROM node:18-alpine
+FROM node:20-alpine
 
 # 開発に必要なツールをインストール
 RUN apk add --no-cache \
@@ -6,28 +6,45 @@ RUN apk add --no-cache \
     bash \
     curl \
     vim \
-    tzdata
+    tzdata \
+    jq \
+    ca-certificates
 
 # タイムゾーンを設定
 ENV TZ=Asia/Tokyo
 
+# 非rootユーザーを作成
+RUN addgroup -g 1001 -S nodejs && \
+    adduser -S nodeuser -u 1001 -G nodejs
+
 # 作業ディレクトリを設定
 WORKDIR /app
 
-# package.json と package-lock.json をコピー
-COPY package*.json ./
+# package.json をコピー
+COPY package.json ./
 
 # 依存関係をインストール（開発依存関係も含む）
-RUN npm ci --include=dev
+RUN npm install && npm cache clean --force
 
 # nodemon をグローバルにインストール
 RUN npm install -g nodemon
 
+# 必要なディレクトリを作成
+RUN mkdir -p /app/data /app/logs /app/dist && \
+    chown -R nodeuser:nodejs /app
+
 # アプリケーションのソースコードをコピー
-COPY . .
+COPY --chown=nodeuser:nodejs . .
+
+# 非rootユーザーに切り替え
+USER nodeuser
 
 # 開発用のポートを公開
-EXPOSE 3000
+EXPOSE 3000 9229
+
+# ヘルスチェック
+HEALTHCHECK --interval=30s --timeout=10s --start-period=15s --retries=3 \
+    CMD curl -f http://localhost:3000/api/health || exit 1
 
 # 開発サーバーを起動
 CMD ["npm", "run", "dev"]
