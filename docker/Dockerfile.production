@@ -17,7 +17,7 @@ RUN npm ci --only=production && npm cache clean --force
 COPY . .
 
 # Build WordPress theme and application assets
-RUN npm run wp:build && npm run build:theme
+RUN npm run build:theme && echo "Build completed successfully"
 
 # Production stage
 FROM node:20-alpine AS production
