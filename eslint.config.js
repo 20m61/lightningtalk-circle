@@ -11,7 +11,11 @@ export default [
         es2022: true,
         node: true,
         jest: true,
-        process: 'readonly'
+        process: 'readonly',
+        console: 'readonly',
+        Buffer: 'readonly',
+        __dirname: 'readonly',
+        __filename: 'readonly'
       }
     },
 

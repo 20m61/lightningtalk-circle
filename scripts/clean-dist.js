@@ -6,9 +6,13 @@
  * distディレクトリのクリーンアップとメンテナンス
  */
 
-const fs = require('fs-extra');
-const path = require('path');
-const readline = require('readline');
+import fs from 'fs-extra';
+import path from 'path';
+import readline from 'readline';
+import { fileURLToPath } from 'url';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const rl = readline.createInterface({
   input: process.stdin,
@@ -20,7 +24,7 @@ const distDir = path.join(__dirname, '../dist');
 async function getDirectorySize(dir) {
   let size = 0;
 
-  if (!await fs.pathExists(dir)) {
+  if (!(await fs.pathExists(dir))) {
     return 0;
   }
 
@@ -41,7 +45,9 @@ async function getDirectorySize(dir) {
 }
 
 function formatBytes(bytes) {
-  if (bytes === 0) {return '0 Bytes';}
+  if (bytes === 0) {
+    return '0 Bytes';
+  }
 
   const k = 1024;
   const sizes = ['Bytes', 'KB', 'MB', 'GB'];
@@ -76,7 +82,7 @@ async function analyzeDirectory() {
 async function cleanArchives(keepCount = 10) {
   const archivesDir = path.join(distDir, 'archives');
 
-  if (!await fs.pathExists(archivesDir)) {
+  if (!(await fs.pathExists(archivesDir))) {
     console.log('アーカイブディレクトリが存在しません。');
     return;
   }
@@ -105,7 +111,7 @@ async function cleanArchives(keepCount = 10) {
 async function cleanBuilds(keepDays = 7) {
   const buildsDir = path.join(distDir, 'builds');
 
-  if (!await fs.pathExists(buildsDir)) {
+  if (!(await fs.pathExists(buildsDir))) {
     console.log('ビルドディレクトリが存在しません。');
     return;
   }
@@ -117,7 +123,9 @@ async function cleanBuilds(keepDays = 7) {
   let deletedCount = 0;
 
   for (const file of files) {
-    if (file.includes('latest')) {continue;}
+    if (file.includes('latest')) {
+      continue;
+    }
 
     const filePath = path.join(buildsDir, file);
     const stat = await fs.stat(filePath);
@@ -177,40 +185,48 @@ async function main() {
   console.log('🧹 Dist Directory Cleanup Tool\n');
 
   const args = process.argv.slice(2);
-  const command = args[0];
+  const [command] = args;
 
   try {
     switch (command) {
-    case 'analyze':
-      await analyzeDirectory();
-      break;
+      case 'analyze':
+        await analyzeDirectory();
+        break;
 
-    case 'clean-archives':
-      const keepCount = parseInt(args[1]) || 10;
-      await cleanArchives(keepCount);
-      break;
+      case 'clean-archives': {
+        const keepCount = parseInt(args[1]) || 10;
+        await cleanArchives(keepCount);
+        break;
+      }
 
-    case 'clean-builds':
-      const keepDays = parseInt(args[1]) || 7;
-      await cleanBuilds(keepDays);
-      break;
+      case 'clean-builds': {
+        const keepDays = parseInt(args[1]) || 7;
+        await cleanBuilds(keepDays);
+        break;
+      }
 
-    case 'clean-all':
-      await cleanArchives(10);
-      await cleanBuilds(7);
-      break;
+      case 'clean-all':
+        await cleanArchives(10);
+        await cleanBuilds(7);
+        break;
 
-    case 'reset':
-      await resetDist();
-      break;
+      case 'reset':
+        await resetDist();
+        break;
 
-    default:
-      console.log('使用方法:');
-      console.log('  node clean-dist.js analyze              - ディレクトリ分析');
-      console.log('  node clean-dist.js clean-archives [数]   - 古いアーカイブを削除（デフォルト: 10個保持）');
-      console.log('  node clean-dist.js clean-builds [日数]   - 古いビルドを削除（デフォルト: 7日保持）');
-      console.log('  node clean-dist.js clean-all            - アーカイブとビルドをクリーンアップ');
-      console.log('  node clean-dist.js reset                - distディレクトリを完全リセット');
+      default:
+        console.log('使用方法:');
+        console.log('  node clean-dist.js analyze              - ディレクトリ分析');
+        console.log(
+          '  node clean-dist.js clean-archives [数]   - 古いアーカイブを削除（デフォルト: 10個保持）'
+        );
+        console.log(
+          '  node clean-dist.js clean-builds [日数]   - 古いビルドを削除（デフォルト: 7日保持）'
+        );
+        console.log(
+          '  node clean-dist.js clean-all            - アーカイブとビルドをクリーンアップ'
+        );
+        console.log('  node clean-dist.js reset                - distディレクトリを完全リセット');
     }
   } catch (error) {
     console.error('❌ エラー:', error.message);
@@ -220,6 +236,7 @@ async function main() {
   }
 }
 
-if (require.main === module) {
+// ES modules環境での直接実行チェック
+if (import.meta.url === `file://${process.argv[1]}`) {
   main();
 }
