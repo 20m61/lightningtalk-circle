@@ -16,6 +16,7 @@ import eventsRouter from './routes/events.js';
 import participantsRouter from './routes/participants.js';
 import talksRouter from './routes/talks.js';
 import adminRouter from './routes/admin.js';
+import healthRouter from './routes/health.js';
 
 // Middleware
 import { errorHandler } from './middleware/errorHandler.js';
@@ -166,16 +167,7 @@ class LightningTalkServer {
     this.app.use('/api/participants', participantsRouter);
     this.app.use('/api/talks', talksRouter);
     this.app.use('/api/admin', adminRouter);
-
-    // Health check
-    this.app.get('/api/health', (req, res) => {
-      res.json({
-        status: 'healthy',
-        timestamp: new Date().toISOString(),
-        environment: this.environment,
-        uptime: process.uptime()
-      });
-    });
+    this.app.use('/api/health', healthRouter);
 
     // API documentation
     this.app.get('/api/docs', (req, res) => {
@@ -185,6 +177,8 @@ class LightningTalkServer {
         endpoints: {
           events: {
             'GET /api/events': 'Get all events',
+            'GET /api/events/search': 'Search and filter events',
+            'GET /api/events/current': 'Get current/next upcoming event',
             'GET /api/events/:id': 'Get specific event',
             'POST /api/events': 'Create new event (admin)',
             'PUT /api/events/:id': 'Update event (admin)',
@@ -201,6 +195,15 @@ class LightningTalkServer {
             'POST /api/talks': 'Submit talk proposal',
             'PUT /api/talks/:id': 'Update talk',
             'DELETE /api/talks/:id': 'Delete talk'
+          },
+          health: {
+            'GET /api/health': 'Basic health check',
+            'GET /api/health/detailed': 'Detailed system status',
+            'GET /api/health/live': 'Kubernetes liveness probe',
+            'GET /api/health/ready': 'Kubernetes readiness probe',
+            'GET /api/health/metrics': 'Prometheus metrics',
+            'GET /api/health/database': 'Database health check',
+            'GET /api/health/dependencies': 'External dependencies check'
           }
         }
       });
