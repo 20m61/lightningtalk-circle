@@ -61,19 +61,57 @@ class LightningTalkServer {
   }
 
   setupMiddleware() {
-    // Security middleware
-    this.app.use(helmet({
-      contentSecurityPolicy: {
-        directives: {
-          defaultSrc: ["'self'"],
-          styleSrc: ["'self'", "'unsafe-inline'", 'https://fonts.googleapis.com'],
-          fontSrc: ["'self'", 'https://fonts.gstatic.com'],
-          scriptSrc: ["'self'"],
-          imgSrc: ["'self'", 'data:', 'https:'],
-          connectSrc: ["'self'"]
-        }
-      }
-    }));
+    // Security middleware - 環境に応じて設定
+    if (this.environment === 'production' && process.env.DISABLE_STRICT_CSP !== 'true') {
+      // 本番環境: 厳格なセキュリティ設定
+      this.app.use(
+        helmet({
+          contentSecurityPolicy: {
+            directives: {
+              defaultSrc: ["'self'"],
+              styleSrc: ["'self'", "'unsafe-inline'", 'https://fonts.googleapis.com'],
+              fontSrc: ["'self'", 'https://fonts.gstatic.com', 'data:'],
+              scriptSrc: ["'self'"],
+              imgSrc: ["'self'", 'data:', 'https:'],
+              connectSrc: ["'self'"],
+              workerSrc: ["'self'", 'blob:'],
+              objectSrc: ["'none'"],
+              baseUri: ["'self'"],
+              formAction: ["'self'"],
+              frameAncestors: ["'self'"],
+              upgradeInsecureRequests: []
+            }
+          }
+        })
+      );
+    } else {
+      // 開発環境: 緩和されたセキュリティ設定
+      this.app.use(
+        helmet({
+          contentSecurityPolicy: {
+            useDefaults: false, // デフォルトを使用しない
+            directives: {
+              defaultSrc: ["'self'"],
+              styleSrc: ["'self'", "'unsafe-inline'", 'https://fonts.googleapis.com'],
+              fontSrc: ["'self'", 'https://fonts.gstatic.com', 'data:'],
+              scriptSrc: ["'self'", "'unsafe-inline'"],
+              scriptSrcAttr: ["'self'", "'unsafe-inline'"],
+              imgSrc: ["'self'", 'data:', 'https:'],
+              connectSrc: ["'self'"],
+              workerSrc: ["'self'", 'blob:'],
+              objectSrc: ["'none'"],
+              baseUri: ["'self'"],
+              formAction: ["'self'"],
+              frameAncestors: ["'self'"]
+              // upgradeInsecureRequests を意図的に除外
+              // script-src-attr も除外
+            }
+          },
+          hsts: false, // HTTPSの強制を無効
+          crossOriginEmbedderPolicy: false
+        })
+      );
+    }
 
     // Rate limiting
     const limiter = rateLimit({
@@ -93,12 +131,20 @@ class LightningTalkServer {
     });
 
     // CORS
-    this.app.use(cors({
-      origin: this.environment === 'production'
-        ? ['https://lightningtalk.example.com']
-        : ['http://localhost:3000', 'http://127.0.0.1:3000'],
-      credentials: true
-    }));
+    this.app.use(
+      cors({
+        origin:
+          this.environment === 'production'
+            ? ['https://lightningtalk.example.com']
+            : [
+                'http://localhost:3000',
+                'http://localhost:3010',
+                'http://127.0.0.1:3000',
+                'http://127.0.0.1:3010'
+              ],
+        credentials: true
+      })
+    );
 
     // Body parsing
     this.app.use(express.json({ limit: '10mb' }));
@@ -199,7 +245,6 @@ class LightningTalkServer {
 
       // Graceful shutdown
       this.setupGracefulShutdown();
-
     } catch (error) {
       console.error('Failed to start server:', error);
       process.exit(1);
@@ -207,11 +252,11 @@ class LightningTalkServer {
   }
 
   setupGracefulShutdown() {
-    const shutdown = async(signal) => {
+    const shutdown = async signal => {
       console.log(`\n📴 Received ${signal}. Starting graceful shutdown...`);
 
       if (this.server) {
-        this.server.close(async() => {
+        this.server.close(async () => {
           console.log('📴 HTTP server closed');
 
           try {
@@ -286,7 +331,7 @@ if (import.meta.url === `file://${process.argv[1]}`) {
 
   // Seed database in development
   if (process.env.NODE_ENV === 'development' && process.argv.includes('--seed')) {
-    (async() => {
+    (async () => {
       try {
         await server.initializeServices();
         await server.seedDatabase();

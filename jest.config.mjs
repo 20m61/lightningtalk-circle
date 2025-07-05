@@ -10,7 +10,7 @@ export default {
             '@babel/preset-env',
             {
               targets: { node: 'current' },
-              modules: 'commonjs'
+              modules: false
             }
           ]
         ],
@@ -24,7 +24,6 @@ export default {
     '/node_modules/',
     '/tests/e2e/',
     '/tests/accessibility/',
-    '/tests/unit/auto-workflow',
     '/tests/unit/quality-gates',
     '/tests/unit/services/database',
     '/tests/integration/notifications.test.js',

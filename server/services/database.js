@@ -57,6 +57,8 @@ export class DatabaseService extends EventEmitter {
         events: 'events.json',
         participants: 'participants.json',
         talks: 'talks.json',
+        presentations: 'presentations.json',
+        presentation_interactions: 'presentation_interactions.json',
         settings: 'settings.json',
         analytics: 'analytics.json'
       };

@@ -1,1 +1,18 @@
-[]
+[
+  {
+    "id": "1751210216399-il3l74tij",
+    "name": "山田太郎",
+    "email": "yamada@example.com",
+    "participationType": "online",
+    "eventId": "event-001",
+    "message": "楽しみにしています！",
+    "newsletter": false,
+    "status": "confirmed",
+    "checkedIn": false,
+    "registrationSource": "web",
+    "ipAddress": "::ffff:172.29.0.1",
+    "userAgent": "curl/8.5.0",
+    "createdAt": "2025-06-29T15:16:56.399Z",
+    "updatedAt": "2025-06-29T15:16:56.399Z"
+  }
+]

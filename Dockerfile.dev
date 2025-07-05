@@ -30,11 +30,14 @@ RUN npm install && npm cache clean --force
 RUN npm install -g nodemon
 
 # 必要なディレクトリを作成
-RUN mkdir -p /app/data /app/logs /app/dist && \
+RUN mkdir -p /app/data /app/logs /app/dist /app/server/data && \
     chown -R nodeuser:nodejs /app
 
 # アプリケーションのソースコードをコピー
 COPY --chown=nodeuser:nodejs . .
+
+# データディレクトリの権限を再設定
+RUN chown -R nodeuser:nodejs /app/server/data /app/data /app/logs
 
 # 非rootユーザーに切り替え
 USER nodeuser

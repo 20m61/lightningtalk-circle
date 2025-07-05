@@ -1,0 +1,37 @@
+[
+  {
+    "id": "int-001",
+    "presentationId": "pres-001",
+    "interactionType": "view",
+    "timestamp": "2025-06-28T14:30:00Z",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36",
+    "ipAddress": "192.168.1.100"
+  },
+  {
+    "id": "int-002",
+    "presentationId": "pres-001",
+    "interactionType": "download",
+    "materialFilename": "presentation-1640995200000-123456789.pdf",
+    "timestamp": "2025-06-28T14:35:00Z",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36",
+    "ipAddress": "192.168.1.100"
+  },
+  {
+    "id": "int-003",
+    "presentationId": "pres-003",
+    "interactionType": "view",
+    "timestamp": "2025-06-28T15:00:00Z",
+    "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36",
+    "ipAddress": "192.168.1.101"
+  },
+  {
+    "id": "6f2b7c92-cb77-4a39-839b-f4359a404e60",
+    "presentationId": "pres-001",
+    "interactionType": "view",
+    "timestamp": "2025-06-30T21:12:10.919Z",
+    "userAgent": "curl/8.5.0",
+    "ipAddress": "::ffff:172.30.0.1",
+    "createdAt": "2025-06-30T21:12:10.919Z",
+    "updatedAt": "2025-06-30T21:12:10.919Z"
+  }
+]

@@ -1,10 +1,12 @@
 # Lightning Talk Circle - Docker Development Environment
 
-This directory contains Docker configuration files for local development of the Lightning Talk Circle application.
+This directory contains Docker configuration files for local development of the
+Lightning Talk Circle application.
 
 ## Quick Start
 
 1. **Start basic development environment:**
+
    ```bash
    ./scripts/docker-dev.sh start
    ```
@@ -21,10 +23,12 @@ This directory contains Docker configuration files for local development of the 
 ## Available Services
 
 ### Basic Development (`./scripts/docker-dev.sh start`)
+
 - **Lightning Talk App**: Main Node.js application
 - **File-based storage**: No external database required
 
 ### Full Development (`./scripts/docker-dev.sh full`)
+
 - **Lightning Talk App**: Main Node.js application
 - **WordPress**: Traditional WordPress theme development
 - **MySQL**: Database for WordPress
@@ -34,10 +38,12 @@ This directory contains Docker configuration files for local development of the 
 ### Profile-based Services
 
 #### WordPress Only (`./scripts/docker-dev.sh wordpress`)
+
 - Includes WordPress and MySQL services
 - Access at: http://localhost:8888
 
 #### Modern Theme Only (`./scripts/docker-dev.sh modern`)
+
 - Includes modern WordPress theme with Vite
 - Dev server at: http://localhost:3001
 - Storybook at: http://localhost:6006
@@ -45,6 +51,7 @@ This directory contains Docker configuration files for local development of the 
 ## Development Scripts
 
 ### `scripts/docker-dev.sh`
+
 Main development helper script with the following commands:
 
 ```bash
@@ -65,7 +72,9 @@ Main development helper script with the following commands:
 ```
 
 ### `scripts/docker-verify.sh`
+
 Comprehensive verification script that:
+
 - Checks Docker installation
 - Builds and starts services
 - Tests health endpoints
@@ -77,6 +86,7 @@ Comprehensive verification script that:
 ## Environment Configuration
 
 ### `.env.docker`
+
 Template environment file for Docker development. Copy to `.env`:
 
 ```bash
@@ -84,6 +94,7 @@ cp .env.docker .env
 ```
 
 Key configuration options:
+
 - `NODE_ENV=development`: Development mode
 - `EMAIL_ENABLED=false`: Disable email for local development
 - `DEBUG=true`: Enable debug logging
@@ -91,15 +102,15 @@ Key configuration options:
 
 ### Environment Variables
 
-| Variable | Default | Description |
-|----------|---------|-------------|
-| `NODE_ENV` | `development` | Application environment |
-| `PORT` | `3000` | Application port |
-| `EMAIL_ENABLED` | `false` | Enable/disable email features |
-| `DEBUG` | `true` | Enable debug logging |
-| `GITHUB_TOKEN` | - | GitHub API token (optional) |
-| `JWT_SECRET` | `development-jwt-secret...` | JWT signing secret |
-| `SESSION_SECRET` | `development-session-secret...` | Session signing secret |
+| Variable         | Default                         | Description                   |
+| ---------------- | ------------------------------- | ----------------------------- |
+| `NODE_ENV`       | `development`                   | Application environment       |
+| `PORT`           | `3000`                          | Application port              |
+| `EMAIL_ENABLED`  | `false`                         | Enable/disable email features |
+| `DEBUG`          | `true`                          | Enable debug logging          |
+| `GITHUB_TOKEN`   | -                               | GitHub API token (optional)   |
+| `JWT_SECRET`     | `development-jwt-secret...`     | JWT signing secret            |
+| `SESSION_SECRET` | `development-session-secret...` | Session signing secret        |
 
 ## File Structure
 
@@ -129,14 +140,17 @@ All services run in the `lightningtalk-local-network` bridge network:
 ## Data Persistence
 
 ### Application Data
+
 - `./data` → `/app/data`: Application data files
 - `./logs` → `/app/logs`: Application log files
 
 ### WordPress Data
+
 - `wp_data`: WordPress files volume
 - `wp_db_data`: MySQL database volume
 
 ### Development Files
+
 - `.:/app`: Source code (bind mount for hot reload)
 - `/app/node_modules`: Isolated node_modules
 
@@ -153,6 +167,7 @@ The application includes comprehensive health checks:
 ## Debugging
 
 ### View Logs
+
 ```bash
 # Recent logs
 ./scripts/docker-dev.sh logs
@@ -165,6 +180,7 @@ docker-compose -f docker-compose.local.yml logs app
 ```
 
 ### Shell Access
+
 ```bash
 # Open shell in main container
 ./scripts/docker-dev.sh shell
@@ -174,6 +190,7 @@ docker-compose -f docker-compose.local.yml exec app sh
 ```
 
 ### Debug Mode
+
 The development container exposes port 9229 for Node.js debugging:
 
 ```bash
@@ -192,6 +209,7 @@ docker-compose -f docker-compose.local.yml up -d
 4. **Health check failures**: Check logs with `./scripts/docker-dev.sh logs`
 
 ### Reset Environment
+
 ```bash
 # Clean everything and start fresh
 ./scripts/docker-dev.sh clean
@@ -200,6 +218,7 @@ docker-compose -f docker-compose.local.yml up -d
 ```
 
 ### Performance Issues
+
 - Use Docker Desktop with adequate resource allocation
 - Enable BuildKit for faster builds: `DOCKER_BUILDKIT=1`
 - Use `.dockerignore` to exclude unnecessary files
@@ -207,6 +226,7 @@ docker-compose -f docker-compose.local.yml up -d
 ## Production Differences
 
 This Docker setup is optimized for development:
+
 - Source code is bind-mounted for hot reload
 - Development dependencies are included
 - Debug ports are exposed
@@ -214,6 +234,7 @@ This Docker setup is optimized for development:
 - Security settings are relaxed
 
 For production deployment, use the main `Dockerfile` with proper:
+
 - Multi-stage builds
 - Production dependencies only
 - Security hardening
@@ -222,6 +243,7 @@ For production deployment, use the main `Dockerfile` with proper:
 ## Integration with CI/CD
 
 The Docker environment is compatible with GitHub Actions workflows:
+
 - Uses the same base configuration
 - Environment variables can be overridden
 - Health checks ensure reliable testing

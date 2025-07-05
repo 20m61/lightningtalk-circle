@@ -1,1 +1,15 @@
-[]
+[
+  {
+    "id": "1751210216399-d7re6sw4c",
+    "eventId": "event-001",
+    "action": "participant_registered",
+    "data": {
+      "participationType": "online",
+      "source": "web"
+    },
+    "timestamp": "2025-06-29T15:16:56.399Z",
+    "date": "Mon Jun 30 2025",
+    "createdAt": "2025-06-29T15:16:56.399Z",
+    "updatedAt": "2025-06-29T15:16:56.399Z"
+  }
+]

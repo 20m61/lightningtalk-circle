@@ -9,6 +9,47 @@ import rateLimit from 'express-rate-limit';
 
 const router = express.Router();
 
+/**
+ * GET /api/participants
+ * Get participants for current event or return error message
+ */
+router.get('/', async (req, res) => {
+    try {
+        const { database } = req.app.locals;
+        
+        // Get current event
+        const events = await database.findAll('events');
+        const currentEvent = events.find(event => event.status === 'upcoming');
+        
+        if (!currentEvent) {
+            return res.status(404).json({
+                error: 'No current event',
+                message: '現在開催予定のイベントがありません',
+                suggestion: 'イベントIDを指定してください: /api/participants/:eventId'
+            });
+        }
+        
+        // Get participants for current event
+        const participants = await database.findAll('participants', { eventId: currentEvent.id });
+        
+        res.json({
+            eventId: currentEvent.id,
+            eventTitle: currentEvent.title,
+            participants: participants || [],
+            total: participants ? participants.length : 0,
+            timestamp: new Date().toISOString()
+        });
+        
+    } catch (error) {
+        console.error('Error fetching participants:', error);
+        res.status(500).json({
+            error: 'Failed to fetch participants',
+            message: '参加者情報の取得に失敗しました',
+            details: error.message
+        });
+    }
+});
+
 // Rate limiting for registration
 const registrationLimiter = rateLimit({
     windowMs: 60 * 60 * 1000, // 1 hour

@@ -2,7 +2,16 @@
  * GitHub API統合テスト
  */
 
-import { describe, it, expect, beforeAll, afterAll, beforeEach, afterEach } from '@jest/globals';
+import {
+  describe,
+  it,
+  expect,
+  beforeAll,
+  afterAll,
+  beforeEach,
+  afterEach,
+  jest
+} from '@jest/globals';
 import { Octokit } from '@octokit/rest';
 import { issueFixtures } from '../fixtures/issues.js';
 
@@ -73,33 +82,32 @@ describe('GitHub API Integration', () => {
     if (!token || token === 'test-token-for-development') {
       console.log('Skipping GitHub API integration tests - no valid GITHUB_TOKEN provided');
       githubService = {
-        createIssue: jest
-          .fn()
-          .mockImplementation((issueData) => {
-            if (!issueData.title || issueData.title.trim() === '') {
-              return Promise.reject(new Error('Title is required'));
-            }
-            return Promise.resolve({ 
-              number: 1, 
-              title: issueData.title, 
-              body: issueData.body || issueData.description, 
-              state: 'open' 
-            });
-          }),
+        createIssue: jest.fn().mockImplementation(issueData => {
+          if (!issueData.title || issueData.title.trim() === '') {
+            return Promise.reject(new Error('Title is required'));
+          }
+          return Promise.resolve({
+            number: 1,
+            title: issueData.title,
+            body: issueData.body || issueData.description,
+            state: 'open'
+          });
+        }),
         getIssues: jest.fn().mockResolvedValue([]),
-        updateIssue: jest.fn().mockImplementation((issueNumber, updates) => Promise.resolve({ 
-          number: issueNumber, 
-          title: updates.title || 'Updated Title', 
-          body: updates.body || 'Updated Body',
-          state: updates.state || 'open'
-        })),
-        addLabelsToIssue: jest.fn().mockResolvedValue([
-          { name: 'test-label' },
-          { name: 'integration-test' }
-        ]),
-        closeIssue: jest.fn().mockResolvedValue({ 
-          number: 1, 
-          state: 'closed' 
+        updateIssue: jest.fn().mockImplementation((issueNumber, updates) =>
+          Promise.resolve({
+            number: issueNumber,
+            title: updates.title || 'Updated Title',
+            body: updates.body || 'Updated Body',
+            state: updates.state || 'open'
+          })
+        ),
+        addLabelsToIssue: jest
+          .fn()
+          .mockResolvedValue([{ name: 'test-label' }, { name: 'integration-test' }]),
+        closeIssue: jest.fn().mockResolvedValue({
+          number: 1,
+          state: 'closed'
         })
       };
       return;
