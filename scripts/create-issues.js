@@ -33,17 +33,17 @@ try {
 } catch (e) {
   // Create a simple chalk replacement
   chalk = {
-    blue: (text) => text,
-    green: (text) => text,
-    yellow: (text) => text,
-    red: (text) => text,
-    bold: (text) => text
+    blue: text => text,
+    green: text => text,
+    yellow: text => text,
+    red: text => text,
+    bold: text => text
   };
 }
 
-// Configuration
-const REPO_OWNER = '20m61';
-const REPO_NAME = 'lightningtalk-circle';
+// Configuration - Use environment variables with fallbacks
+const REPO_OWNER = process.env.GITHUB_OWNER || '20m61';
+const REPO_NAME = process.env.GITHUB_REPO || 'lightningtalk-circle';
 
 // Get current file path and directory (ES Module equivalent of __dirname)
 const __filename = fileURLToPath(import.meta.url);
@@ -59,7 +59,9 @@ const ISSUES_DATA_PATH = path.resolve(process.cwd(), 'docs/project/issues-data.j
 if (isGitHubActions) {
   console.log(`Debug: Looking for data file at: ${ISSUES_DATA_PATH}`);
   console.log(`Debug: Working directory: ${process.cwd()}`);
-  console.log(`Debug: Directory contents: ${fs.readdirSync(path.dirname(ISSUES_DATA_PATH)).join(', ')}`);
+  console.log(
+    `Debug: Directory contents: ${fs.readdirSync(path.dirname(ISSUES_DATA_PATH)).join(', ')}`
+  );
   console.log(`Debug: File exists: ${fs.existsSync(ISSUES_DATA_PATH)}`);
 }
 
@@ -83,7 +85,9 @@ async function createIssues(categoryFilter = null) {
   try {
     // Check if data file exists first
     if (!fs.existsSync(ISSUES_DATA_PATH)) {
-      throw new Error(`Data file not found: ${ISSUES_DATA_PATH}. Check that the file exists and the path is correct.`);
+      throw new Error(
+        `Data file not found: ${ISSUES_DATA_PATH}. Check that the file exists and the path is correct.`
+      );
     }
 
     // Load issues data
@@ -93,10 +97,10 @@ async function createIssues(categoryFilter = null) {
 
     // Map category argument to data structure
     const categoryMap = {
-      'infrastructure': 'infrastructure_foundation_issues',
-      'core': 'core_feature_issues',
-      'enhancement': 'enhancement_optimization_issues',
-      'compliance': 'compliance_maintenance_issues'
+      infrastructure: 'infrastructure_foundation_issues',
+      core: 'core_feature_issues',
+      enhancement: 'enhancement_optimization_issues',
+      compliance: 'compliance_maintenance_issues'
     };
 
     // Create infrastructure/foundation issues
@@ -137,7 +141,6 @@ async function createIssues(categoryFilter = null) {
 
     log(chalk.green('\nIssue creation completed!'));
     printSummary();
-
   } catch (error) {
     log(chalk.red(`Error creating issues: ${error.message}`));
     setGitHubActionsFailed(error.message);

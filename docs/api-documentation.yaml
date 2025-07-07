@@ -1,0 +1,1014 @@
+openapi: 3.0.3
+info:
+  title: Lightning Talk Circle API
+  description: |
+    Lightning Talk Circle is a comprehensive event management system for organizing Lightning Talk events.
+    This API provides endpoints for managing events, participants, talks, and administrative functions.
+    
+    ## Authentication
+    Most endpoints require authentication using JWT tokens. Include the token in the Authorization header:
+    ```
+    Authorization: Bearer <your-jwt-token>
+    ```
+    
+    ## Rate Limiting
+    - General endpoints: 100 requests per 15 minutes per IP
+    - Registration endpoints: 5 requests per hour per IP
+    
+    ## Error Handling
+    All endpoints return consistent error responses with appropriate HTTP status codes and error messages.
+  version: 1.0.0
+  contact:
+    name: Lightning Talk Circle
+    url: https://github.com/your-org/lightningtalk-circle
+  license:
+    name: MIT
+    url: https://opensource.org/licenses/MIT
+
+servers:
+  - url: http://localhost:3000/api
+    description: Development server
+  - url: https://api.lightningtalk.example.com/api
+    description: Production server
+
+paths:
+  /health:
+    get:
+      summary: Health check endpoint
+      description: Returns the health status of the API server
+      tags:
+        - System
+      responses:
+        '200':
+          description: Service is healthy
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: healthy
+                  timestamp:
+                    type: string
+                    format: date-time
+                  environment:
+                    type: string
+                    example: production
+                  uptime:
+                    type: number
+                    example: 86400
+
+  /docs:
+    get:
+      summary: API documentation
+      description: Returns API documentation and available endpoints
+      tags:
+        - System
+      responses:
+        '200':
+          description: API documentation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  title:
+                    type: string
+                    example: Lightning Talk API
+                  version:
+                    type: string
+                    example: 1.0.0
+                  endpoints:
+                    type: object
+
+  /auth/login:
+    post:
+      summary: User login
+      description: Authenticate user and return JWT token
+      tags:
+        - Authentication
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - email
+                - password
+              properties:
+                email:
+                  type: string
+                  format: email
+                  example: admin@example.com
+                password:
+                  type: string
+                  format: password
+                  example: securepassword123
+      responses:
+        '200':
+          description: Login successful
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  token:
+                    type: string
+                    example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+                  user:
+                    $ref: '#/components/schemas/User'
+        '401':
+          description: Invalid credentials
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /auth/register:
+    post:
+      summary: User registration
+      description: Register a new user account
+      tags:
+        - Authentication
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - email
+                - password
+                - name
+              properties:
+                email:
+                  type: string
+                  format: email
+                  example: user@example.com
+                password:
+                  type: string
+                  format: password
+                  minLength: 8
+                  example: securepassword123
+                name:
+                  type: string
+                  example: John Doe
+                role:
+                  type: string
+                  enum: [user, admin]
+                  default: user
+      responses:
+        '201':
+          description: User registered successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  user:
+                    $ref: '#/components/schemas/User'
+        '400':
+          description: Registration failed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /auth/me:
+    get:
+      summary: Get current user
+      description: Get information about the currently authenticated user
+      tags:
+        - Authentication
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: User information
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /events:
+    get:
+      summary: Get all events
+      description: Retrieve a list of all events
+      tags:
+        - Events
+      parameters:
+        - name: status
+          in: query
+          description: Filter events by status
+          schema:
+            type: string
+            enum: [upcoming, live, completed, cancelled]
+        - name: limit
+          in: query
+          description: Number of events to return
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 100
+            default: 10
+        - name: offset
+          in: query
+          description: Number of events to skip
+          schema:
+            type: integer
+            minimum: 0
+            default: 0
+      responses:
+        '200':
+          description: List of events
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Event'
+
+    post:
+      summary: Create new event
+      description: Create a new Lightning Talk event (admin only)
+      tags:
+        - Events
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EventCreate'
+      responses:
+        '201':
+          description: Event created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Event'
+        '403':
+          description: Forbidden - Admin access required
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /events/{id}:
+    get:
+      summary: Get event by ID
+      description: Retrieve a specific event by its ID
+      tags:
+        - Events
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: Event ID
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Event details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Event'
+        '404':
+          description: Event not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+    put:
+      summary: Update event
+      description: Update an existing event (admin only)
+      tags:
+        - Events
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: Event ID
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EventUpdate'
+      responses:
+        '200':
+          description: Event updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Event'
+        '403':
+          description: Forbidden - Admin access required
+        '404':
+          description: Event not found
+
+    delete:
+      summary: Delete event
+      description: Delete an event (admin only)
+      tags:
+        - Events
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: Event ID
+          schema:
+            type: string
+      responses:
+        '204':
+          description: Event deleted successfully
+        '403':
+          description: Forbidden - Admin access required
+        '404':
+          description: Event not found
+
+  /participants/register:
+    post:
+      summary: Register for event
+      description: Register a participant for an event
+      tags:
+        - Participants
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ParticipantRegistration'
+      responses:
+        '201':
+          description: Registration successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Participant'
+        '400':
+          description: Registration failed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /participants/{eventId}:
+    get:
+      summary: Get event participants
+      description: Get all participants for a specific event (admin only)
+      tags:
+        - Participants
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: eventId
+          in: path
+          required: true
+          description: Event ID
+          schema:
+            type: string
+      responses:
+        '200':
+          description: List of participants
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Participant'
+        '403':
+          description: Forbidden - Admin access required
+
+  /participants/{id}:
+    put:
+      summary: Update participant
+      description: Update participant information
+      tags:
+        - Participants
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: Participant ID
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ParticipantUpdate'
+      responses:
+        '200':
+          description: Participant updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Participant'
+        '404':
+          description: Participant not found
+
+    delete:
+      summary: Remove participant
+      description: Remove a participant from an event (admin only)
+      tags:
+        - Participants
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: Participant ID
+          schema:
+            type: string
+      responses:
+        '204':
+          description: Participant removed successfully
+        '403':
+          description: Forbidden - Admin access required
+        '404':
+          description: Participant not found
+
+  /talks:
+    post:
+      summary: Submit talk proposal
+      description: Submit a new talk proposal
+      tags:
+        - Talks
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TalkSubmission'
+      responses:
+        '201':
+          description: Talk submitted successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Talk'
+        '400':
+          description: Talk submission failed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /talks/{eventId}:
+    get:
+      summary: Get talks for event
+      description: Get all talks for a specific event
+      tags:
+        - Talks
+      parameters:
+        - name: eventId
+          in: path
+          required: true
+          description: Event ID
+          schema:
+            type: string
+        - name: status
+          in: query
+          description: Filter talks by status
+          schema:
+            type: string
+            enum: [pending, approved, rejected]
+      responses:
+        '200':
+          description: List of talks
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Talk'
+
+  /talks/{id}:
+    put:
+      summary: Update talk
+      description: Update a talk proposal
+      tags:
+        - Talks
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: Talk ID
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TalkUpdate'
+      responses:
+        '200':
+          description: Talk updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Talk'
+        '404':
+          description: Talk not found
+
+    delete:
+      summary: Delete talk
+      description: Delete a talk proposal
+      tags:
+        - Talks
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: Talk ID
+          schema:
+            type: string
+      responses:
+        '204':
+          description: Talk deleted successfully
+        '404':
+          description: Talk not found
+
+  /admin/dashboard:
+    get:
+      summary: Get admin dashboard data
+      description: Get dashboard statistics and information (admin only)
+      tags:
+        - Admin
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Dashboard data
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AdminDashboard'
+        '403':
+          description: Forbidden - Admin access required
+
+  /admin/users:
+    get:
+      summary: Get all users
+      description: Get all registered users (admin only)
+      tags:
+        - Admin
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: List of users
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/User'
+        '403':
+          description: Forbidden - Admin access required
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  schemas:
+    User:
+      type: object
+      properties:
+        id:
+          type: string
+          example: user-123
+        email:
+          type: string
+          format: email
+          example: user@example.com
+        name:
+          type: string
+          example: John Doe
+        role:
+          type: string
+          enum: [user, admin]
+          example: user
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+
+    Event:
+      type: object
+      properties:
+        id:
+          type: string
+          example: event-123
+        title:
+          type: string
+          example: 第1回 なんでもライトニングトーク
+        description:
+          type: string
+          example: 5分間で世界を変える！あなたの「なんでも」を聞かせて！
+        date:
+          type: string
+          format: date-time
+          example: 2025-06-25T19:00:00+09:00
+        endDate:
+          type: string
+          format: date-time
+          example: 2025-06-25T22:00:00+09:00
+        venue:
+          $ref: '#/components/schemas/Venue'
+        status:
+          type: string
+          enum: [upcoming, live, completed, cancelled]
+          example: upcoming
+        registrationOpen:
+          type: boolean
+          example: true
+        talkSubmissionOpen:
+          type: boolean
+          example: true
+        maxTalks:
+          type: integer
+          example: 20
+        talkDuration:
+          type: integer
+          example: 5
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+
+    EventCreate:
+      type: object
+      required:
+        - title
+        - description
+        - date
+        - venue
+      properties:
+        title:
+          type: string
+          example: 第1回 なんでもライトニングトーク
+        description:
+          type: string
+          example: 5分間で世界を変える！あなたの「なんでも」を聞かせて！
+        date:
+          type: string
+          format: date-time
+          example: 2025-06-25T19:00:00+09:00
+        endDate:
+          type: string
+          format: date-time
+          example: 2025-06-25T22:00:00+09:00
+        venue:
+          $ref: '#/components/schemas/Venue'
+        maxTalks:
+          type: integer
+          example: 20
+        talkDuration:
+          type: integer
+          example: 5
+
+    EventUpdate:
+      type: object
+      properties:
+        title:
+          type: string
+        description:
+          type: string
+        date:
+          type: string
+          format: date-time
+        endDate:
+          type: string
+          format: date-time
+        venue:
+          $ref: '#/components/schemas/Venue'
+        status:
+          type: string
+          enum: [upcoming, live, completed, cancelled]
+        registrationOpen:
+          type: boolean
+        talkSubmissionOpen:
+          type: boolean
+        maxTalks:
+          type: integer
+        talkDuration:
+          type: integer
+
+    Venue:
+      type: object
+      properties:
+        name:
+          type: string
+          example: 新宿会場
+        address:
+          type: string
+          example: 西新宿8-14-19 小林第二ビル8階
+        capacity:
+          type: integer
+          example: 50
+        online:
+          type: boolean
+          example: true
+        onlineUrl:
+          type: string
+          format: uri
+          example: https://meet.google.com/ycp-sdec-xsr
+
+    Participant:
+      type: object
+      properties:
+        id:
+          type: string
+          example: participant-123
+        name:
+          type: string
+          example: 山田太郎
+        email:
+          type: string
+          format: email
+          example: yamada@example.com
+        eventId:
+          type: string
+          example: event-123
+        participationType:
+          type: string
+          enum: [offline, online]
+          example: offline
+        emergencyContact:
+          type: string
+          example: 090-1234-5678
+        dietaryRestrictions:
+          type: string
+          example: "アレルギー: 卵、乳製品"
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+
+    ParticipantRegistration:
+      type: object
+      required:
+        - name
+        - email
+        - eventId
+        - participationType
+      properties:
+        name:
+          type: string
+          example: 山田太郎
+        email:
+          type: string
+          format: email
+          example: yamada@example.com
+        eventId:
+          type: string
+          example: event-123
+        participationType:
+          type: string
+          enum: [offline, online]
+          example: offline
+        emergencyContact:
+          type: string
+          example: 090-1234-5678
+        dietaryRestrictions:
+          type: string
+          example: "アレルギー: 卵、乳製品"
+
+    ParticipantUpdate:
+      type: object
+      properties:
+        name:
+          type: string
+        email:
+          type: string
+          format: email
+        participationType:
+          type: string
+          enum: [offline, online]
+        emergencyContact:
+          type: string
+        dietaryRestrictions:
+          type: string
+
+    Talk:
+      type: object
+      properties:
+        id:
+          type: string
+          example: talk-123
+        title:
+          type: string
+          example: 5分でわかるDocker入門
+        description:
+          type: string
+          example: Dockerの基本的な使い方を実演デモ付きで紹介します
+        speakerName:
+          type: string
+          example: 田中花子
+        speakerEmail:
+          type: string
+          format: email
+          example: tanaka@example.com
+        eventId:
+          type: string
+          example: event-123
+        category:
+          type: string
+          enum: [tech, hobby, learning, travel, food, game, lifehack, pet, garden, money, sports, music, other]
+          example: tech
+        status:
+          type: string
+          enum: [pending, approved, rejected]
+          example: pending
+        order:
+          type: integer
+          example: 1
+        rating:
+          type: number
+          format: float
+          minimum: 1
+          maximum: 5
+          example: 4.5
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+
+    TalkSubmission:
+      type: object
+      required:
+        - title
+        - description
+        - speakerName
+        - speakerEmail
+        - eventId
+        - category
+      properties:
+        title:
+          type: string
+          example: 5分でわかるDocker入門
+        description:
+          type: string
+          example: Dockerの基本的な使い方を実演デモ付きで紹介します
+        speakerName:
+          type: string
+          example: 田中花子
+        speakerEmail:
+          type: string
+          format: email
+          example: tanaka@example.com
+        eventId:
+          type: string
+          example: event-123
+        category:
+          type: string
+          enum: [tech, hobby, learning, travel, food, game, lifehack, pet, garden, money, sports, music, other]
+          example: tech
+
+    TalkUpdate:
+      type: object
+      properties:
+        title:
+          type: string
+        description:
+          type: string
+        speakerName:
+          type: string
+        speakerEmail:
+          type: string
+          format: email
+        category:
+          type: string
+          enum: [tech, hobby, learning, travel, food, game, lifehack, pet, garden, money, sports, music, other]
+        status:
+          type: string
+          enum: [pending, approved, rejected]
+        order:
+          type: integer
+        rating:
+          type: number
+          format: float
+          minimum: 1
+          maximum: 5
+
+    AdminDashboard:
+      type: object
+      properties:
+        statistics:
+          type: object
+          properties:
+            totalEvents:
+              type: integer
+              example: 5
+            totalParticipants:
+              type: integer
+              example: 127
+            totalTalks:
+              type: integer
+              example: 43
+            upcomingEvents:
+              type: integer
+              example: 2
+        recentActivity:
+          type: array
+          items:
+            type: object
+            properties:
+              type:
+                type: string
+                example: registration
+              description:
+                type: string
+                example: 新規参加者登録: 山田太郎
+              timestamp:
+                type: string
+                format: date-time
+        systemHealth:
+          type: object
+          properties:
+            database:
+              type: string
+              example: healthy
+            email:
+              type: string
+              example: healthy
+            storage:
+              type: string
+              example: healthy
+
+    Error:
+      type: object
+      properties:
+        error:
+          type: string
+          example: Validation failed
+        message:
+          type: string
+          example: Required fields are missing
+        details:
+          type: array
+          items:
+            type: string
+          example: ["Name is required", "Email is required"]
+        timestamp:
+          type: string
+          format: date-time
+
+tags:
+  - name: System
+    description: System health and information endpoints
+  - name: Authentication
+    description: User authentication and authorization
+  - name: Events
+    description: Event management operations
+  - name: Participants
+    description: Participant registration and management
+  - name: Talks
+    description: Talk submission and management
+  - name: Admin
+    description: Administrative operations

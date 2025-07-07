@@ -13,9 +13,11 @@ RUN apk add --no-cache \
 # タイムゾーンを設定
 ENV TZ=Asia/Tokyo
 
-# 非rootユーザーを作成
-RUN addgroup -g 1001 -S nodejs && \
-    adduser -S nodeuser -u 1001 -G nodejs
+# 動的なUID/GIDでユーザーを作成
+ARG UID=1001
+ARG GID=1001
+RUN addgroup -g ${GID} -S nodejs && \
+    adduser -S nodeuser -u ${UID} -G nodejs
 
 # 作業ディレクトリを設定
 WORKDIR /app
@@ -31,13 +33,13 @@ RUN npm install -g nodemon
 
 # 必要なディレクトリを作成
 RUN mkdir -p /app/data /app/logs /app/dist /app/server/data && \
-    chown -R nodeuser:nodejs /app
+    chown -R ${UID}:${GID} /app
 
 # アプリケーションのソースコードをコピー
-COPY --chown=nodeuser:nodejs . .
+COPY --chown=${UID}:${GID} . .
 
 # データディレクトリの権限を再設定
-RUN chown -R nodeuser:nodejs /app/server/data /app/data /app/logs
+RUN chown -R ${UID}:${GID} /app/server/data /app/data /app/logs
 
 # 非rootユーザーに切り替え
 USER nodeuser

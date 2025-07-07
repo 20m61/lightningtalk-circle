@@ -20,23 +20,84 @@ if (typeof import.meta !== 'undefined' && import.meta.url) {
 }
 
 export class DatabaseService extends EventEmitter {
-  static _instance;
-  static getInstance(config) {
-    if (!DatabaseService._instance) {
-      DatabaseService._instance = new DatabaseService(config);
+  static _instance = null;
+  static _lastConfig = null;
+
+  static getInstance(config = {}) {
+    // Create a config signature for comparison
+    const configSignature = JSON.stringify(config);
+
+    // If instance exists and config hasn't changed, return existing instance
+    if (DatabaseService._instance && DatabaseService._lastConfig === configSignature) {
+      return DatabaseService._instance;
     }
+
+    // If config changed, close existing instance and create new one
+    if (DatabaseService._instance && DatabaseService._lastConfig !== configSignature) {
+      console.log('🔄 Database configuration changed, reinitializing...');
+      DatabaseService._instance.close();
+    }
+
+    // Create new instance
+    DatabaseService._instance = new DatabaseService(config);
+    DatabaseService._lastConfig = configSignature;
+
     return DatabaseService._instance;
+  }
+
+  static resetInstance() {
+    if (DatabaseService._instance) {
+      DatabaseService._instance.close();
+      DatabaseService._instance = null;
+      DatabaseService._lastConfig = null;
+    }
   }
 
   constructor(config = {}) {
     super();
-    this.config = config;
-    this.connectionString = this._buildConnectionString(config);
-    this.dataDir = path.join(__dirname, '../data');
+
+    // Prevent direct instantiation
+    if (DatabaseService._instance && this !== DatabaseService._instance) {
+      throw new Error('DatabaseService is a singleton. Use DatabaseService.getInstance() instead.');
+    }
+
+    this.config = this._validateConfig(config);
+    this.connectionString = this._buildConnectionString(this.config);
+    this.dataDir = this._getDataDirectory();
     this.cache = new Map();
     this.initialized = false;
     this.saveQueue = new Map();
     this.saveTimeout = null;
+    this.isClosing = false;
+    this.lockManager = new Map(); // For handling concurrent operations
+  }
+
+  _validateConfig(config) {
+    const validatedConfig = {
+      type: config.type || 'file',
+      dataDir: config.dataDir || null,
+      host: config.host || 'localhost',
+      port: config.port || 5432,
+      database: config.database || 'lightningtalk',
+      user: config.user || null,
+      password: config.password || null,
+      ssl: config.ssl || false,
+      maxConnections: config.maxConnections || 10,
+      connectionTimeout: config.connectionTimeout || 5000,
+      ...config
+    };
+
+    return validatedConfig;
+  }
+
+  _getDataDirectory() {
+    if (this.config.dataDir) {
+      return path.resolve(this.config.dataDir);
+    }
+
+    // Default data directory
+    const defaultDir = path.join(__dirname, '../data');
+    return defaultDir;
   }
 
   _buildConnectionString(config) {
@@ -56,6 +117,7 @@ export class DatabaseService extends EventEmitter {
       this.collections = {
         events: 'events.json',
         participants: 'participants.json',
+        users: 'users.json',
         talks: 'talks.json',
         presentations: 'presentations.json',
         presentation_interactions: 'presentation_interactions.json',
@@ -280,7 +342,7 @@ export class DatabaseService extends EventEmitter {
     return counts;
   }
 
-  async getStats(collection) {
+  async getCollectionStats(collection) {
     const data = await this.findAll(collection);
 
     return {
@@ -473,17 +535,207 @@ export class DatabaseService extends EventEmitter {
     }
   }
 
+  /**
+   * Acquire lock for a collection to prevent concurrent operations
+   */
+  async acquireLock(collection) {
+    while (this.lockManager.has(collection)) {
+      await new Promise(resolve => setTimeout(resolve, 10));
+    }
+    this.lockManager.set(collection, Date.now());
+  }
+
+  /**
+   * Release lock for a collection
+   */
+  releaseLock(collection) {
+    this.lockManager.delete(collection);
+  }
+
+  /**
+   * Perform operation with lock
+   */
+  async withLock(collection, operation) {
+    await this.acquireLock(collection);
+    try {
+      return await operation();
+    } finally {
+      this.releaseLock(collection);
+    }
+  }
+
+  /**
+   * Get database health status
+   */
+  getHealth() {
+    return {
+      status: this.initialized ? 'healthy' : 'initializing',
+      type: this.config.type,
+      dataDir: this.dataDir,
+      collections: Object.keys(this.collections),
+      cacheSize: this.cache.size,
+      pendingSaves: this.saveQueue.size,
+      uptime: process.uptime(),
+      lastCheck: new Date().toISOString()
+    };
+  }
+
+  /**
+   * Get database statistics
+   */
+  async getStats() {
+    const stats = {
+      collections: {},
+      totalRecords: 0,
+      totalSize: 0
+    };
+
+    for (const [collection, filename] of Object.entries(this.collections)) {
+      const data = this.cache.get(collection) || [];
+      const filePath = path.join(this.dataDir, filename);
+
+      let fileSize = 0;
+      try {
+        const fileStat = await fs.stat(filePath);
+        fileSize = fileStat.size;
+      } catch (error) {
+        // File might not exist yet
+      }
+
+      stats.collections[collection] = {
+        records: data.length,
+        size: fileSize,
+        lastModified: new Date().toISOString()
+      };
+
+      stats.totalRecords += data.length;
+      stats.totalSize += fileSize;
+    }
+
+    return stats;
+  }
+
+  /**
+   * Backup all data
+   */
+  async backup(backupDir = null) {
+    const backupDirectory = backupDir || path.join(this.dataDir, 'backups');
+    const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
+    const backupPath = path.join(backupDirectory, `backup-${timestamp}`);
+
+    await fs.mkdir(backupPath, { recursive: true });
+
+    for (const [collection, filename] of Object.entries(this.collections)) {
+      const sourcePath = path.join(this.dataDir, filename);
+      const backupFilePath = path.join(backupPath, filename);
+
+      try {
+        await fs.copyFile(sourcePath, backupFilePath);
+      } catch (error) {
+        if (error.code !== 'ENOENT') {
+          throw error;
+        }
+      }
+    }
+
+    console.log(`📦 Database backup created: ${backupPath}`);
+    return backupPath;
+  }
+
+  /**
+   * Restore from backup
+   */
+  async restore(backupPath) {
+    if (this.isClosing) {
+      throw new Error('Cannot restore while database is closing');
+    }
+
+    console.log(`📦 Restoring database from: ${backupPath}`);
+
+    for (const [collection, filename] of Object.entries(this.collections)) {
+      const backupFilePath = path.join(backupPath, filename);
+      const targetPath = path.join(this.dataDir, filename);
+
+      try {
+        await fs.copyFile(backupFilePath, targetPath);
+
+        // Reload collection into cache
+        const data = await fs.readFile(targetPath, 'utf8');
+        this.cache.set(collection, JSON.parse(data));
+      } catch (error) {
+        if (error.code !== 'ENOENT') {
+          throw error;
+        }
+      }
+    }
+
+    console.log('📦 Database restore completed');
+  }
+
+  /**
+   * Close database connection and cleanup
+   */
   async close() {
-    // Save all pending changes
-    if (this.saveTimeout) {
-      clearTimeout(this.saveTimeout);
+    if (this.isClosing) {
+      return;
     }
 
-    const collectionsToSave = Array.from(this.saveQueue.keys());
-    for (const collection of collectionsToSave) {
-      await this.saveCollection(collection);
-    }
+    this.isClosing = true;
+    console.log('📦 Closing database service...');
 
-    console.log('📦 Database service closed');
+    try {
+      // Wait for all locks to be released
+      const lockWaitTimeout = 5000; // 5 seconds
+      const startTime = Date.now();
+
+      while (this.lockManager.size > 0 && Date.now() - startTime < lockWaitTimeout) {
+        await new Promise(resolve => setTimeout(resolve, 100));
+      }
+
+      if (this.lockManager.size > 0) {
+        console.warn(
+          '⚠️  Force closing database with active locks:',
+          Array.from(this.lockManager.keys())
+        );
+        this.lockManager.clear();
+      }
+
+      // Save all pending changes
+      if (this.saveTimeout) {
+        clearTimeout(this.saveTimeout);
+        this.saveTimeout = null;
+      }
+
+      const collectionsToSave = Array.from(this.saveQueue.keys());
+      this.saveQueue.clear();
+
+      for (const collection of collectionsToSave) {
+        try {
+          await this.saveCollection(collection);
+        } catch (error) {
+          console.error(`Failed to save collection ${collection} during close:`, error);
+        }
+      }
+
+      // Clear cache
+      this.cache.clear();
+      this.initialized = false;
+
+      this.emit('closed');
+      console.log('📦 Database service closed successfully');
+    } catch (error) {
+      console.error('Error during database close:', error);
+      throw error;
+    } finally {
+      this.isClosing = false;
+    }
+  }
+
+  /**
+   * Graceful shutdown helper
+   */
+  async shutdown() {
+    await this.close();
+    this.removeAllListeners();
   }
 }

@@ -12,7 +12,7 @@ function getConfig(environment) {
       },
       database: {
         engine: 'postgres',
-        version: '15.4',
+        version: '14.9',
         instanceClass: 'db.t3.micro',
         allocatedStorage: 20,
         multiAz: false,
@@ -40,6 +40,7 @@ function getConfig(environment) {
         enableXRayTracing: false
       },
       security: {
+        wafEnabled: false,
         enableWaf: false,
         enableGuardDuty: false,
         allowedIpRanges: [],
@@ -59,7 +60,7 @@ function getConfig(environment) {
       },
       database: {
         engine: 'postgres',
-        version: '15.4',
+        version: '14.9',
         instanceClass: 'db.t3.small',
         allocatedStorage: 50,
         multiAz: true,
@@ -106,7 +107,7 @@ function getConfig(environment) {
       },
       database: {
         engine: 'postgres',
-        version: '15.4',
+        version: '14.9',
         instanceClass: 'db.t3.medium',
         allocatedStorage: 100,
         multiAz: true,

@@ -10,7 +10,7 @@ class MonitoringStack extends Stack {
   constructor(scope, id, props) {
     super(scope, id, props);
 
-    const { config, database, apiService, alb } = props;
+    const { config, databaseStack, apiService, alb } = props;
 
     // Create SNS topic for alerts
     const alertTopic = new sns.Topic(this, 'AlertTopic', {
@@ -30,36 +30,47 @@ class MonitoringStack extends Stack {
       dashboardName: `${config.app.name}-${config.app.stage}-dashboard`,
     });
 
-    // Database Metrics
-    const dbCpuMetric = new cloudwatch.Metric({
-      namespace: 'AWS/RDS',
-      metricName: 'CPUUtilization',
+    // DynamoDB Metrics
+    const tables = [
+      { name: databaseStack.eventsTable.tableName, label: 'Events' },
+      { name: databaseStack.participantsTable.tableName, label: 'Participants' },
+      { name: databaseStack.usersTable.tableName, label: 'Users' },
+      { name: databaseStack.talksTable.tableName, label: 'Talks' }
+    ];
+    
+    const dbReadMetrics = tables.map(table => new cloudwatch.Metric({
+      namespace: 'AWS/DynamoDB',
+      metricName: 'ConsumedReadCapacityUnits',
       dimensionsMap: {
-        DBInstanceIdentifier: database.instanceIdentifier,
+        TableName: table.name,
       },
-      statistic: 'Average',
+      statistic: 'Sum',
       period: Duration.minutes(5),
-    });
+      label: `${table.label} Read`,
+    }));
 
-    const dbConnectionsMetric = new cloudwatch.Metric({
-      namespace: 'AWS/RDS',
-      metricName: 'DatabaseConnections',
+    const dbWriteMetrics = tables.map(table => new cloudwatch.Metric({
+      namespace: 'AWS/DynamoDB',
+      metricName: 'ConsumedWriteCapacityUnits',
       dimensionsMap: {
-        DBInstanceIdentifier: database.instanceIdentifier,
+        TableName: table.name,
       },
-      statistic: 'Average',
+      statistic: 'Sum',
       period: Duration.minutes(5),
-    });
+      label: `${table.label} Write`,
+    }));
 
-    const dbStorageMetric = new cloudwatch.Metric({
-      namespace: 'AWS/RDS',
-      metricName: 'FreeStorageSpace',
+    const dbThrottleMetrics = tables.map(table => new cloudwatch.Metric({
+      namespace: 'AWS/DynamoDB',
+      metricName: 'UserErrors',
       dimensionsMap: {
-        DBInstanceIdentifier: database.instanceIdentifier,
+        TableName: table.name,
       },
-      statistic: 'Average',
+      statistic: 'Sum',
       period: Duration.minutes(5),
-    });
+      label: `${table.label} Errors`,
+    }));
+
 
     // ECS Metrics
     const ecsCpuMetric = new cloudwatch.Metric({
@@ -116,23 +127,16 @@ class MonitoringStack extends Stack {
     });
 
     // Create Alarms
-    new cloudwatch.Alarm(this, 'DatabaseCpuAlarm', {
-      metric: dbCpuMetric,
-      threshold: 80,
-      evaluationPeriods: 2,
-      datapointsToAlarm: 2,
-      treatMissingData: cloudwatch.TreatMissingData.BREACHING,
-      alarmDescription: 'Database CPU utilization is too high',
-    }).addAlarmAction(new cwactions.SnsAction(alertTopic));
-
-    new cloudwatch.Alarm(this, 'DatabaseStorageAlarm', {
-      metric: dbStorageMetric,
-      threshold: 2 * 1024 * 1024 * 1024, // 2GB in bytes
-      evaluationPeriods: 1,
-      comparisonOperator: cloudwatch.ComparisonOperator.LESS_THAN_THRESHOLD,
-      treatMissingData: cloudwatch.TreatMissingData.BREACHING,
-      alarmDescription: 'Database free storage is running low',
-    }).addAlarmAction(new cwactions.SnsAction(alertTopic));
+    // DynamoDB throttle alarms
+    tables.forEach((table, index) => {
+      new cloudwatch.Alarm(this, `${table.label}ThrottleAlarm`, {
+        metric: dbThrottleMetrics[index],
+        threshold: 1,
+        evaluationPeriods: 1,
+        treatMissingData: cloudwatch.TreatMissingData.NOT_BREACHING,
+        alarmDescription: `${table.label} table is experiencing throttling`,
+      }).addAlarmAction(new cwactions.SnsAction(alertTopic));
+    });
 
     new cloudwatch.Alarm(this, 'EcsCpuAlarm', {
       metric: ecsCpuMetric,
@@ -172,15 +176,14 @@ class MonitoringStack extends Stack {
     // Add widgets to dashboard
     dashboard.addWidgets(
       new cloudwatch.GraphWidget({
-        title: 'Database Metrics',
-        left: [dbCpuMetric],
-        right: [dbConnectionsMetric],
+        title: 'DynamoDB Read Capacity',
+        left: dbReadMetrics,
         width: 12,
         height: 6,
       }),
       new cloudwatch.GraphWidget({
-        title: 'Database Storage',
-        left: [dbStorageMetric],
+        title: 'DynamoDB Write Capacity',
+        left: dbWriteMetrics,
         width: 12,
         height: 6,
       })

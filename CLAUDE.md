@@ -38,6 +38,21 @@ npm run workflow             # Interactive workflow CLI
 npm run auto-workflow        # Automated development workflow
 ```
 
+### Docker Development
+```bash
+# Docker development with proper permissions
+./scripts/docker-dev.sh init # Initialize permissions (first time only)
+./scripts/docker-dev.sh up    # Start development environment
+./scripts/docker-dev.sh down  # Stop all containers
+./scripts/docker-dev.sh shell # Open shell in app container
+./scripts/docker-dev.sh logs  # Show application logs
+
+# Alternative Docker commands
+./scripts/docker-dev.sh full   # Full environment with WordPress
+./scripts/docker-dev.sh modern # Modern theme development
+./scripts/docker-dev.sh clean  # Clean up containers and volumes
+```
+
 ### WordPress Development
 ```bash
 # WordPress theme development
