@@ -1,16 +1,20 @@
 # Lightning Talk Circle - CDK Infrastructure
 
-This directory contains AWS CDK (Cloud Development Kit) infrastructure code for deploying the Lightning Talk Circle application on AWS.
+This directory contains AWS CDK (Cloud Development Kit) infrastructure code for
+deploying the Lightning Talk Circle application on AWS.
 
 ## Architecture Overview
 
 The infrastructure consists of multiple CDK stacks:
 
-- **DatabaseStack**: VPC, RDS PostgreSQL, ElastiCache Redis, and optional bastion host
-- **ApiStack**: ECS Fargate service, Application Load Balancer with HTTPS, and API container
+- **DatabaseStack**: VPC, RDS PostgreSQL, ElastiCache Redis, and optional
+  bastion host
+- **ApiStack**: ECS Fargate service, Application Load Balancer with HTTPS, and
+  API container
 - **StaticSiteStack**: S3 bucket and CloudFront distribution for static assets
 - **MonitoringStack**: CloudWatch dashboards, alarms, and log aggregation
-- **CostMonitoringStack**: AWS Budgets, cost anomaly detection, and spending alerts
+- **CostMonitoringStack**: AWS Budgets, cost anomaly detection, and spending
+  alerts
 
 ## Prerequisites
 
@@ -22,16 +26,19 @@ The infrastructure consists of multiple CDK stacks:
 ## Environment Setup
 
 1. **Install dependencies**:
+
    ```bash
    cd cdk
    npm install
    ```
 
 2. **Configure domain settings**:
-   - Copy `lib/config/domain-config.example.json` to `lib/config/domain-config.json`
+   - Copy `lib/config/domain-config.example.json` to
+     `lib/config/domain-config.json`
    - Update with your actual domain names and Route53 hosted zone IDs
 
 3. **Set environment variables**:
+
    ```bash
    export CDK_DEFAULT_ACCOUNT=123456789012  # Your AWS account ID
    export CDK_DEFAULT_REGION=ap-northeast-1  # Your AWS region
@@ -44,12 +51,14 @@ The infrastructure consists of multiple CDK stacks:
 
 ## Configuration
 
-The infrastructure uses environment-specific configurations located in `lib/config/`:
+The infrastructure uses environment-specific configurations located in
+`lib/config/`:
 
 - `dev.json` - Development environment settings
-- `staging.json` - Staging environment settings  
+- `staging.json` - Staging environment settings
 - `production.json` - Production environment settings
-- `domain-config.json` - Domain and certificate configuration (create from example)
+- `domain-config.json` - Domain and certificate configuration (create from
+  example)
 
 ### Key Configuration Options
 
@@ -108,17 +117,20 @@ npx cdk diff --context env=dev
 ## Stack Management
 
 ### List All Stacks
+
 ```bash
 npx cdk ls --context env=dev
 ```
 
 ### View Stack Outputs
+
 ```bash
 aws cloudformation describe-stacks --stack-name LightningTalk-Api-dev \
   --query "Stacks[0].Outputs"
 ```
 
 ### Destroy Stacks
+
 ⚠️ **Warning**: This will delete all resources including databases!
 
 ```bash
@@ -179,6 +191,7 @@ Configure these secrets in your GitHub repository:
 ### Common Issues
 
 1. **CDK Bootstrap Error**:
+
    ```bash
    npx cdk bootstrap aws://ACCOUNT_ID/REGION
    ```
@@ -217,6 +230,7 @@ aws logs tail /aws/ecs/lightningtalk-api --follow
 ## Support
 
 For issues or questions:
+
 - Check AWS CloudFormation console for deployment errors
 - Review CloudWatch logs for application errors
 - Consult the main project documentation in `../docs/`

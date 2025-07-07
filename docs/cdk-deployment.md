@@ -1,6 +1,7 @@
 # CDK Deployment Guide
 
-This guide explains how to deploy Lightning Talk Circle using AWS CDK with custom domain support.
+This guide explains how to deploy Lightning Talk Circle using AWS CDK with
+custom domain support.
 
 ## Prerequisites
 
@@ -55,13 +56,13 @@ The domain configuration supports the following options:
 ```json
 {
   "domain": {
-    "domainName": "your-domain.com",           // Primary domain
-    "zoneName": "your-domain.com",             // Route53 hosted zone
-    "hostedZoneId": "Z1234567890ABC",          // Optional: specific zone ID
-    "certificateArn": "arn:aws:acm:...",       // Optional: existing certificate
+    "domainName": "your-domain.com", // Primary domain
+    "zoneName": "your-domain.com", // Route53 hosted zone
+    "hostedZoneId": "Z1234567890ABC", // Optional: specific zone ID
+    "certificateArn": "arn:aws:acm:...", // Optional: existing certificate
     "alternativeNames": ["www.your-domain.com"], // Additional domains
-    "redirectWww": true,                       // Redirect www to apex
-    "enableIPv6": true                         // Enable IPv6 support
+    "redirectWww": true, // Redirect www to apex
+    "enableIPv6": true // Enable IPv6 support
   }
 }
 ```
@@ -268,7 +269,7 @@ If SSL certificate validation fails:
 Monitor these key metrics:
 
 - **CloudFront**: Cache hit ratio, error rates
-- **S3**: Request metrics, error rates  
+- **S3**: Request metrics, error rates
 - **Route53**: Health check status
 
 ### Cost Optimization
@@ -301,4 +302,5 @@ npx cdk destroy
 # Note: Some resources (like custom domains) may need manual cleanup
 ```
 
-**Important**: Production resources with `RETAIN` policy will not be deleted automatically.
+**Important**: Production resources with `RETAIN` policy will not be deleted
+automatically.

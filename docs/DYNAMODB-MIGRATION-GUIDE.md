@@ -1,10 +1,12 @@
 # DynamoDB Migration Guide
 
-Lightning Talk CircleのデータをファイルベースからDynamoDBへ移行するためのガイドです。
+Lightning Talk
+CircleのデータをファイルベースからDynamoDBへ移行するためのガイドです。
 
 ## 📊 テーブル構造
 
 ### 1. Events Table
+
 - **テーブル名**: `lightningtalk-circle-{stage}-events`
 - **パーティションキー**: `id` (String)
 - **ソートキー**: `createdAt` (String)
@@ -35,6 +37,7 @@ Lightning Talk CircleのデータをファイルベースからDynamoDBへ移行
 ```
 
 ### 2. Participants Table
+
 - **テーブル名**: `lightningtalk-circle-{stage}-participants`
 - **パーティションキー**: `id` (String)
 - **ソートキー**: `eventId` (String)
@@ -55,6 +58,7 @@ Lightning Talk CircleのデータをファイルベースからDynamoDBへ移行
 ```
 
 ### 3. Users Table
+
 - **テーブル名**: `lightningtalk-circle-{stage}-users`
 - **パーティションキー**: `id` (String)
 - **GSI**: `email-index` (email)
@@ -72,6 +76,7 @@ Lightning Talk CircleのデータをファイルベースからDynamoDBへ移行
 ```
 
 ### 4. Talks Table
+
 - **テーブル名**: `lightningtalk-circle-{stage}-talks`
 - **パーティションキー**: `id` (String)
 - **ソートキー**: `eventId` (String)
@@ -118,7 +123,7 @@ const dynamodb = new AWS.DynamoDB.DocumentClient({
 async function migrateEvents() {
   const eventsFile = path.join(__dirname, '../server/data/events.json');
   const events = JSON.parse(await fs.readFile(eventsFile, 'utf-8'));
-  
+
   for (const event of events) {
     const params = {
       TableName: `lightningtalk-circle-${process.env.STAGE}-events`,
@@ -128,7 +133,7 @@ async function migrateEvents() {
         updatedAt: new Date().toISOString()
       }
     };
-    
+
     try {
       await dynamodb.put(params).promise();
       console.log(`✅ Migrated event: ${event.id}`);
@@ -141,12 +146,12 @@ async function migrateEvents() {
 // 同様に他のテーブルも移行
 async function migrate() {
   console.log('🚀 Starting DynamoDB migration...');
-  
+
   await migrateEvents();
   await migrateParticipants();
   await migrateUsers();
   await migrateTalks();
-  
+
   console.log('✅ Migration completed!');
 }
 
@@ -166,7 +171,7 @@ class DynamoDBDatabaseService {
     this.dynamodb = new AWS.DynamoDB.DocumentClient({
       region: process.env.AWS_REGION || 'us-east-1'
     });
-    
+
     this.tables = {
       events: process.env.DYNAMODB_EVENTS_TABLE,
       participants: process.env.DYNAMODB_PARTICIPANTS_TABLE,
@@ -174,22 +179,22 @@ class DynamoDBDatabaseService {
       talks: process.env.DYNAMODB_TALKS_TABLE
     };
   }
-  
+
   async findOne(collection, id) {
     const params = {
       TableName: this.tables[collection],
       Key: { id }
     };
-    
+
     const result = await this.dynamodb.get(params).promise();
     return result.Item;
   }
-  
+
   async find(collection, filter = {}) {
     // クエリまたはスキャンの実装
     // GSIを使用した効率的なクエリ
   }
-  
+
   async insert(collection, data) {
     const item = {
       ...data,
@@ -197,16 +202,16 @@ class DynamoDBDatabaseService {
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString()
     };
-    
+
     const params = {
       TableName: this.tables[collection],
       Item: item
     };
-    
+
     await this.dynamodb.put(params).promise();
     return item;
   }
-  
+
   // その他のメソッドも実装
 }
 ```
@@ -227,16 +232,19 @@ cp -r ./backup-20250106/* server/data/
 ## 📝 注意事項
 
 ### コスト最適化
+
 - DynamoDBはPay-per-requestモードで設定
 - 使用量に応じた課金のため、初期コストは最小限
 - 必要に応じてプロビジョンドキャパシティに変更可能
 
 ### パフォーマンス考慮事項
+
 - GSIを活用して効率的なクエリを実行
 - バッチ処理にはBatchWriteItemを使用
 - 大量データの場合はDynamoDB Streamsでの非同期処理を検討
 
 ### セキュリティ
+
 - IAMロールで最小権限の原則を適用
 - VPCエンドポイントを使用してプライベート接続
 - 保管時・転送時の暗号化が有効
@@ -244,6 +252,7 @@ cp -r ./backup-20250106/* server/data/
 ## 🧪 テスト方法
 
 ### ローカルテスト
+
 DynamoDB Localを使用：
 
 ```bash
@@ -256,6 +265,7 @@ export AWS_REGION=local
 ```
 
 ### 統合テスト
+
 ```javascript
 // tests/dynamodb-integration.test.js
 describe('DynamoDB Integration', () => {
@@ -265,10 +275,10 @@ describe('DynamoDB Integration', () => {
       title: 'Test Event',
       date: '2025-07-01T10:00:00Z'
     };
-    
+
     await db.insert('events', event);
     const retrieved = await db.findOne('events', 'test-event-1');
-    
+
     expect(retrieved.title).toBe('Test Event');
   });
 });
@@ -289,6 +299,7 @@ describe('DynamoDB Integration', () => {
 ## 📊 モニタリング
 
 移行後の監視項目：
+
 - ConsumedReadCapacityUnits
 - ConsumedWriteCapacityUnits
 - UserErrors (スロットリング)

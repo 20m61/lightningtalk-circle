@@ -5,7 +5,7 @@ on:
     branches:
       - main
       - develop
-      - 'feature/cdk-migration'
+      - "feature/cdk-migration"
   pull_request:
     branches:
       - main
@@ -13,29 +13,29 @@ on:
 
 env:
   AWS_REGION: ap-northeast-1
-  NODE_VERSION: '18'
+  NODE_VERSION: "18"
 
 jobs:
   test:
     name: Test
     runs-on: ubuntu-latest
-    
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-        
+
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
-          cache: 'npm'
-          
+          cache: "npm"
+
       - name: Install dependencies
         run: npm ci
-        
+
       - name: Run tests
         run: npm test
-        
+
       - name: Build static assets
         run: npm run build:static
 
@@ -44,28 +44,28 @@ jobs:
     runs-on: ubuntu-latest
     needs: test
     if: github.event_name == 'push'
-    
+
     outputs:
       image-tag: ${{ steps.meta.outputs.tags }}
-      
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-        
+
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v4
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ env.AWS_REGION }}
-          
+
       - name: Login to Amazon ECR
         id: login-ecr
         uses: aws-actions/amazon-ecr-login@v2
-        
+
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
-        
+
       - name: Docker meta
         id: meta
         uses: docker/metadata-action@v5
@@ -76,7 +76,7 @@ jobs:
             type=ref,event=pr
             type=sha,prefix={{branch}}-
             type=raw,value=latest,enable={{is_default_branch}}
-            
+
       - name: Build and push Docker image
         id: build-image
         uses: docker/build-push-action@v5
@@ -92,24 +92,24 @@ jobs:
             NODE_ENV=${{ github.ref == 'refs/heads/main' && 'production' || 'development' }}
             BUILD_DATE=${{ github.event.head_commit.timestamp }}
             VERSION=${{ github.sha }}
-            
+
       - name: Run Trivy vulnerability scanner
         uses: aquasecurity/trivy-action@master
         with:
           image-ref: ${{ steps.login-ecr.outputs.registry }}/lightningtalk-circle-api:${{ github.sha }}
-          format: 'sarif'
-          output: 'trivy-results.sarif'
-          
+          format: "sarif"
+          output: "trivy-results.sarif"
+
       - name: Upload Trivy scan results to GitHub Security tab
         uses: github/codeql-action/upload-sarif@v3
         if: always()
         with:
-          sarif_file: 'trivy-results.sarif'
-          
+          sarif_file: "trivy-results.sarif"
+
       - name: Run container security checks
         run: |
           echo "🔍 Running additional security checks..."
-          
+
           # Check for secrets in the image
           if command -v docker &> /dev/null; then
             echo "Checking for potential secrets in Docker image..."
@@ -118,7 +118,7 @@ jobs:
               --image ${{ steps.login-ecr.outputs.registry }}/lightningtalk-circle-api:${{ github.sha }} \
               --no-verification || echo "No secrets detected or scanner not available"
           fi
-          
+
           # Generate security report
           echo "📋 Container Security Summary:" > security-report.txt
           echo "Image: ${{ steps.login-ecr.outputs.registry }}/lightningtalk-circle-api:${{ github.sha }}" >> security-report.txt
@@ -131,24 +131,24 @@ jobs:
     runs-on: ubuntu-latest
     needs: test
     if: github.event_name == 'pull_request'
-    
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-        
+
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
-          cache: 'npm'
-          cache-dependency-path: 'cdk/package-lock.json'
-          
+          cache: "npm"
+          cache-dependency-path: "cdk/package-lock.json"
+
       - name: Install CDK dependencies
         run: |
           cd cdk
           npm ci
         timeout-minutes: 10
-          
+
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v4
         with:
@@ -156,7 +156,7 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ env.AWS_REGION }}
         timeout-minutes: 2
-          
+
       - name: Determine environment
         id: determine-env
         run: |
@@ -167,13 +167,13 @@ jobs:
           else
             echo "environment=dev" >> $GITHUB_OUTPUT
           fi
-          
+
       - name: CDK Diff
         id: cdk-diff
         run: |
           cd cdk
           echo "Running CDK diff for environment: ${{ steps.determine-env.outputs.environment }}"
-          
+
           # Capture diff output
           if npx cdk diff --context env=${{ steps.determine-env.outputs.environment }} 2>&1 | tee diff-output.txt; then
             echo "diff_status=success" >> $GITHUB_OUTPUT
@@ -181,14 +181,14 @@ jobs:
             echo "diff_status=failed" >> $GITHUB_OUTPUT
             echo "❌ CDK diff failed" >> diff-output.txt
           fi
-          
+
           # Set output variables
           echo "diff_output<<EOF" >> $GITHUB_OUTPUT
           cat diff-output.txt >> $GITHUB_OUTPUT
           echo "EOF" >> $GITHUB_OUTPUT
         continue-on-error: true
         timeout-minutes: 10
-          
+
       - name: Comment PR
         uses: actions/github-script@v7
         if: always()
@@ -197,24 +197,24 @@ jobs:
             const diffStatus = '${{ steps.cdk-diff.outputs.diff_status }}';
             const diffOutput = `${{ steps.cdk-diff.outputs.diff_output }}`;
             const environment = '${{ steps.determine-env.outputs.environment }}';
-            
+
             const statusEmoji = diffStatus === 'success' ? '✅' : '❌';
             const statusText = diffStatus === 'success' ? 'Success' : 'Failed';
-            
+
             const output = `#### CDK Diff ${statusEmoji} \`${environment}\` - ${statusText}
-            
+
             <details><summary>Show Diff Output</summary>
-            
+
             \`\`\`
             ${diffOutput || 'No diff output captured'}
             \`\`\`
-            
+
             </details>
-            
+
             ${diffStatus === 'failed' ? '⚠️ **CDK diff failed. Please check the configuration and try again.**' : ''}
-            
+
             *Pushed by: @${{ github.actor }}, Action: \`${{ github.event_name }}\`*`;
-            
+
             github.rest.issues.createComment({
               issue_number: context.issue.number,
               owner: context.repo.owner,
@@ -227,24 +227,24 @@ jobs:
     runs-on: ubuntu-latest
     needs: build-and-push
     if: github.event_name == 'push'
-    
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-        
+
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
-          cache: 'npm'
-          cache-dependency-path: 'cdk/package-lock.json'
-          
+          cache: "npm"
+          cache-dependency-path: "cdk/package-lock.json"
+
       - name: Install CDK dependencies
         run: |
           cd cdk
           npm ci
         timeout-minutes: 10
-          
+
       - name: Determine environment
         id: determine-env
         run: |
@@ -255,7 +255,7 @@ jobs:
           else
             echo "environment=dev" >> $GITHUB_OUTPUT
           fi
-          
+
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v4
         with:
@@ -263,13 +263,13 @@ jobs:
           aws-secret-access-key: ${{ steps.determine-env.outputs.environment == 'prod' && secrets.AWS_SECRET_ACCESS_KEY_PROD || secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ env.AWS_REGION }}
         timeout-minutes: 2
-          
+
       - name: Deploy CDK
         id: cdk-deploy
         run: |
           cd cdk
           echo "🚀 Starting CDK deployment for environment: ${{ steps.determine-env.outputs.environment }}"
-          
+
           # Deploy with error handling
           if npx cdk deploy --all --context env=${{ steps.determine-env.outputs.environment }} --require-approval never 2>&1 | tee deploy-output.txt; then
             echo "deploy_status=success" >> $GITHUB_OUTPUT
@@ -280,12 +280,12 @@ jobs:
             exit 1
           fi
         timeout-minutes: 30
-          
+
       - name: Run database migrations
         id: db-migrate
         run: |
           echo "📊 Running database migrations for ${{ steps.determine-env.outputs.environment }}"
-          
+
           if [ -f "./scripts/db-migration.sh" ]; then
             if ./scripts/db-migration.sh ${{ steps.determine-env.outputs.environment }} init 2>&1 | tee migration-output.txt; then
               echo "migration_status=success" >> $GITHUB_OUTPUT
@@ -300,13 +300,13 @@ jobs:
             echo "⏭️ Database migration script not found, skipping"
           fi
         timeout-minutes: 10
-          
+
       - name: Setup monitoring
         id: monitoring-setup
         if: steps.determine-env.outputs.environment != 'dev'
         run: |
           echo "🔍 Setting up monitoring for ${{ steps.determine-env.outputs.environment }}"
-          
+
           if [ -f "./scripts/setup-monitoring.sh" ]; then
             if ./scripts/setup-monitoring.sh ${{ steps.determine-env.outputs.environment }} 2>&1 | tee monitoring-output.txt; then
               echo "monitoring_status=success" >> $GITHUB_OUTPUT
@@ -328,7 +328,7 @@ jobs:
     runs-on: ubuntu-latest
     needs: [deploy]
     if: always() && github.event_name == 'push'
-    
+
     steps:
       - name: Notify success
         if: needs.deploy.result == 'success'
@@ -342,7 +342,7 @@ jobs:
             Commit: ${{ github.sha }}
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
-          
+
       - name: Notify failure
         if: needs.deploy.result == 'failure'
         uses: 8398a7/action-slack@v3

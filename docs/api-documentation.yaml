@@ -964,7 +964,7 @@ components:
                 example: registration
               description:
                 type: string
-                example: 新規参加者登録: 山田太郎
+                example: "新規参加者登録: 山田太郎"
               timestamp:
                 type: string
                 format: date-time

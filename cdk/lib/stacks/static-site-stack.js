@@ -77,7 +77,7 @@ class StaticSiteStack extends Stack {
     // CloudFront distribution configuration
     const distributionConfig = {
       defaultBehavior: {
-        origin: new origins.S3Origin(staticBucket, {
+        origin: new origins.S3BucketOrigin(staticBucket, {
           originAccessIdentity: oai,
         }),
         viewerProtocolPolicy: cloudfront.ViewerProtocolPolicy.REDIRECT_TO_HTTPS,

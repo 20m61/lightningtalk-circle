@@ -1,186 +1,192 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="ja">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>ログイン - なんでもライトニングトーク</title>
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="styles.css" />
     <style>
-        .login-container {
-            max-width: 400px;
-            margin: 100px auto;
-            padding: 2rem;
-            background: white;
-            border-radius: 8px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-        }
+      .login-container {
+        max-width: 400px;
+        margin: 100px auto;
+        padding: 2rem;
+        background: white;
+        border-radius: 8px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      }
 
-        .login-form h2 {
-            text-align: center;
-            margin-bottom: 2rem;
-            color: #333;
-        }
+      .login-form h2 {
+        text-align: center;
+        margin-bottom: 2rem;
+        color: #333;
+      }
 
-        .form-group {
-            margin-bottom: 1.5rem;
-        }
+      .form-group {
+        margin-bottom: 1.5rem;
+      }
 
-        .form-group label {
-            display: block;
-            margin-bottom: 0.5rem;
-            font-weight: 500;
-            color: #555;
-        }
+      .form-group label {
+        display: block;
+        margin-bottom: 0.5rem;
+        font-weight: 500;
+        color: #555;
+      }
 
-        .form-group input {
-            width: 100%;
-            padding: 0.75rem;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            font-size: 1rem;
-            transition: border-color 0.3s;
-        }
+      .form-group input {
+        width: 100%;
+        padding: 0.75rem;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        font-size: 1rem;
+        transition: border-color 0.3s;
+      }
 
-        .form-group input:focus {
-            outline: none;
-            border-color: #007bff;
-        }
+      .form-group input:focus {
+        outline: none;
+        border-color: #007bff;
+      }
 
-        .form-error {
-            background: #fee;
-            color: #c33;
-            padding: 0.75rem;
-            border-radius: 4px;
-            margin-bottom: 1rem;
-            font-size: 0.9rem;
-        }
+      .form-error {
+        background: #fee;
+        color: #c33;
+        padding: 0.75rem;
+        border-radius: 4px;
+        margin-bottom: 1rem;
+        font-size: 0.9rem;
+      }
 
-        .form-success {
-            background: #efe;
-            color: #3c3;
-            padding: 0.75rem;
-            border-radius: 4px;
-            margin-bottom: 1rem;
-            font-size: 0.9rem;
-        }
+      .form-success {
+        background: #efe;
+        color: #3c3;
+        padding: 0.75rem;
+        border-radius: 4px;
+        margin-bottom: 1rem;
+        font-size: 0.9rem;
+      }
 
-        .btn-login {
-            width: 100%;
-            padding: 0.75rem;
-            background: #007bff;
-            color: white;
-            border: none;
-            border-radius: 4px;
-            font-size: 1rem;
-            font-weight: 500;
-            cursor: pointer;
-            transition: background-color 0.3s;
-        }
+      .btn-login {
+        width: 100%;
+        padding: 0.75rem;
+        background: #007bff;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        font-size: 1rem;
+        font-weight: 500;
+        cursor: pointer;
+        transition: background-color 0.3s;
+      }
 
-        .btn-login:hover {
-            background: #0056b3;
-        }
+      .btn-login:hover {
+        background: #0056b3;
+      }
 
-        .btn-login:disabled {
-            background: #ccc;
-            cursor: not-allowed;
-        }
+      .btn-login:disabled {
+        background: #ccc;
+        cursor: not-allowed;
+      }
 
-        .back-link {
-            text-align: center;
-            margin-top: 2rem;
-        }
+      .back-link {
+        text-align: center;
+        margin-top: 2rem;
+      }
 
-        .back-link a {
-            color: #007bff;
-            text-decoration: none;
-        }
+      .back-link a {
+        color: #007bff;
+        text-decoration: none;
+      }
 
-        .back-link a:hover {
-            text-decoration: underline;
-        }
+      .back-link a:hover {
+        text-decoration: underline;
+      }
     </style>
-</head>
-<body>
+  </head>
+  <body>
     <div class="login-container">
-        <div class="login-form">
-            <h2>管理者ログイン</h2>
-            <form id="loginForm">
-                <div class="form-group">
-                    <label for="email">メールアドレス</label>
-                    <input type="email" id="email" name="email" required autocomplete="email">
-                </div>
-                <div class="form-group">
-                    <label for="password">パスワード</label>
-                    <input type="password" id="password" name="password" required autocomplete="current-password">
-                </div>
-                <div class="form-error" id="loginError" style="display: none;"></div>
-                <div class="form-success" id="loginSuccess" style="display: none;"></div>
-                <button type="submit" class="btn-login" id="loginButton">ログイン</button>
-            </form>
-            <div class="back-link">
-                <a href="/">トップページに戻る</a>
-            </div>
+      <div class="login-form">
+        <h2>管理者ログイン</h2>
+        <form id="loginForm">
+          <div class="form-group">
+            <label for="email">メールアドレス</label>
+            <input type="email" id="email" name="email" required autocomplete="email" />
+          </div>
+          <div class="form-group">
+            <label for="password">パスワード</label>
+            <input
+              type="password"
+              id="password"
+              name="password"
+              required
+              autocomplete="current-password"
+            />
+          </div>
+          <div class="form-error" id="loginError" style="display: none"></div>
+          <div class="form-success" id="loginSuccess" style="display: none"></div>
+          <button type="submit" class="btn-login" id="loginButton">ログイン</button>
+        </form>
+        <div class="back-link">
+          <a href="/">トップページに戻る</a>
         </div>
+      </div>
     </div>
 
     <script type="module">
-        import auth from './src/features/user-authentication.js';
+      import auth from './src/features/user-authentication.js';
 
-        const form = document.getElementById('loginForm');
-        const errorDiv = document.getElementById('loginError');
-        const successDiv = document.getElementById('loginSuccess');
-        const loginButton = document.getElementById('loginButton');
+      const form = document.getElementById('loginForm');
+      const errorDiv = document.getElementById('loginError');
+      const successDiv = document.getElementById('loginSuccess');
+      const loginButton = document.getElementById('loginButton');
 
-        // Check if already authenticated
-        if (auth.isAuthenticated()) {
-            window.location.href = auth.isAdmin() ? '/admin' : '/';
+      // Check if already authenticated
+      if (auth.isAuthenticated()) {
+        window.location.href = auth.isAdmin() ? '/admin' : '/';
+      }
+
+      form.addEventListener('submit', async e => {
+        e.preventDefault();
+
+        // Clear messages
+        errorDiv.style.display = 'none';
+        successDiv.style.display = 'none';
+
+        // Disable button
+        loginButton.disabled = true;
+        loginButton.textContent = 'ログイン中...';
+
+        const formData = new FormData(form);
+        const email = formData.get('email');
+        const password = formData.get('password');
+
+        try {
+          const result = await auth.login(email, password);
+
+          if (result.success) {
+            successDiv.textContent = 'ログインに成功しました。リダイレクト中...';
+            successDiv.style.display = 'block';
+
+            // Redirect based on role
+            setTimeout(() => {
+              if (auth.isAdmin()) {
+                window.location.href = '/admin';
+              } else {
+                window.location.href = '/';
+              }
+            }, 1000);
+          } else {
+            errorDiv.textContent = result.error || 'ログインに失敗しました';
+            errorDiv.style.display = 'block';
+            loginButton.disabled = false;
+            loginButton.textContent = 'ログイン';
+          }
+        } catch (error) {
+          console.error('Login error:', error);
+          errorDiv.textContent = 'ネットワークエラーが発生しました';
+          errorDiv.style.display = 'block';
+          loginButton.disabled = false;
+          loginButton.textContent = 'ログイン';
         }
-
-        form.addEventListener('submit', async (e) => {
-            e.preventDefault();
-            
-            // Clear messages
-            errorDiv.style.display = 'none';
-            successDiv.style.display = 'none';
-            
-            // Disable button
-            loginButton.disabled = true;
-            loginButton.textContent = 'ログイン中...';
-
-            const formData = new FormData(form);
-            const email = formData.get('email');
-            const password = formData.get('password');
-
-            try {
-                const result = await auth.login(email, password);
-                
-                if (result.success) {
-                    successDiv.textContent = 'ログインに成功しました。リダイレクト中...';
-                    successDiv.style.display = 'block';
-                    
-                    // Redirect based on role
-                    setTimeout(() => {
-                        if (auth.isAdmin()) {
-                            window.location.href = '/admin';
-                        } else {
-                            window.location.href = '/';
-                        }
-                    }, 1000);
-                } else {
-                    errorDiv.textContent = result.error || 'ログインに失敗しました';
-                    errorDiv.style.display = 'block';
-                    loginButton.disabled = false;
-                    loginButton.textContent = 'ログイン';
-                }
-            } catch (error) {
-                console.error('Login error:', error);
-                errorDiv.textContent = 'ネットワークエラーが発生しました';
-                errorDiv.style.display = 'block';
-                loginButton.disabled = false;
-                loginButton.textContent = 'ログイン';
-            }
-        });
+      });
     </script>
-</body>
+  </body>
 </html>

@@ -1,6 +1,7 @@
 # API Documentation Setup
 
-Lightning Talk Circle includes comprehensive API documentation using OpenAPI/Swagger specification.
+Lightning Talk Circle includes comprehensive API documentation using
+OpenAPI/Swagger specification.
 
 ## Features
 
@@ -48,6 +49,7 @@ The API uses JWT bearer tokens for authentication. In Swagger UI:
 ### Rate Limiting Information
 
 Documentation includes rate limiting details:
+
 - General endpoints: 100 requests per 15 minutes per IP
 - Registration endpoints: 5 requests per hour per IP
 
@@ -90,6 +92,7 @@ Example JSDoc annotation:
 ### Validation
 
 The documentation includes validation rules:
+
 - Required fields
 - Data types and formats
 - Minimum/maximum values
@@ -122,6 +125,7 @@ NODE_ENV=production
 ### Custom Styling
 
 The Swagger UI includes custom CSS for better branding:
+
 - Hidden top bar
 - Custom color scheme
 - Lightning Talk branding
@@ -165,16 +169,19 @@ The Swagger UI includes custom CSS for better branding:
 ### Troubleshooting
 
 **Documentation not loading**:
+
 - Check if YAML file is valid
 - Verify route setup in app.js
 - Check console for errors
 
 **Authentication not working**:
+
 - Ensure JWT token is valid
 - Check token format (must include "Bearer ")
 - Verify API endpoints require authentication
 
 **Missing endpoints**:
+
 - Check if routes are included in swagger options
 - Verify JSDoc annotations
 - Update external YAML file

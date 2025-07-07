@@ -136,6 +136,57 @@ class MonitoringStack extends Stack {
         treatMissingData: cloudwatch.TreatMissingData.NOT_BREACHING,
         alarmDescription: `${table.label} table is experiencing throttling`,
       }).addAlarmAction(new cwactions.SnsAction(alertTopic));
+      
+      // Add consumed read capacity alarms
+      new cloudwatch.Alarm(this, `${table.label}ReadCapacityAlarm`, {
+        metric: new cloudwatch.Metric({
+          namespace: 'AWS/DynamoDB',
+          metricName: 'ConsumedReadCapacityUnits',
+          dimensionsMap: {
+            TableName: table.name,
+          },
+          statistic: 'Sum',
+          period: Duration.minutes(1),
+        }),
+        threshold: 1000, // Adjust based on expected traffic
+        evaluationPeriods: 2,
+        treatMissingData: cloudwatch.TreatMissingData.NOT_BREACHING,
+        alarmDescription: `${table.label} table read capacity consumption is high`,
+      }).addAlarmAction(new cwactions.SnsAction(alertTopic));
+      
+      // Add consumed write capacity alarms
+      new cloudwatch.Alarm(this, `${table.label}WriteCapacityAlarm`, {
+        metric: new cloudwatch.Metric({
+          namespace: 'AWS/DynamoDB',
+          metricName: 'ConsumedWriteCapacityUnits',
+          dimensionsMap: {
+            TableName: table.name,
+          },
+          statistic: 'Sum',
+          period: Duration.minutes(1),
+        }),
+        threshold: 1000, // Adjust based on expected traffic
+        evaluationPeriods: 2,
+        treatMissingData: cloudwatch.TreatMissingData.NOT_BREACHING,
+        alarmDescription: `${table.label} table write capacity consumption is high`,
+      }).addAlarmAction(new cwactions.SnsAction(alertTopic));
+      
+      // Add system errors alarm
+      new cloudwatch.Alarm(this, `${table.label}SystemErrorsAlarm`, {
+        metric: new cloudwatch.Metric({
+          namespace: 'AWS/DynamoDB',
+          metricName: 'SystemErrors',
+          dimensionsMap: {
+            TableName: table.name,
+          },
+          statistic: 'Sum',
+          period: Duration.minutes(5),
+        }),
+        threshold: 5,
+        evaluationPeriods: 1,
+        treatMissingData: cloudwatch.TreatMissingData.NOT_BREACHING,
+        alarmDescription: `${table.label} table is experiencing system errors`,
+      }).addAlarmAction(new cwactions.SnsAction(alertTopic));
     });
 
     new cloudwatch.Alarm(this, 'EcsCpuAlarm', {
@@ -184,6 +235,34 @@ class MonitoringStack extends Stack {
       new cloudwatch.GraphWidget({
         title: 'DynamoDB Write Capacity',
         left: dbWriteMetrics,
+        width: 12,
+        height: 6,
+      })
+    );
+
+    dashboard.addWidgets(
+      new cloudwatch.GraphWidget({
+        title: 'DynamoDB Errors & Throttling',
+        left: dbThrottleMetrics,
+        width: 12,
+        height: 6,
+        leftYAxis: {
+          label: 'Error Count',
+          showUnits: false,
+        },
+      }),
+      new cloudwatch.GraphWidget({
+        title: 'DynamoDB System Errors',
+        left: tables.map(table => new cloudwatch.Metric({
+          namespace: 'AWS/DynamoDB',
+          metricName: 'SystemErrors',
+          dimensionsMap: {
+            TableName: table.name,
+          },
+          statistic: 'Sum',
+          period: Duration.minutes(5),
+          label: `${table.label} System Errors`,
+        })),
         width: 12,
         height: 6,
       })

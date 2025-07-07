@@ -1,7 +1,7 @@
 # Lightning Talk Circle - Deployment Guide v2
 
-このガイドでは、Lightning Talk CircleのAWS環境へのデプロイ手順を説明します。
-RDSからDynamoDBへの移行後の最新手順です。
+このガイドでは、Lightning Talk
+CircleのAWS環境へのデプロイ手順を説明します。RDSからDynamoDBへの移行後の最新手順です。
 
 ## 📋 前提条件
 
@@ -86,6 +86,7 @@ npx cdk deploy --all
 ```
 
 デプロイされるスタック：
+
 - `LightningTalk-Database-Prod` - VPC、DynamoDBテーブル
 - `LightningTalk-Api-Prod` - ECS、ALB、ECR
 - `LightningTalk-StaticSite-Prod` - CloudFront、S3
@@ -121,6 +122,7 @@ docker push <account-id>.dkr.ecr.<region>.amazonaws.com/lightningtalk-circle-api
 ## 📊 Step 4: DynamoDBの初期設定
 
 DynamoDBテーブルは自動的に作成されます：
+
 - `lightningtalk-circle-prod-events` - イベント情報
 - `lightningtalk-circle-prod-participants` - 参加者情報
 - `lightningtalk-circle-prod-users` - ユーザー情報
@@ -187,6 +189,7 @@ aws logs tail /aws/ecs/lightningtalk-circle-api --follow
 ### CloudWatchダッシュボード
 
 CDKで自動作成されるダッシュボードで以下を監視：
+
 - ECSタスクのCPU/メモリ使用率
 - ALBのリクエスト数とレスポンスタイム
 - DynamoDBの読み書きキャパシティ
@@ -232,13 +235,16 @@ DynamoDBテーブルは本番環境では`RETAIN`ポリシーが設定されて�
 ## 📝 注意事項
 
 1. **セキュリティ**: JWT_SECRETは定期的にローテーションしてください
-2. **バックアップ**: DynamoDBのポイントインタイムリカバリが本番環境で有効になっています
-3. **スケーリング**: DynamoDBはオートスケーリング、ECSは設定に基づいて自動スケール
+2. **バックアップ**:
+   DynamoDBのポイントインタイムリカバリが本番環境で有効になっています
+3. **スケーリング**:
+   DynamoDBはオートスケーリング、ECSは設定に基づいて自動スケール
 4. **コスト**: CloudWatchでコストアラームを設定することを推奨
 
 ## 🆘 サポート
 
 問題が発生した場合は、以下を確認してください：
+
 - CloudWatch Logs
 - ECSタスクの詳細
 - DynamoDBのメトリクス

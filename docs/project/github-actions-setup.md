@@ -1,20 +1,26 @@
 # GitHub Actions AWS Configuration Guide
 
-This guide provides step-by-step instructions for configuring GitHub Actions to deploy the Lightning Talk Circle infrastructure using AWS CDK.
+This guide provides step-by-step instructions for configuring GitHub Actions to
+deploy the Lightning Talk Circle infrastructure using AWS CDK.
 
 ## Required GitHub Secrets
 
 You need to configure the following secrets in your GitHub repository settings:
 
 ### Development/Staging Environment
+
 - `AWS_ACCESS_KEY_ID` - AWS IAM access key for dev/staging deployments
-- `AWS_SECRET_ACCESS_KEY` - AWS IAM secret access key for dev/staging deployments
+- `AWS_SECRET_ACCESS_KEY` - AWS IAM secret access key for dev/staging
+  deployments
 
 ### Production Environment
+
 - `AWS_ACCESS_KEY_ID_PROD` - AWS IAM access key for production deployments
-- `AWS_SECRET_ACCESS_KEY_PROD` - AWS IAM secret access key for production deployments
+- `AWS_SECRET_ACCESS_KEY_PROD` - AWS IAM secret access key for production
+  deployments
 
 ### Optional Secrets
+
 - `SLACK_WEBHOOK_URL` - Slack webhook for deployment notifications (optional)
 
 ## Step-by-Step Setup
@@ -68,12 +74,7 @@ Create separate IAM users for different environments:
        },
        {
          "Effect": "Allow",
-         "Action": [
-           "cloudfront:*",
-           "wafv2:*",
-           "acm:*",
-           "route53:*"
-         ],
+         "Action": ["cloudfront:*", "wafv2:*", "acm:*", "route53:*"],
          "Resource": "*",
          "Condition": {
            "StringEquals": {
@@ -100,24 +101,28 @@ Create separate IAM users for different environments:
 4. Add each secret:
 
 #### AWS_ACCESS_KEY_ID
+
 ```
 Name: AWS_ACCESS_KEY_ID
 Value: [Your dev/staging IAM access key]
 ```
 
 #### AWS_SECRET_ACCESS_KEY
+
 ```
 Name: AWS_SECRET_ACCESS_KEY
 Value: [Your dev/staging IAM secret key]
 ```
 
 #### AWS_ACCESS_KEY_ID_PROD
+
 ```
 Name: AWS_ACCESS_KEY_ID_PROD
 Value: [Your production IAM access key]
 ```
 
 #### AWS_SECRET_ACCESS_KEY_PROD
+
 ```
 Name: AWS_SECRET_ACCESS_KEY_PROD
 Value: [Your production IAM secret key]

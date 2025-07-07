@@ -1,6 +1,7 @@
 # Email Service Configuration Guide
 
-Lightning Talk Circle supports multiple email service providers for sending transactional emails. This guide will help you configure the email service.
+Lightning Talk Circle supports multiple email service providers for sending
+transactional emails. This guide will help you configure the email service.
 
 ## Supported Email Providers
 
@@ -19,7 +20,8 @@ Set `EMAIL_ENABLED=true` in your `.env` file.
 
 ### 2. Choose Email Provider
 
-Set `EMAIL_SERVICE` to one of: `gmail`, `sendgrid`, `aws-ses`, `smtp`, `mailgun`, or `mock`.
+Set `EMAIL_SERVICE` to one of: `gmail`, `sendgrid`, `aws-ses`, `smtp`,
+`mailgun`, or `mock`.
 
 ### 3. Provider-Specific Configuration
 
@@ -91,6 +93,7 @@ The system sends the following types of emails:
 ## Testing Email Configuration
 
 1. Use mock mode for development:
+
    ```env
    EMAIL_SERVICE=mock
    EMAIL_ENABLED=true
@@ -107,18 +110,22 @@ The system sends the following types of emails:
 ## Troubleshooting
 
 ### Gmail Issues
+
 - Ensure you're using App Password, not regular password
 - Check if "Less secure app access" is needed (not recommended)
 
 ### SendGrid Issues
+
 - Verify sender domain if required
 - Check API key permissions
 
 ### AWS SES Issues
+
 - Verify email addresses in sandbox mode
 - Check region configuration
 
 ### General Issues
+
 - Check spam folder
 - Verify `EMAIL_FROM` address is valid
 - Check server logs for error messages

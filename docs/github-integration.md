@@ -1,19 +1,24 @@
 # GitHub Integration Guide
 
-Lightning Talk Circle includes automated GitHub integration for issue management and workflow automation. This guide explains how to set up and use these features.
+Lightning Talk Circle includes automated GitHub integration for issue management
+and workflow automation. This guide explains how to set up and use these
+features.
 
 ## Features
 
 - **Automated Issue Creation**: Create GitHub issues from structured data
-- **Issue Verification**: Verify that expected issues exist and have correct labels
-- **Workflow Automation**: Automated worktree creation, development, and PR management
+- **Issue Verification**: Verify that expected issues exist and have correct
+  labels
+- **Workflow Automation**: Automated worktree creation, development, and PR
+  management
 - **Integration Testing**: Validate GitHub API access and permissions
 
 ## Setup
 
 ### Prerequisites
 
-1. **GitHub Repository**: You need a GitHub repository with appropriate permissions
+1. **GitHub Repository**: You need a GitHub repository with appropriate
+   permissions
 2. **Personal Access Token**: Create a token with the following scopes:
    - `repo` (Full control of private repositories)
    - `workflow` (Update GitHub Action workflows) - if using GitHub Actions
@@ -27,6 +32,7 @@ npm run setup:github
 ```
 
 This script will:
+
 1. Check your current configuration
 2. Prompt for missing values
 3. Update your `.env` file
@@ -42,8 +48,8 @@ This script will:
    - Select scopes: `repo`, `workflow` (if needed)
    - Copy the generated token
 
-2. **Configure Environment Variables**:
-   Add to your `.env` file:
+2. **Configure Environment Variables**: Add to your `.env` file:
+
    ```env
    GITHUB_TOKEN="your_personal_access_token"
    GITHUB_OWNER="your_username_or_org"
@@ -85,14 +91,14 @@ npm run workflow
 
 ### Environment Variables
 
-| Variable | Description | Default |
-|----------|-------------|---------|
-| `GITHUB_TOKEN` | Personal Access Token | Required |
-| `GITHUB_OWNER` | Repository owner/organization | `20m61` |
-| `GITHUB_REPO` | Repository name | `lightningtalk-circle` |
-| `AUTO_MERGE` | Enable automatic PR merging | `false` |
-| `REQUIRE_REVIEW` | Require PR reviews | `true` |
-| `REQUIRE_STATUS_CHECKS` | Require status checks | `true` |
+| Variable                | Description                   | Default                |
+| ----------------------- | ----------------------------- | ---------------------- |
+| `GITHUB_TOKEN`          | Personal Access Token         | Required               |
+| `GITHUB_OWNER`          | Repository owner/organization | `20m61`                |
+| `GITHUB_REPO`           | Repository name               | `lightningtalk-circle` |
+| `AUTO_MERGE`            | Enable automatic PR merging   | `false`                |
+| `REQUIRE_REVIEW`        | Require PR reviews            | `true`                 |
+| `REQUIRE_STATUS_CHECKS` | Require status checks         | `true`                 |
 
 ### Issue Data Structure
 
@@ -123,6 +129,7 @@ Issues are defined in `docs/project/issues-data.json`:
 ### Automated Worktree Management
 
 The system can automatically:
+
 1. Create git worktrees for feature development
 2. Manage multiple parallel development streams
 3. Clean up completed worktrees
@@ -180,11 +187,13 @@ The system can automatically:
 ### Debugging
 
 Enable debug logging:
+
 ```bash
 DEBUG=github:* npm run create-issues
 ```
 
 Check configuration:
+
 ```bash
 npm run setup:github
 ```
@@ -206,7 +215,7 @@ Example workflow for automated issue management:
 name: Issue Management
 on:
   schedule:
-    - cron: '0 9 * * 1'  # Weekly on Mondays
+    - cron: '0 9 * * 1' # Weekly on Mondays
   workflow_dispatch:
 
 jobs:
@@ -227,4 +236,5 @@ jobs:
 
 ### Local Development
 
-For local development, the integration works with your personal access token and provides immediate feedback on issue creation and management.
+For local development, the integration works with your personal access token and
+provides immediate feedback on issue creation and management.

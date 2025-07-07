@@ -66,7 +66,10 @@
     "cdk:deploy:dev": "cd cdk && npx cdk deploy --all --context env=dev",
     "cdk:deploy:staging": "cd cdk && npx cdk deploy --all --context env=staging",
     "cdk:deploy:prod": "cd cdk && npx cdk deploy --all --context env=prod",
-    "cdk:test": "cd cdk && npm test"
+    "cdk:test": "cd cdk && npm test",
+    "migrate-to-dynamodb": "node scripts/migrate-to-dynamodb.js",
+    "test-rollback": "node scripts/test-rollback.js",
+    "generate-secrets": "node scripts/generate-secrets.js"
   },
   "dependencies": {
     "@octokit/rest": "^20.1.2",

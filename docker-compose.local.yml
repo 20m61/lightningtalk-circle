@@ -139,7 +139,7 @@ services:
   init-permissions:
     image: alpine:latest
     container_name: lightningtalk-init-permissions
-    user: "0:0"  # Run as root to fix permissions
+    user: "0:0" # Run as root to fix permissions
     volumes:
       - ./data:/host-data
       - ./logs:/host-logs
@@ -150,13 +150,13 @@ services:
       - |
         # Create directories if they don't exist
         mkdir -p /host-data /host-logs /host-server-data
-        
+
         # Set ownership to the user that will run the app
         chown -R ${DOCKER_UID:-1001}:${DOCKER_GID:-1001} /host-data /host-logs /host-server-data
-        
+
         # Set proper permissions
         chmod -R 755 /host-data /host-logs /host-server-data
-        
+
         echo "Permissions initialized successfully"
     profiles:
       - init
