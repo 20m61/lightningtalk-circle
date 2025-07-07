@@ -46,6 +46,7 @@ describe('ApiStack', () => {
       const stack = new ApiStack(app, 'TestApiStack', {
         config: defaultConfig,
         databaseStack: databaseStack,
+        apiUrl: 'http://localhost:3000',
         env: { account: '123456789012', region: 'us-east-1' }
       });
       template = Template.fromStack(stack);
@@ -66,6 +67,7 @@ describe('ApiStack', () => {
       const stack = new ApiStack(app, 'TestApiStack', {
         config: defaultConfig,
         databaseStack: databaseStack,
+        apiUrl: 'http://localhost:3000',
         env: { account: '123456789012', region: 'us-east-1' }
       });
       template = Template.fromStack(stack);
@@ -100,6 +102,7 @@ describe('ApiStack', () => {
       const stack = new ApiStack(app, 'TestApiStack', {
         config: defaultConfig,
         databaseStack: databaseStack,
+        apiUrl: 'http://localhost:3000',
         env: { account: '123456789012', region: 'us-east-1' }
       });
       template = Template.fromStack(stack);
@@ -139,6 +142,7 @@ describe('ApiStack', () => {
       const stack = new ApiStack(app, 'TestApiStack', {
         config: defaultConfig,
         databaseStack: databaseStack,
+        apiUrl: 'http://localhost:3000',
         env: { account: '123456789012', region: 'us-east-1' }
       });
       template = Template.fromStack(stack);
@@ -192,6 +196,7 @@ describe('ApiStack', () => {
       const stack = new ApiStack(app, 'TestApiStack', {
         config: defaultConfig,
         databaseStack: databaseStack,
+        apiUrl: 'http://localhost:3000',
         env: { account: '123456789012', region: 'us-east-1' }
       });
       template = Template.fromStack(stack);
@@ -235,6 +240,7 @@ describe('ApiStack', () => {
       const stack = new ApiStack(app, 'TestApiStack', {
         config: defaultConfig,
         databaseStack: databaseStack,
+        apiUrl: 'http://localhost:3000',
         env: { account: '123456789012', region: 'us-east-1' }
       });
       template = Template.fromStack(stack);
@@ -258,6 +264,7 @@ describe('ApiStack', () => {
       const stack = new ApiStack(app, 'TestApiStack', {
         config: defaultConfig,
         databaseStack: databaseStack,
+        apiUrl: 'http://localhost:3000',
         env: { account: '123456789012', region: 'us-east-1' }
       });
       template = Template.fromStack(stack);
@@ -317,6 +324,7 @@ describe('ApiStack', () => {
       const stack = new ApiStack(app, 'TestApiStack', {
         config: defaultConfig,
         databaseStack: databaseStack,
+        apiUrl: 'http://localhost:3000',
         env: { account: '123456789012', region: 'us-east-1' }
       });
       template = Template.fromStack(stack);
@@ -335,6 +343,7 @@ describe('ApiStack', () => {
       const stack = new ApiStack(app, 'TestApiStack', {
         config: defaultConfig,
         databaseStack: databaseStack,
+        apiUrl: 'http://localhost:3000',
         env: { account: '123456789012', region: 'us-east-1' }
       });
       template = Template.fromStack(stack);
@@ -402,6 +411,7 @@ describe('ApiStack', () => {
       const stack = new ApiStack(app, 'ProdApiStack', {
         config: prodConfig,
         databaseStack: prodDatabaseStack,
+        apiUrl: 'https://api.lightningtalk.example.com',
         env: { account: '123456789012', region: 'us-east-1' }
       });
       template = Template.fromStack(stack);
@@ -420,6 +430,7 @@ describe('ApiStack', () => {
       const stack = new ApiStack(app, 'ProdApiStack', {
         config: prodConfig,
         databaseStack: prodDatabaseStack,
+        apiUrl: 'https://api.lightningtalk.example.com',
         env: { account: '123456789012', region: 'us-east-1' }
       });
       template = Template.fromStack(stack);

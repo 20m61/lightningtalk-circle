@@ -9,6 +9,13 @@ class DatabaseStack extends Stack {
     super(scope, id, props);
 
     const { config } = props;
+    
+    // Production safety check
+    if (config.app.stage === 'production') {
+      console.warn('⚠️  Deploying to PRODUCTION environment');
+      console.warn('⚠️  DynamoDB tables will be RETAINED on stack deletion');
+      console.warn('⚠️  Point-in-time recovery is ENABLED');
+    }
 
     // Create VPC
     this.vpc = new ec2.Vpc(this, 'LightningTalkVpc', {

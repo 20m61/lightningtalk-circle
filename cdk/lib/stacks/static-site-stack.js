@@ -14,6 +14,11 @@ class StaticSiteStack extends Stack {
 
     const { config, apiUrl } = props;
     
+    // Validate required parameters
+    if (!apiUrl) {
+      throw new Error('API URL is required for Static Site Stack');
+    }
+    
     // Custom domain configuration
     const customDomain = config.domain;
     let hostedZone, certificate;
@@ -131,7 +136,7 @@ class StaticSiteStack extends Stack {
       webAclId: props.wafAclArn,
       additionalBehaviors: {
         '/api/*': {
-          origin: new origins.HttpOrigin(apiUrl.replace('http://', ''), {
+          origin: new origins.HttpOrigin(this.parseApiUrl(apiUrl), {
             protocolPolicy: cloudfront.OriginProtocolPolicy.HTTP_ONLY,
           }),
           viewerProtocolPolicy: cloudfront.ViewerProtocolPolicy.REDIRECT_TO_HTTPS,
@@ -263,6 +268,22 @@ class StaticSiteStack extends Stack {
         description: 'Custom domain name',
         exportName: `${config.app.name}-${config.app.stage}-custom-domain`,
       });
+    }
+  }
+
+  /**
+   * Parse API URL to extract hostname and port
+   * @param {string} apiUrl - The API URL to parse
+   * @returns {string} The hostname with optional port
+   */
+  parseApiUrl(apiUrl) {
+    try {
+      const url = new URL(apiUrl);
+      return url.hostname + (url.port ? `:${url.port}` : '');
+    } catch (error) {
+      // Fallback to simple string replacement if URL parsing fails
+      console.warn(`Failed to parse API URL: ${apiUrl}. Using fallback method.`);
+      return apiUrl.replace(/^https?:\/\//, '');
     }
   }
 }

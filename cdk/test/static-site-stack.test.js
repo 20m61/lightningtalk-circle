@@ -163,11 +163,23 @@ describe('StaticSiteStack', () => {
     });
 
     test('grants OAI read access to S3 bucket', () => {
-      // Check that bucket policy exists
-      template.hasResourceProperties('AWS::S3::BucketPolicy', {});
+      // Find bucket policy resources
+      const policies = template.findResources('AWS::S3::BucketPolicy');
+      const policyValues = Object.values(policies);
 
-      // The actual policy structure varies depending on CDK version
-      // so we just verify that the policy is created
+      // Verify that at least one bucket policy exists
+      expect(policyValues).toHaveLength(1);
+      expect(policyValues[0].Properties.PolicyDocument).toBeDefined();
+      expect(policyValues[0].Properties.PolicyDocument.Statement).toBeDefined();
+
+      // Verify that at least one statement allows s3:GetObject
+      const statements = policyValues[0].Properties.PolicyDocument.Statement;
+      const hasGetObjectPermission = statements.some(stmt => {
+        const actions = Array.isArray(stmt.Action) ? stmt.Action : [stmt.Action];
+        return actions.some(action => action === 's3:GetObject' || action.includes('s3:GetObject'));
+      });
+
+      expect(hasGetObjectPermission).toBe(true);
     });
   });
 
