@@ -1,0 +1,36 @@
+{
+  "domain": {
+    "domainName": "lightningtalk.example.com",
+    "zoneName": "example.com",
+    "hostedZoneId": "Z1234567890ABC",
+    "certificateArn": "arn:aws:acm:us-east-1:123456789012:certificate/12345678-1234-1234-1234-123456789012",
+    "alternativeNames": ["www.lightningtalk.example.com"],
+    "redirectWww": true,
+    "enableIPv6": true
+  },
+  "cdn": {
+    "priceClass": "PriceClass_200",
+    "geoRestriction": {
+      "restrictionType": "none",
+      "locations": []
+    },
+    "cacheSettings": {
+      "defaultTtl": 86400,
+      "maxTtl": 31536000,
+      "minTtl": 0
+    },
+    "compression": true,
+    "httpVersion": "http2and3"
+  },
+  "security": {
+    "minimumProtocolVersion": "TLSv1.2_2021",
+    "sslSupportMethod": "sni-only",
+    "originProtocolPolicy": "https-only",
+    "viewerProtocolPolicy": "redirect-to-https"
+  },
+  "logging": {
+    "enabled": false,
+    "bucket": "",
+    "prefix": "access-logs/"
+  }
+}

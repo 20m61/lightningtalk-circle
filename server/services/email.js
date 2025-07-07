@@ -1,8 +1,9 @@
 /**
  * Email Service for Lightning Talk Event Management
- * Handles all email communications
+ * Handles all email communications with real email provider integration
  */
 
+import nodemailer from 'nodemailer';
 import { logger } from '../middleware/logger.js';
 
 export class EmailService {
@@ -10,21 +11,106 @@ export class EmailService {
     this.enabled = process.env.EMAIL_ENABLED === 'true';
     this.from = process.env.EMAIL_FROM || 'noreply@lightningtalk.example.com';
     this.templates = this.initializeTemplates();
-    this.provider = config.provider || 'mock';
+    this.provider = process.env.EMAIL_SERVICE || config.provider || 'mock';
     this.config = {
-      provider: config.provider || 'mock',
-      apiKey: config.apiKey || '',
-      fromEmail: config.fromEmail || this.from
+      provider: this.provider,
+      fromEmail: this.from
     };
+
     if (this.enabled) {
       this.setupEmailProvider();
+    } else {
+      logger.info('📧 Email service disabled (simulation mode)');
     }
   }
 
   setupEmailProvider() {
-    // In a real implementation, you would set up nodemailer or another email service
-    // For now, we'll simulate email sending
-    logger.info('📧 Email service initialized (simulation mode)');
+    try {
+      switch (this.provider.toLowerCase()) {
+        case 'gmail':
+          this.transporter = nodemailer.createTransport({
+            service: 'gmail',
+            auth: {
+              user: process.env.EMAIL_USER,
+              pass: process.env.EMAIL_PASSWORD
+            }
+          });
+          logger.info('📧 Email service initialized with Gmail');
+          break;
+
+        case 'sendgrid':
+          this.transporter = nodemailer.createTransport({
+            host: 'smtp.sendgrid.net',
+            port: 587,
+            secure: false,
+            auth: {
+              user: 'apikey',
+              pass: process.env.SENDGRID_API_KEY
+            }
+          });
+          logger.info('📧 Email service initialized with SendGrid');
+          break;
+
+        case 'aws-ses':
+          this.transporter = nodemailer.createTransport({
+            host: process.env.AWS_SES_REGION
+              ? `email-smtp.${process.env.AWS_SES_REGION}.amazonaws.com`
+              : 'email-smtp.us-east-1.amazonaws.com',
+            port: 587,
+            secure: false,
+            auth: {
+              user: process.env.AWS_SES_USERNAME,
+              pass: process.env.AWS_SES_PASSWORD
+            }
+          });
+          logger.info('📧 Email service initialized with AWS SES');
+          break;
+
+        case 'smtp':
+          this.transporter = nodemailer.createTransport({
+            host: process.env.SMTP_HOST,
+            port: process.env.SMTP_PORT || 587,
+            secure: process.env.SMTP_SECURE === 'true',
+            auth: {
+              user: process.env.SMTP_USER,
+              pass: process.env.SMTP_PASSWORD
+            }
+          });
+          logger.info('📧 Email service initialized with custom SMTP');
+          break;
+
+        case 'mailgun':
+          this.transporter = nodemailer.createTransport({
+            host: process.env.MAILGUN_SMTP_HOST || 'smtp.mailgun.org',
+            port: process.env.MAILGUN_SMTP_PORT || 587,
+            secure: false,
+            auth: {
+              user: process.env.MAILGUN_SMTP_USER,
+              pass: process.env.MAILGUN_SMTP_PASSWORD
+            }
+          });
+          logger.info('📧 Email service initialized with Mailgun');
+          break;
+
+        default:
+          logger.warn('📧 Email service in mock mode - no real emails will be sent');
+          this.transporter = null;
+      }
+
+      // Verify transporter configuration
+      if (this.transporter) {
+        this.transporter.verify((error, success) => {
+          if (error) {
+            logger.error('📧 Email service configuration error:', error);
+          } else {
+            logger.info('📧 Email service ready to send messages');
+          }
+        });
+      }
+    } catch (error) {
+      logger.error('📧 Failed to setup email provider:', error);
+      this.transporter = null;
+    }
   }
 
   initializeTemplates() {
@@ -53,19 +139,17 @@ export class EmailService {
   }
 
   async sendRegistrationConfirmation(participant, event) {
-    if (!this.enabled) {
-      logger.info('📧 [SIMULATED] Registration confirmation email sent to:', participant.email);
-      return;
-    }
-
     const template = this.templates.registrationConfirmation;
     const html = template.template
-      .replace('{{participantName}}', participant.name)
-      .replace('{{eventTitle}}', event.title)
-      .replace('{{eventDate}}', this.formatDate(event.date))
-      .replace('{{eventVenue}}', event.venue.name)
-      .replace('{{participationType}}', this.formatParticipationType(participant.participationType))
-      .replace('{{onlineUrl}}', event.venue.onlineUrl || '');
+      .replace(/{{participantName}}/g, participant.name)
+      .replace(/{{eventTitle}}/g, event.title)
+      .replace(/{{eventDate}}/g, this.formatDate(event.date))
+      .replace(/{{eventVenue}}/g, event.venue.name)
+      .replace(
+        /{{participationType}}/g,
+        this.formatParticipationType(participant.participationType)
+      )
+      .replace(/{{onlineUrl}}/g, event.venue.onlineUrl || '');
 
     await this.sendEmail({
       to: participant.email,
@@ -75,19 +159,14 @@ export class EmailService {
   }
 
   async sendSpeakerConfirmation(participant, talk, event) {
-    if (!this.enabled) {
-      logger.info('📧 [SIMULATED] Speaker confirmation email sent to:', participant.email);
-      return;
-    }
-
     const template = this.templates.speakerConfirmation;
     const html = template.template
-      .replace('{{speakerName}}', participant.name)
-      .replace('{{talkTitle}}', talk.title)
-      .replace('{{eventTitle}}', event.title)
-      .replace('{{eventDate}}', this.formatDate(event.date))
-      .replace('{{talkDuration}}', talk.duration)
-      .replace('{{category}}', this.formatCategory(talk.category));
+      .replace(/{{speakerName}}/g, participant.name)
+      .replace(/{{talkTitle}}/g, talk.title)
+      .replace(/{{eventTitle}}/g, event.title)
+      .replace(/{{eventDate}}/g, this.formatDate(event.date))
+      .replace(/{{talkDuration}}/g, talk.duration)
+      .replace(/{{category}}/g, this.formatCategory(talk.category));
 
     await this.sendEmail({
       to: participant.email,
@@ -97,22 +176,17 @@ export class EmailService {
   }
 
   async sendEventReminder(participant, event) {
-    if (!this.enabled) {
-      logger.info('📧 [SIMULATED] Event reminder email sent to:', participant.email);
-      return;
-    }
-
     const daysUntil = Math.ceil(
       Math.abs((new Date(event.date) - new Date()) / (1000 * 60 * 60 * 24))
     );
     const template = this.templates.eventReminder;
     const html = template.template
-      .replace('{{participantName}}', participant.name)
-      .replace('{{eventTitle}}', event.title)
-      .replace('{{eventDate}}', this.formatDate(event.date))
-      .replace('{{daysUntil}}', daysUntil)
-      .replace('{{eventVenue}}', event.venue.name)
-      .replace('{{onlineUrl}}', event.venue.onlineUrl || '');
+      .replace(/{{participantName}}/g, participant.name)
+      .replace(/{{eventTitle}}/g, event.title)
+      .replace(/{{eventDate}}/g, this.formatDate(event.date))
+      .replace(/{{daysUntil}}/g, daysUntil)
+      .replace(/{{eventVenue}}/g, event.venue.name)
+      .replace(/{{onlineUrl}}/g, event.venue.onlineUrl || '');
 
     await this.sendEmail({
       to: participant.email,
@@ -122,17 +196,12 @@ export class EmailService {
   }
 
   async sendEventCancellation(participant, event, reason = '') {
-    if (!this.enabled) {
-      logger.info('📧 [SIMULATED] Event cancellation email sent to:', participant.email);
-      return;
-    }
-
     const template = this.templates.eventCancellation;
     const html = template.template
-      .replace('{{participantName}}', participant.name)
-      .replace('{{eventTitle}}', event.title)
-      .replace('{{eventDate}}', this.formatDate(event.date))
-      .replace('{{reason}}', reason || '諸事情により');
+      .replace(/{{participantName}}/g, participant.name)
+      .replace(/{{eventTitle}}/g, event.title)
+      .replace(/{{eventDate}}/g, this.formatDate(event.date))
+      .replace(/{{reason}}/g, reason || '諸事情により');
 
     await this.sendEmail({
       to: participant.email,
@@ -142,16 +211,11 @@ export class EmailService {
   }
 
   async sendFeedbackRequest(participant, event) {
-    if (!this.enabled) {
-      logger.info('📧 [SIMULATED] Feedback request email sent to:', participant.email);
-      return;
-    }
-
     const template = this.templates.feedbackRequest;
     const html = template.template
-      .replace('{{participantName}}', participant.name)
-      .replace('{{eventTitle}}', event.title)
-      .replace('{{feedbackUrl}}', process.env.FEEDBACK_URL || 'https://forms.google.com/feedback');
+      .replace(/{{participantName}}/g, participant.name)
+      .replace(/{{eventTitle}}/g, event.title)
+      .replace(/{{feedbackUrl}}/g, process.env.FEEDBACK_URL || 'https://forms.google.com/feedback');
 
     await this.sendEmail({
       to: participant.email,
@@ -160,17 +224,45 @@ export class EmailService {
     });
   }
 
-  async sendEmail({ to, subject, _html }) {
+  async sendEmail({ to, subject, html, text }) {
     try {
+      if (!this.enabled) {
+        logger.info(`📧 [SIMULATED] Email to: ${to}, Subject: ${subject}`);
+        return {
+          success: true,
+          messageId: `mock-${Date.now()}`,
+          simulated: true
+        };
+      }
+
+      if (!this.transporter) {
+        logger.warn(`📧 [MOCK MODE] Email to: ${to}, Subject: ${subject}`);
+        return {
+          success: true,
+          messageId: `mock-${Date.now()}`,
+          mock: true
+        };
+      }
+
       logger.info(`📧 Sending email to: ${to}`);
-      logger.info(`📧 Subject: ${subject}`);
 
-      // Simulate email sending delay
-      await new Promise(resolve => setTimeout(resolve, 100));
+      const mailOptions = {
+        from: this.from,
+        to,
+        subject,
+        html,
+        text: text || this.htmlToText(html)
+      };
 
-      return { messageId: `msg-${Date.now()}` };
+      const info = await this.transporter.sendMail(mailOptions);
+
+      logger.info(`📧 Email sent successfully: ${info.messageId}`);
+      return {
+        success: true,
+        messageId: info.messageId
+      };
     } catch (error) {
-      logger.error('Failed to send email:', error);
+      logger.error('📧 Failed to send email:', error);
       throw error;
     }
   }
@@ -183,8 +275,10 @@ export class EmailService {
    */
   async sendWithRetry(emailData, options = {}) {
     const maxRetries = options.maxRetries ?? 3;
+    const retryDelay = options.retryDelay ?? 1000;
     let attempts = 0;
     let lastError;
+
     while (attempts < maxRetries) {
       attempts++;
       try {
@@ -195,9 +289,75 @@ export class EmailService {
         lastError = new Error('Unknown send failure');
       } catch (err) {
         lastError = err;
+        logger.warn(`📧 Email send attempt ${attempts} failed:`, err.message);
+
+        if (attempts < maxRetries) {
+          await new Promise(resolve => setTimeout(resolve, retryDelay * attempts));
+        }
       }
     }
+
     throw Object.assign(lastError || new Error('Failed to send email'), { attempts });
+  }
+
+  /**
+   * バッチメール送信
+   * @param {Array} recipients - 受信者リスト
+   * @param {Function} templateFn - テンプレート生成関数
+   * @param {object} options - オプション
+   * @returns {Promise<Array>} 送信結果
+   */
+  async sendBatch(recipients, templateFn, options = {}) {
+    const results = [];
+    const batchSize = options.batchSize || 10;
+    const delayBetweenBatches = options.delayBetweenBatches || 1000;
+
+    for (let i = 0; i < recipients.length; i += batchSize) {
+      const batch = recipients.slice(i, i + batchSize);
+
+      const batchResults = await Promise.allSettled(
+        batch.map(async recipient => {
+          try {
+            const emailData = await templateFn(recipient);
+            return await this.sendWithRetry(emailData, options);
+          } catch (error) {
+            return {
+              success: false,
+              error: error.message,
+              recipient: recipient.email
+            };
+          }
+        })
+      );
+
+      results.push(...batchResults);
+
+      // Delay between batches to avoid rate limiting
+      if (i + batchSize < recipients.length) {
+        await new Promise(resolve => setTimeout(resolve, delayBetweenBatches));
+      }
+    }
+
+    return results;
+  }
+
+  /**
+   * Convert HTML to plain text
+   * @param {string} html - HTML content
+   * @returns {string} Plain text
+   */
+  htmlToText(html) {
+    return html
+      .replace(/<style[^>]*>[\s\S]*?<\/style>/gi, '')
+      .replace(/<script[^>]*>[\s\S]*?<\/script>/gi, '')
+      .replace(/<[^>]+>/g, ' ')
+      .replace(/\s+/g, ' ')
+      .replace(/&nbsp;/g, ' ')
+      .replace(/&amp;/g, '&')
+      .replace(/&lt;/g, '<')
+      .replace(/&gt;/g, '>')
+      .replace(/&quot;/g, '"')
+      .trim();
   }
 
   // Email templates

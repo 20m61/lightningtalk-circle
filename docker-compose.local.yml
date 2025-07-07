@@ -10,7 +10,8 @@ services:
       context: .
       dockerfile: Dockerfile.dev
     container_name: lightningtalk-dev
-    user: "0:0"  # Run as root temporarily to fix permissions
+    # Use uid:gid of current user to avoid permission issues
+    user: "${DOCKER_UID:-1001}:${DOCKER_GID:-1001}"
     environment:
       NODE_ENV: development
       PORT: 3000
@@ -133,6 +134,32 @@ services:
     profiles:
       - tools
     command: tail -f /dev/null # Keep container running
+
+  # Initialize permissions for data directories
+  init-permissions:
+    image: alpine:latest
+    container_name: lightningtalk-init-permissions
+    user: "0:0" # Run as root to fix permissions
+    volumes:
+      - ./data:/host-data
+      - ./logs:/host-logs
+      - ./server/data:/host-server-data
+    command:
+      - sh
+      - -c
+      - |
+        # Create directories if they don't exist
+        mkdir -p /host-data /host-logs /host-server-data
+
+        # Set ownership to the user that will run the app
+        chown -R ${DOCKER_UID:-1001}:${DOCKER_GID:-1001} /host-data /host-logs /host-server-data
+
+        # Set proper permissions
+        chmod -R 755 /host-data /host-logs /host-server-data
+
+        echo "Permissions initialized successfully"
+    profiles:
+      - init
 
 volumes:
   wp_data:
