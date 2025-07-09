@@ -31,7 +31,9 @@ class EventSearch {
   setupSearchForm() {
     // Create search form if it doesn't exist
     const searchContainer = document.getElementById('event-search-container');
-    if (!searchContainer) return;
+    if (!searchContainer) {
+      return;
+    }
 
     searchContainer.innerHTML = `
       <div class="search-form-container">
@@ -107,7 +109,9 @@ class EventSearch {
   }
 
   setupEventListeners() {
-    if (!this.searchForm) return;
+    if (!this.searchForm) {
+      return;
+    }
 
     // Form submission
     this.searchForm.addEventListener('submit', e => {
@@ -142,7 +146,7 @@ class EventSearch {
       venue: formData.get('venue') || 'all',
       dateFrom: formData.get('dateFrom') || '',
       dateTo: formData.get('dateTo') || '',
-      page: page,
+      page,
       perPage: 10,
       sortBy: formData.get('sortBy') || 'date',
       sortOrder: formData.get('sortOrder') || 'asc'
@@ -268,8 +272,10 @@ class EventSearch {
     const endPage = Math.min(totalPages, page + 2);
 
     if (startPage > 1) {
-      html += `<button class="page-btn" data-page="1">1</button>`;
-      if (startPage > 2) html += '<span class="page-ellipsis">...</span>';
+      html += '<button class="page-btn" data-page="1">1</button>';
+      if (startPage > 2) {
+        html += '<span class="page-ellipsis">...</span>';
+      }
     }
 
     for (let i = startPage; i <= endPage; i++) {
@@ -278,7 +284,9 @@ class EventSearch {
     }
 
     if (endPage < totalPages) {
-      if (endPage < totalPages - 1) html += '<span class="page-ellipsis">...</span>';
+      if (endPage < totalPages - 1) {
+        html += '<span class="page-ellipsis">...</span>';
+      }
       html += `<button class="page-btn" data-page="${totalPages}">${totalPages}</button>`;
     }
 
@@ -312,14 +320,22 @@ class EventSearch {
   }
 
   getVenueType(venue) {
-    if (!venue) return '未定';
+    if (!venue) {
+      return '未定';
+    }
 
     const hasOnline = venue.online;
     const hasOffline = venue.address || venue.name;
 
-    if (hasOnline && hasOffline) return 'ハイブリッド';
-    if (hasOnline) return 'オンライン';
-    if (hasOffline) return 'オフライン';
+    if (hasOnline && hasOffline) {
+      return 'ハイブリッド';
+    }
+    if (hasOnline) {
+      return 'オンライン';
+    }
+    if (hasOffline) {
+      return 'オフライン';
+    }
     return '未定';
   }
 

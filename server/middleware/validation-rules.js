@@ -7,7 +7,7 @@ import { body, param, query } from 'express-validator';
 
 // Common validation patterns
 const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-const phonePattern = /^[\+]?[\d\s\-\(\)]{10,15}$/;
+const phonePattern = /^[+]?[\d\s\-()]{10,15}$/;
 const urlPattern = /^https?:\/\/[^\s/$.?#].[^\s]*$/;
 const timePattern = /^([01]?[0-9]|2[0-3]):[0-5][0-9]$/;
 

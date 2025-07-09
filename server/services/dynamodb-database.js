@@ -27,8 +27,12 @@ export class DynamoDBDatabaseService {
 
     // Table names from environment or config
     this.tables = {
-      events: config.eventsTable || process.env.DYNAMODB_EVENTS_TABLE || 'lightningtalk-circle-events',
-      participants: config.participantsTable || process.env.DYNAMODB_PARTICIPANTS_TABLE || 'lightningtalk-circle-participants',
+      events:
+        config.eventsTable || process.env.DYNAMODB_EVENTS_TABLE || 'lightningtalk-circle-events',
+      participants:
+        config.participantsTable ||
+        process.env.DYNAMODB_PARTICIPANTS_TABLE ||
+        'lightningtalk-circle-participants',
       users: config.usersTable || process.env.DYNAMODB_USERS_TABLE || 'lightningtalk-circle-users',
       talks: config.talksTable || process.env.DYNAMODB_TALKS_TABLE || 'lightningtalk-circle-talks'
     };
@@ -51,7 +55,7 @@ export class DynamoDBDatabaseService {
     try {
       const dynamodb = new AWS.DynamoDB();
       const tableNames = Object.values(this.tables);
-      
+
       for (const tableName of tableNames) {
         try {
           await dynamodb.describeTable({ TableName: tableName }).promise();
@@ -104,7 +108,7 @@ export class DynamoDBDatabaseService {
    */
   async findAll(collection, filter = {}) {
     const tableName = this.tables[collection];
-    
+
     // For simple queries, use scan (not recommended for large datasets)
     // In production, use query with GSIs for better performance
     if (Object.keys(filter).length === 0) {
@@ -115,11 +119,11 @@ export class DynamoDBDatabaseService {
     if (collection === 'events' && filter.status) {
       return this.queryEventsByStatus(filter.status);
     }
-    
+
     if (collection === 'participants' && filter.eventId) {
       return this.queryParticipantsByEvent(filter.eventId);
     }
-    
+
     if (collection === 'talks' && filter.eventId) {
       return this.queryTalksByEvent(filter.eventId);
     }
@@ -168,7 +172,7 @@ export class DynamoDBDatabaseService {
     Object.entries(filter).forEach(([key, value], index) => {
       const attrName = `#attr${index}`;
       const attrValue = `:val${index}`;
-      
+
       filterExpressions.push(`${attrName} = ${attrValue}`);
       expressionAttributeNames[attrName] = key;
       expressionAttributeValues[attrValue] = value;
@@ -299,10 +303,11 @@ export class DynamoDBDatabaseService {
 
     // Build update expression
     Object.entries(updates).forEach(([key, value], index) => {
-      if (key !== 'id' && key !== 'createdAt') { // Don't update these fields
+      if (key !== 'id' && key !== 'createdAt') {
+        // Don't update these fields
         const attrName = `#attr${index}`;
         const attrValue = `:val${index}`;
-        
+
         updateExpressions.push(`${attrName} = ${attrValue}`);
         expressionAttributeNames[attrName] = key;
         expressionAttributeValues[attrValue] = value;
@@ -388,12 +393,12 @@ export class DynamoDBDatabaseService {
    */
   async getCollectionStats(collection) {
     const tableName = this.tables[collection];
-    
+
     try {
       // Get table description for item count
       const dynamodb = new AWS.DynamoDB();
       const tableDesc = await dynamodb.describeTable({ TableName: tableName }).promise();
-      
+
       const stats = {
         total: tableDesc.Table.ItemCount || 0,
         tableSizeBytes: tableDesc.Table.TableSizeBytes || 0,
@@ -402,23 +407,21 @@ export class DynamoDBDatabaseService {
 
       // For more detailed stats, we would need to scan the table
       // which is expensive for large tables
-      if (stats.total < 1000) { // Only scan small tables
+      if (stats.total < 1000) {
+        // Only scan small tables
         const items = await this.scan(collection);
         const now = new Date();
         const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
         const weekAgo = new Date(today.getTime() - 7 * 24 * 60 * 60 * 1000);
 
-        stats.createdToday = items.filter(item => 
-          new Date(item.createdAt) >= today
-        ).length;
+        stats.createdToday = items.filter(item => new Date(item.createdAt) >= today).length;
 
-        stats.createdThisWeek = items.filter(item => 
-          new Date(item.createdAt) >= weekAgo
-        ).length;
+        stats.createdThisWeek = items.filter(item => new Date(item.createdAt) >= weekAgo).length;
 
-        stats.lastUpdated = items.length > 0 
-          ? Math.max(...items.map(item => new Date(item.updatedAt).getTime()))
-          : null;
+        stats.lastUpdated =
+          items.length > 0
+            ? Math.max(...items.map(item => new Date(item.updatedAt).getTime()))
+            : null;
       }
 
       return stats;

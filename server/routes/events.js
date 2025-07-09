@@ -38,7 +38,9 @@ router.get('/', async (req, res) => {
 
     // Build filter
     const filter = {};
-    if (status) filter.status = status;
+    if (status) {
+      filter.status = status;
+    }
 
     // Get events
     let events = await database.findAll('events', filter);
@@ -174,8 +176,12 @@ router.get(
       if (dateFrom || dateTo) {
         events = events.filter(event => {
           const eventDate = new Date(event.date);
-          if (dateFrom && eventDate < new Date(dateFrom)) return false;
-          if (dateTo && eventDate > new Date(dateTo)) return false;
+          if (dateFrom && eventDate < new Date(dateFrom)) {
+            return false;
+          }
+          if (dateTo && eventDate > new Date(dateTo)) {
+            return false;
+          }
           return true;
         });
       }
@@ -810,7 +816,7 @@ router.post(
       await eventService.trackAnalytics(id, 'event_status_changed', {
         from: event.status,
         to: status,
-        reason: reason,
+        reason,
         participantCount: participants.length
       });
 

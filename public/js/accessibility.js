@@ -20,31 +20,31 @@ class AccessibilityEnhancer {
   setupAccessibility() {
     // WAI-ARIA属性の自動設定
     this.setupAriaAttributes();
-    
+
     // フォーカス管理の強化
     this.enhanceFocusManagement();
-    
+
     // キーボードナビゲーション
     this.setupKeyboardNavigation();
-    
+
     // スクリーンリーダー対応
     this.setupScreenReaderSupport();
-    
+
     // カラーコントラスト監視
     this.monitorColorContrast();
-    
+
     // アニメーション制御
     this.setupMotionControls();
-    
+
     // フォーム改善
     this.enhanceFormAccessibility();
-    
+
     // 画像とメディアの改善
     this.enhanceMediaAccessibility();
-    
+
     // ランドマークの設定
     this.setupLandmarks();
-    
+
     // ライブリージョンの設定
     this.setupLiveRegions();
   }
@@ -76,7 +76,7 @@ class AccessibilityEnhancer {
     document.querySelectorAll('.modal').forEach(modal => {
       modal.setAttribute('role', 'dialog');
       modal.setAttribute('aria-modal', 'true');
-      
+
       const title = modal.querySelector('.modal-title, h1, h2, h3');
       if (title && !modal.hasAttribute('aria-labelledby')) {
         if (!title.id) {
@@ -132,10 +132,10 @@ class AccessibilityEnhancer {
 
     // フォーカストラップの実装
     this.setupFocusTrap();
-    
+
     // フォーカス表示の強化
     this.enhanceFocusVisibility();
-    
+
     // スキップリンクの追加
     this.addSkipLinks();
   }
@@ -144,9 +144,11 @@ class AccessibilityEnhancer {
    * フォーカストラップの実装
    */
   setupFocusTrap() {
-    document.addEventListener('keydown', (e) => {
+    document.addEventListener('keydown', e => {
       if (e.key === 'Tab') {
-        const activeModal = document.querySelector('.modal[aria-modal="true"]:not([style*="display: none"])');
+        const activeModal = document.querySelector(
+          '.modal[aria-modal="true"]:not([style*="display: none"])'
+        );
         if (activeModal) {
           this.trapFocusInElement(e, activeModal);
         }
@@ -181,13 +183,13 @@ class AccessibilityEnhancer {
   enhanceFocusVisibility() {
     // マウス使用時のフォーカス表示を抑制
     let isMouseUser = false;
-    
+
     document.addEventListener('mousedown', () => {
       isMouseUser = true;
       document.body.classList.add('mouse-user');
     });
 
-    document.addEventListener('keydown', (e) => {
+    document.addEventListener('keydown', e => {
       if (e.key === 'Tab') {
         isMouseUser = false;
         document.body.classList.remove('mouse-user');
@@ -195,13 +197,13 @@ class AccessibilityEnhancer {
     });
 
     // フォーカス時のスタイル適用
-    document.addEventListener('focusin', (e) => {
+    document.addEventListener('focusin', e => {
       if (!isMouseUser) {
         e.target.classList.add('keyboard-focused');
       }
     });
 
-    document.addEventListener('focusout', (e) => {
+    document.addEventListener('focusout', e => {
       e.target.classList.remove('keyboard-focused');
     });
   }
@@ -213,7 +215,7 @@ class AccessibilityEnhancer {
     const skipLinks = document.createElement('nav');
     skipLinks.className = 'skip-links';
     skipLinks.setAttribute('aria-label', 'スキップリンク');
-    
+
     skipLinks.innerHTML = `
       <a href="#main-content" class="skip-link">メインコンテンツへスキップ</a>
       <a href="#navigation" class="skip-link">ナビゲーションへスキップ</a>
@@ -249,14 +251,14 @@ class AccessibilityEnhancer {
    */
   setupKeyboardNavigation() {
     // Escapeキーでモーダル/ドロップダウンを閉じる
-    document.addEventListener('keydown', (e) => {
+    document.addEventListener('keydown', e => {
       if (e.key === 'Escape') {
         this.handleEscapeKey();
       }
     });
 
     // Enter/Spaceキーでボタン動作
-    document.addEventListener('keydown', (e) => {
+    document.addEventListener('keydown', e => {
       if ((e.key === 'Enter' || e.key === ' ') && e.target.getAttribute('role') === 'button') {
         e.preventDefault();
         e.target.click();
@@ -272,7 +274,9 @@ class AccessibilityEnhancer {
    */
   handleEscapeKey() {
     // アクティブなモーダルを閉じる
-    const activeModal = document.querySelector('.modal[aria-modal="true"]:not([style*="display: none"])');
+    const activeModal = document.querySelector(
+      '.modal[aria-modal="true"]:not([style*="display: none"])'
+    );
     if (activeModal) {
       const closeButton = activeModal.querySelector('.modal-close, [data-dismiss="modal"]');
       if (closeButton) {
@@ -301,8 +305,8 @@ class AccessibilityEnhancer {
     // タブリスト内の矢印キーナビゲーション
     document.querySelectorAll('[role="tablist"]').forEach(tablist => {
       const tabs = tablist.querySelectorAll('[role="tab"]');
-      
-      tablist.addEventListener('keydown', (e) => {
+
+      tablist.addEventListener('keydown', e => {
         const currentIndex = Array.from(tabs).indexOf(e.target);
         let targetIndex;
 
@@ -337,10 +341,10 @@ class AccessibilityEnhancer {
   setupScreenReaderSupport() {
     // ライブリージョンの作成
     this.createAnnouncer();
-    
+
     // ページタイトルの動的更新
     this.setupDynamicTitles();
-    
+
     // 状態変更のアナウンス
     this.setupStateAnnouncements();
   }
@@ -364,7 +368,7 @@ class AccessibilityEnhancer {
       if (announcer) {
         announcer.setAttribute('aria-live', priority);
         announcer.textContent = message;
-        
+
         // メッセージをクリア
         setTimeout(() => {
           announcer.textContent = '';
@@ -378,8 +382,8 @@ class AccessibilityEnhancer {
    */
   setupDynamicTitles() {
     // SPA風のページ遷移時のタイトル更新
-    const observer = new MutationObserver((mutations) => {
-      mutations.forEach((mutation) => {
+    const observer = new MutationObserver(mutations => {
+      mutations.forEach(mutation => {
         if (mutation.type === 'childList') {
           const newTitle = document.querySelector('h1');
           if (newTitle && newTitle !== this.lastTitle) {
@@ -398,14 +402,14 @@ class AccessibilityEnhancer {
    */
   setupStateAnnouncements() {
     // フォーム送信状態
-    document.addEventListener('submit', (e) => {
+    document.addEventListener('submit', e => {
       window.announceToScreenReader('フォームを送信中です');
     });
 
     // 読み込み状態
-    const loadingObserver = new MutationObserver((mutations) => {
-      mutations.forEach((mutation) => {
-        mutation.addedNodes.forEach((node) => {
+    const loadingObserver = new MutationObserver(mutations => {
+      mutations.forEach(mutation => {
+        mutation.addedNodes.forEach(node => {
           if (node.nodeType === 1 && node.classList?.contains('loading')) {
             window.announceToScreenReader('読み込み中です');
           }
@@ -426,7 +430,7 @@ class AccessibilityEnhancer {
     }
 
     // コントラスト設定の変更を監視
-    window.matchMedia('(prefers-contrast: high)').addEventListener('change', (e) => {
+    window.matchMedia('(prefers-contrast: high)').addEventListener('change', e => {
       document.body.classList.toggle('high-contrast', e.matches);
     });
 
@@ -451,7 +455,9 @@ class AccessibilityEnhancer {
       const isHighContrast = document.body.classList.toggle('user-high-contrast');
       localStorage.setItem('high-contrast-mode', isHighContrast);
       window.announceToScreenReader(
-        isHighContrast ? '高コントラストモードが有効になりました' : '高コントラストモードが無効になりました'
+        isHighContrast
+          ? '高コントラストモードが有効になりました'
+          : '高コントラストモードが無効になりました'
       );
     });
 
@@ -472,7 +478,7 @@ class AccessibilityEnhancer {
       document.body.classList.add('reduce-motion');
     }
 
-    window.matchMedia('(prefers-reduced-motion: reduce)').addEventListener('change', (e) => {
+    window.matchMedia('(prefers-reduced-motion: reduce)').addEventListener('change', e => {
       document.body.classList.toggle('reduce-motion', e.matches);
     });
 
@@ -515,13 +521,13 @@ class AccessibilityEnhancer {
   enhanceFormAccessibility() {
     // フォームコントロールとラベルの関連付け
     this.associateLabelsWithControls();
-    
+
     // エラーメッセージの改善
     this.enhanceFormErrors();
-    
+
     // 必須フィールドの明示
     this.markRequiredFields();
-    
+
     // フォーム説明の追加
     this.addFormDescriptions();
   }
@@ -533,12 +539,14 @@ class AccessibilityEnhancer {
     document.querySelectorAll('input, select, textarea').forEach(control => {
       if (!control.getAttribute('aria-label') && !control.getAttribute('aria-labelledby')) {
         // 隣接するラベルを探す
-        const label = control.previousElementSibling?.tagName === 'LABEL' 
-          ? control.previousElementSibling
-          : control.parentElement?.querySelector('label');
-        
+        const label =
+          control.previousElementSibling?.tagName === 'LABEL'
+            ? control.previousElementSibling
+            : control.parentElement?.querySelector('label');
+
         if (label) {
-          const labelId = label.id || `label-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+          const labelId =
+            label.id || `label-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
           label.id = labelId;
           control.setAttribute('aria-labelledby', labelId);
         }
@@ -550,10 +558,10 @@ class AccessibilityEnhancer {
    * フォームエラーの改善
    */
   enhanceFormErrors() {
-    document.addEventListener('invalid', (e) => {
+    document.addEventListener('invalid', e => {
       const input = e.target;
       const errorMessage = this.getErrorMessage(input);
-      
+
       // エラーメッセージ要素の作成または更新
       let errorElement = document.getElementById(`${input.id}-error`);
       if (!errorElement) {
@@ -563,17 +571,17 @@ class AccessibilityEnhancer {
         errorElement.setAttribute('role', 'alert');
         input.parentElement.appendChild(errorElement);
       }
-      
+
       errorElement.textContent = errorMessage;
       input.setAttribute('aria-describedby', errorElement.id);
       input.setAttribute('aria-invalid', 'true');
-      
+
       // スクリーンリーダーへの通知
       window.announceToScreenReader(`エラー: ${errorMessage}`, 'assertive');
     });
 
     // エラー解消時の処理
-    document.addEventListener('input', (e) => {
+    document.addEventListener('input', e => {
       const input = e.target;
       if (input.getAttribute('aria-invalid') === 'true' && input.validity.valid) {
         input.removeAttribute('aria-invalid');
@@ -617,8 +625,11 @@ class AccessibilityEnhancer {
    * フィールド名の取得
    */
   getFieldName(input) {
-    const label = document.querySelector(`label[for="${input.id}"]`) 
-      || input.previousElementSibling?.tagName === 'LABEL' ? input.previousElementSibling : null;
+    const label =
+      document.querySelector(`label[for="${input.id}"]`) ||
+      input.previousElementSibling?.tagName === 'LABEL'
+        ? input.previousElementSibling
+        : null;
     return label?.textContent?.replace(/[*:：]/g, '').trim() || input.name || 'このフィールド';
   }
 
@@ -627,9 +638,12 @@ class AccessibilityEnhancer {
    */
   markRequiredFields() {
     document.querySelectorAll('[required]').forEach(field => {
-      const label = document.querySelector(`label[for="${field.id}"]`) 
-        || field.previousElementSibling?.tagName === 'LABEL' ? field.previousElementSibling : null;
-      
+      const label =
+        document.querySelector(`label[for="${field.id}"]`) ||
+        field.previousElementSibling?.tagName === 'LABEL'
+          ? field.previousElementSibling
+          : null;
+
       if (label && !label.querySelector('.required-indicator')) {
         const indicator = document.createElement('span');
         indicator.className = 'required-indicator';
@@ -637,7 +651,7 @@ class AccessibilityEnhancer {
         indicator.setAttribute('aria-label', '必須');
         label.appendChild(indicator);
       }
-      
+
       field.setAttribute('aria-required', 'true');
     });
   }
@@ -662,10 +676,10 @@ class AccessibilityEnhancer {
   enhanceMediaAccessibility() {
     // 画像のalt属性チェック
     this.checkImageAltTexts();
-    
+
     // 動画のコントロール確保
     this.ensureVideoControls();
-    
+
     // 音声の自動再生防止
     this.preventAutoplay();
   }
@@ -694,7 +708,7 @@ class AccessibilityEnhancer {
   ensureVideoControls() {
     document.querySelectorAll('video').forEach(video => {
       video.setAttribute('controls', '');
-      
+
       // キーボードアクセス可能性
       if (!video.hasAttribute('tabindex')) {
         video.setAttribute('tabindex', '0');

@@ -15,11 +15,7 @@ import { logger } from '../services/logger.js';
  * @returns {Promise<any>} - Result of the operation
  */
 export async function dynamoDbWithRetry(operation, options = {}) {
-  const {
-    maxRetries = 3,
-    baseDelay = 100,
-    maxDelay = 5000
-  } = options;
+  const { maxRetries = 3, baseDelay = 100, maxDelay = 5000 } = options;
 
   let lastError;
 
@@ -27,31 +23,33 @@ export async function dynamoDbWithRetry(operation, options = {}) {
     try {
       // Execute the operation
       const result = await operation();
-      
+
       // Log successful retry if it wasn't the first attempt
       if (attempt > 0) {
         logger.info(`DynamoDB operation succeeded after ${attempt} retries`);
       }
-      
+
       return result;
     } catch (error) {
       lastError = error;
-      
+
       // Check if error is retryable
       if (!isRetryableError(error) || attempt === maxRetries) {
         throw error;
       }
-      
+
       // Calculate delay with exponential backoff and jitter
       const delay = calculateDelay(attempt, baseDelay, maxDelay);
-      
-      logger.warn(`DynamoDB operation failed (attempt ${attempt + 1}/${maxRetries + 1}): ${error.message}. Retrying in ${delay}ms...`);
-      
+
+      logger.warn(
+        `DynamoDB operation failed (attempt ${attempt + 1}/${maxRetries + 1}): ${error.message}. Retrying in ${delay}ms...`
+      );
+
       // Wait before retrying
       await sleep(delay);
     }
   }
-  
+
   // This should never be reached, but just in case
   throw lastError;
 }
@@ -70,22 +68,22 @@ function isRetryableError(error) {
     'InternalServerError',
     'ItemCollectionSizeLimitExceededException'
   ];
-  
+
   // Check error code
   if (error.code && retryableErrors.includes(error.code)) {
     return true;
   }
-  
+
   // Check status code for service unavailable or too many requests
   if (error.statusCode && (error.statusCode === 503 || error.statusCode === 429)) {
     return true;
   }
-  
+
   // Check for timeout errors
   if (error.code === 'ETIMEDOUT' || error.code === 'ESOCKETTIMEDOUT') {
     return true;
   }
-  
+
   return false;
 }
 
@@ -99,13 +97,13 @@ function isRetryableError(error) {
 function calculateDelay(attempt, baseDelay, maxDelay) {
   // Exponential backoff: delay = baseDelay * 2^attempt
   const exponentialDelay = baseDelay * Math.pow(2, attempt);
-  
+
   // Add jitter (random value between 0-25% of the delay)
   const jitter = Math.random() * 0.25 * exponentialDelay;
-  
+
   // Calculate final delay with jitter
   const delayWithJitter = exponentialDelay + jitter;
-  
+
   // Cap at maximum delay
   return Math.min(delayWithJitter, maxDelay);
 }
@@ -126,21 +124,31 @@ function sleep(ms) {
  */
 export function wrapDynamoDbClient(dynamoDbClient) {
   const wrappedClient = {};
-  
+
   // Wrap common DynamoDB operations
-  const operations = ['get', 'put', 'update', 'delete', 'query', 'scan', 'batchGet', 'batchWrite', 'transactWrite'];
-  
+  const operations = [
+    'get',
+    'put',
+    'update',
+    'delete',
+    'query',
+    'scan',
+    'batchGet',
+    'batchWrite',
+    'transactWrite'
+  ];
+
   operations.forEach(operation => {
     if (typeof dynamoDbClient[operation] === 'function') {
-      wrappedClient[operation] = (params) => {
+      wrappedClient[operation] = params => {
         return dynamoDbWithRetry(() => dynamoDbClient[operation](params).promise());
       };
     }
   });
-  
+
   // Add original client as a property for direct access if needed
   wrappedClient._originalClient = dynamoDbClient;
-  
+
   return wrappedClient;
 }
 
@@ -154,11 +162,11 @@ export function wrapDynamoDbClient(dynamoDbClient) {
  */
 export async function batchWriteWithRetry(dynamoDbClient, tableName, items, options = {}) {
   const { chunkSize = 25 } = options; // DynamoDB limit is 25 items per batch
-  
+
   // Process items in chunks
   for (let i = 0; i < items.length; i += chunkSize) {
     const chunk = items.slice(i, i + chunkSize);
-    
+
     const params = {
       RequestItems: {
         [tableName]: chunk.map(item => ({
@@ -166,10 +174,12 @@ export async function batchWriteWithRetry(dynamoDbClient, tableName, items, opti
         }))
       }
     };
-    
+
     await dynamoDbWithRetry(() => dynamoDbClient.batchWrite(params).promise());
-    
-    logger.info(`Batch wrote ${chunk.length} items to ${tableName} (${i + chunk.length}/${items.length} total)`);
+
+    logger.info(
+      `Batch wrote ${chunk.length} items to ${tableName} (${i + chunk.length}/${items.length} total)`
+    );
   }
 }
 

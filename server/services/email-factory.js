@@ -100,7 +100,7 @@ export class EmailServiceFactory {
         }
         break;
 
-      case 'ses':
+      case 'ses': {
         // Check AWS SES configuration
         const requiredAwsVars = ['AWS_ACCESS_KEY_ID', 'AWS_SECRET_ACCESS_KEY'];
         const missingVars = requiredAwsVars.filter(varName => !process.env[varName]);
@@ -114,6 +114,7 @@ export class EmailServiceFactory {
           validation.warnings.push('AWS_REGION not set, defaulting to us-east-1');
         }
         break;
+      }
 
       case 'simulation':
         // Simulation mode warnings

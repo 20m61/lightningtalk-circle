@@ -3,7 +3,7 @@ import { jest } from '@jest/globals';
  * Jest テスト環境のセットアップファイル
  */
 
-import fs from 'fs-extra';
+import fs from 'fs/promises';
 import path from 'path';
 
 // テスト環境変数の設定

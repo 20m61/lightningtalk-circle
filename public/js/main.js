@@ -368,12 +368,12 @@ class LightningTalkApp {
 
     const message = typeMessages[type] || typeMessages.general;
 
-    this.showNotification(message + ' 詳細は登録されたメールアドレスに送信されます。', 'success');
+    this.showNotification(`${message} 詳細は登録されたメールアドレスに送信されます。`, 'success');
   }
 
   showRegistrationError(errorMessage) {
     const message = errorMessage || '登録処理中にエラーが発生しました。';
-    this.showNotification('❌ エラー: ' + message + '\n時間をおいて再度お試しください。', 'error');
+    this.showNotification(`❌ エラー: ${message}\n時間をおいて再度お試しください。`, 'error');
   }
 
   // Form validation methods
@@ -534,7 +534,7 @@ class LightningTalkApp {
   }
 
   handleServerValidationErrors(errors) {
-    let errorMessages = [];
+    const errorMessages = [];
 
     errors.forEach(error => {
       const fieldName = error.path || error.param;
@@ -557,7 +557,7 @@ class LightningTalkApp {
     });
 
     if (errorMessages.length > 0) {
-      this.showNotification('入力内容にエラーがあります: ' + errorMessages.join(', '), 'error');
+      this.showNotification(`入力内容にエラーがあります: ${errorMessages.join(', ')}`, 'error');
     }
   }
 
@@ -659,7 +659,9 @@ class LightningTalkApp {
     const now = new Date();
     const feedbackBtn = document.getElementById('feedbackBtn');
 
-    if (!feedbackBtn) return;
+    if (!feedbackBtn) {
+      return;
+    }
 
     if (now >= this.eventDate) {
       feedbackBtn.disabled = false;
@@ -687,7 +689,9 @@ class LightningTalkApp {
   }
 
   updateParallax() {
-    if (!this.floatingElements) return;
+    if (!this.floatingElements) {
+      return;
+    }
 
     const scrolled = window.pageYOffset;
     this.floatingElements.style.transform = `translateY(${scrolled * 0.5}px)`;
@@ -850,7 +854,9 @@ class LightningTalkApp {
     const toggle = document.querySelector('.mobile-menu-toggle');
     const navLinks = document.querySelector('.nav-links');
 
-    if (!toggle || !navLinks) return;
+    if (!toggle || !navLinks) {
+      return;
+    }
 
     toggle.addEventListener('click', () => {
       navLinks.classList.toggle('active');

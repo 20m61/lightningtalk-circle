@@ -39,11 +39,11 @@ class RealtimeNotificationClient {
   init() {
     this.createNotificationUI();
     this.setupDefaultHandlers();
-    
+
     if (this.enableSSE) {
       this.connectSSE();
     }
-    
+
     if (this.enableWebSocket) {
       this.connectWebSocket();
     }
@@ -67,7 +67,9 @@ class RealtimeNotificationClient {
    * SSE接続の確立
    */
   connectSSE() {
-    if (!this.enableSSE || this.sseConnection) return;
+    if (!this.enableSSE || this.sseConnection) {
+      return;
+    }
 
     try {
       console.log('Connecting to SSE...');
@@ -81,51 +83,50 @@ class RealtimeNotificationClient {
         this.triggerConnectionHandler('connected', 'sse');
       });
 
-      this.sseConnection.addEventListener('error', (error) => {
+      this.sseConnection.addEventListener('error', error => {
         console.error('SSE connection error:', error);
         this.handleConnectionError('sse');
       });
 
-      this.sseConnection.addEventListener('message', (event) => {
+      this.sseConnection.addEventListener('message', event => {
         this.handleSSEMessage(event);
       });
 
       // カスタムイベントリスナー
-      this.sseConnection.addEventListener('connected', (event) => {
+      this.sseConnection.addEventListener('connected', event => {
         const data = JSON.parse(event.data);
         console.log('SSE connected:', data);
       });
 
-      this.sseConnection.addEventListener('participant_registered', (event) => {
+      this.sseConnection.addEventListener('participant_registered', event => {
         const data = JSON.parse(event.data);
         this.handleNotification('participant_registered', data);
       });
 
-      this.sseConnection.addEventListener('talk_submitted', (event) => {
+      this.sseConnection.addEventListener('talk_submitted', event => {
         const data = JSON.parse(event.data);
         this.handleNotification('talk_submitted', data);
       });
 
-      this.sseConnection.addEventListener('event_updated', (event) => {
+      this.sseConnection.addEventListener('event_updated', event => {
         const data = JSON.parse(event.data);
         this.handleNotification('event_updated', data);
       });
 
-      this.sseConnection.addEventListener('system_notification', (event) => {
+      this.sseConnection.addEventListener('system_notification', event => {
         const data = JSON.parse(event.data);
         this.handleNotification('system_notification', data);
       });
 
-      this.sseConnection.addEventListener('chat_message', (event) => {
+      this.sseConnection.addEventListener('chat_message', event => {
         const data = JSON.parse(event.data);
         this.handleNotification('chat_message', data);
       });
 
-      this.sseConnection.addEventListener('heartbeat', (event) => {
+      this.sseConnection.addEventListener('heartbeat', event => {
         // ハートビート処理
         this.updateLastActivity();
       });
-
     } catch (error) {
       console.error('Failed to establish SSE connection:', error);
       this.handleConnectionError('sse');
@@ -136,12 +137,14 @@ class RealtimeNotificationClient {
    * WebSocket接続の確立
    */
   connectWebSocket() {
-    if (!this.enableWebSocket || this.wsConnection) return;
+    if (!this.enableWebSocket || this.wsConnection) {
+      return;
+    }
 
     try {
       const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
       const wsUrl = `${protocol}//${window.location.host}/ws`;
-      
+
       console.log('Connecting to WebSocket...');
       this.wsConnection = new WebSocket(wsUrl);
 
@@ -151,7 +154,7 @@ class RealtimeNotificationClient {
         this.reconnectAttempts = 0;
         this.updateConnectionStatus('connected', 'WebSocket');
         this.triggerConnectionHandler('connected', 'websocket');
-        
+
         // 初期設定メッセージ
         this.sendWebSocketMessage({
           type: 'subscribe',
@@ -159,21 +162,20 @@ class RealtimeNotificationClient {
         });
       });
 
-      this.wsConnection.addEventListener('close', (event) => {
+      this.wsConnection.addEventListener('close', event => {
         console.log('WebSocket connection closed:', event);
         this.wsConnection = null;
         this.handleConnectionError('websocket');
       });
 
-      this.wsConnection.addEventListener('error', (error) => {
+      this.wsConnection.addEventListener('error', error => {
         console.error('WebSocket connection error:', error);
         this.handleConnectionError('websocket');
       });
 
-      this.wsConnection.addEventListener('message', (event) => {
+      this.wsConnection.addEventListener('message', event => {
         this.handleWebSocketMessage(event);
       });
-
     } catch (error) {
       console.error('Failed to establish WebSocket connection:', error);
       this.handleConnectionError('websocket');
@@ -198,7 +200,7 @@ class RealtimeNotificationClient {
   handleWebSocketMessage(event) {
     try {
       const message = JSON.parse(event.data);
-      
+
       switch (message.event || message.type) {
         case 'connected':
           console.log('WebSocket connected:', message.data);
@@ -232,8 +234,8 @@ class RealtimeNotificationClient {
   handleNotification(event, data) {
     const notification = {
       id: data.id || Date.now().toString(),
-      event: event,
-      data: data,
+      event,
+      data,
       timestamp: data.timestamp || new Date().toISOString(),
       read: false
     };
@@ -248,9 +250,11 @@ class RealtimeNotificationClient {
     this.showNotification(notification);
 
     // カスタムイベントの発火
-    window.dispatchEvent(new CustomEvent('realtimeNotification', {
-      detail: notification
-    }));
+    window.dispatchEvent(
+      new CustomEvent('realtimeNotification', {
+        detail: notification
+      })
+    );
   }
 
   /**
@@ -263,8 +267,10 @@ class RealtimeNotificationClient {
 
     if (this.autoReconnect && this.reconnectAttempts < this.maxReconnectAttempts) {
       this.reconnectAttempts++;
-      console.log(`Attempting to reconnect ${connectionType} (${this.reconnectAttempts}/${this.maxReconnectAttempts})...`);
-      
+      console.log(
+        `Attempting to reconnect ${connectionType} (${this.reconnectAttempts}/${this.maxReconnectAttempts})...`
+      );
+
       setTimeout(() => {
         if (connectionType === 'sse') {
           this.connectSSE();
@@ -319,7 +325,8 @@ class RealtimeNotificationClient {
     this.connectionStatus = document.createElement('div');
     this.connectionStatus.id = 'connection-status';
     this.connectionStatus.className = 'connection-status';
-    this.connectionStatus.innerHTML = '<span class="status-indicator"></span><span class="status-text">接続中...</span>';
+    this.connectionStatus.innerHTML =
+      '<span class="status-indicator"></span><span class="status-text">接続中...</span>';
     this.notificationContainer.appendChild(this.connectionStatus);
 
     // スタイルの追加
@@ -330,7 +337,9 @@ class RealtimeNotificationClient {
    * 通知スタイルの追加
    */
   addNotificationStyles() {
-    if (document.getElementById('realtime-notification-styles')) return;
+    if (document.getElementById('realtime-notification-styles')) {
+      return;
+    }
 
     const styles = document.createElement('style');
     styles.id = 'realtime-notification-styles';
@@ -503,7 +512,7 @@ class RealtimeNotificationClient {
     `;
 
     // 閉じるボタンのイベント
-    notificationElement.querySelector('.notification-close').addEventListener('click', (e) => {
+    notificationElement.querySelector('.notification-close').addEventListener('click', e => {
       e.stopPropagation();
       this.hideNotification(notificationElement);
     });
@@ -553,9 +562,11 @@ class RealtimeNotificationClient {
    */
   handleNotificationClick(notification) {
     // カスタムイベントの発火
-    window.dispatchEvent(new CustomEvent('notificationClick', {
-      detail: notification
-    }));
+    window.dispatchEvent(
+      new CustomEvent('notificationClick', {
+        detail: notification
+      })
+    );
 
     console.log('Notification clicked:', notification);
   }
@@ -564,10 +575,12 @@ class RealtimeNotificationClient {
    * 接続ステータスの更新
    */
   updateConnectionStatus(status, connectionType) {
-    if (!this.connectionStatus) return;
+    if (!this.connectionStatus) {
+      return;
+    }
 
     this.connectionStatus.className = `connection-status ${status}`;
-    
+
     const statusText = this.connectionStatus.querySelector('.status-text');
     if (statusText) {
       const statusMessages = {
@@ -591,7 +604,7 @@ class RealtimeNotificationClient {
    */
   addToHistory(notification) {
     this.notificationHistory.unshift(notification);
-    
+
     if (this.notificationHistory.length > this.maxHistorySize) {
       this.notificationHistory = this.notificationHistory.slice(0, this.maxHistorySize);
     }
@@ -602,23 +615,23 @@ class RealtimeNotificationClient {
    */
   setupDefaultHandlers() {
     // デフォルトの通知ハンドラー
-    this.on('participant_registered', (notification) => {
+    this.on('participant_registered', notification => {
       console.log('New participant registered:', notification.data);
     });
 
-    this.on('talk_submitted', (notification) => {
+    this.on('talk_submitted', notification => {
       console.log('New talk submitted:', notification.data);
     });
 
-    this.on('event_updated', (notification) => {
+    this.on('event_updated', notification => {
       console.log('Event updated:', notification.data);
     });
 
-    this.on('system_notification', (notification) => {
+    this.on('system_notification', notification => {
       console.log('System notification:', notification.data);
     });
 
-    this.on('chat_message', (notification) => {
+    this.on('chat_message', notification => {
       console.log('Chat message:', notification.data);
     });
   }
@@ -682,8 +695,8 @@ class RealtimeNotificationClient {
     if (this.wsConnection && this.wsConnection.readyState === WebSocket.OPEN) {
       this.sendWebSocketMessage({
         type: 'chat',
-        message: message,
-        author: author
+        message,
+        author
       });
     } else {
       console.warn('WebSocket not connected, cannot send chat message');
@@ -720,7 +733,7 @@ class RealtimeNotificationClient {
   reconnect() {
     this.disconnect();
     this.reconnectAttempts = 0;
-    
+
     setTimeout(() => {
       if (this.enableSSE) {
         this.connectSSE();

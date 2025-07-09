@@ -3,8 +3,34 @@
  */
 
 import { describe, expect, it } from '@jest/globals';
-import fs from 'fs-extra';
+import fs from 'fs/promises';
 import path from 'path';
+
+// Helper functions to replace fs-extra methods
+async function pathExists(path) {
+  try {
+    await fs.access(path);
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+async function ensureDir(dir) {
+  try {
+    await fs.mkdir(dir, { recursive: true });
+  } catch (error) {
+    if (error.code !== 'EEXIST') throw error;
+  }
+}
+
+async function remove(path) {
+  try {
+    await fs.rm(path, { recursive: true, force: true });
+  } catch (error) {
+    if (error.code !== 'ENOENT') throw error;
+  }
+}
 
 // テスト対象のユーティリティ関数（実装予定）
 class DataManager {
@@ -14,16 +40,17 @@ class DataManager {
 
   async loadData(filename) {
     const filePath = path.join(this.dataDir, filename);
-    if (await fs.pathExists(filePath)) {
-      return await fs.readJson(filePath);
+    if (await pathExists(filePath)) {
+      const content = await fs.readFile(filePath, 'utf8');
+      return JSON.parse(content);
     }
     return null;
   }
 
   async saveData(filename, data) {
     const filePath = path.join(this.dataDir, filename);
-    await fs.ensureDir(path.dirname(filePath));
-    await fs.writeJson(filePath, data, { spaces: 2 });
+    await ensureDir(path.dirname(filePath));
+    await fs.writeFile(filePath, JSON.stringify(data, null, 2));
     return true;
   }
 
@@ -43,8 +70,8 @@ class DataManager {
 
   async deleteData(filename) {
     const filePath = path.join(this.dataDir, filename);
-    if (await fs.pathExists(filePath)) {
-      await fs.remove(filePath);
+    if (await pathExists(filePath)) {
+      await remove(filePath);
       return true;
     }
     return false;
@@ -118,12 +145,12 @@ describe('DataManager', () => {
 
   beforeEach(async () => {
     dataManager = new DataManager(testDataDir);
-    await fs.ensureDir(testDataDir);
+    await ensureDir(testDataDir);
   });
 
   afterEach(async () => {
-    if (await fs.pathExists(testDataDir)) {
-      await fs.remove(testDataDir);
+    if (await pathExists(testDataDir)) {
+      await remove(testDataDir);
     }
   });
 
@@ -132,7 +159,7 @@ describe('DataManager', () => {
       const testData = { name: 'Test Event', participants: 10 };
       const filename = 'test-event.json';
 
-      await fs.writeJson(path.join(testDataDir, filename), testData);
+      await fs.writeFile(path.join(testDataDir, filename), JSON.stringify(testData));
 
       const loadedData = await dataManager.loadData(filename);
       expect(loadedData).toEqual(testData);
@@ -159,7 +186,7 @@ describe('DataManager', () => {
       const result = await dataManager.saveData(filename, testData);
       expect(result).toBe(true);
 
-      const savedData = await fs.readJson(path.join(testDataDir, filename));
+      const savedData = JSON.parse(await fs.readFile(path.join(testDataDir, filename), 'utf8'));
       expect(savedData).toEqual(testData);
     });
 
@@ -171,7 +198,7 @@ describe('DataManager', () => {
       expect(result).toBe(true);
 
       const filePath = path.join(testDataDir, filename);
-      expect(await fs.pathExists(filePath)).toBe(true);
+      expect(await pathExists(filePath)).toBe(true);
     });
 
     it('should overwrite existing file', async () => {
@@ -233,7 +260,7 @@ describe('DataManager', () => {
       expect(result).toBe(true);
 
       const filePath = path.join(testDataDir, filename);
-      expect(await fs.pathExists(filePath)).toBe(false);
+      expect(await pathExists(filePath)).toBe(false);
     });
 
     it('should return false for non-existent file', async () => {
