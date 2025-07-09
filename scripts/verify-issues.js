@@ -33,17 +33,17 @@ try {
 } catch (e) {
   // Create a simple chalk replacement
   chalk = {
-    blue: (text) => text,
-    green: (text) => text,
-    yellow: (text) => text,
-    red: (text) => text,
-    bold: (text) => text
+    blue: text => text,
+    green: text => text,
+    yellow: text => text,
+    red: text => text,
+    bold: text => text
   };
 }
 
-// Configuration
-const REPO_OWNER = '20m61';
-const REPO_NAME = 'lightningtalk-circle';
+// Configuration - Use environment variables with fallbacks
+const REPO_OWNER = process.env.GITHUB_OWNER || '20m61';
+const REPO_NAME = process.env.GITHUB_REPO || 'lightningtalk-circle';
 
 // Get current file path and directory (ES Module equivalent of __dirname)
 const __filename = fileURLToPath(import.meta.url);
@@ -59,7 +59,9 @@ const ISSUES_DATA_PATH = path.resolve(process.cwd(), 'docs/project/issues-data.j
 if (isGitHubActions) {
   console.log(`Debug: Looking for data file at: ${ISSUES_DATA_PATH}`);
   console.log(`Debug: Working directory: ${process.cwd()}`);
-  console.log(`Debug: Directory contents: ${fs.readdirSync(path.dirname(ISSUES_DATA_PATH)).join(', ')}`);
+  console.log(
+    `Debug: Directory contents: ${fs.readdirSync(path.dirname(ISSUES_DATA_PATH)).join(', ')}`
+  );
   console.log(`Debug: File exists: ${fs.existsSync(ISSUES_DATA_PATH)}`);
 }
 
@@ -72,7 +74,9 @@ async function verifyIssues() {
   try {
     // Check if data file exists first
     if (!fs.existsSync(ISSUES_DATA_PATH)) {
-      throw new Error(`Data file not found: ${ISSUES_DATA_PATH}. Check that the file exists and the path is correct.`);
+      throw new Error(
+        `Data file not found: ${ISSUES_DATA_PATH}. Check that the file exists and the path is correct.`
+      );
     }
 
     // Load expected issues data
@@ -203,11 +207,17 @@ async function verifyIssues() {
 | Missing issues | ${missingIssues.length} |
 | Issues with problems | ${mismatchedIssues.length} |
 
-${missingIssues.length > 0 ?
-    `### Missing Issues\n\n${missingIssues.map(issue => `- [${issue.category}] ${issue.title}`).join('\n')}\n` : ''}
+${
+  missingIssues.length > 0
+    ? `### Missing Issues\n\n${missingIssues.map(issue => `- [${issue.category}] ${issue.title}`).join('\n')}\n`
+    : ''
+}
 
-${mismatchedIssues.length > 0 ?
-    `### Issues With Problems\n\n${mismatchedIssues.map(issue => `- #${issue.number} ${issue.title}: ${issue.problem}`).join('\n')}\n` : ''}
+${
+  mismatchedIssues.length > 0
+    ? `### Issues With Problems\n\n${mismatchedIssues.map(issue => `- #${issue.number} ${issue.title}: ${issue.problem}`).join('\n')}\n`
+    : ''
+}
 `;
 
       // Write to GitHub Actions summary
@@ -222,7 +232,9 @@ ${mismatchedIssues.length > 0 ?
 
       // Set status based on verification results
       if (missingIssues.length > 0 || mismatchedIssues.length > 0) {
-        setGitHubActionsWarning(`Verification found ${missingIssues.length} missing issues and ${mismatchedIssues.length} issues with problems`);
+        setGitHubActionsWarning(
+          `Verification found ${missingIssues.length} missing issues and ${mismatchedIssues.length} issues with problems`
+        );
       }
     }
 
@@ -233,7 +245,6 @@ ${mismatchedIssues.length > 0 ?
       log(chalk.red('\n❌ Some issues are missing or have problems.'));
       return false;
     }
-
   } catch (error) {
     log(chalk.red(`Error verifying issues: ${error.message}`));
     setGitHubActionsFailed(`Error verifying issues: ${error.message}`);

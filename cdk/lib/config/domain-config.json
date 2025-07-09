@@ -1,0 +1,29 @@
+{
+  "api": {
+    "domain": {
+      "domainName": null,
+      "hostedZoneId": null,
+      "certificateArn": null
+    }
+  },
+  "static": {
+    "domain": {
+      "domainName": null,
+      "hostedZoneId": null,
+      "certificateArn": null
+    },
+    "aliases": []
+  },
+  "monitoring": {
+    "alertEmail": null
+  },
+  "costMonitoring": {
+    "alertEmail": null,
+    "enableAnomalyDetection": true
+  },
+  "security": {
+    "allowedCidrs": ["0.0.0.0/0"],
+    "wafEnabled": true,
+    "rateLimitPerMinute": 1000
+  }
+}

@@ -17,10 +17,13 @@ import participantsRouter from './routes/participants.js';
 import talksRouter from './routes/talks.js';
 import adminRouter from './routes/admin.js';
 import healthRouter from './routes/health.js';
+import authRouter from './routes/auth.js';
+import swaggerRouter from './routes/swagger.js';
 
 // Middleware
-import { errorHandler } from './middleware/errorHandler.js';
+import { errorHandler, notFoundHandler } from './middleware/errorHandler.js';
 import { logger } from './middleware/logger.js';
+import { authenticateToken, requireAdmin } from './middleware/auth.js';
 
 // Services
 import { DatabaseService } from './services/database.js';
@@ -132,17 +135,20 @@ class LightningTalkServer {
     });
 
     // CORS
+    const corsOrigins = process.env.CORS_ORIGINS
+      ? process.env.CORS_ORIGINS.split(',').map(origin => origin.trim())
+      : this.environment === 'production'
+        ? ['https://lightningtalk.example.com']
+        : [
+            'http://localhost:3000',
+            'http://localhost:3010',
+            'http://127.0.0.1:3000',
+            'http://127.0.0.1:3010'
+          ];
+
     this.app.use(
       cors({
-        origin:
-          this.environment === 'production'
-            ? ['https://lightningtalk.example.com']
-            : [
-                'http://localhost:3000',
-                'http://localhost:3010',
-                'http://127.0.0.1:3000',
-                'http://127.0.0.1:3010'
-              ],
+        origin: corsOrigins,
         credentials: true
       })
     );
@@ -162,40 +168,31 @@ class LightningTalkServer {
   }
 
   setupRoutes() {
+    // API Documentation
+    this.app.use('/api/docs', swaggerRouter);
+
     // API Routes
+    this.app.use('/api/auth', authRouter);
     this.app.use('/api/events', eventsRouter);
     this.app.use('/api/participants', participantsRouter);
     this.app.use('/api/talks', talksRouter);
-    this.app.use('/api/admin', adminRouter);
+    this.app.use('/api/admin', authenticateToken, requireAdmin, adminRouter);
     this.app.use('/api/health', healthRouter);
 
-    // API documentation
-    this.app.get('/api/docs', (req, res) => {
+    // API information endpoint (simple JSON overview)
+    this.app.get('/api', (req, res) => {
       res.json({
         title: 'Lightning Talk API',
         version: '1.0.0',
+        description: 'Lightning Talk Event Management System API',
+        documentation: '/api/docs',
+        health: '/api/health',
         endpoints: {
-          events: {
-            'GET /api/events': 'Get all events',
-            'GET /api/events/search': 'Search and filter events',
-            'GET /api/events/current': 'Get current/next upcoming event',
-            'GET /api/events/:id': 'Get specific event',
-            'POST /api/events': 'Create new event (admin)',
-            'PUT /api/events/:id': 'Update event (admin)',
-            'DELETE /api/events/:id': 'Delete event (admin)'
-          },
-          participants: {
-            'POST /api/participants/register': 'Register for event',
-            'GET /api/participants/:eventId': 'Get event participants (admin)',
-            'PUT /api/participants/:id': 'Update participant info',
-            'DELETE /api/participants/:id': 'Remove participant (admin)'
-          },
-          talks: {
-            'GET /api/talks/:eventId': 'Get talks for event',
-            'POST /api/talks': 'Submit talk proposal',
-            'PUT /api/talks/:id': 'Update talk',
-            'DELETE /api/talks/:id': 'Delete talk'
-          },
+          events: 'GET|POST /api/events, GET|PUT|DELETE /api/events/:id',
+          participants: 'POST /api/participants/register, GET|PUT|DELETE /api/participants/:id',
+          talks: 'GET /api/talks/:eventId, POST|PUT|DELETE /api/talks/:id',
+          auth: 'POST /api/auth/login, POST /api/auth/register, GET /api/auth/me',
+          admin: 'GET /api/admin/* (requires admin access)',
           health: {
             'GET /api/health': 'Basic health check',
             'GET /api/health/detailed': 'Detailed system status',
@@ -217,11 +214,7 @@ class LightningTalkServer {
 
   setupErrorHandling() {
     // 404 handler
-    this.app.use((req, res, next) => {
-      const error = new Error(`Not Found - ${req.originalUrl}`);
-      error.status = 404;
-      next(error);
-    });
+    this.app.use(notFoundHandler);
 
     // Error handler
     this.app.use(errorHandler);
@@ -241,6 +234,7 @@ class LightningTalkServer {
 🌐 Server: http://localhost:${this.port}
 📊 Health: http://localhost:${this.port}/api/health
 📚 API Docs: http://localhost:${this.port}/api/docs
+📋 API Info: http://localhost:${this.port}/api
 
 ⚡ Ready to manage lightning talks!
                 `);
