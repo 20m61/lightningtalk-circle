@@ -17,6 +17,17 @@ class ApiStack extends Stack {
 
     const { config, databaseStack, secretsStack } = props;
     const { vpc } = databaseStack;
+    
+    // Validate API URL is provided
+    if (!props.apiUrl) {
+      throw new Error('API URL is required for API Stack deployment');
+    }
+    
+    // Production safety check
+    if (config.app.stage === 'production') {
+      console.warn('⚠️  Deploying API to PRODUCTION environment');
+      console.warn('⚠️  ECS service will use production-grade settings');
+    }
 
     // Create ECR repository
     const repository = new ecr.Repository(this, 'ApiRepository', {
