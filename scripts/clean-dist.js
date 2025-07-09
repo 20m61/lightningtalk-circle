@@ -6,10 +6,36 @@
  * distディレクトリのクリーンアップとメンテナンス
  */
 
-import fs from 'fs-extra';
+import fs from 'fs/promises';
 import path from 'path';
 import readline from 'readline';
 import { fileURLToPath } from 'url';
+
+// Helper functions to replace fs-extra methods
+async function pathExists(path) {
+  try {
+    await fs.access(path);
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+async function remove(path) {
+  try {
+    await fs.rm(path, { recursive: true, force: true });
+  } catch (error) {
+    if (error.code !== 'ENOENT') throw error;
+  }
+}
+
+async function ensureDir(dir) {
+  try {
+    await fs.mkdir(dir, { recursive: true });
+  } catch (error) {
+    if (error.code !== 'EEXIST') throw error;
+  }
+}
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -24,7 +50,7 @@ const distDir = path.join(__dirname, '../dist');
 async function getDirectorySize(dir) {
   let size = 0;
 
-  if (!(await fs.pathExists(dir))) {
+  if (!(await pathExists(dir))) {
     return 0;
   }
 
@@ -67,7 +93,7 @@ async function analyzeDirectory() {
     const size = await getDirectorySize(dirPath);
     totalSize += size;
 
-    if (await fs.pathExists(dirPath)) {
+    if (await pathExists(dirPath)) {
       const files = await fs.readdir(dirPath);
       console.log(`📁 ${dir}/`);
       console.log(`   ファイル数: ${files.length}`);
@@ -82,7 +108,7 @@ async function analyzeDirectory() {
 async function cleanArchives(keepCount = 10) {
   const archivesDir = path.join(distDir, 'archives');
 
-  if (!(await fs.pathExists(archivesDir))) {
+  if (!(await pathExists(archivesDir))) {
     console.log('アーカイブディレクトリが存在しません。');
     return;
   }
@@ -103,7 +129,7 @@ async function cleanArchives(keepCount = 10) {
 
   for (const file of toDelete) {
     const filePath = path.join(archivesDir, file);
-    await fs.remove(filePath);
+    await remove(filePath);
     console.log(`   削除: ${file}`);
   }
 }
@@ -111,7 +137,7 @@ async function cleanArchives(keepCount = 10) {
 async function cleanBuilds(keepDays = 7) {
   const buildsDir = path.join(distDir, 'builds');
 
-  if (!(await fs.pathExists(buildsDir))) {
+  if (!(await pathExists(buildsDir))) {
     console.log('ビルドディレクトリが存在しません。');
     return;
   }
@@ -132,7 +158,7 @@ async function cleanBuilds(keepDays = 7) {
     const age = now - stat.mtime.getTime();
 
     if (age > maxAge) {
-      await fs.remove(filePath);
+      await remove(filePath);
       deletedCount++;
       console.log(`   削除: ${file} (${Math.floor(age / (24 * 60 * 60 * 1000))}日前)`);
     }
@@ -158,7 +184,7 @@ async function resetDist() {
   }
 
   console.log('🗑️  distディレクトリをリセットしています...');
-  await fs.remove(distDir);
+  await remove(distDir);
 
   // ディレクトリ構造を再作成
   const dirs = [
@@ -169,7 +195,7 @@ async function resetDist() {
   ];
 
   for (const dir of dirs) {
-    await fs.ensureDir(dir);
+    await ensureDir(dir);
   }
 
   // .gitkeepファイルを作成

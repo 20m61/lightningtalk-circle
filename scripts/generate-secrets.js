@@ -17,8 +17,8 @@ const jwtSecret = generateSecret(64);
 const sessionSecret = generateSecret(64);
 
 console.log('🔐 Generated Secure Secrets:\n');
-console.log('JWT_SECRET=' + jwtSecret);
-console.log('SESSION_SECRET=' + sessionSecret);
+console.log(`JWT_SECRET=${jwtSecret}`);
+console.log(`SESSION_SECRET=${sessionSecret}`);
 console.log('\n📋 Instructions:');
 console.log('1. Copy these values to your .env file');
 console.log('2. Add them to GitHub Secrets for CI/CD');

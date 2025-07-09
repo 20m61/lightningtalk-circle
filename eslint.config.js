@@ -16,6 +16,10 @@ export default [
         Buffer: 'readonly',
         __dirname: 'readonly',
         __filename: 'readonly',
+        setTimeout: 'readonly',
+        setInterval: 'readonly',
+        clearTimeout: 'readonly',
+        clearInterval: 'readonly',
         window: 'readonly',
         document: 'readonly',
         URL: 'readonly',
@@ -154,7 +158,7 @@ export default [
     rules: {
       'no-console': 'off',
       'no-undef': 'off',
-      'quotes': 'off',
+      quotes: 'off',
       'comma-dangle': 'off',
       'eol-last': 'off',
       'no-trailing-spaces': 'off'

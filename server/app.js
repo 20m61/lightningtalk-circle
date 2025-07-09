@@ -16,6 +16,7 @@ import eventsRouter from './routes/events.js';
 import participantsRouter from './routes/participants.js';
 import talksRouter from './routes/talks.js';
 import adminRouter from './routes/admin.js';
+import healthRouter from './routes/health.js';
 import authRouter from './routes/auth.js';
 import swaggerRouter from './routes/swagger.js';
 
@@ -176,16 +177,7 @@ class LightningTalkServer {
     this.app.use('/api/participants', participantsRouter);
     this.app.use('/api/talks', talksRouter);
     this.app.use('/api/admin', authenticateToken, requireAdmin, adminRouter);
-
-    // Health check
-    this.app.get('/api/health', (req, res) => {
-      res.json({
-        status: 'healthy',
-        timestamp: new Date().toISOString(),
-        environment: this.environment,
-        uptime: process.uptime()
-      });
-    });
+    this.app.use('/api/health', healthRouter);
 
     // API information endpoint (simple JSON overview)
     this.app.get('/api', (req, res) => {
@@ -200,7 +192,16 @@ class LightningTalkServer {
           participants: 'POST /api/participants/register, GET|PUT|DELETE /api/participants/:id',
           talks: 'GET /api/talks/:eventId, POST|PUT|DELETE /api/talks/:id',
           auth: 'POST /api/auth/login, POST /api/auth/register, GET /api/auth/me',
-          admin: 'GET /api/admin/* (requires admin access)'
+          admin: 'GET /api/admin/* (requires admin access)',
+          health: {
+            'GET /api/health': 'Basic health check',
+            'GET /api/health/detailed': 'Detailed system status',
+            'GET /api/health/live': 'Kubernetes liveness probe',
+            'GET /api/health/ready': 'Kubernetes readiness probe',
+            'GET /api/health/metrics': 'Prometheus metrics',
+            'GET /api/health/database': 'Database health check',
+            'GET /api/health/dependencies': 'External dependencies check'
+          }
         }
       });
     });

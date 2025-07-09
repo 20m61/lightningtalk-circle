@@ -6,11 +6,50 @@
  * ビルド結果にタイムスタンプを付与してdistディレクトリに出力
  */
 
-import fs from 'fs-extra';
+import fs from 'fs/promises';
 import path from 'path';
 import archiver from 'archiver';
 import { execSync } from 'child_process';
 import { fileURLToPath } from 'url';
+
+// Helper functions to replace fs-extra methods
+async function ensureDir(dir) {
+  try {
+    await fs.mkdir(dir, { recursive: true });
+  } catch (error) {
+    if (error.code !== 'EEXIST') throw error;
+  }
+}
+
+async function pathExists(path) {
+  try {
+    await fs.access(path);
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+async function remove(path) {
+  try {
+    await fs.rm(path, { recursive: true, force: true });
+  } catch (error) {
+    if (error.code !== 'ENOENT') throw error;
+  }
+}
+
+async function copy(src, dest) {
+  await fs.cp(src, dest, { recursive: true });
+}
+
+async function move(src, dest) {
+  await fs.rename(src, dest);
+}
+
+async function writeJson(path, data, options = {}) {
+  const spaces = options.spaces || 0;
+  await fs.writeFile(path, JSON.stringify(data, null, spaces));
+}
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -81,29 +120,29 @@ async function ensureDirectories() {
   ];
 
   for (const dir of dirs) {
-    await fs.ensureDir(dir);
+    await ensureDir(dir);
   }
 }
 
 async function cleanTempDirectory() {
   console.log('🧹 一時ディレクトリをクリーンアップしています...');
-  await fs.remove(config.tempDir);
-  await fs.ensureDir(config.tempDir);
+  await remove(config.tempDir);
+  await ensureDir(config.tempDir);
 }
 
 async function copyThemeFiles() {
   console.log('📋 テーマファイルをコピーしています...');
 
   const targetDir = path.join(config.tempDir, config.themeName);
-  await fs.ensureDir(targetDir);
+  await ensureDir(targetDir);
 
   let { sourceDir } = config;
 
   // ソースディレクトリの存在確認
-  if (!(await fs.pathExists(config.sourceDir))) {
+  if (!(await pathExists(config.sourceDir))) {
     console.log(`⚠️  ${config.sourceDir} が見つかりません。フォールバックディレクトリを確認中...`);
 
-    if (await fs.pathExists(config.fallbackDir)) {
+    if (await pathExists(config.fallbackDir)) {
       sourceDir = config.fallbackDir;
       console.log(`✅ フォールバックディレクトリを使用: ${sourceDir}`);
     } else {
@@ -136,7 +175,7 @@ Template: cocoon
 
       // ビルド情報ファイルを追加
       const buildInfoPath = path.join(targetDir, 'build-info.json');
-      await fs.writeJson(buildInfoPath, buildInfo, { spaces: 2 });
+      await writeJson(buildInfoPath, buildInfo, { spaces: 2 });
       return;
     }
   }
@@ -156,13 +195,13 @@ Template: cocoon
     if (!shouldExclude) {
       const sourcePath = path.join(sourceDir, file);
       const targetPath = path.join(targetDir, file);
-      await fs.copy(sourcePath, targetPath);
+      await copy(sourcePath, targetPath);
     }
   }
 
   // ビルド情報ファイルを追加
   const buildInfoPath = path.join(targetDir, 'build-info.json');
-  await fs.writeJson(buildInfoPath, buildInfo, { spaces: 2 });
+  await writeJson(buildInfoPath, buildInfo, { spaces: 2 });
 }
 
 async function runAssetBuild() {
@@ -170,7 +209,7 @@ async function runAssetBuild() {
 
   try {
     // npm run buildが存在する場合は実行
-    if (await fs.pathExists(path.join(config.sourceDir, 'package.json'))) {
+    if (await pathExists(path.join(config.sourceDir, 'package.json'))) {
       execSync('npm run build', {
         cwd: config.sourceDir,
         stdio: 'inherit'
@@ -242,7 +281,7 @@ async function createBuildManifest(zipInfo) {
     'builds',
     `build-manifest_${config.timestamp}.json`
   );
-  await fs.writeJson(manifestPath, manifest, { spaces: 2 });
+  await writeJson(manifestPath, manifest, { spaces: 2 });
 
   // 最新ビルドへのシンボリックリンクを作成（Windowsでない場合）
   if (process.platform !== 'win32') {
@@ -250,8 +289,8 @@ async function createBuildManifest(zipInfo) {
     const latestManifest = path.join(config.distDir, 'builds', 'build-manifest_latest.json');
 
     try {
-      await fs.remove(latestLink);
-      await fs.remove(latestManifest);
+      await remove(latestLink);
+      await remove(latestManifest);
       await fs.symlink(zipInfo.path, latestLink);
       await fs.symlink(manifestPath, latestManifest);
     } catch (error) {
@@ -289,7 +328,7 @@ async function archiveOldBuilds() {
     for (const file of toArchive) {
       const sourcePath = path.join(themesDir, file);
       const archivePath = path.join(config.distDir, 'archives', file);
-      await fs.move(sourcePath, archivePath);
+      await move(sourcePath, archivePath);
       console.log(`  📁 アーカイブ: ${file}`);
     }
   }

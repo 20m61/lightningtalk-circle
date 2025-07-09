@@ -6,7 +6,7 @@
  */
 
 import { Octokit } from '@octokit/rest';
-import fs from 'fs-extra';
+import fs from 'fs/promises';
 import path from 'path';
 import { fileURLToPath } from 'url';
 
@@ -70,8 +70,8 @@ async function loadIssueData() {
 
   for (const file of issueFiles) {
     const filePath = path.join(__dirname, file);
-    if (await fs.pathExists(filePath)) {
-      const data = await fs.readJson(filePath);
+    try {
+      const data = JSON.parse(await fs.readFile(filePath, 'utf8'));
 
       // Flatten all issue categories
       Object.values(data).forEach(category => {
@@ -79,6 +79,8 @@ async function loadIssueData() {
           allIssues.push(...category);
         }
       });
+    } catch (error) {
+      console.warn(`Warning: Could not read ${filePath}:`, error.message);
     }
   }
 
@@ -226,7 +228,7 @@ async function addProjectMetadata() {
   };
 
   const metadataPath = path.join(__dirname, '../docs/project/issue-creation-metadata.json');
-  await fs.writeJson(metadataPath, metadata, { spaces: 2 });
+  await fs.writeFile(metadataPath, JSON.stringify(metadata, null, 2));
 }
 
 // Main execution

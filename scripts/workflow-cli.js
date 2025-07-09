@@ -28,7 +28,7 @@ class WorkflowCLI {
       .option('-a, --auto-merge', 'Enable auto-merge after successful review')
       .option('-p, --parallel', 'Run tests in parallel')
       .option('--dry-run', 'Show what would be done without executing')
-      .action(async(instruction, options) => {
+      .action(async (instruction, options) => {
         await this.executeInstruction(instruction, options);
       });
 
@@ -37,7 +37,7 @@ class WorkflowCLI {
       .command('analyze <instruction>')
       .description('Analyze an instruction without executing')
       .option('-o, --output <file>', 'Output analysis to file')
-      .action(async(instruction, options) => {
+      .action(async (instruction, options) => {
         await this.analyzeInstruction(instruction, options);
       });
 
@@ -48,7 +48,7 @@ class WorkflowCLI {
       .option('-c, --coverage <number>', 'Coverage threshold', '80')
       .option('-p, --parallel', 'Run checks in parallel')
       .option('--export <file>', 'Export results to file')
-      .action(async(options) => {
+      .action(async options => {
         await this.runQualityCheck(options);
       });
 
@@ -56,7 +56,7 @@ class WorkflowCLI {
     program
       .command('status')
       .description('Show workflow status and active branches')
-      .action(async() => {
+      .action(async () => {
         await this.showStatus();
       });
 
@@ -65,7 +65,7 @@ class WorkflowCLI {
       .command('interactive')
       .alias('i')
       .description('Start interactive workflow mode')
-      .action(async() => {
+      .action(async () => {
         await this.startInteractiveMode();
       });
 
@@ -74,7 +74,7 @@ class WorkflowCLI {
       .command('history')
       .description('Show workflow execution history')
       .option('-n, --count <number>', 'Number of entries to show', '10')
-      .action(async(options) => {
+      .action(async options => {
         await this.showHistory(options);
       });
 
@@ -117,7 +117,6 @@ class WorkflowCLI {
 
       // 4. 履歴に記録
       await this.recordExecution(instruction, analysis, result);
-
     } catch (error) {
       console.error(chalk.red('❌ Workflow execution failed:'), error.message);
       process.exit(1);
@@ -182,13 +181,15 @@ class WorkflowCLI {
       try {
         const worktrees = execSync('git worktree list', { encoding: 'utf8' });
         console.log(chalk.white('\n🌿 Active Worktrees:'));
-        worktrees.split('\n').filter(line => line.trim()).forEach(line => {
-          console.log(`   ${line}`);
-        });
+        worktrees
+          .split('\n')
+          .filter(line => line.trim())
+          .forEach(line => {
+            console.log(`   ${line}`);
+          });
       } catch (error) {
         console.log(chalk.gray('   No additional worktrees'));
       }
-
     } catch (error) {
       console.log(chalk.red('   Error reading git status'));
     }
@@ -234,7 +235,8 @@ class WorkflowCLI {
     console.log(chalk.cyan('🎯 Interactive Workflow Mode'));
     console.log(chalk.gray('Type "exit" to quit\n'));
 
-    while (true) {
+    let shouldContinue = true;
+    while (shouldContinue) {
       try {
         const { action } = await inquirer.prompt([
           {
@@ -254,11 +256,11 @@ class WorkflowCLI {
 
         if (action === 'exit') {
           console.log(chalk.green('👋 Goodbye!'));
+          shouldContinue = false;
           break;
         }
 
         await this.handleInteractiveAction(action);
-
       } catch (error) {
         if (error.isTtyError) {
           console.log(chalk.red('Interactive mode not supported in this terminal'));
@@ -276,52 +278,54 @@ class WorkflowCLI {
     const { default: inquirer } = await import('inquirer');
 
     switch (action) {
-    case 'execute':
-      const { instruction } = await inquirer.prompt([
-        {
-          type: 'input',
-          name: 'instruction',
-          message: 'Enter your development instruction:',
-          validate: input => input.trim().length > 0 || 'Instruction cannot be empty'
-        }
-      ]);
+      case 'execute': {
+        const { instruction } = await inquirer.prompt([
+          {
+            type: 'input',
+            name: 'instruction',
+            message: 'Enter your development instruction:',
+            validate: input => input.trim().length > 0 || 'Instruction cannot be empty'
+          }
+        ]);
 
-      const { autoMerge } = await inquirer.prompt([
-        {
-          type: 'confirm',
-          name: 'autoMerge',
-          message: 'Enable auto-merge?',
-          default: false
-        }
-      ]);
+        const { autoMerge } = await inquirer.prompt([
+          {
+            type: 'confirm',
+            name: 'autoMerge',
+            message: 'Enable auto-merge?',
+            default: false
+          }
+        ]);
 
-      await this.executeInstruction(instruction, { autoMerge });
-      break;
+        await this.executeInstruction(instruction, { autoMerge });
+        break;
+      }
 
-    case 'analyze':
-      const { analyzeInstruction } = await inquirer.prompt([
-        {
-          type: 'input',
-          name: 'analyzeInstruction',
-          message: 'Enter instruction to analyze:',
-          validate: input => input.trim().length > 0 || 'Instruction cannot be empty'
-        }
-      ]);
+      case 'analyze': {
+        const { analyzeInstruction } = await inquirer.prompt([
+          {
+            type: 'input',
+            name: 'analyzeInstruction',
+            message: 'Enter instruction to analyze:',
+            validate: input => input.trim().length > 0 || 'Instruction cannot be empty'
+          }
+        ]);
 
-      await this.analyzeInstruction(analyzeInstruction, {});
-      break;
+        await this.analyzeInstruction(analyzeInstruction, {});
+        break;
+      }
 
-    case 'quality':
-      await this.runQualityCheck({ parallel: true });
-      break;
+      case 'quality':
+        await this.runQualityCheck({ parallel: true });
+        break;
 
-    case 'status':
-      await this.showStatus();
-      break;
+      case 'status':
+        await this.showStatus();
+        break;
 
-    case 'history':
-      await this.showHistory({ count: 10 });
-      break;
+      case 'history':
+        await this.showHistory({ count: 10 });
+        break;
     }
 
     // 続行確認
@@ -385,7 +389,6 @@ class WorkflowCLI {
           console.log(`   PR: ${chalk.blue(entry.result.pr.html_url)}`);
         }
       }
-
     } catch (error) {
       console.log(chalk.gray('No execution history found'));
     }
@@ -422,7 +425,6 @@ class WorkflowCLI {
       }
 
       writeFileSync(historyFile, JSON.stringify(history, null, 2));
-
     } catch (error) {
       console.warn(chalk.yellow('Warning: Could not save execution history'));
     }

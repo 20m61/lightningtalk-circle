@@ -60,7 +60,7 @@ export class DatabaseFactory {
     switch (dbType.toLowerCase()) {
       case 'postgresql':
       case 'postgres':
-      case 'pg':
+      case 'pg': {
         // Check PostgreSQL configuration
         if (!process.env.DATABASE_URL) {
           validation.errors.push('DATABASE_URL is required for PostgreSQL');
@@ -80,6 +80,7 @@ export class DatabaseFactory {
         }
 
         break;
+      }
 
       case 'file':
       case 'json':

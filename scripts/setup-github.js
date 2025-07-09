@@ -167,7 +167,7 @@ class GitHubSetup {
       console.log(`✅ Repository access verified: ${repo.full_name}`);
 
       // Check permissions
-      const permissions = repo.permissions;
+      const { permissions } = repo;
       console.log('📋 Repository permissions:');
       console.log(`   Admin: ${permissions.admin ? '✅' : '❌'}`);
       console.log(`   Push: ${permissions.push ? '✅' : '❌'}`);
