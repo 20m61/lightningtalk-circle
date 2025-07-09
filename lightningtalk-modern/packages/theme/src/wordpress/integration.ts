@@ -3,22 +3,24 @@
  * WordPressとの統合機能を提供
  */
 
+import type { WordPressEvent } from '../types/wordpress.js';
+
 /**
  * WordPress統合の適用
  */
 export function applyWordPressIntegration(): void {
   // WordPress フック システムとの統合
   setupWordPressHooks();
-  
+
   // Gutenberg ブロックエディターとの統合
   setupGutenbergIntegration();
-  
+
   // カスタマイザーとの統合
   setupCustomizerIntegration();
-  
+
   // SEO最適化
   setupSEOOptimizations();
-  
+
   // アクセシビリティ機能
   setupAccessibilityFeatures();
 }
@@ -34,7 +36,7 @@ function setupWordPressHooks(): void {
     // Lightning Talk 固有のアクション
     addAction('lightningtalk_registration_complete', 'lightningtalk/theme', (data: any) => {
       console.log('Registration completed:', data);
-      
+
       // カスタムイベントを発火
       const event = new CustomEvent('lightningtalk:registration', {
         detail: data,
@@ -45,7 +47,7 @@ function setupWordPressHooks(): void {
 
     addAction('lightningtalk_talk_submitted', 'lightningtalk/theme', (data: any) => {
       console.log('Talk submitted:', data);
-      
+
       // カスタムイベントを発火
       const event = new CustomEvent('lightningtalk:talk-submission', {
         detail: data,
@@ -92,17 +94,21 @@ function setupGutenbergIntegration(): void {
       },
       edit: (props: any) => {
         const { attributes, setAttributes } = props;
-        
-        return createElement('div', {
-          className: 'lightningtalk-block-editor'
-        }, [
-          createElement('h3', { key: 'title' }, 'Lightning Talk Event'),
-          createElement('p', { key: 'desc' }, 'Event ID: ' + (attributes.eventId || 'Not set'))
-        ]);
+
+        return createElement(
+          'div',
+          {
+            className: 'lightningtalk-block-editor'
+          },
+          [
+            createElement('h3', { key: 'title' }, 'Lightning Talk Event'),
+            createElement('p', { key: 'desc' }, 'Event ID: ' + (attributes.eventId || 'Not set'))
+          ]
+        );
       },
       save: (props: any) => {
         const { attributes } = props;
-        
+
         return createElement('div', {
           className: 'lightningtalk-event-block',
           'data-event-id': attributes.eventId,
@@ -123,16 +129,20 @@ function setupGutenbergIntegration(): void {
         }
       },
       edit: (props: any) => {
-        return createElement('div', {
-          className: 'lightningtalk-block-editor'
-        }, [
-          createElement('h3', { key: 'title' }, 'Lightning Talk Registration Form'),
-          createElement('p', { key: 'desc' }, 'Registration form will appear here on frontend')
-        ]);
+        return createElement(
+          'div',
+          {
+            className: 'lightningtalk-block-editor'
+          },
+          [
+            createElement('h3', { key: 'title' }, 'Lightning Talk Registration Form'),
+            createElement('p', { key: 'desc' }, 'Registration form will appear here on frontend')
+          ]
+        );
       },
       save: (props: any) => {
         const { attributes } = props;
-        
+
         return createElement('div', {
           id: 'lightningtalk-registration',
           'data-event-id': attributes.eventId
@@ -154,7 +164,7 @@ function setupCustomizerIntegration(): void {
     if (customize.preview) {
       customize.preview.bind('lightningtalk-settings-changed', (data: any) => {
         console.log('Customizer settings changed:', data);
-        
+
         // 設定に応じてテーマの表示を更新
         updateThemeSettings(data);
       });
@@ -181,7 +191,7 @@ function updateThemeSettings(settings: any): void {
         --font-size-base: ${settings.typography.baseSize}px;
       }
     `;
-    
+
     // 既存のスタイルを削除して新しいものを追加
     const existing = document.getElementById('lightningtalk-custom-typography');
     if (existing) existing.remove();
@@ -195,10 +205,10 @@ function updateThemeSettings(settings: any): void {
 function setupSEOOptimizations(): void {
   // 構造化データの追加
   addStructuredData();
-  
+
   // メタタグの最適化
   optimizeMetaTags();
-  
+
   // Open Graph の設定
   setupOpenGraph();
 }
@@ -208,7 +218,7 @@ function setupSEOOptimizations(): void {
  */
 function addStructuredData(): void {
   const events = document.querySelectorAll('[data-event-id]');
-  
+
   events.forEach(eventElement => {
     const eventId = eventElement.getAttribute('data-event-id');
     if (!eventId) return;
@@ -217,18 +227,18 @@ function addStructuredData(): void {
     fetchEventData(eventId).then(eventData => {
       if (eventData) {
         const structuredData = {
-          "@context": "https://schema.org",
-          "@type": "Event",
-          "name": eventData.title,
-          "description": eventData.description,
-          "startDate": eventData.date,
-          "location": {
-            "@type": "Place",
-            "name": eventData.venue
+          '@context': 'https://schema.org',
+          '@type': 'Event',
+          name: eventData.title,
+          description: eventData.description,
+          startDate: eventData.date,
+          location: {
+            '@type': 'Place',
+            name: eventData.venue
           },
-          "organizer": {
-            "@type": "Organization",
-            "name": "Lightning Talk Circle"
+          organizer: {
+            '@type': 'Organization',
+            name: 'Lightning Talk Circle'
           }
         };
 
@@ -244,14 +254,32 @@ function addStructuredData(): void {
 /**
  * イベントデータの取得
  */
-async function fetchEventData(eventId: string): Promise<any> {
+async function fetchEventData(eventId: string): Promise<WordPressEvent | null> {
   try {
     const wpData = window.wpLightningTalk;
-    if (!wpData) return null;
+    if (!wpData) {
+      console.warn(
+        'wpLightningTalk is not available. WordPress localization may not be properly configured.'
+      );
+      return null;
+    }
 
-    const response = await fetch(`${wpData.apiUrl}lightningtalk/v1/events/${eventId}`);
+    if (!wpData.apiUrl) {
+      console.error('API URL is not configured in wpLightningTalk');
+      return null;
+    }
+
+    const apiUrl = wpData.apiUrl.endsWith('/') ? wpData.apiUrl : `${wpData.apiUrl}/`;
+    const response = await fetch(`${apiUrl}lightningtalk/v1/events/${eventId}`, {
+      headers: {
+        'X-WP-Nonce': wpData.nonce || ''
+      }
+    });
+
     if (response.ok) {
       return await response.json();
+    } else {
+      console.error(`Failed to fetch event data: ${response.status} ${response.statusText}`);
     }
   } catch (error) {
     console.error('Failed to fetch event data:', error);
@@ -297,7 +325,7 @@ function setupOpenGraph(): void {
   ogTags.forEach(tag => {
     const key = tag.property || tag.name;
     const existing = document.querySelector(`meta[${tag.property ? 'property' : 'name'}="${key}"]`);
-    
+
     if (!existing) {
       const meta = document.createElement('meta');
       if (tag.property) meta.setAttribute('property', tag.property);
@@ -314,10 +342,10 @@ function setupOpenGraph(): void {
 function setupAccessibilityFeatures(): void {
   // スキップリンクの追加
   addSkipLinks();
-  
+
   // フォーカス管理
   setupFocusManagement();
-  
+
   // ARIA ラベルの動的更新
   setupDynamicARIA();
 }
@@ -346,7 +374,7 @@ function setupFocusManagement(): void {
       const focusableElements = modal.querySelectorAll(
         'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
       );
-      
+
       if (focusableElements.length > 0) {
         (focusableElements[0] as HTMLElement).focus();
       }
@@ -365,13 +393,13 @@ function setupDynamicARIA(): void {
         mutation.addedNodes.forEach(node => {
           if (node.nodeType === Node.ELEMENT_NODE) {
             const element = node as Element;
-            
+
             // ローディングスピナーの ARIA ラベル
             if (element.classList.contains('loading-spinner')) {
               element.setAttribute('aria-label', '読み込み中');
               element.setAttribute('role', 'status');
             }
-            
+
             // エラーメッセージの ARIA ラベル
             if (element.classList.contains('error-message')) {
               element.setAttribute('role', 'alert');

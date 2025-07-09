@@ -5,20 +5,21 @@ on:
     branches:
       - main
       - develop
-      - feature/cdk-migration
+      - "feature/cdk-migration"
   pull_request:
     branches:
       - main
       - develop
 
 env:
-  AWS_REGION: us-east-1
+  AWS_REGION: ap-northeast-1
   NODE_VERSION: "18"
 
 jobs:
   test:
-    name: Run Tests
+    name: Test
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -32,48 +33,220 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Run unit tests
-        run: npm run test:unit
-
-      - name: Run linting
-        run: npm run lint
+      - name: Run tests
+        run: npm test
 
       - name: Build static assets
         run: npm run build:static
-
-      - name: Docker build test
-        run: npm run docker:test
 
   build-and-push:
     name: Build and Push Docker Image
     runs-on: ubuntu-latest
     needs: test
-    if: github.ref == 'refs/heads/feature/cdk-migration' || github.ref == 'refs/heads/develop' || github.ref == 'refs/heads/main'
+    if: github.event_name == 'push'
+
     outputs:
-      image-uri: ${{ steps.build.outputs.image-uri }}
+      image-tag: ${{ steps.meta.outputs.tags }}
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: ${{ env.NODE_VERSION }}
-          cache: "npm"
-
-      - name: Install dependencies
-        run: npm ci
-
       - name: Configure AWS credentials
-        if: ${{ secrets.AWS_ACCESS_KEY_ID != '' }}
         uses: aws-actions/configure-aws-credentials@v4
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ env.AWS_REGION }}
 
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v2
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Docker meta
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ${{ steps.login-ecr.outputs.registry }}/lightningtalk-circle-api
+          tags: |
+            type=ref,event=branch
+            type=ref,event=pr
+            type=sha,prefix={{branch}}-
+            type=raw,value=latest,enable={{is_default_branch}}
+
+      - name: Build and push Docker image
+        id: build-image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: ./docker/Dockerfile.production
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+          build-args: |
+            NODE_ENV=${{ github.ref == 'refs/heads/main' && 'production' || 'development' }}
+            BUILD_DATE=${{ github.event.head_commit.timestamp }}
+            VERSION=${{ github.sha }}
+
+      - name: Run Trivy vulnerability scanner
+        uses: aquasecurity/trivy-action@master
+        with:
+          image-ref: ${{ steps.login-ecr.outputs.registry }}/lightningtalk-circle-api:${{ github.sha }}
+          format: "sarif"
+          output: "trivy-results.sarif"
+
+      - name: Upload Trivy scan results to GitHub Security tab
+        uses: github/codeql-action/upload-sarif@v3
+        if: always()
+        with:
+          sarif_file: "trivy-results.sarif"
+
+      - name: Run container security checks
+        run: |
+          echo "🔍 Running additional security checks..."
+
+          # Check for secrets in the image
+          if command -v docker &> /dev/null; then
+            echo "Checking for potential secrets in Docker image..."
+            docker run --rm -v /var/run/docker.sock:/var/run/docker.sock \
+              trufflesecurity/trufflehog:latest docker \
+              --image ${{ steps.login-ecr.outputs.registry }}/lightningtalk-circle-api:${{ github.sha }} \
+              --no-verification || echo "No secrets detected or scanner not available"
+          fi
+
+          # Generate security report
+          echo "📋 Container Security Summary:" > security-report.txt
+          echo "Image: ${{ steps.login-ecr.outputs.registry }}/lightningtalk-circle-api:${{ github.sha }}" >> security-report.txt
+          echo "Scan Date: $(date)" >> security-report.txt
+          echo "Trivy scan completed" >> security-report.txt
+        continue-on-error: true
+
+  cdk-diff:
+    name: CDK Diff
+    runs-on: ubuntu-latest
+    needs: test
+    if: github.event_name == 'pull_request'
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: "npm"
+          cache-dependency-path: "cdk/package-lock.json"
+
+      - name: Install CDK dependencies
+        run: |
+          cd cdk
+          npm ci
+        timeout-minutes: 10
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_REGION }}
+        timeout-minutes: 2
+
       - name: Determine environment
-        id: env
+        id: determine-env
+        run: |
+          if [[ "${{ github.base_ref }}" == "main" ]]; then
+            echo "environment=prod" >> $GITHUB_OUTPUT
+          elif [[ "${{ github.base_ref }}" == "develop" ]]; then
+            echo "environment=staging" >> $GITHUB_OUTPUT
+          else
+            echo "environment=dev" >> $GITHUB_OUTPUT
+          fi
+
+      - name: CDK Diff
+        id: cdk-diff
+        run: |
+          cd cdk
+          echo "Running CDK diff for environment: ${{ steps.determine-env.outputs.environment }}"
+
+          # Capture diff output
+          if npx cdk diff --context env=${{ steps.determine-env.outputs.environment }} 2>&1 | tee diff-output.txt; then
+            echo "diff_status=success" >> $GITHUB_OUTPUT
+          else
+            echo "diff_status=failed" >> $GITHUB_OUTPUT
+            echo "❌ CDK diff failed" >> diff-output.txt
+          fi
+
+          # Set output variables
+          echo "diff_output<<EOF" >> $GITHUB_OUTPUT
+          cat diff-output.txt >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
+        continue-on-error: true
+        timeout-minutes: 10
+
+      - name: Comment PR
+        uses: actions/github-script@v7
+        if: always()
+        with:
+          script: |
+            const diffStatus = '${{ steps.cdk-diff.outputs.diff_status }}';
+            const diffOutput = `${{ steps.cdk-diff.outputs.diff_output }}`;
+            const environment = '${{ steps.determine-env.outputs.environment }}';
+
+            const statusEmoji = diffStatus === 'success' ? '✅' : '❌';
+            const statusText = diffStatus === 'success' ? 'Success' : 'Failed';
+
+            const output = `#### CDK Diff ${statusEmoji} \`${environment}\` - ${statusText}
+
+            <details><summary>Show Diff Output</summary>
+
+            \`\`\`
+            ${diffOutput || 'No diff output captured'}
+            \`\`\`
+
+            </details>
+
+            ${diffStatus === 'failed' ? '⚠️ **CDK diff failed. Please check the configuration and try again.**' : ''}
+
+            *Pushed by: @${{ github.actor }}, Action: \`${{ github.event_name }}\`*`;
+
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: output
+            })
+
+  deploy:
+    name: Deploy CDK
+    runs-on: ubuntu-latest
+    needs: build-and-push
+    if: github.event_name == 'push'
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: "npm"
+          cache-dependency-path: "cdk/package-lock.json"
+
+      - name: Install CDK dependencies
+        run: |
+          cd cdk
+          npm ci
+        timeout-minutes: 10
+
+      - name: Determine environment
+        id: determine-env
         run: |
           if [[ "${{ github.ref }}" == "refs/heads/main" ]]; then
             echo "environment=prod" >> $GITHUB_OUTPUT
@@ -83,186 +256,102 @@ jobs:
             echo "environment=dev" >> $GITHUB_OUTPUT
           fi
 
-      - name: Build and push Docker image
-        if: ${{ secrets.AWS_ACCESS_KEY_ID != '' }}
-        id: build
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ steps.determine-env.outputs.environment == 'prod' && secrets.AWS_ACCESS_KEY_ID_PROD || secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ steps.determine-env.outputs.environment == 'prod' && secrets.AWS_SECRET_ACCESS_KEY_PROD || secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_REGION }}
+        timeout-minutes: 2
+
+      - name: Deploy CDK
+        id: cdk-deploy
         run: |
-          # Generate image tag from git commit
-          IMAGE_TAG="${{ github.sha }}"
+          cd cdk
+          echo "🚀 Starting CDK deployment for environment: ${{ steps.determine-env.outputs.environment }}"
 
-          # Run build script (skip if AWS credentials not available)
-          if [ -f "./scripts/docker-build-push.sh" ]; then
-            ./scripts/docker-build-push.sh ${{ steps.env.outputs.environment }} ${IMAGE_TAG}
-            
-            # Output the image URI for subsequent jobs
-            AWS_ACCOUNT_ID=$(aws sts get-caller-identity --query Account --output text)
-            IMAGE_URI="${AWS_ACCOUNT_ID}.dkr.ecr.${{ env.AWS_REGION }}.amazonaws.com/lightningtalk-circle/api:${IMAGE_TAG}"
-            echo "image-uri=${IMAGE_URI}" >> $GITHUB_OUTPUT
-            echo "Built and pushed image: ${IMAGE_URI}"
+          # Deploy with error handling
+          if npx cdk deploy --all --context env=${{ steps.determine-env.outputs.environment }} --require-approval never 2>&1 | tee deploy-output.txt; then
+            echo "deploy_status=success" >> $GITHUB_OUTPUT
+            echo "✅ CDK deployment completed successfully"
           else
-            echo "Docker build script not found, skipping build"
-            echo "image-uri=mock-image-uri" >> $GITHUB_OUTPUT
+            echo "deploy_status=failed" >> $GITHUB_OUTPUT
+            echo "❌ CDK deployment failed"
+            exit 1
           fi
+        timeout-minutes: 30
 
-  cdk-diff:
-    name: CDK Diff
-    runs-on: ubuntu-latest
-    needs: test
-    if: github.event_name == 'pull_request'
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
+      - name: Run database migrations
+        id: db-migrate
+        run: |
+          echo "📊 Running database migrations for ${{ steps.determine-env.outputs.environment }}"
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: ${{ env.NODE_VERSION }}
-          cache: "npm"
+          if [ -f "./scripts/db-migration.sh" ]; then
+            if ./scripts/db-migration.sh ${{ steps.determine-env.outputs.environment }} init 2>&1 | tee migration-output.txt; then
+              echo "migration_status=success" >> $GITHUB_OUTPUT
+              echo "✅ Database migrations completed successfully"
+            else
+              echo "migration_status=failed" >> $GITHUB_OUTPUT
+              echo "❌ Database migrations failed"
+              exit 1
+            fi
+          else
+            echo "migration_status=skipped" >> $GITHUB_OUTPUT
+            echo "⏭️ Database migration script not found, skipping"
+          fi
+        timeout-minutes: 10
 
-      - name: Install dependencies
-        run: npm ci
+      - name: Setup monitoring
+        id: monitoring-setup
+        if: steps.determine-env.outputs.environment != 'dev'
+        run: |
+          echo "🔍 Setting up monitoring for ${{ steps.determine-env.outputs.environment }}"
 
-      - name: Install CDK dependencies
-        run: npm run cdk:install
-
-      - name: Configure AWS credentials
-        if: ${{ secrets.AWS_ACCESS_KEY_ID != '' }}
-        uses: aws-actions/configure-aws-credentials@v4
-        with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: ${{ env.AWS_REGION }}
-
-      - name: CDK diff
-        run: npm run cdk:diff
-        env:
-          CDK_DEFAULT_REGION: ${{ env.AWS_REGION }}
-
-  deploy-dev:
-    name: Deploy to Development
-    runs-on: ubuntu-latest
-    needs: [test, build-and-push]
-    if: github.ref == 'refs/heads/feature/cdk-migration' || github.ref == 'refs/heads/develop'
-    environment: development
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: ${{ env.NODE_VERSION }}
-          cache: "npm"
-
-      - name: Install dependencies
-        run: npm ci
-
-      - name: Install CDK dependencies
-        run: npm run cdk:install
-
-      - name: Build CDK
-        run: npm run cdk:build
-
-      - name: Configure AWS credentials
-        if: ${{ secrets.AWS_ACCESS_KEY_ID != '' }}
-        uses: aws-actions/configure-aws-credentials@v4
-        with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: ${{ env.AWS_REGION }}
-
-      - name: Deploy to development
-        run: npm run cdk:deploy:dev
-        env:
-          CDK_DEFAULT_REGION: ${{ env.AWS_REGION }}
-          DOCKER_IMAGE_URI: ${{ needs.build-and-push.outputs.image-uri }}
-
-  deploy-staging:
-    name: Deploy to Staging
-    runs-on: ubuntu-latest
-    needs: [test, build-and-push]
-    if: github.ref == 'refs/heads/develop'
-    environment: staging
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: ${{ env.NODE_VERSION }}
-          cache: "npm"
-
-      - name: Install dependencies
-        run: npm ci
-
-      - name: Install CDK dependencies
-        run: npm run cdk:install
-
-      - name: Build CDK
-        run: npm run cdk:build
-
-      - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v4
-        with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID_STAGING }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY_STAGING }}
-          aws-region: ${{ env.AWS_REGION }}
-
-      - name: Deploy to staging
-        run: npm run cdk:deploy:staging
-        env:
-          CDK_DEFAULT_REGION: ${{ env.AWS_REGION }}
-          DOCKER_IMAGE_URI: ${{ needs.build-and-push.outputs.image-uri }}
-
-  deploy-prod:
-    name: Deploy to Production
-    runs-on: ubuntu-latest
-    needs: [test, build-and-push]
-    if: github.ref == 'refs/heads/main'
-    environment: production
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: ${{ env.NODE_VERSION }}
-          cache: "npm"
-
-      - name: Install dependencies
-        run: npm ci
-
-      - name: Install CDK dependencies
-        run: npm run cdk:install
-
-      - name: Build CDK
-        run: npm run cdk:build
-
-      - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v4
-        with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID_PROD }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY_PROD }}
-          aws-region: ${{ env.AWS_REGION }}
-
-      - name: Deploy to production
-        run: npm run cdk:deploy:prod
-        env:
-          CDK_DEFAULT_REGION: ${{ env.AWS_REGION }}
-          DOCKER_IMAGE_URI: ${{ needs.build-and-push.outputs.image-uri }}
+          if [ -f "./scripts/setup-monitoring.sh" ]; then
+            if ./scripts/setup-monitoring.sh ${{ steps.determine-env.outputs.environment }} 2>&1 | tee monitoring-output.txt; then
+              echo "monitoring_status=success" >> $GITHUB_OUTPUT
+              echo "✅ Monitoring setup completed successfully"
+            else
+              echo "monitoring_status=failed" >> $GITHUB_OUTPUT
+              echo "❌ Monitoring setup failed"
+              # Don't fail the entire deployment for monitoring issues
+            fi
+          else
+            echo "monitoring_status=skipped" >> $GITHUB_OUTPUT
+            echo "⏭️ Monitoring setup script not found, skipping"
+          fi
+        timeout-minutes: 5
+        continue-on-error: true
 
   notify:
-    name: Notify Deployment
+    name: Notify Deployment Status
     runs-on: ubuntu-latest
-    needs: [deploy-dev, deploy-staging, deploy-prod]
-    if: always()
+    needs: [deploy]
+    if: always() && github.event_name == 'push'
+
     steps:
       - name: Notify success
-        if: needs.deploy-dev.result == 'success' || needs.deploy-staging.result == 'success' || needs.deploy-prod.result == 'success'
-        run: echo "✅ Deployment successful"
+        if: needs.deploy.result == 'success'
+        uses: 8398a7/action-slack@v3
+        with:
+          status: success
+          text: |
+            ✅ CDK Deployment Successful
+            Environment: ${{ needs.deploy.outputs.environment }}
+            Branch: ${{ github.ref_name }}
+            Commit: ${{ github.sha }}
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
 
       - name: Notify failure
-        if: needs.deploy-dev.result == 'failure' || needs.deploy-staging.result == 'failure' || needs.deploy-prod.result == 'failure'
-        run: echo "❌ Deployment failed"
+        if: needs.deploy.result == 'failure'
+        uses: 8398a7/action-slack@v3
+        with:
+          status: failure
+          text: |
+            ❌ CDK Deployment Failed
+            Environment: ${{ needs.deploy.outputs.environment }}
+            Branch: ${{ github.ref_name }}
+            Commit: ${{ github.sha }}
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}

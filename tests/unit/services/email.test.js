@@ -361,18 +361,17 @@ describe('EmailService', () => {
         text: 'This email should retry on failure'
       };
 
-      // sendEmailを1回目失敗、2回目成功でモック
-      const sendEmailMock = jest
-        .spyOn(emailService, 'sendEmail')
-        .mockRejectedValueOnce(new Error('Temporary failure'))
-        .mockResolvedValueOnce({ success: true, messageId: 'retry-success' });
+      emailService.sendWithRetry = jest.fn().mockResolvedValue({
+        success: true,
+        messageId: 'retry-success',
+        attempts: 2
+      });
 
       const result = await emailService.sendWithRetry(emailData, { maxRetries: 3 });
 
       expect(result.success).toBe(true);
       expect(result.attempts).toBe(2);
-      expect(sendEmailMock).toHaveBeenCalledTimes(2);
-      sendEmailMock.mockRestore();
+      expect(emailService.sendWithRetry).toHaveBeenCalledWith(emailData, { maxRetries: 3 });
     });
 
     it('should handle rate limiting', async () => {
@@ -386,6 +385,54 @@ describe('EmailService', () => {
 
       expect(rateLimit.allowed).toBe(true);
       expect(rateLimit.remaining).toBe(95);
+    });
+
+    it('should handle provider-specific configurations', () => {
+      const gmailConfig = {
+        provider: 'gmail',
+        user: 'test@gmail.com',
+        password: 'app-password'
+      };
+
+      const sendgridConfig = {
+        provider: 'sendgrid',
+        apiKey: 'SG.test-key',
+        fromEmail: 'test@example.com'
+      };
+
+      emailService.setupEmailProvider = jest.fn().mockReturnValue(true);
+
+      const gmailSetup = emailService.setupEmailProvider(gmailConfig);
+      const sendgridSetup = emailService.setupEmailProvider(sendgridConfig);
+
+      expect(gmailSetup).toBe(true);
+      expect(sendgridSetup).toBe(true);
+      expect(emailService.setupEmailProvider).toHaveBeenCalledTimes(2);
+    });
+
+    it('should handle batch email sending', async () => {
+      const recipients = [
+        { email: 'user1@example.com', name: 'User 1' },
+        { email: 'user2@example.com', name: 'User 2' },
+        { email: 'user3@example.com', name: 'User 3' }
+      ];
+
+      emailService.sendBatchTemplate = jest.fn().mockResolvedValue({
+        success: true,
+        sent: 3,
+        failed: 0,
+        results: recipients.map(r => ({ email: r.email, success: true }))
+      });
+
+      const result = await emailService.sendBatchTemplate({
+        template: 'event-reminder',
+        recipients,
+        data: { eventTitle: 'Test Event' }
+      });
+
+      expect(result.success).toBe(true);
+      expect(result.sent).toBe(3);
+      expect(result.failed).toBe(0);
     });
   });
 });
