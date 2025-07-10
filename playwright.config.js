@@ -74,19 +74,12 @@ export default defineConfig({
   ],
 
   // Webサーバー設定
-  webServer: process.env.CI
-    ? {
-        command: 'npm start',
-        url: 'http://localhost:3000',
-        reuseExistingServer: false,
-        timeout: 60 * 1000
-      }
-    : {
-        command: 'npm run dev',
-        url: 'http://localhost:3000',
-        reuseExistingServer: !process.env.CI,
-        timeout: 120 * 1000
-      },
+  webServer: {
+    command: process.env.CI ? 'npm start' : 'npm run dev',
+    url: 'http://localhost:3000',
+    reuseExistingServer: true,
+    timeout: process.env.CI ? 60 * 1000 : 120 * 1000
+  },
 
   // テストタイムアウト設定
   timeout: 30 * 1000,
