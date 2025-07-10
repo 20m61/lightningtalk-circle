@@ -1,4 +1,28 @@
+version: '3.8'
+
 services:
+  # Node.js application test
+  app-test:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.test
+    container_name: lt_app_test
+    environment:
+      - NODE_ENV=test
+      - PORT=3000
+    command: |
+      sh -c "
+        npm run test:unit &&
+        npm run test:integration &&
+        echo 'All tests passed'
+      "
+    volumes:
+      - .:/app
+      - /app/node_modules
+    networks:
+      - test-network
+
+  # WordPress test environment
   wordpress:
     image: wordpress:latest
     container_name: lt_wordpress_test
@@ -12,9 +36,11 @@ services:
       WORDPRESS_DB_NAME: wordpress
     volumes:
       - wordpress_data:/var/www/html
-      - ./dist/lightningtalk-wordpress-theme-v1.3.0.zip:/tmp/theme.zip
+      - ./lightningtalk-child-theme.zip:/tmp/theme.zip:ro
     depends_on:
       - db
+    networks:
+      - test-network
 
   db:
     image: mysql:8.0
@@ -29,7 +55,15 @@ services:
       - "--default-authentication-plugin=mysql_native_password"
       - "--character-set-server=utf8mb4"
       - "--collation-server=utf8mb4_unicode_ci"
+    networks:
+      - test-network
+
+networks:
+  test-network:
+    driver: bridge
 
 volumes:
   wordpress_data:
+    driver: local
   db_data:
+    driver: local

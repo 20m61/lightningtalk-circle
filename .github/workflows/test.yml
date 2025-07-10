@@ -78,7 +78,7 @@ jobs:
 
       - name: Start test server
         run: |
-          npm run dev &
+          npm start &
           sleep 10
           curl -f http://localhost:3000 || exit 1
         env:
@@ -107,15 +107,18 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
       - name: Build test environment
-        run: docker-compose -f docker-compose.test.yml build
+        run: docker compose -f docker-compose.test.yml build || docker-compose -f docker-compose.test.yml build
 
       - name: Run tests in Docker
-        run: docker-compose -f docker-compose.test.yml up --abort-on-container-exit
+        run: docker compose -f docker-compose.test.yml up --abort-on-container-exit || docker-compose -f docker-compose.test.yml up --abort-on-container-exit
 
       - name: Cleanup Docker environment
         if: always()
-        run: docker-compose -f docker-compose.test.yml down -v
+        run: docker compose -f docker-compose.test.yml down -v || docker-compose -f docker-compose.test.yml down -v
 
   # テスト結果レポート
   test-report:
@@ -215,10 +218,10 @@ jobs:
       - name: Run security audit
         run: npm audit --audit-level high
 
-      - name: Run CodeQL Analysis
-        uses: github/codeql-action/init@v2
+      - name: Initialize CodeQL
+        uses: github/codeql-action/init@v3
         with:
           languages: javascript
 
       - name: Perform CodeQL Analysis
-        uses: github/codeql-action/analyze@v2
+        uses: github/codeql-action/analyze@v3
