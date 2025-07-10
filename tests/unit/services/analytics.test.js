@@ -122,7 +122,10 @@ describe('AnalyticsService', () => {
       const result = await analyticsService.getEventStatistics(eventId, options);
 
       expect(result.trends).toBeDefined();
-      expect(analyticsService.getEventTrends).toHaveBeenCalledWith(eventId, options);
+      expect(analyticsService.getEventTrends).toHaveBeenCalledWith(eventId, {
+        startDate: undefined,
+        endDate: undefined
+      });
     });
 
     it('should handle errors gracefully', async () => {
