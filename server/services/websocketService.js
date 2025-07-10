@@ -67,9 +67,16 @@ export class WebSocketService extends EventEmitter {
       const token = socket.handshake.auth.token;
       
       if (token) {
-        // Verify token (implement your auth logic)
-        socket.userId = this.verifyToken(token);
-        socket.authenticated = true;
+        const user = this.verifyToken(token);
+        if (user) {
+          socket.userId = user.id;
+          socket.userRole = user.role;
+          socket.userEmail = user.email;
+          socket.authenticated = true;
+        } else {
+          socket.authenticated = false;
+          return next(new Error('Invalid authentication token'));
+        }
       } else {
         socket.authenticated = false;
       }
@@ -77,9 +84,13 @@ export class WebSocketService extends EventEmitter {
       next();
     });
 
-    // Request tracking
+    // Request tracking and rate limiting
     this.io.use((socket, next) => {
       socket.requestId = `ws-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+      socket.messageCount = 0;
+      socket.lastMessageTime = Date.now();
+      socket.rateLimitExceeded = false;
+      
       logger.debug(`New connection attempt: ${socket.requestId}`);
       next();
     });
@@ -269,6 +280,24 @@ export class WebSocketService extends EventEmitter {
    * Handle incoming messages
    */
   handleMessage(socket, data) {
+    // Rate limiting check
+    const now = Date.now();
+    if (now - socket.lastMessageTime < 100) { // 100ms minimum between messages
+      socket.messageCount++;
+      if (socket.messageCount > 10) { // Max 10 rapid messages
+        if (!socket.rateLimitExceeded) {
+          socket.rateLimitExceeded = true;
+          logger.warn(`Rate limit exceeded for socket ${socket.id}`);
+          socket.emit('error', { message: 'Rate limit exceeded' });
+        }
+        return;
+      }
+    } else {
+      socket.messageCount = 0;
+      socket.rateLimitExceeded = false;
+    }
+    socket.lastMessageTime = now;
+
     this.metrics.messagesTotal++;
 
     const { type, payload, room, target } = data;
@@ -386,14 +415,21 @@ export class WebSocketService extends EventEmitter {
   }
 
   /**
-   * Verify token (implement your auth logic)
+   * Verify JWT token for WebSocket authentication
    */
   verifyToken(token) {
-    // This is a placeholder - implement your actual token verification
     try {
-      // jwt.verify(token, process.env.JWT_SECRET)
-      return 'user-' + token.slice(0, 8);
-    } catch {
+      const jwt = require('jsonwebtoken'); // Dynamic import for optional dependency
+      const secret = process.env.JWT_SECRET || 'development-secret-do-not-use-in-production';
+      
+      const decoded = jwt.verify(token, secret);
+      return {
+        id: decoded.userId || decoded.id,
+        role: decoded.role || 'user',
+        email: decoded.email
+      };
+    } catch (error) {
+      logger.warn('Token verification failed:', error.message);
       return null;
     }
   }

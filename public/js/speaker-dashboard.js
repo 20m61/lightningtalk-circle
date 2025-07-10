@@ -104,7 +104,9 @@ class SpeakerDashboard {
 
   renderUpcomingTalks(talks) {
     const container = document.querySelector('.upcoming-talks');
-    if (!container || talks.length === 0) return;
+    if (!container || talks.length === 0) {
+      return;
+    }
 
     const talksHtml = talks
       .map(

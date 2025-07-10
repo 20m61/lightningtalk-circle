@@ -1,6 +1,7 @@
 import { EventEmitter } from 'events';
 import { v4 as uuidv4 } from 'uuid';
 import { createLogger } from '../utils/logger.js';
+import { DatabaseError, ValidationError, NotFoundError, ConflictError } from '../utils/errors.js';
 
 const logger = createLogger('voting-service');
 
@@ -77,7 +78,7 @@ export class VotingService extends EventEmitter {
     if (!session) {
       session = await this.database.findOne('voting_sessions', { id: sessionId });
       if (!session) {
-        throw new Error('Voting session not found');
+        throw new NotFoundError('Voting session');
       }
     }
 
@@ -95,7 +96,7 @@ export class VotingService extends EventEmitter {
 
     // Check if user has already voted
     if (session.votes[voterId]) {
-      throw new Error('Already voted');
+      throw new ConflictError('User has already voted in this session');
     }
 
     // Record vote
@@ -142,7 +143,7 @@ export class VotingService extends EventEmitter {
     if (!session) {
       session = await this.database.findOne('voting_sessions', { id: sessionId });
       if (!session) {
-        throw new Error('Voting session not found');
+        throw new NotFoundError('Voting session');
       }
     }
 
@@ -205,7 +206,7 @@ export class VotingService extends EventEmitter {
     if (!session) {
       session = await this.database.findOne('voting_sessions', { id: sessionId });
       if (!session) {
-        throw new Error('Voting session not found');
+        throw new NotFoundError('Voting session');
       }
     }
 

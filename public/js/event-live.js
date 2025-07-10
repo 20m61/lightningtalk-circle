@@ -160,7 +160,7 @@ class EventLiveManager {
     reaction.textContent = emoji;
 
     // Random horizontal position
-    reaction.style.left = Math.random() * 80 + 10 + '%';
+    reaction.style.left = `${Math.random() * 80 + 10}%`;
 
     container.appendChild(reaction);
 
