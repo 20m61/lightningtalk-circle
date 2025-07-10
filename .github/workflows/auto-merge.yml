@@ -334,12 +334,7 @@ jobs:
               owner: context.repo.owner,
               repo: context.repo.repo,
               issue_number: prNumber,
-              body: `🎉 **Successfully auto-merged!**
-              
-**Quality Score:** ${{ needs.quality-gates.outputs.quality-score }}%
-**Merge SHA:** ${merge.sha}
-
-All quality gates passed and merge conditions were met.`
+              body: '🎉 **Successfully auto-merged!**\n\n**Quality Score:** ${{ needs.quality-gates.outputs.quality-score }}%\n**Merge SHA:** ' + merge.sha + '\n\nAll quality gates passed and merge conditions were met.'
             });
             
             console.log('✅ PR successfully auto-merged');
@@ -352,11 +347,7 @@ All quality gates passed and merge conditions were met.`
               owner: context.repo.owner,
               repo: context.repo.repo,
               issue_number: prNumber,
-              body: `❌ **Auto-merge failed**
-              
-Error: ${error.message}
-
-Please merge manually or check for conflicts.`
+              body: '❌ **Auto-merge failed**\n\nError: ' + error.message + '\n\nPlease merge manually or check for conflicts.'
             });
             
             throw error;

@@ -62,7 +62,11 @@ class LightningTalkServer {
 
     // Initialize voting service
     this.votingService = new VotingService(this.database);
-    await this.votingService.cleanupExpiredSessions();
+
+    // Only cleanup if database is properly initialized
+    if (this.database && typeof this.database.find === 'function') {
+      await this.votingService.cleanupExpiredSessions();
+    }
 
     // Make services available to routes
     this.app.locals.database = this.database;

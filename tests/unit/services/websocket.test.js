@@ -31,7 +31,7 @@ jest.unstable_mockModule('socket.io', () => ({
   Server: jest.fn(() => mockIo)
 }));
 
-jest.unstable_mockModule('../../server/utils/logger.js', () => ({
+jest.unstable_mockModule('../../../server/utils/logger.js', () => ({
   createLogger: () => ({
     info: jest.fn(),
     error: jest.fn(),

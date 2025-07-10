@@ -5,17 +5,17 @@ import { jest } from '@jest/globals';
  */
 
 // Mock logger before importing
-jest.mock('../../../server/middleware/logger.js', () => ({
-  logger: {
+jest.unstable_mockModule('../../../server/utils/logger.js', () => ({
+  createLogger: () => ({
     info: jest.fn(),
     error: jest.fn(),
     warn: jest.fn(),
     debug: jest.fn()
-  }
+  })
 }));
 
 // Mock DatabaseService
-jest.mock('../../../server/services/database.js', () => ({
+jest.unstable_mockModule('../../../server/services/database.js', () => ({
   DatabaseService: {
     getInstance: jest.fn().mockReturnValue({
       query: jest.fn()
