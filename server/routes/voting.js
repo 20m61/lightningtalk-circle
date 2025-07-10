@@ -72,8 +72,9 @@ router.post(
   '/sessions/:sessionId/vote',
   [
     param('sessionId')
-      .isUUID()
-      .withMessage('Session ID must be a valid UUID'),
+      .isLength({ min: 1, max: 100 })
+      .withMessage('Session ID must be provided')
+      .trim(),
     body('rating')
       .isInt({ min: 1, max: 5 })
       .withMessage('Rating must be between 1-5')

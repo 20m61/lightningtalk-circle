@@ -16,7 +16,9 @@ const mockSocket = {
   leave: jest.fn(),
   emit: jest.fn(),
   to: jest.fn(() => mockSocket),
-  broadcast: jest.fn()
+  broadcast: {
+    emit: jest.fn()
+  }
 };
 
 const mockIo = {
