@@ -65,7 +65,7 @@ export class WebSocketService extends EventEmitter {
     // Authentication middleware
     this.io.use((socket, next) => {
       const token = socket.handshake.auth.token;
-      
+
       if (token) {
         const user = this.verifyToken(token);
         if (user) {
@@ -80,7 +80,7 @@ export class WebSocketService extends EventEmitter {
       } else {
         socket.authenticated = false;
       }
-      
+
       next();
     });
 
@@ -90,7 +90,7 @@ export class WebSocketService extends EventEmitter {
       socket.messageCount = 0;
       socket.lastMessageTime = Date.now();
       socket.rateLimitExceeded = false;
-      
+
       logger.debug(`New connection attempt: ${socket.requestId}`);
       next();
     });
@@ -100,23 +100,23 @@ export class WebSocketService extends EventEmitter {
    * Setup core event handlers
    */
   setupEventHandlers() {
-    this.io.on('connection', (socket) => {
+    this.io.on('connection', socket => {
       this.handleConnection(socket);
 
-      socket.on('disconnect', (reason) => {
+      socket.on('disconnect', reason => {
         this.handleDisconnect(socket, reason);
       });
 
-      socket.on('error', (error) => {
+      socket.on('error', error => {
         this.handleError(socket, error);
       });
 
       // Room management
-      socket.on('join:room', (data) => this.handleJoinRoom(socket, data));
-      socket.on('leave:room', (data) => this.handleLeaveRoom(socket, data));
+      socket.on('join:room', data => this.handleJoinRoom(socket, data));
+      socket.on('leave:room', data => this.handleLeaveRoom(socket, data));
 
       // Message routing
-      socket.on('message', (data) => this.handleMessage(socket, data));
+      socket.on('message', data => this.handleMessage(socket, data));
     });
   }
 
@@ -161,7 +161,7 @@ export class WebSocketService extends EventEmitter {
       connectionInfo.rooms.forEach(room => {
         this.removeFromRoom(socket, room);
       });
-      
+
       this.connections.delete(socket.id);
     }
 
@@ -257,7 +257,7 @@ export class WebSocketService extends EventEmitter {
     const roomInfo = this.rooms.get(room);
     if (roomInfo) {
       roomInfo.members.delete(socket.id);
-      
+
       // Notify remaining members
       this.io.to(room).emit('room:member:left', {
         room,
@@ -282,9 +282,11 @@ export class WebSocketService extends EventEmitter {
   handleMessage(socket, data) {
     // Rate limiting check
     const now = Date.now();
-    if (now - socket.lastMessageTime < 100) { // 100ms minimum between messages
+    if (now - socket.lastMessageTime < 100) {
+      // 100ms minimum between messages
       socket.messageCount++;
-      if (socket.messageCount > 10) { // Max 10 rapid messages
+      if (socket.messageCount > 10) {
+        // Max 10 rapid messages
         if (!socket.rateLimitExceeded) {
           socket.rateLimitExceeded = true;
           logger.warn(`Rate limit exceeded for socket ${socket.id}`);
@@ -305,7 +307,7 @@ export class WebSocketService extends EventEmitter {
     // Route to specific handler
     const handler = this.messageHandlers.get(type);
     if (handler) {
-      handler(socket, payload, { room, target });
+      handler(socket, payload || {}, { room, target });
     } else {
       // Default broadcast behavior
       if (room) {
@@ -402,15 +404,15 @@ export class WebSocketService extends EventEmitter {
   async validateRoomAccess(socket, room) {
     // Implement your room access validation logic
     // For example, check if user has permission to join event room
-    
+
     if (room.startsWith('event:')) {
       return socket.authenticated;
     }
-    
+
     if (room.startsWith('admin:')) {
       return socket.userId && socket.userRole === 'admin';
     }
-    
+
     return true; // Default allow
   }
 
@@ -421,7 +423,7 @@ export class WebSocketService extends EventEmitter {
     try {
       const jwt = require('jsonwebtoken'); // Dynamic import for optional dependency
       const secret = process.env.JWT_SECRET || 'development-secret-do-not-use-in-production';
-      
+
       const decoded = jwt.verify(token, secret);
       return {
         id: decoded.userId || decoded.id,
@@ -439,7 +441,7 @@ export class WebSocketService extends EventEmitter {
    */
   async shutdown() {
     logger.info('Shutting down WebSocket service...');
-    
+
     // Notify all clients
     this.broadcast('server:shutdown', {
       message: 'Server is shutting down',
@@ -448,7 +450,7 @@ export class WebSocketService extends EventEmitter {
 
     // Close all connections
     if (this.io) {
-      await new Promise((resolve) => {
+      await new Promise(resolve => {
         this.io.close(() => {
           logger.info('WebSocket server closed');
           resolve();

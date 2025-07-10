@@ -102,8 +102,8 @@ describe('Voting API Integration Tests', () => {
         .post('/api/voting/sessions')
         .set('Authorization', 'Bearer test-token')
         .send({
-          eventId: 'event-123',
-          talkId: 'talk-456',
+          eventId: '123e4567-e89b-12d3-a456-426614174000',
+          talkId: '456e4567-e89b-12d3-a456-426614174001',
           duration: 60
         });
 
@@ -113,8 +113,8 @@ describe('Voting API Integration Tests', () => {
         session: mockSession
       });
       expect(mockVotingService.createSession).toHaveBeenCalledWith({
-        eventId: 'event-123',
-        talkId: 'talk-456',
+        eventId: '123e4567-e89b-12d3-a456-426614174000',
+        talkId: '456e4567-e89b-12d3-a456-426614174001',
         duration: 60,
         createdBy: 'test-user-123'
       });
@@ -139,7 +139,7 @@ describe('Voting API Integration Tests', () => {
 
       expect(response.status).toBe(400);
       expect(response.body.errors).toBeDefined();
-      expect(response.body.errors[0].msg).toBe('Event ID is required');
+      expect(response.body.errors[0].msg).toBe('Event ID must be a valid UUID');
     });
 
     it('should validate duration range', async () => {
@@ -147,8 +147,8 @@ describe('Voting API Integration Tests', () => {
         .post('/api/voting/sessions')
         .set('Authorization', 'Bearer test-token')
         .send({
-          eventId: 'event-123',
-          talkId: 'talk-456',
+          eventId: '123e4567-e89b-12d3-a456-426614174000',
+          talkId: '456e4567-e89b-12d3-a456-426614174001',
           duration: 400 // Too long
         });
 

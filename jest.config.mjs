@@ -14,6 +14,7 @@ export default {
     '/tests/accessibility/',
     '/tests/unit/quality-gates',
     '/tests/unit/services/database',
+    '/tests/unit/cdk/',
     '/tests/integration/notifications.test.js',
     '/tests/integration/multiEvents.test.js',
     '/cdk/cdk.out/'

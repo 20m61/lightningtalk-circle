@@ -1,225 +1,397 @@
 # CLAUDE.md
 
-This file provides guidance to Claude Code (claude.ai/code) when working with
-code in this repository.
+このファイルは、このリポジトリでコードを扱う際のClaude
+Code（claude.ai/code）向けのガイダンスを提供します。
 
-## Project Overview
+## プロジェクト概要
 
-Lightning Talk Circle is a comprehensive web application for managing Lightning
-Talk events. The project supports multiple deployment modes:
+Lightning Talk
+Circleは、ライトニングトークイベントを管理するための包括的なWebアプリケーションです。プロジェクトは複数のデプロイメントモードをサポートしています：
 
-1. **Static Frontend**: Basic HTML/CSS/JS in `public/` (functioning event
-   landing page)
-2. **Node.js Backend**: Express.js API server in `server/` with GitHub
-   integration
-3. **WordPress Theme**: Custom child theme based on Cocoon in `wordpress/`
-4. **Modern WordPress Theme**: Next-generation theme in `lightningtalk-modern/`
-   (monorepo structure)
+1. **静的フロントエンド**:
+   `public/`内の基本的なHTML/CSS/JS（機能するイベントランディングページ）
+2. **Node.jsバックエンド**: GitHub統合を備えたExpress.js
+   APIサーバー（`server/`）
+3. **WordPressテーマ**: Cocoonベースのカスタム子テーマ（`wordpress/`）
+4. **モダンWordPressテーマ**:
+   TypeScript/モノレポ構造の次世代テーマ（`lightningtalk-modern/`）
+5. **AWSサーバーレス**: クラウドデプロイメント用のCDKベースインフラストラクチャ
 
-## Essential Commands
+## 必須コマンド
 
-### Main Development
+### メイン開発
 
 ```bash
-# Start development server
-npm run dev                    # Node.js server with nodemon
-npm run dev:seed              # Development server with sample data
+# 開発サーバーの起動
+npm run dev                    # nodemonを使用したNode.jsサーバー
+npm run dev:seed              # サンプルデータ付き開発サーバー
 
-# Testing
-npm test                      # Run all tests (Jest)
-npm run test:unit            # Unit tests only
-npm run test:integration     # Integration tests only
-npm run test:e2e             # E2E tests with Playwright
-npm run test:coverage        # Test coverage report
-npm run test:watch           # Watch mode for TDD
+# テスト
+npm test                      # すべてのテストを実行（Jest）
+npm run test:unit            # ユニットテストのみ
+npm run test:integration     # 統合テストのみ
+npm run test:e2e             # PlaywrightによるE2Eテスト
+npm run test:coverage        # テストカバレッジレポート
+npm run test:watch           # TDD用のウォッチモード
 
-# Code quality
-npm run lint                 # ESLint (if configured)
-npm run format:check         # Prettier formatting check
+# コード品質
+npm run lint                 # ESLint（設定されている場合）
+npm run format:check         # Prettierフォーマットチェック
 
-# Issue management
-npm run create-issues        # Create GitHub issues from data
-npm run verify-issues        # Verify existing issues
-npm run workflow             # Interactive workflow CLI
-npm run auto-workflow        # Automated development workflow
+# イシュー管理
+npm run create-issues        # データからGitHubイシューを作成
+npm run verify-issues        # 既存のイシューを検証
+npm run workflow             # インタラクティブなワークフローCLI
+npm run auto-workflow        # 自動化された開発ワークフロー
 ```
 
-### Docker Development
+### Docker開発
 
 ```bash
-# Docker development with proper permissions
-./scripts/docker-dev.sh init # Initialize permissions (first time only)
-./scripts/docker-dev.sh up    # Start development environment
-./scripts/docker-dev.sh down  # Stop all containers
-./scripts/docker-dev.sh shell # Open shell in app container
-./scripts/docker-dev.sh logs  # Show application logs
+# 適切な権限でのDocker開発
+./scripts/docker-dev.sh init # 権限の初期化（初回のみ）
+./scripts/docker-dev.sh up    # 開発環境の起動
+./scripts/docker-dev.sh down  # すべてのコンテナを停止
+./scripts/docker-dev.sh shell # アプリコンテナでシェルを開く
+./scripts/docker-dev.sh logs  # アプリケーションログを表示
 
-# Alternative Docker commands
-./scripts/docker-dev.sh full   # Full environment with WordPress
-./scripts/docker-dev.sh modern # Modern theme development
-./scripts/docker-dev.sh clean  # Clean up containers and volumes
+# 代替Dockerコマンド
+./scripts/docker-dev.sh full   # WordPress付きフル環境
+./scripts/docker-dev.sh modern # モダンテーマ開発
+./scripts/docker-dev.sh clean  # コンテナとボリュームのクリーンアップ
 ```
 
-### WordPress Development
+### WordPress開発
 
 ```bash
-# WordPress theme development
-npm run wp:dev               # Gulp development with BrowserSync
-npm run wp:build             # Production build for WordPress
-npm run wp:package           # Build and package theme for deployment
-npm run wp:assets            # Process images and generate WebP
+# WordPressテーマ開発
+npm run wp:dev               # BrowserSync付きGulp開発
+npm run wp:build             # WordPress用本番ビルド
+npm run wp:package           # デプロイメント用にテーマをビルド＆パッケージ
+npm run wp:assets            # 画像処理とWebP生成
 
-# Theme building
-npm run build:theme          # Build WordPress theme
-npm run build:theme:clean    # Clean dist directory
-npm run build:theme:analyze  # Analyze build output
+# テーマビルド
+npm run build:theme          # WordPressテーマのビルド
+npm run build:theme:clean    # distディレクトリのクリーン
+npm run build:theme:analyze  # ビルド出力の分析
 ```
 
-### Modern WordPress (lightningtalk-modern/)
+### モダンWordPress (lightningtalk-modern/)
 
 ```bash
-# Monorepo development
-cd lightningtalk-modern && npm run dev           # All services concurrently
-cd lightningtalk-modern && npm run build         # Build all packages
-cd lightningtalk-modern && npm run test          # Full test suite
+# モノレポ開発
+cd lightningtalk-modern && npm run dev           # すべてのサービスを同時実行
+cd lightningtalk-modern && npm run build         # すべてのパッケージをビルド
+cd lightningtalk-modern && npm run test          # フルテストスイート
 cd lightningtalk-modern && npm run lint          # TypeScript/ESLint
-cd lightningtalk-modern && npm run type-check    # TypeScript checking
+cd lightningtalk-modern && npm run type-check    # TypeScriptチェック
 
-# WordPress Docker environment
-cd lightningtalk-modern && npm run wp:up         # Start WordPress/MySQL
-cd lightningtalk-modern && npm run wp:down       # Stop containers
-cd lightningtalk-modern && npm run wp:reset      # Reset database
+# WordPress Docker環境
+cd lightningtalk-modern && npm run wp:up         # WordPress/MySQLの起動
+cd lightningtalk-modern && npm run wp:down       # コンテナの停止
+cd lightningtalk-modern && npm run wp:reset      # データベースのリセット
 ```
 
-### Workflow Automation
+### AWS CDKデプロイメント
 
 ```bash
-npm run worktree             # Set up git worktree for parallel development
-npm run analyze              # Analyze instructions for implementation
-npm run quality              # Run quality gates script
+# CDKインフラストラクチャ管理
+npm run cdk:install          # CDK依存関係のインストール
+npm run cdk:build            # CDK TypeScriptのビルド
+npm run cdk:synth            # CloudFormationテンプレートの合成
+npm run cdk:diff             # デプロイメント変更の表示
+npm run cdk:deploy:dev       # 開発環境のデプロイ
+npm run cdk:deploy:staging   # ステージング環境のデプロイ
+npm run cdk:deploy:prod      # 本番環境のデプロイ
+npm run cdk:destroy:dev      # 開発スタックの削除
+
+# デプロイメントテスト
+./scripts/cdk-deployment-test.sh  # CDKデプロイメントの検証
 ```
 
-## Architecture & Key Components
+### ワークフロー自動化
 
-### Root Level Structure
+```bash
+npm run worktree             # 並行開発用のgit worktreeをセットアップ
+npm run analyze              # 実装用の指示を分析
+npm run quality              # 品質ゲートスクリプトの実行
+npm run env:switch           # 環境間をインタラクティブに切り替え
+npm run env:backup           # 現在の環境設定をバックアップ
+```
 
-- `public/` - Static frontend with functioning event landing page
-  - Event information display with online/offline participation survey
-  - Registration modals and emergency contact features
-  - Chat widget with localStorage persistence
-  - Google Maps integration
-- `server/` - Express.js backend with modular architecture
-- `wordpress/` - Traditional WordPress child theme (Cocoon-based)
-- `lightningtalk-modern/` - Modern WordPress theme with TypeScript/monorepo
-- `scripts/` - Comprehensive automation and workflow tools
-- `docs/` - Extensive project documentation
+## アーキテクチャと主要コンポーネント
 
-### Backend Services (server/)
+### ルートレベル構造
 
-- **EmailService**: Email templates and sending logic
-- **GitHub Integration**: Issue creation and management via Octokit
-- **Event Management**: Event CRUD operations
-- **Participant Management**: Registration and survey handling
+- `public/` - 機能するイベントランディングページを含む静的フロントエンド
+  - オンライン/オフライン参加調査付きイベント情報表示
+  - 登録モーダルと緊急連絡先機能
+  - localStorageを使用したチャットウィジェット
+  - Google Maps統合
+- `server/` - モジュラーアーキテクチャのExpress.jsバックエンド
+- `wordpress/` - 従来のWordPress子テーマ（Cocoonベース）
+- `lightningtalk-modern/` - TypeScript/モノレポのモダンWordPressテーマ
+- `cdk/` - AWS CDKインフラストラクチャ・アズ・コード
+- `scripts/` - 包括的な自動化とワークフローツール
+- `docs/` - 詳細なプロジェクトドキュメント
 
-### Modern WordPress Architecture (lightningtalk-modern/)
+### バックエンドサービス (server/)
 
-- **Monorepo Structure**: Workspaces-based organization
-- **packages/theme/**: Main WordPress theme with Vite
-- **packages/admin-panel/**: React-based admin interface
-- **packages/components/**: Shared UI components with Storybook
-- **TypeScript**: Full type safety across packages
+- **EmailService**: マルチプロバイダーメールサポート（Gmail、SendGrid、AWS
+  SES、SMTP、Mailgun）
+- **GitHub統合**: Octokitを使用したイシュー作成と管理
+- **イベント管理**: バリデーション付きイベントCRUD操作
+- **参加者管理**: 登録と調査の処理
+- **認証**: リフレッシュトークン付きJWTベース認証
+- **データベース**: ファイルベースとDynamoDBストレージのデュアルサポート
+- **リアルタイム**: ライブアップデート用Socket.io統合
+- **APIドキュメント**: `/api/docs`のOpenAPI/Swagger
 
-### Build Systems
+### モダンWordPressアーキテクチャ (lightningtalk-modern/)
 
-- **Gulp**: WordPress asset processing, SASS compilation, image optimization
-- **Vite**: Modern build system for lightningtalk-modern
-- **Webpack**: Legacy build support
-- **Storybook**: Component library development
+- **モノレポ構造**: Workspacesベースの組織
+- **packages/theme/**: Viteを使用したメインWordPressテーマ
+- **packages/admin-panel/**: Reactベースの管理インターフェース
+- **packages/components/**: Storybookを使用した共有UIコンポーネント
+- **TypeScript**: パッケージ全体での完全な型安全性
 
-## Environment Configuration
+### AWSインフラストラクチャ (cdk/)
 
-### Root Project (.env)
+- **SecretsStack**: AWS Secrets
+  Manager経由ですべてのアプリケーションシークレットを管理
+- **DatabaseStack**: 適切なGSIとVPC設定を持つDynamoDBテーブル
+- **ApiStack**: ALB、オートスケーリング、コンテナレジストリを備えたECS Fargate
+- **StaticSiteStack**: グローバルCDN配信用のS3 + CloudFront
+- **MonitoringStack**: CloudWatchダッシュボードとSNSアラート
+- **WafStack**: セキュリティ用Webアプリケーションファイアウォール
+- **CostMonitoringStack**: 予算アラートとコスト最適化
+
+### Dockerサービス
+
+開発環境には以下が含まれます：
+
+- **app**: Node.jsアプリケーションコンテナ
+- **postgres**: PostgreSQLデータベース（開発のみ）
+- **redis**: セッション/レート制限用Redisキャッシュ
+- **pgadmin**: データベース管理UI
+
+### ビルドシステム
+
+- **Gulp**: WordPressアセット処理、SASSコンパイル、画像最適化
+- **Vite**: lightningtalk-modern用モダンビルドシステム
+- **Webpack**: レガシービルドサポート
+- **Storybook**: コンポーネントライブラリ開発
+- **Docker**: 本番最適化用マルチステージビルド
+
+## 環境設定
+
+### 完全な環境変数 (.env)
 
 ```env
-PORT=3000                           # Server port
-GITHUB_TOKEN=your_github_token      # For issue automation
-GITHUB_OWNER=your_username          # GitHub repository owner
-GITHUB_REPO=your_repo               # GitHub repository name
-EMAIL_SERVICE=gmail                 # Email service provider
-EMAIL_USER=your_email               # Email credentials
-EMAIL_PASS=your_password           # Email password
-FEEDBACK_URL=https://forms.google.com/...  # Google Forms URL
+# サーバー設定
+NODE_ENV=development
+PORT=3000
+SITE_NAME="なんでもライトニングトーク"
+SITE_URL="http://localhost:3000"
+
+# GitHub統合（イシュー自動化に必要）
+GITHUB_TOKEN=your_github_token
+GITHUB_OWNER=your_username
+GITHUB_REPO=your_repo
+
+# メール設定（プロバイダーを1つ選択）
+EMAIL_ENABLED=false
+EMAIL_FROM="noreply@lightningtalk.example.com"
+EMAIL_SERVICE=gmail  # オプション: gmail, sendgrid, aws-ses, smtp, mailgun, mock
+
+# データベース設定
+DATABASE_TYPE=file  # オプション: file, dynamodb
+# DynamoDB用（AWSデプロイメント）：
+# AWS_REGION=us-east-1
+# DYNAMODB_EVENTS_TABLE=lightningtalk-circle-prod-events
+# DYNAMODB_PARTICIPANTS_TABLE=lightningtalk-circle-prod-participants
+# DYNAMODB_USERS_TABLE=lightningtalk-circle-prod-users
+# DYNAMODB_TALKS_TABLE=lightningtalk-circle-prod-talks
+
+# セキュリティ設定（安全な値を生成）
+JWT_SECRET=your_jwt_secret_here
+SESSION_SECRET=your_session_secret_here
+JWT_EXPIRES_IN=24h
+
+# CORS設定
+CORS_ORIGINS=http://localhost:3000,http://localhost:8080
+
+# 管理者ユーザー（初期セットアップ）
+ADMIN_EMAIL=admin@lightningtalk.local
+ADMIN_PASSWORD=ChangeThisPassword123!
+ADMIN_NAME=System Administrator
+
+# レート制限
+RATE_LIMIT_WINDOW_MS=900000  # 15分
+RATE_LIMIT_MAX_REQUESTS=100
+REGISTRATION_LIMIT_PER_HOUR=5
+
+# 機能フラグ
+AUTO_MERGE=false
+REQUIRE_REVIEW=true
+REQUIRE_STATUS_CHECKS=true
+SEND_REMINDER_EMAILS=true
+SEND_CONFIRMATION_EMAILS=true
+
+# 外部サービス
+FEEDBACK_URL=https://docs.google.com/forms/...
+GOOGLE_ANALYTICS_ID=
+SENTRY_DSN=
+SLACK_WEBHOOK_URL=
 ```
 
-### WordPress Development
+### WordPress開発
 
-- Gulp configured for Cocoon child theme development
-- BrowserSync proxy: `http://localhost:8888` (configurable)
-- Asset optimization for production deployment
+- Cocoon子テーマ開発用に設定されたGulp
+- BrowserSyncプロキシ: `http://localhost:8888`（設定可能）
+- 本番デプロイメント用アセット最適化
 
-## Testing Strategy
+## テスト戦略
 
-### Test Coverage Requirements
+### テストフレームワーク設定
 
-- Maintain 80% coverage threshold
-- Unit tests: 70% of test suite
-- Integration tests: 25% of test suite
-- E2E tests: 5% of test suite
+- **Jest**: ユニットおよび統合テスト
+  - カバレッジ閾値: 全体80%、ファイルごと70%
+  - テスト環境: nodeとjsdom
+  - 外部サービス用モックサポート
+- **Playwright**: E2Eテスト
+  - ブラウザ: Chromium、Firefox、WebKit
+  - モバイルビューポート: iPhone 12、Pixel 5
+  - 失敗時のスクリーンショット
+  - ビデオ録画可能
 
-### Test Locations
+### テストの場所
 
-- `tests/unit/` - Jest unit tests
-- `tests/integration/` - Integration tests
-- `tests/e2e/` - Playwright E2E tests
-- `lightningtalk-modern/tests/` - Modern theme tests
+- `tests/unit/` - Jestユニットテスト
+- `tests/integration/` - 統合テスト
+- `tests/e2e/` - Playwright E2Eテスト
+- `lightningtalk-modern/tests/` - モダンテーマテスト
 
-## Development Workflow
+### テストカバレッジ要件
 
-### Git Workflow
+- 80%のカバレッジ閾値を維持
+- ユニットテスト: テストスイートの70%
+- 統合テスト: テストスイートの25%
+- E2Eテスト: テストスイートの5%
 
-- Uses git worktrees for parallel development
-- Main branch: Primary development
-- Feature branches: Created via worktrees
-- All work tracked via GitHub issues
+## CI/CDとGitHub Actions
 
-### Issue Management
+### ワークフロー
 
-- Automated issue creation from `docs/project/issues-data.json`
-- Standardized labels and templates
-- Issue verification and quality gates
-- Comprehensive documentation in `docs/project/`
+1. **ci-cd.yml**: メインパイプライン
+   - テスト実行（ユニット、統合、E2E）
+   - npm auditによるセキュリティスキャン
+   - コードカバレッジレポート
+   - 自動バージョニング
+   - Dockerイメージビルド
+   - CDKデプロイメント（mainブランチ）
 
-### Security & Performance
+2. **auto-workflow.yml**: 開発自動化
+   - イシュー割り当てでトリガー
+   - フィーチャーブランチ作成
+   - 品質ゲート実行
+   - イシューステータス更新
 
-- Helmet.js security headers
-- Rate limiting on API endpoints
-- Input validation with express-validator
-- CORS configuration
-- Image optimization and WebP generation
-- WCAG 2.1 AA accessibility compliance
+3. **cdk-deploy.yml**: インフラストラクチャデプロイメント
+   - 環境固有のデプロイメント
+   - スタック検証
+   - コスト見積もり
 
-## WordPress Integration Patterns
+4. **release.yml**: リリース管理
+   - セマンティックバージョニング
+   - 変更履歴生成
+   - GitHubリリース作成
 
-### Traditional Theme (wordpress/)
+## 開発ワークフロー
 
-1. Use Gulp tasks for asset compilation: `npm run wp:dev`
-2. Follow Cocoon child theme structure
-3. Build for production: `npm run wp:build`
-4. Package for deployment: `npm run wp:package`
+### Gitワークフロー
 
-### Modern Theme (lightningtalk-modern/)
+- 並行開発用にgit worktreesを使用
+- メインブランチ: プライマリ開発
+- フィーチャーブランチ: worktrees経由で作成
+- すべての作業はGitHubイシューで追跡
+- テンプレート付き自動PR作成
 
-1. TypeScript-first development
-2. Component-driven architecture with Storybook
-3. Vite for fast development and optimized builds
-4. Docker WordPress environment for testing
+### イシュー管理
 
-## Key Development Principles
+- `docs/project/issues-data.json`からの自動イシュー作成
+- 標準化されたラベルとテンプレート
+- イシュー検証と品質ゲート
+- `docs/project/`内の包括的なドキュメント
 
-- **Automation-First**: Extensive scripts for repetitive tasks
-- **Issue-Driven Development**: All work tracked via GitHub issues
-- **Multi-Platform Support**: Static, Node.js, and WordPress deployments
-- **Type Safety**: TypeScript in modern components
-- **Accessibility**: WCAG 2.1 AA compliance required
-- **Performance**: Image optimization, asset minification, WebP support
-- **Security**: Input validation, rate limiting, security headers
+### セキュリティとパフォーマンス
+
+- Helmet.jsセキュリティヘッダー
+- APIエンドポイントのレート制限
+- express-validatorによる入力検証
+- CORS設定
+- リフレッシュトークン付きJWT認証
+- 画像最適化とWebP生成
+- WCAG 2.1 AAアクセシビリティ準拠
+- 本番環境でのWAF保護
+
+## データベース管理
+
+### デュアルデータベースサポート
+
+1. **ファイルベース**（開発）
+   - `data/`ディレクトリ内のJSONファイル
+   - シンプル、セットアップ不要
+   - ローカル開発に適している
+
+2. **DynamoDB**（本番）
+   - サーバーレス、スケーラブル
+   - クエリ用グローバルセカンダリインデックス
+   - オンデマンド課金
+   - ポイントインタイムリカバリー
+
+### 移行
+
+- データ移行には`scripts/migrate-to-dynamodb.js`を使用
+- 移行前の自動バックアップ
+- ロールバックサポート
+
+## APIリファレンス
+
+- OpenAPIドキュメント: `http://localhost:3000/api/docs`
+- 認証: JWT Bearerトークン
+- レート制限: 15分あたり100リクエスト
+- エンドポイント:
+  - `/api/auth/*` - 認証
+  - `/api/events/*` - イベント管理
+  - `/api/participants/*` - 登録
+  - `/api/talks/*` - トーク提出
+  - `/api/admin/*` - 管理機能
+
+## トラブルシューティング
+
+### 一般的な問題
+
+1. **Docker権限**: `./scripts/docker-dev.sh init`を実行
+2. **ポート競合**: .envの`PORT`を確認
+3. **データベース接続**: DATABASE_TYPE設定を確認
+4. **メール送信**: EMAIL_SERVICE設定を確認
+5. **GitHub API制限**: 有効なGITHUB_TOKENを確認
+
+### デバッグモード
+
+- 詳細ログには`DEBUG=lightningtalk:*`を設定
+- `logs/`ディレクトリのログを確認
+- 集中ログ表示には`npm run logs`を使用
+
+## 主要な開発原則
+
+- **自動化優先**: 繰り返しタスク用の広範なスクリプト
+- **イシュー駆動開発**: すべての作業はGitHubイシューで追跡
+- **マルチプラットフォームサポート**: 静的、Node.js、WordPress、AWSデプロイメント
+- **型安全性**: モダンコンポーネントでのTypeScript
+- **アクセシビリティ**: WCAG 2.1 AA準拠が必要
+- **パフォーマンス**: 画像最適化、アセット圧縮、WebPサポート
+- **セキュリティ**: 入力検証、レート制限、セキュリティヘッダー、WAF
+- **観測可能性**: 包括的なモニタリングとアラート
+- **コスト意識**: 予算モニタリングと最適化

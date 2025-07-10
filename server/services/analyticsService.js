@@ -536,7 +536,7 @@ class AnalyticsService {
   }
 
   findPeakRegistrationDay(timeline) {
-    if (!timeline.length) {
+    if (!timeline || !timeline.length) {
       return null;
     }
     return timeline.reduce((peak, current) =>
@@ -829,9 +829,11 @@ class AnalyticsService {
 
       return {
         totalFeedback: results.reduce((sum, r) => sum + r.count, 0),
-        averageRating: results.length > 0 ? 
-          results.reduce((sum, r) => sum + (r.rating * r.count), 0) / 
-          results.reduce((sum, r) => sum + r.count, 0) : 0,
+        averageRating:
+          results.length > 0
+            ? results.reduce((sum, r) => sum + r.rating * r.count, 0) /
+              results.reduce((sum, r) => sum + r.count, 0)
+            : 0,
         distribution: results
       };
     } catch (error) {
@@ -849,7 +851,16 @@ class AnalyticsService {
       return 'No participants data available';
     }
 
-    const headers = ['ID', 'Name', 'Email', 'Participation Type', 'Organization', 'Location', 'Experience Level', 'Created At'];
+    const headers = [
+      'ID',
+      'Name',
+      'Email',
+      'Participation Type',
+      'Organization',
+      'Location',
+      'Experience Level',
+      'Created At'
+    ];
     const csvRows = [headers.join(',')];
 
     participants.forEach(p => {
@@ -874,7 +885,17 @@ class AnalyticsService {
       return 'No talks data available';
     }
 
-    const headers = ['ID', 'Title', 'Speaker Name', 'Speaker Email', 'Category', 'Duration', 'Status', 'Experience Level', 'Created At'];
+    const headers = [
+      'ID',
+      'Title',
+      'Speaker Name',
+      'Speaker Email',
+      'Category',
+      'Duration',
+      'Status',
+      'Experience Level',
+      'Created At'
+    ];
     const csvRows = [headers.join(',')];
 
     talks.forEach(t => {
@@ -965,7 +986,7 @@ class AnalyticsService {
   // Additional helper methods for reports
   generateRecommendations(stats) {
     const recommendations = [];
-    
+
     if (stats.statistics.basic.summary.totalParticipants < 50) {
       recommendations.push({
         type: 'marketing',
@@ -1005,10 +1026,11 @@ class AnalyticsService {
 
   generateKeyInsights(stats) {
     const insights = [];
-    
-    const onlineParticipants = stats.statistics.participants.distribution.byType.find(t => t.type === 'online')?.count || 0;
+
+    const onlineParticipants =
+      stats.statistics.participants.distribution.byType.find(t => t.type === 'online')?.count || 0;
     const totalParticipants = stats.statistics.basic.summary.totalParticipants;
-    
+
     if (totalParticipants > 0) {
       const onlineRatio = (onlineParticipants / totalParticipants) * 100;
       insights.push(`オンライン参加者が${onlineRatio.toFixed(1)}%を占めています`);
@@ -1019,7 +1041,7 @@ class AnalyticsService {
 
   generateActionItems(stats) {
     const actionItems = [];
-    
+
     if (stats.statistics.basic.summary.pendingTalks > 0) {
       actionItems.push({
         action: '保留中の発表申込みを確認し、承認プロセスを進める',

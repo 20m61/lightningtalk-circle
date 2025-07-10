@@ -126,7 +126,12 @@ describe('WordPress Integration', () => {
         date: '2025-06-25T19:00:00+09:00'
       };
 
-      mockWordPressIntegration.fetchEventData.mockResolvedValue(mockEventData);
+      // Mock the fetchEventData to also simulate localStorage interaction
+      mockWordPressIntegration.fetchEventData.mockImplementation(async id => {
+        window.localStorage.setItem(`wp_event_${id}`, JSON.stringify(mockEventData));
+        return mockEventData;
+      });
+
       window.localStorage.getItem.mockReturnValue(null);
       window.localStorage.setItem.mockReturnValue(undefined);
 
