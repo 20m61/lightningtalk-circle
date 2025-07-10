@@ -1,6 +1,6 @@
 {
   "name": "lightningtalk-circle",
-  "version": "1.6.0",
+  "version": "1.7.0",
   "type": "module",
   "description": "Lightning Talk Circle - Issue Management",
   "scripts": {
