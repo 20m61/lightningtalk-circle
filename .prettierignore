@@ -72,6 +72,9 @@ LICENSE
 .gitignore
 .dockerignore
 
+# Shell scripts
+*.sh
+
 # Static theme directory - contains various file types
 theme/deploy.sh
 theme/robots.txt
