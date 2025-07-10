@@ -241,7 +241,7 @@ describe('VotingService', () => {
           voterId: 'voter-123',
           rating: 4
         })
-      ).rejects.toThrow('Already voted');
+      ).rejects.toThrow('User has already voted in this session');
     });
 
     it('should reject votes for non-existent session', async () => {

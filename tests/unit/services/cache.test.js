@@ -339,10 +339,11 @@ describe('CacheService', () => {
       
       cacheService.import(data);
       
-      expect(cacheService.get('key1')).toBe('value1');
+      // Check metadata before calling get (which increments hits)
+      const metaBeforeGet = cacheService.metadata.get('key1');
+      expect(metaBeforeGet.hits).toBe(5);
       
-      const meta = cacheService.metadata.get('key1');
-      expect(meta.hits).toBe(5);
+      expect(cacheService.get('key1')).toBe('value1');
     });
   });
 
@@ -366,7 +367,7 @@ describe('CacheService', () => {
       cacheService.on('set', setSpy);
       cacheService.on('delete', deleteSpy);
       
-      cacheService.set('key1', 'value1');
+      cacheService.set('key1', 'value1', 1000); // Set with explicit TTL
       cacheService.get('key1');
       cacheService.delete('key1');
       
