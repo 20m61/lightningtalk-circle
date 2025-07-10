@@ -3,11 +3,13 @@
  * WebSocketとServer-Sent Eventsを使用したリアルタイム通知機能
  */
 
-const EventEmitter = require('events');
-const { v4: uuidv4 } = require('uuid');
-const logger = require('../middleware/logger');
+import { EventEmitter } from 'events';
+import { v4 as uuidv4 } from 'uuid';
+import { createLogger } from '../utils/logger.js';
 
-class NotificationService extends EventEmitter {
+const logger = createLogger('notification-service');
+
+export class NotificationService extends EventEmitter {
   constructor() {
     super();
     this.clients = new Map(); // SSE クライアント管理
@@ -548,7 +550,7 @@ class NotificationService extends EventEmitter {
 }
 
 // シングルトンインスタンス
-const notificationService = new NotificationService();
+export const notificationService = new NotificationService();
 
 // 定期クリーンアップの開始
 notificationService.startPeriodicCleanup();
@@ -564,4 +566,4 @@ process.on('SIGTERM', () => {
   process.exit(0);
 });
 
-module.exports = notificationService;
+export default notificationService;
