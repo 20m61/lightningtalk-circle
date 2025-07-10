@@ -89,9 +89,11 @@
     "multer": "^2.0.1",
     "nodemailer": "^7.0.4",
     "swagger-jsdoc": "^6.2.8",
-    "swagger-ui-express": "^5.0.1"
+    "swagger-ui-express": "^5.0.1",
+    "uuid": "^11.1.0"
   },
   "devDependencies": {
+    "@playwright/test": "^1.53.2",
     "eslint": "^8.0.0",
     "jest": "^30.0.4",
     "jest-environment-node": "^30.0.4",

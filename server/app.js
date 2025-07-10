@@ -19,6 +19,7 @@ import adminRouter from './routes/admin.js';
 import healthRouter from './routes/health.js';
 import authRouter from './routes/auth.js';
 import swaggerRouter from './routes/swagger.js';
+import votingRouter from './routes/voting.js';
 
 // Middleware
 import { errorHandler, notFoundHandler } from './middleware/errorHandler.js';
@@ -29,6 +30,7 @@ import { authenticateToken, requireAdmin } from './middleware/auth.js';
 import { DatabaseService } from './services/database.js';
 import { EmailService } from './services/email.js';
 import { EventService } from './services/event.js';
+import { VotingService } from './services/votingService.js';
 
 dotenv.config();
 
@@ -58,10 +60,15 @@ class LightningTalkServer {
     // Initialize event service
     this.eventService = new EventService(this.database, this.emailService);
 
+    // Initialize voting service
+    this.votingService = new VotingService(this.database);
+    await this.votingService.cleanupExpiredSessions();
+
     // Make services available to routes
     this.app.locals.database = this.database;
     this.app.locals.emailService = this.emailService;
     this.app.locals.eventService = this.eventService;
+    this.app.locals.votingService = this.votingService;
   }
 
   setupMiddleware() {
@@ -176,6 +183,7 @@ class LightningTalkServer {
     this.app.use('/api/events', eventsRouter);
     this.app.use('/api/participants', participantsRouter);
     this.app.use('/api/talks', talksRouter);
+    this.app.use('/api/voting', votingRouter);
     this.app.use('/api/admin', authenticateToken, requireAdmin, adminRouter);
     this.app.use('/api/health', healthRouter);
 

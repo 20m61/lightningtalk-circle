@@ -12,6 +12,11 @@ process.env.PORT = '3001';
 process.env.GITHUB_TOKEN = 'test-token';
 process.env.GITHUB_OWNER = 'test-owner';
 process.env.GITHUB_REPO = 'test-repo';
+process.env.JWT_SECRET = 'test-jwt-secret-for-testing-only';
+process.env.REFRESH_TOKEN_SECRET = 'test-refresh-secret-for-testing-only';
+process.env.EMAIL_SERVICE = 'test';
+process.env.EMAIL_USER = 'test@example.com';
+process.env.EMAIL_PASS = 'test-password';
 
 // グローバルタイムアウト設定
 jest.setTimeout(10000);

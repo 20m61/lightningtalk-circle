@@ -1,0 +1,291 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>スピーカーダッシュボード | なんでもライトニングトーク</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="css/style.css" />
+    <link rel="stylesheet" href="css/speaker-dashboard.css" />
+  </head>
+  <body>
+    <header>
+      <nav class="container">
+        <div class="logo">⚡ なんでもLT</div>
+        <ul class="nav-links">
+          <li><a href="/">ホーム</a></li>
+          <li><a href="/speaker-dashboard.html" class="active">ダッシュボード</a></li>
+          <li><a href="/presentations.html">アーカイブ</a></li>
+          <li><a href="/#contact">お問い合わせ</a></li>
+        </ul>
+        <div class="user-menu">
+          <img src="/images/default-avatar.png" alt="プロフィール" class="user-avatar" />
+          <span class="user-name">山田太郎</span>
+          <button class="logout-btn">ログアウト</button>
+        </div>
+        <div class="mobile-menu-toggle">
+          <span></span>
+          <span></span>
+          <span></span>
+        </div>
+      </nav>
+    </header>
+
+    <main class="dashboard-main">
+      <div class="container dashboard-container">
+        <!-- サイドバー -->
+        <aside class="dashboard-sidebar">
+          <div class="speaker-profile">
+            <img src="/images/default-avatar.png" alt="プロフィール画像" class="profile-image" />
+            <h3 class="profile-name">山田太郎</h3>
+            <p class="profile-role">スピーカー</p>
+            <div class="speaker-stats">
+              <div class="stat-item">
+                <span class="stat-value">5</span>
+                <span class="stat-label">発表回数</span>
+              </div>
+              <div class="stat-item">
+                <span class="stat-value">4.8</span>
+                <span class="stat-label">平均評価</span>
+              </div>
+            </div>
+          </div>
+
+          <nav class="sidebar-nav">
+            <a href="#overview" class="nav-item active">
+              <span class="nav-icon">📊</span>
+              <span class="nav-text">概要</span>
+            </a>
+            <a href="#my-talks" class="nav-item">
+              <span class="nav-icon">🎤</span>
+              <span class="nav-text">私の発表</span>
+            </a>
+            <a href="#upcoming" class="nav-item">
+              <span class="nav-icon">📅</span>
+              <span class="nav-text">予定</span>
+            </a>
+            <a href="#feedback" class="nav-item">
+              <span class="nav-icon">💬</span>
+              <span class="nav-text">フィードバック</span>
+            </a>
+            <a href="#resources" class="nav-item">
+              <span class="nav-icon">📚</span>
+              <span class="nav-text">リソース</span>
+            </a>
+            <a href="#settings" class="nav-item">
+              <span class="nav-icon">⚙️</span>
+              <span class="nav-text">設定</span>
+            </a>
+          </nav>
+        </aside>
+
+        <!-- メインコンテンツ -->
+        <div class="dashboard-content">
+          <!-- 概要セクション -->
+          <section id="overview" class="dashboard-section active">
+            <h2 class="section-title">ダッシュボード概要</h2>
+
+            <div class="stats-grid">
+              <div class="stat-card">
+                <div class="stat-icon">🎯</div>
+                <div class="stat-content">
+                  <h4>今月の発表</h4>
+                  <p class="stat-number">2</p>
+                </div>
+              </div>
+              <div class="stat-card">
+                <div class="stat-icon">👥</div>
+                <div class="stat-content">
+                  <h4>総視聴者数</h4>
+                  <p class="stat-number">324</p>
+                </div>
+              </div>
+              <div class="stat-card">
+                <div class="stat-icon">⭐</div>
+                <div class="stat-content">
+                  <h4>平均評価</h4>
+                  <p class="stat-number">4.8/5.0</p>
+                </div>
+              </div>
+              <div class="stat-card">
+                <div class="stat-icon">💬</div>
+                <div class="stat-content">
+                  <h4>Q&A回答数</h4>
+                  <p class="stat-number">18</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="upcoming-talks">
+              <h3>次回の発表</h3>
+              <div class="talk-card upcoming">
+                <div class="talk-date">2025年7月15日（火）19:30</div>
+                <h4 class="talk-title">Vimの効率的な使い方 - 初心者から上級者まで</h4>
+                <div class="talk-meta">
+                  <span class="event-name">第1回 なんでもライトニングトーク</span>
+                  <span class="talk-duration">5分</span>
+                </div>
+                <div class="talk-actions">
+                  <button class="btn btn-primary">スライドをアップロード</button>
+                  <button class="btn btn-secondary">練習タイマー</button>
+                </div>
+              </div>
+            </div>
+
+            <div class="recent-feedback">
+              <h3>最近のフィードバック</h3>
+              <div class="feedback-list">
+                <div class="feedback-item">
+                  <div class="feedback-header">
+                    <span class="feedback-author">匿名</span>
+                    <span class="feedback-date">2025年6月20日</span>
+                  </div>
+                  <div class="feedback-rating">⭐⭐⭐⭐⭐</div>
+                  <p class="feedback-text">
+                    とても分かりやすい説明でした！実例が豊富で参考になりました。
+                  </p>
+                </div>
+                <div class="feedback-item">
+                  <div class="feedback-header">
+                    <span class="feedback-author">佐藤さん</span>
+                    <span class="feedback-date">2025年6月20日</span>
+                  </div>
+                  <div class="feedback-rating">⭐⭐⭐⭐</div>
+                  <p class="feedback-text">
+                    時間配分が素晴らしかったです。もう少し応用例があるとさらに良いと思います。
+                  </p>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <!-- 私の発表セクション -->
+          <section id="my-talks" class="dashboard-section">
+            <h2 class="section-title">私の発表</h2>
+
+            <div class="talks-filters">
+              <select class="filter-select">
+                <option value="all">すべて</option>
+                <option value="upcoming">予定</option>
+                <option value="past">過去</option>
+                <option value="draft">下書き</option>
+              </select>
+              <button class="btn btn-primary">新規発表を作成</button>
+            </div>
+
+            <div class="talks-list">
+              <div class="talk-item">
+                <div class="talk-status upcoming">予定</div>
+                <div class="talk-info">
+                  <h4>Vimの効率的な使い方 - 初心者から上級者まで</h4>
+                  <p class="talk-event">第1回 なんでもライトニングトーク - 2025年7月15日</p>
+                  <div class="talk-tags">
+                    <span class="tag">プログラミング</span>
+                    <span class="tag">効率化</span>
+                    <span class="tag">エディタ</span>
+                  </div>
+                </div>
+                <div class="talk-actions">
+                  <button class="btn-icon" title="編集"><span>✏️</span></button>
+                  <button class="btn-icon" title="プレビュー"><span>👁️</span></button>
+                  <button class="btn-icon" title="削除"><span>🗑️</span></button>
+                </div>
+              </div>
+
+              <div class="talk-item">
+                <div class="talk-status past">完了</div>
+                <div class="talk-info">
+                  <h4>GitHubActions入門 - CI/CDを始めよう</h4>
+                  <p class="talk-event">Tech Meetup #5 - 2025年6月20日</p>
+                  <div class="talk-metrics">
+                    <span>👥 87人視聴</span>
+                    <span>⭐ 4.9評価</span>
+                    <span>💬 12質問</span>
+                  </div>
+                </div>
+                <div class="talk-actions">
+                  <button class="btn-icon" title="統計を見る"><span>📊</span></button>
+                  <button class="btn-icon" title="動画を見る"><span>🎥</span></button>
+                  <button class="btn-icon" title="フィードバック"><span>💬</span></button>
+                </div>
+              </div>
+
+              <div class="talk-item">
+                <div class="talk-status draft">下書き</div>
+                <div class="talk-info">
+                  <h4>未完成：Rustで作るWebアプリケーション</h4>
+                  <p class="talk-event">イベント未定</p>
+                  <div class="progress-bar">
+                    <div class="progress-fill" style="width: 60%"></div>
+                  </div>
+                  <p class="progress-text">60% 完了</p>
+                </div>
+                <div class="talk-actions">
+                  <button class="btn-icon" title="編集を続ける"><span>✏️</span></button>
+                  <button class="btn-icon" title="削除"><span>🗑️</span></button>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <!-- 練習タイマーモーダル -->
+          <div id="practiceTimerModal" class="modal">
+            <div class="modal-content timer-modal">
+              <span class="close">&times;</span>
+              <h2>練習タイマー</h2>
+              <div class="timer-display">
+                <div class="timer-circle">
+                  <svg viewBox="0 0 200 200">
+                    <circle
+                      cx="100"
+                      cy="100"
+                      r="90"
+                      fill="none"
+                      stroke="#e0e0e0"
+                      stroke-width="10"
+                    />
+                    <circle
+                      id="timerProgress"
+                      cx="100"
+                      cy="100"
+                      r="90"
+                      fill="none"
+                      stroke="#4CAF50"
+                      stroke-width="10"
+                      stroke-dasharray="565.48"
+                      stroke-dashoffset="565.48"
+                      transform="rotate(-90 100 100)"
+                    />
+                  </svg>
+                  <div class="timer-text">
+                    <span id="timerMinutes">05</span>:<span id="timerSeconds">00</span>
+                  </div>
+                </div>
+              </div>
+              <div class="timer-controls">
+                <button class="btn btn-primary" id="startTimer">開始</button>
+                <button class="btn btn-secondary" id="pauseTimer" disabled>一時停止</button>
+                <button class="btn btn-secondary" id="resetTimer">リセット</button>
+              </div>
+              <div class="timer-tips">
+                <h4>タイムマネジメントのコツ</h4>
+                <ul>
+                  <li>導入: 30秒</li>
+                  <li>本題: 3分30秒</li>
+                  <li>まとめ: 1分</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <script src="js/speaker-dashboard.js"></script>
+  </body>
+</html>

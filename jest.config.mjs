@@ -2,7 +2,12 @@
 export default {
   testEnvironment: 'node',
   moduleFileExtensions: ['js', 'json', 'node'],
-  testMatch: ['**/tests/unit/*.test.js', '**/tests/integration/*.test.js'],
+  testMatch: [
+    '**/tests/unit/*.test.js',
+    '**/tests/unit/**/*.test.js',
+    '**/tests/integration/*.test.js',
+    '**/tests/integration/**/*.test.js'
+  ],
   testPathIgnorePatterns: [
     '/node_modules/',
     '/tests/e2e/',
