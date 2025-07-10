@@ -3,11 +3,11 @@
  * 並行イベント管理と相互運用機能を提供するサービス
  */
 
-const logger = require('../middleware/logger');
-const { DatabaseService } = require('./database');
-const analyticsService = require('./analyticsService');
-const { EventService } = require('./event');
-const { EmailService } = require('./email');
+import logger from '../middleware/logger.js';
+import { DatabaseService } from './database.js';
+import analyticsService from './analyticsService.js';
+import { EventService } from './event.js';
+import { EmailService } from './email.js';
 
 class MultiEventService {
   constructor() {
@@ -659,3 +659,4 @@ class EventScheduler {
 
 const multiEventService = new MultiEventService();
 export default multiEventService;
+export { MultiEventService, EventConflictResolver, EventScheduler };
