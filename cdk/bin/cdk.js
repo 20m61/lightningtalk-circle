@@ -2,6 +2,8 @@
 const cdk = require('aws-cdk-lib');
 const { LightningTalkStack } = require('../lib/lightning-talk-stack');
 const { CognitoStack } = require('../lib/cognito-stack');
+const { ApiOnlyStack } = require('../lib/api-only-stack');
+const { WebSocketStack } = require('../lib/websocket-stack');
 
 const app = new cdk.App();
 
@@ -31,6 +33,28 @@ new LightningTalkStack(app, 'LightningTalkStack', {
 new CognitoStack(app, 'LightningTalkCognitoStack', {
   env: env,
   description: 'Lightning Talk Circle - Authentication Infrastructure',
+  tags: {
+    Project: 'lightning-talk-circle',
+    Environment: 'production',
+    ManagedBy: 'cdk',
+  },
+});
+
+// Create API-only stack (for quick deployment)
+new ApiOnlyStack(app, 'LightningTalkApiOnlyStack', {
+  env: env,
+  description: 'Lightning Talk Circle - API Only Stack',
+  tags: {
+    Project: 'lightning-talk-circle',
+    Environment: 'production',
+    ManagedBy: 'cdk',
+  },
+});
+
+// Create WebSocket stack for real-time updates
+new WebSocketStack(app, 'LightningTalkWebSocketStack', {
+  env: env,
+  description: 'Lightning Talk Circle - WebSocket API for Real-time Updates',
   tags: {
     Project: 'lightning-talk-circle',
     Environment: 'production',

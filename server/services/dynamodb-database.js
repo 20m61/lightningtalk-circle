@@ -34,7 +34,15 @@ export class DynamoDBDatabaseService {
         process.env.DYNAMODB_PARTICIPANTS_TABLE ||
         'lightningtalk-circle-participants',
       users: config.usersTable || process.env.DYNAMODB_USERS_TABLE || 'lightningtalk-circle-users',
-      talks: config.talksTable || process.env.DYNAMODB_TALKS_TABLE || 'lightningtalk-circle-talks'
+      talks: config.talksTable || process.env.DYNAMODB_TALKS_TABLE || 'lightningtalk-circle-talks',
+      participation_votes:
+        config.participationVotesTable ||
+        process.env.DYNAMODB_PARTICIPATION_VOTES_TABLE ||
+        'lightningtalk-circle-participation-votes',
+      voting_sessions:
+        config.votingSessionsTable ||
+        process.env.DYNAMODB_VOTING_SESSIONS_TABLE ||
+        'lightningtalk-circle-voting-sessions'
     };
 
     logger.info('DynamoDB Database Service initialized', { tables: this.tables });

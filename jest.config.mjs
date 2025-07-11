@@ -37,5 +37,10 @@ export default {
       lines: 75,
       statements: 75
     }
-  }
+  },
+  // Timeouts
+  testTimeout: 10000,
+  // Prevent hanging tests
+  detectOpenHandles: true,
+  forceExit: true
 };

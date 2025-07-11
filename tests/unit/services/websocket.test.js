@@ -58,6 +58,14 @@ describe('WebSocketService', () => {
     mockIo.on.mockClear();
   });
 
+  afterEach(() => {
+    // Clean up any timers or connections
+    if (websocketService.io) {
+      websocketService.io.close();
+    }
+    jest.clearAllTimers();
+  });
+
   describe('initialize', () => {
     it('should initialize WebSocket server with default options', () => {
       const result = websocketService.initialize(mockServer);

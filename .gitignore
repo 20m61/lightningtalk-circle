@@ -49,20 +49,16 @@ wp-config.php
 
 # Node.js dependencies
 node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
 
 # Build outputs (except for dist which we want to track)
 .tmp/
-*.log
-
-# Jest cache
-.jest-cache/
-
-# Storybook
-*storybook.log
-storybook-static
-
-# Archive directories (temporary files)
-/archive/
+build/
+out/
+.next/
+.nuxt/
 
 # Environment files
 .env
@@ -70,6 +66,26 @@ storybook-static
 .env.development.local
 .env.test.local
 .env.production.local
+.env.production
+.env.staging
+
+# Testing
+coverage/
+test-results/
+*.heapsnapshot
+.jest-cache/
+
+# Logs
+logs/
+*.log
+lerna-debug.log*
+
+# Storybook
+*storybook.log
+storybook-static
+
+# Archive directories (temporary files)
+/archive/
 
 # IDE files
 .vscode/
@@ -81,7 +97,14 @@ storybook-static
 # OS files
 .DS_Store
 Thumbs.db
+
+# Reports
 reports/
+migration-metrics.json
+monitoring-arns.sh
+health-report-*.txt
+rollback-*.log
+staging-outputs.json
 
 # CDK generated files
 cdk/cdk.out/
@@ -91,3 +114,47 @@ cdk/bin/*.js
 cdk/bin/*.d.ts
 cdk.out/
 cdk.context.json
+.cdk.staging/
+.cdk.cache/
+
+# Lambda
+lambda-*.zip
+lambda-layer/
+lambda.js
+server/lambda-handler.js
+
+# Temporary files
+*.tmp
+*.temp
+*.cache
+*.pid
+*.lock
+.cache/
+
+# Backup files
+*.backup
+*.bak
+
+# Docker
+docker-compose.override.yml
+.docker/
+
+# Secrets
+*.pem
+*.key
+*.crt
+*.p12
+secrets/
+
+# Monitoring
+canary.zip
+dashboard-operational.json
+log-insights-queries.json
+canary-script.js
+slack-notifier.js
+MONITORING-RUNBOOK.md
+
+# Misc
+.history/
+*.orig
+package-lock.json.*
