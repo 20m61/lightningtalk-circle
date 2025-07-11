@@ -1,529 +1,584 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="ja">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>プレゼンテーション・アーカイブ ⚡ なんでもライトニングトーク</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="css/style.css">
+
+    <!-- Favicon and App Icons -->
+    <link rel="icon" type="image/x-icon" href="/favicon.ico" />
+    <link rel="icon" type="image/png" sizes="16x16" href="/icons/favicon-16x16.png" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/icons/favicon-32x32.png" />
+    <link rel="icon" type="image/png" sizes="96x96" href="/icons/favicon-96x96.png" />
+
+    <!-- Apple Touch Icons -->
+    <link rel="apple-touch-icon" sizes="57x57" href="/icons/apple-touch-icon-57x57.png" />
+    <link rel="apple-touch-icon" sizes="60x60" href="/icons/apple-touch-icon-60x60.png" />
+    <link rel="apple-touch-icon" sizes="72x72" href="/icons/apple-touch-icon-72x72.png" />
+    <link rel="apple-touch-icon" sizes="76x76" href="/icons/apple-touch-icon-76x76.png" />
+    <link rel="apple-touch-icon" sizes="114x114" href="/icons/apple-touch-icon-114x114.png" />
+    <link rel="apple-touch-icon" sizes="120x120" href="/icons/apple-touch-icon-120x120.png" />
+    <link rel="apple-touch-icon" sizes="144x144" href="/icons/apple-touch-icon-144x144.png" />
+    <link rel="apple-touch-icon" sizes="152x152" href="/icons/apple-touch-icon-152x152.png" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/icons/apple-touch-icon-180x180.png" />
+
+    <!-- Android Chrome Icons -->
+    <link rel="manifest" href="/manifest.json" />
+
+    <!-- Microsoft Tiles -->
+    <meta name="msapplication-config" content="/browserconfig.xml" />
+    <meta name="msapplication-TileColor" content="#4A90E2" />
+    <meta name="msapplication-TileImage" content="/icons/mstile-144x144.png" />
+
+    <!-- Theme Colors -->
+    <meta name="theme-color" content="#4A90E2" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+    <meta name="apple-mobile-web-app-title" content="LT Circle" />
+
+    <!-- Social Media Meta Tags -->
+    <meta
+      property="og:title"
+      content="プレゼンテーション・アーカイブ ⚡ なんでもライトニングトーク"
+    />
+    <meta
+      property="og:description"
+      content="過去のライトニングトーク発表を検索・閲覧できるアーカイブです。"
+    />
+    <meta property="og:image" content="/icons/android-chrome-512x512.png" />
+    <meta property="og:type" content="website" />
+    <meta name="twitter:card" content="summary_large_image" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="css/style.css" />
     <style>
-        /* Archive-specific styles */
-        .archive-header {
-            background: #2ECC71;
-            color: white;
-            padding: 100px 0 60px;
-            text-align: center;
-        }
+      /* Archive-specific styles */
+      .archive-header {
+        background: #2ecc71;
+        color: white;
+        padding: 100px 0 60px;
+        text-align: center;
+      }
 
-        .archive-header h1 {
-            font-size: 2.5rem;
-            margin-bottom: 16px;
-            color: white;
-            text-shadow: none;
-        }
+      .archive-header h1 {
+        font-size: 2.5rem;
+        margin-bottom: 16px;
+        color: white;
+        text-shadow: none;
+      }
 
-        .archive-header p {
-            font-size: 1.1rem;
-            color: white;
-            opacity: 0.9;
-        }
+      .archive-header p {
+        font-size: 1.1rem;
+        color: white;
+        opacity: 0.9;
+      }
 
-        .search-filters {
-            background: #F8F9FA;
-            padding: 32px 0;
-            border-bottom: 1px solid #ECF0F1;
-        }
+      .search-filters {
+        background: #f8f9fa;
+        padding: 32px 0;
+        border-bottom: 1px solid #ecf0f1;
+      }
 
+      .filter-grid {
+        display: grid;
+        grid-template-columns: 2fr 1fr 1fr;
+        gap: 16px;
+        margin-bottom: 16px;
+      }
+
+      .search-box {
+        position: relative;
+      }
+
+      .search-input {
+        width: 100%;
+        padding: 12px 16px 12px 48px;
+        border: 1px solid #ecf0f1;
+        border-radius: 4px;
+        font-size: 1rem;
+        font-family: 'Noto Sans JP', sans-serif;
+      }
+
+      .search-input:focus {
+        outline: none;
+        border-color: #2ecc71;
+        box-shadow: 0 0 0 2px rgba(46, 204, 113, 0.1);
+      }
+
+      .search-icon {
+        position: absolute;
+        left: 16px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #7f8c8d;
+      }
+
+      .filter-select {
+        padding: 12px 16px;
+        border: 1px solid #ecf0f1;
+        border-radius: 4px;
+        font-size: 1rem;
+        font-family: 'Noto Sans JP', sans-serif;
+        background: white;
+      }
+
+      .filter-select:focus {
+        outline: none;
+        border-color: #2ecc71;
+      }
+
+      .filter-tags {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        margin-top: 16px;
+      }
+
+      .tag-filter {
+        padding: 6px 12px;
+        background: #ecf0f1;
+        border: 1px solid #ecf0f1;
+        border-radius: 16px;
+        font-size: 0.875rem;
+        cursor: pointer;
+        transition: all 0.2s ease;
+      }
+
+      .tag-filter:hover {
+        background: #2ecc71;
+        color: white;
+        border-color: #2ecc71;
+      }
+
+      .tag-filter.active {
+        background: #2ecc71;
+        color: white;
+        border-color: #2ecc71;
+      }
+
+      .presentations-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+        gap: 24px;
+        padding: 40px 0;
+      }
+
+      .presentation-card {
+        background: white;
+        border-radius: 8px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        padding: 24px;
+        transition: all 0.3s ease;
+        cursor: pointer;
+      }
+
+      .presentation-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+      }
+
+      .presentation-meta {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 16px;
+        font-size: 0.875rem;
+        color: #7f8c8d;
+      }
+
+      .presentation-title {
+        font-size: 1.25rem;
+        font-weight: 600;
+        color: #34495e;
+        margin-bottom: 8px;
+        line-height: 1.4;
+      }
+
+      .presentation-presenter {
+        color: #2ecc71;
+        font-weight: 500;
+        margin-bottom: 12px;
+      }
+
+      .presentation-abstract {
+        color: #34495e;
+        line-height: 1.6;
+        margin-bottom: 16px;
+        display: -webkit-box;
+        -webkit-line-clamp: 3;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+      }
+
+      .presentation-tags {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px;
+        margin-bottom: 16px;
+      }
+
+      .presentation-tag {
+        padding: 4px 8px;
+        background: #f8f9fa;
+        color: #34495e;
+        border-radius: 12px;
+        font-size: 0.75rem;
+      }
+
+      .presentation-actions {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .presentation-stats {
+        display: flex;
+        gap: 16px;
+        font-size: 0.875rem;
+        color: #7f8c8d;
+      }
+
+      .skill-badge {
+        padding: 4px 8px;
+        border-radius: 4px;
+        font-size: 0.75rem;
+        font-weight: 500;
+      }
+
+      .skill-beginner {
+        background: #e8f5e8;
+        color: #27ae60;
+      }
+
+      .skill-intermediate {
+        background: #fff3cd;
+        color: #f39c12;
+      }
+
+      .skill-advanced {
+        background: #f8e8e8;
+        color: #e74c3c;
+      }
+
+      .no-results {
+        text-align: center;
+        padding: 60px 20px;
+        color: #7f8c8d;
+      }
+
+      .no-results h3 {
+        font-size: 1.5rem;
+        margin-bottom: 16px;
+        color: #34495e;
+      }
+
+      .loading {
+        text-align: center;
+        padding: 60px 20px;
+        color: #7f8c8d;
+      }
+
+      @media (max-width: 768px) {
         .filter-grid {
-            display: grid;
-            grid-template-columns: 2fr 1fr 1fr;
-            gap: 16px;
-            margin-bottom: 16px;
-        }
-
-        .search-box {
-            position: relative;
-        }
-
-        .search-input {
-            width: 100%;
-            padding: 12px 16px 12px 48px;
-            border: 1px solid #ECF0F1;
-            border-radius: 4px;
-            font-size: 1rem;
-            font-family: 'Noto Sans JP', sans-serif;
-        }
-
-        .search-input:focus {
-            outline: none;
-            border-color: #2ECC71;
-            box-shadow: 0 0 0 2px rgba(46, 204, 113, 0.1);
-        }
-
-        .search-icon {
-            position: absolute;
-            left: 16px;
-            top: 50%;
-            transform: translateY(-50%);
-            color: #7F8C8D;
-        }
-
-        .filter-select {
-            padding: 12px 16px;
-            border: 1px solid #ECF0F1;
-            border-radius: 4px;
-            font-size: 1rem;
-            font-family: 'Noto Sans JP', sans-serif;
-            background: white;
-        }
-
-        .filter-select:focus {
-            outline: none;
-            border-color: #2ECC71;
-        }
-
-        .filter-tags {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 8px;
-            margin-top: 16px;
-        }
-
-        .tag-filter {
-            padding: 6px 12px;
-            background: #ECF0F1;
-            border: 1px solid #ECF0F1;
-            border-radius: 16px;
-            font-size: 0.875rem;
-            cursor: pointer;
-            transition: all 0.2s ease;
-        }
-
-        .tag-filter:hover {
-            background: #2ECC71;
-            color: white;
-            border-color: #2ECC71;
-        }
-
-        .tag-filter.active {
-            background: #2ECC71;
-            color: white;
-            border-color: #2ECC71;
+          grid-template-columns: 1fr;
         }
 
         .presentations-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-            gap: 24px;
-            padding: 40px 0;
-        }
-
-        .presentation-card {
-            background: white;
-            border-radius: 8px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-            padding: 24px;
-            transition: all 0.3s ease;
-            cursor: pointer;
-        }
-
-        .presentation-card:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 8px 24px rgba(0,0,0,0.15);
-        }
-
-        .presentation-meta {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 16px;
-            font-size: 0.875rem;
-            color: #7F8C8D;
-        }
-
-        .presentation-title {
-            font-size: 1.25rem;
-            font-weight: 600;
-            color: #34495E;
-            margin-bottom: 8px;
-            line-height: 1.4;
-        }
-
-        .presentation-presenter {
-            color: #2ECC71;
-            font-weight: 500;
-            margin-bottom: 12px;
-        }
-
-        .presentation-abstract {
-            color: #34495E;
-            line-height: 1.6;
-            margin-bottom: 16px;
-            display: -webkit-box;
-            -webkit-line-clamp: 3;
-            -webkit-box-orient: vertical;
-            overflow: hidden;
-        }
-
-        .presentation-tags {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 6px;
-            margin-bottom: 16px;
-        }
-
-        .presentation-tag {
-            padding: 4px 8px;
-            background: #F8F9FA;
-            color: #34495E;
-            border-radius: 12px;
-            font-size: 0.75rem;
+          grid-template-columns: 1fr;
         }
 
         .presentation-actions {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
+          flex-direction: column;
+          gap: 12px;
+          align-items: stretch;
         }
-
-        .presentation-stats {
-            display: flex;
-            gap: 16px;
-            font-size: 0.875rem;
-            color: #7F8C8D;
-        }
-
-        .skill-badge {
-            padding: 4px 8px;
-            border-radius: 4px;
-            font-size: 0.75rem;
-            font-weight: 500;
-        }
-
-        .skill-beginner {
-            background: #E8F5E8;
-            color: #27AE60;
-        }
-
-        .skill-intermediate {
-            background: #FFF3CD;
-            color: #F39C12;
-        }
-
-        .skill-advanced {
-            background: #F8E8E8;
-            color: #E74C3C;
-        }
-
-        .no-results {
-            text-align: center;
-            padding: 60px 20px;
-            color: #7F8C8D;
-        }
-
-        .no-results h3 {
-            font-size: 1.5rem;
-            margin-bottom: 16px;
-            color: #34495E;
-        }
-
-        .loading {
-            text-align: center;
-            padding: 60px 20px;
-            color: #7F8C8D;
-        }
-
-        @media (max-width: 768px) {
-            .filter-grid {
-                grid-template-columns: 1fr;
-            }
-            
-            .presentations-grid {
-                grid-template-columns: 1fr;
-            }
-            
-            .presentation-actions {
-                flex-direction: column;
-                gap: 12px;
-                align-items: stretch;
-            }
-        }
+      }
     </style>
-</head>
-<body>
+  </head>
+  <body>
     <header>
-        <nav class="container">
-            <div class="logo">⚡ なんでもLT</div>
-            <ul class="nav-links">
-                <li><a href="/">ホーム</a></li>
-                <li><a href="/#event">イベント情報</a></li>
-                <li><a href="/presentations.html">アーカイブ</a></li>
-                <li><a href="/#about">ライトニングトークとは</a></li>
-                <li><a href="/#join">参加方法</a></li>
-                <li><a href="/#contact">お問い合わせ</a></li>
-            </ul>
-            <div class="mobile-menu-toggle">
-                <span></span>
-                <span></span>
-                <span></span>
-            </div>
-        </nav>
+      <nav class="container">
+        <div class="logo">⚡ なんでもLT</div>
+        <ul class="nav-links">
+          <li><a href="/">ホーム</a></li>
+          <li><a href="/#event">イベント情報</a></li>
+          <li><a href="/presentations.html">アーカイブ</a></li>
+          <li><a href="/#about">ライトニングトークとは</a></li>
+          <li><a href="/#join">参加方法</a></li>
+          <li><a href="/#contact">お問い合わせ</a></li>
+        </ul>
+        <div class="mobile-menu-toggle">
+          <span></span>
+          <span></span>
+          <span></span>
+        </div>
+      </nav>
     </header>
 
     <main>
-        <section class="archive-header">
-            <div class="container">
-                <h1>📚 プレゼンテーション・アーカイブ</h1>
-                <p>過去のライトニングトーク発表を検索・閲覧できます</p>
-            </div>
-        </section>
+      <section class="archive-header">
+        <div class="container">
+          <h1>📚 プレゼンテーション・アーカイブ</h1>
+          <p>過去のライトニングトーク発表を検索・閲覧できます</p>
+        </div>
+      </section>
 
-        <section class="search-filters">
-            <div class="container">
-                <div class="filter-grid">
-                    <div class="search-box">
-                        <span class="search-icon">🔍</span>
-                        <input type="text" id="searchInput" class="search-input" placeholder="タイトル、発表者、内容で検索...">
-                    </div>
-                    <select id="skillFilter" class="filter-select">
-                        <option value="">すべてのレベル</option>
-                        <option value="beginner">初級</option>
-                        <option value="intermediate">中級</option>
-                        <option value="advanced">上級</option>
-                    </select>
-                    <select id="sortFilter" class="filter-select">
-                        <option value="date_desc">新しい順</option>
-                        <option value="date_asc">古い順</option>
-                        <option value="title">タイトル順</option>
-                        <option value="popularity">人気順</option>
-                    </select>
-                </div>
-                
-                <div class="filter-tags" id="tagFilters">
-                    <!-- Tags will be populated dynamically -->
-                </div>
+      <section class="search-filters">
+        <div class="container">
+          <div class="filter-grid">
+            <div class="search-box">
+              <span class="search-icon">🔍</span>
+              <input
+                type="text"
+                id="searchInput"
+                class="search-input"
+                placeholder="タイトル、発表者、内容で検索..."
+              />
             </div>
-        </section>
+            <select id="skillFilter" class="filter-select">
+              <option value="">すべてのレベル</option>
+              <option value="beginner">初級</option>
+              <option value="intermediate">中級</option>
+              <option value="advanced">上級</option>
+            </select>
+            <select id="sortFilter" class="filter-select">
+              <option value="date_desc">新しい順</option>
+              <option value="date_asc">古い順</option>
+              <option value="title">タイトル順</option>
+              <option value="popularity">人気順</option>
+            </select>
+          </div>
 
-        <section class="presentations-archive">
-            <div class="container">
-                <div id="loadingIndicator" class="loading">
-                    <p>📊 プレゼンテーションを読み込み中...</p>
-                </div>
-                
-                <div id="presentationsGrid" class="presentations-grid" style="display: none;">
-                    <!-- Presentations will be populated dynamically -->
-                </div>
+          <div class="filter-tags" id="tagFilters">
+            <!-- Tags will be populated dynamically -->
+          </div>
+        </div>
+      </section>
 
-                <div id="noResults" class="no-results" style="display: none;">
-                    <h3>😔 該当するプレゼンテーションが見つかりません</h3>
-                    <p>検索条件を変更してお試しください</p>
-                </div>
-            </div>
-        </section>
+      <section class="presentations-archive">
+        <div class="container">
+          <div id="loadingIndicator" class="loading">
+            <p>📊 プレゼンテーションを読み込み中...</p>
+          </div>
+
+          <div id="presentationsGrid" class="presentations-grid" style="display: none">
+            <!-- Presentations will be populated dynamically -->
+          </div>
+
+          <div id="noResults" class="no-results" style="display: none">
+            <h3>😔 該当するプレゼンテーションが見つかりません</h3>
+            <p>検索条件を変更してお試しください</p>
+          </div>
+        </div>
+      </section>
     </main>
 
     <footer id="contact">
-        <div class="container">
-            <h3>✨ なんでもライトニングトーク</h3>
-            <p>5分間で世界が広がる。あなたの参加をお待ちしています！</p>
-            <div class="footer-links">
-                <a href="/privacy">プライバシーポリシー</a>
-                <a href="/terms">利用規約</a>
-                <a href="/contact">お問い合わせ</a>
-            </div>
-            <p class="copyright">© 2025 なんでもライトニングトーク. All rights reserved.</p>
+      <div class="container">
+        <h3>✨ なんでもライトニングトーク</h3>
+        <p>5分間で世界が広がる。あなたの参加をお待ちしています！</p>
+        <div class="footer-links">
+          <a href="/privacy">プライバシーポリシー</a>
+          <a href="/terms">利用規約</a>
+          <a href="/contact">お問い合わせ</a>
         </div>
+        <p class="copyright">© 2025 なんでもライトニングトーク. All rights reserved.</p>
+      </div>
     </footer>
 
     <!-- プレゼンテーション詳細モーダル -->
     <div id="presentationModal" class="modal">
-        <div class="modal-content">
-            <span class="close">&times;</span>
-            <div id="presentationModalBody"></div>
-        </div>
+      <div class="modal-content">
+        <span class="close">&times;</span>
+        <div id="presentationModalBody"></div>
+      </div>
     </div>
 
     <script>
-        class PresentationArchive {
-            constructor() {
-                this.presentations = [];
-                this.filteredPresentations = [];
-                this.filters = {
-                    search: '',
-                    tags: [],
-                    skillLevel: '',
-                    sort: 'date_desc'
-                };
-                this.init();
+      class PresentationArchive {
+        constructor() {
+          this.presentations = [];
+          this.filteredPresentations = [];
+          this.filters = {
+            search: '',
+            tags: [],
+            skillLevel: '',
+            sort: 'date_desc'
+          };
+          this.init();
+        }
+
+        async init() {
+          await this.loadPresentations();
+          this.setupEventListeners();
+          this.renderTagFilters();
+          this.renderPresentations();
+        }
+
+        async loadPresentations() {
+          try {
+            const response = await fetch('/api/presentations');
+            const data = await response.json();
+            this.presentations = data.presentations || [];
+            this.filteredPresentations = [...this.presentations];
+          } catch (error) {
+            console.error('Failed to load presentations:', error);
+            this.showError('プレゼンテーションの読み込みに失敗しました');
+          }
+        }
+
+        setupEventListeners() {
+          // Search input
+          document.getElementById('searchInput').addEventListener('input', e => {
+            this.filters.search = e.target.value;
+            this.applyFilters();
+          });
+
+          // Skill level filter
+          document.getElementById('skillFilter').addEventListener('change', e => {
+            this.filters.skillLevel = e.target.value;
+            this.applyFilters();
+          });
+
+          // Sort filter
+          document.getElementById('sortFilter').addEventListener('change', e => {
+            this.filters.sort = e.target.value;
+            this.applyFilters();
+          });
+
+          // Modal close
+          document.querySelector('.modal .close').addEventListener('click', () => {
+            document.getElementById('presentationModal').style.display = 'none';
+          });
+
+          // Click outside modal to close
+          window.addEventListener('click', e => {
+            const modal = document.getElementById('presentationModal');
+            if (e.target === modal) {
+              modal.style.display = 'none';
             }
+          });
+        }
 
-            async init() {
-                await this.loadPresentations();
-                this.setupEventListeners();
-                this.renderTagFilters();
-                this.renderPresentations();
+        renderTagFilters() {
+          const allTags = [...new Set(this.presentations.flatMap(p => p.tags || []))];
+          const tagFiltersContainer = document.getElementById('tagFilters');
+
+          tagFiltersContainer.innerHTML = allTags
+            .map(tag => `<button class="tag-filter" data-tag="${tag}">${tag}</button>`)
+            .join('');
+
+          // Add tag filter event listeners
+          tagFiltersContainer.addEventListener('click', e => {
+            if (e.target.classList.contains('tag-filter')) {
+              const tag = e.target.dataset.tag;
+              const isActive = e.target.classList.contains('active');
+
+              if (isActive) {
+                e.target.classList.remove('active');
+                this.filters.tags = this.filters.tags.filter(t => t !== tag);
+              } else {
+                e.target.classList.add('active');
+                this.filters.tags.push(tag);
+              }
+
+              this.applyFilters();
             }
+          });
+        }
 
-            async loadPresentations() {
-                try {
-                    const response = await fetch('/api/presentations');
-                    const data = await response.json();
-                    this.presentations = data.presentations || [];
-                    this.filteredPresentations = [...this.presentations];
-                } catch (error) {
-                    console.error('Failed to load presentations:', error);
-                    this.showError('プレゼンテーションの読み込みに失敗しました');
-                }
-            }
+        applyFilters() {
+          let filtered = [...this.presentations];
 
-            setupEventListeners() {
-                // Search input
-                document.getElementById('searchInput').addEventListener('input', (e) => {
-                    this.filters.search = e.target.value;
-                    this.applyFilters();
-                });
+          // Search filter
+          if (this.filters.search) {
+            const searchLower = this.filters.search.toLowerCase();
+            filtered = filtered.filter(
+              p =>
+                p.title.toLowerCase().includes(searchLower) ||
+                p.presenter.toLowerCase().includes(searchLower) ||
+                p.abstract.toLowerCase().includes(searchLower) ||
+                (p.tags && p.tags.some(tag => tag.toLowerCase().includes(searchLower)))
+            );
+          }
 
-                // Skill level filter
-                document.getElementById('skillFilter').addEventListener('change', (e) => {
-                    this.filters.skillLevel = e.target.value;
-                    this.applyFilters();
-                });
+          // Tag filters
+          if (this.filters.tags.length > 0) {
+            filtered = filtered.filter(
+              p => p.tags && this.filters.tags.every(tag => p.tags.includes(tag))
+            );
+          }
 
-                // Sort filter
-                document.getElementById('sortFilter').addEventListener('change', (e) => {
-                    this.filters.sort = e.target.value;
-                    this.applyFilters();
-                });
+          // Skill level filter
+          if (this.filters.skillLevel) {
+            filtered = filtered.filter(p => p.skillLevel === this.filters.skillLevel);
+          }
 
-                // Modal close
-                document.querySelector('.modal .close').addEventListener('click', () => {
-                    document.getElementById('presentationModal').style.display = 'none';
-                });
+          // Sort
+          switch (this.filters.sort) {
+            case 'date_desc':
+              filtered.sort((a, b) => new Date(b.presentationDate) - new Date(a.presentationDate));
+              break;
+            case 'date_asc':
+              filtered.sort((a, b) => new Date(a.presentationDate) - new Date(b.presentationDate));
+              break;
+            case 'title':
+              filtered.sort((a, b) => a.title.localeCompare(b.title));
+              break;
+            case 'popularity':
+              filtered.sort((a, b) => (b.views || 0) - (a.views || 0));
+              break;
+          }
 
-                // Click outside modal to close
-                window.addEventListener('click', (e) => {
-                    const modal = document.getElementById('presentationModal');
-                    if (e.target === modal) {
-                        modal.style.display = 'none';
-                    }
-                });
-            }
+          this.filteredPresentations = filtered;
+          this.renderPresentations();
+        }
 
-            renderTagFilters() {
-                const allTags = [...new Set(this.presentations.flatMap(p => p.tags || []))];
-                const tagFiltersContainer = document.getElementById('tagFilters');
-                
-                tagFiltersContainer.innerHTML = allTags.map(tag => 
-                    `<button class="tag-filter" data-tag="${tag}">${tag}</button>`
-                ).join('');
+        renderPresentations() {
+          const grid = document.getElementById('presentationsGrid');
+          const loading = document.getElementById('loadingIndicator');
+          const noResults = document.getElementById('noResults');
 
-                // Add tag filter event listeners
-                tagFiltersContainer.addEventListener('click', (e) => {
-                    if (e.target.classList.contains('tag-filter')) {
-                        const tag = e.target.dataset.tag;
-                        const isActive = e.target.classList.contains('active');
-                        
-                        if (isActive) {
-                            e.target.classList.remove('active');
-                            this.filters.tags = this.filters.tags.filter(t => t !== tag);
-                        } else {
-                            e.target.classList.add('active');
-                            this.filters.tags.push(tag);
-                        }
-                        
-                        this.applyFilters();
-                    }
-                });
-            }
+          loading.style.display = 'none';
 
-            applyFilters() {
-                let filtered = [...this.presentations];
+          if (this.filteredPresentations.length === 0) {
+            grid.style.display = 'none';
+            noResults.style.display = 'block';
+            return;
+          }
 
-                // Search filter
-                if (this.filters.search) {
-                    const searchLower = this.filters.search.toLowerCase();
-                    filtered = filtered.filter(p => 
-                        p.title.toLowerCase().includes(searchLower) ||
-                        p.presenter.toLowerCase().includes(searchLower) ||
-                        p.abstract.toLowerCase().includes(searchLower) ||
-                        (p.tags && p.tags.some(tag => tag.toLowerCase().includes(searchLower)))
-                    );
-                }
+          noResults.style.display = 'none';
+          grid.style.display = 'grid';
 
-                // Tag filters
-                if (this.filters.tags.length > 0) {
-                    filtered = filtered.filter(p => 
-                        p.tags && this.filters.tags.every(tag => p.tags.includes(tag))
-                    );
-                }
+          grid.innerHTML = this.filteredPresentations
+            .map(presentation => this.renderPresentationCard(presentation))
+            .join('');
 
-                // Skill level filter
-                if (this.filters.skillLevel) {
-                    filtered = filtered.filter(p => p.skillLevel === this.filters.skillLevel);
-                }
+          // Add click event listeners to cards
+          grid.querySelectorAll('.presentation-card').forEach(card => {
+            card.addEventListener('click', () => {
+              const presentationId = card.dataset.id;
+              this.showPresentationDetails(presentationId);
+            });
+          });
+        }
 
-                // Sort
-                switch (this.filters.sort) {
-                    case 'date_desc':
-                        filtered.sort((a, b) => new Date(b.presentationDate) - new Date(a.presentationDate));
-                        break;
-                    case 'date_asc':
-                        filtered.sort((a, b) => new Date(a.presentationDate) - new Date(b.presentationDate));
-                        break;
-                    case 'title':
-                        filtered.sort((a, b) => a.title.localeCompare(b.title));
-                        break;
-                    case 'popularity':
-                        filtered.sort((a, b) => (b.views || 0) - (a.views || 0));
-                        break;
-                }
+        renderPresentationCard(presentation) {
+          const date = new Date(presentation.presentationDate).toLocaleDateString('ja-JP');
+          const skillBadgeClass = `skill-${presentation.skillLevel}`;
+          const skillLabel =
+            {
+              beginner: '初級',
+              intermediate: '中級',
+              advanced: '上級'
+            }[presentation.skillLevel] || '不明';
 
-                this.filteredPresentations = filtered;
-                this.renderPresentations();
-            }
-
-            renderPresentations() {
-                const grid = document.getElementById('presentationsGrid');
-                const loading = document.getElementById('loadingIndicator');
-                const noResults = document.getElementById('noResults');
-
-                loading.style.display = 'none';
-
-                if (this.filteredPresentations.length === 0) {
-                    grid.style.display = 'none';
-                    noResults.style.display = 'block';
-                    return;
-                }
-
-                noResults.style.display = 'none';
-                grid.style.display = 'grid';
-
-                grid.innerHTML = this.filteredPresentations.map(presentation => 
-                    this.renderPresentationCard(presentation)
-                ).join('');
-
-                // Add click event listeners to cards
-                grid.querySelectorAll('.presentation-card').forEach(card => {
-                    card.addEventListener('click', () => {
-                        const presentationId = card.dataset.id;
-                        this.showPresentationDetails(presentationId);
-                    });
-                });
-            }
-
-            renderPresentationCard(presentation) {
-                const date = new Date(presentation.presentationDate).toLocaleDateString('ja-JP');
-                const skillBadgeClass = `skill-${presentation.skillLevel}`;
-                const skillLabel = {
-                    'beginner': '初級',
-                    'intermediate': '中級',
-                    'advanced': '上級'
-                }[presentation.skillLevel] || '不明';
-
-                return `
+          return `
                     <div class="presentation-card" data-id="${presentation.id}">
                         <div class="presentation-meta">
                             <span>${date}</span>
@@ -533,9 +588,9 @@
                         <div class="presentation-presenter">👤 ${presentation.presenter}</div>
                         <div class="presentation-abstract">${presentation.abstract}</div>
                         <div class="presentation-tags">
-                            ${(presentation.tags || []).map(tag => 
-                                `<span class="presentation-tag">${tag}</span>`
-                            ).join('')}
+                            ${(presentation.tags || [])
+                              .map(tag => `<span class="presentation-tag">${tag}</span>`)
+                              .join('')}
                         </div>
                         <div class="presentation-actions">
                             <div class="presentation-stats">
@@ -546,33 +601,34 @@
                         </div>
                     </div>
                 `;
-            }
+        }
 
-            async showPresentationDetails(presentationId) {
-                try {
-                    const response = await fetch(`/api/presentations/${presentationId}`);
-                    const data = await response.json();
-                    const presentation = data.presentation;
+        async showPresentationDetails(presentationId) {
+          try {
+            const response = await fetch(`/api/presentations/${presentationId}`);
+            const data = await response.json();
+            const presentation = data.presentation;
 
-                    const modalBody = document.getElementById('presentationModalBody');
-                    modalBody.innerHTML = this.renderPresentationDetails(presentation);
-                    
-                    document.getElementById('presentationModal').style.display = 'block';
-                } catch (error) {
-                    console.error('Failed to load presentation details:', error);
-                    this.showError('プレゼンテーション詳細の読み込みに失敗しました');
-                }
-            }
+            const modalBody = document.getElementById('presentationModalBody');
+            modalBody.innerHTML = this.renderPresentationDetails(presentation);
 
-            renderPresentationDetails(presentation) {
-                const date = new Date(presentation.presentationDate).toLocaleDateString('ja-JP');
-                const skillLabel = {
-                    'beginner': '初級',
-                    'intermediate': '中級',
-                    'advanced': '上級'
-                }[presentation.skillLevel] || '不明';
+            document.getElementById('presentationModal').style.display = 'block';
+          } catch (error) {
+            console.error('Failed to load presentation details:', error);
+            this.showError('プレゼンテーション詳細の読み込みに失敗しました');
+          }
+        }
 
-                return `
+        renderPresentationDetails(presentation) {
+          const date = new Date(presentation.presentationDate).toLocaleDateString('ja-JP');
+          const skillLabel =
+            {
+              beginner: '初級',
+              intermediate: '中級',
+              advanced: '上級'
+            }[presentation.skillLevel] || '不明';
+
+          return `
                     <div class="presentation-details">
                         <h2>${presentation.title}</h2>
                         <div class="presentation-meta">
@@ -588,62 +644,89 @@
                             <p>${presentation.abstract}</p>
                         </div>
 
-                        ${presentation.tags && presentation.tags.length > 0 ? `
+                        ${
+                          presentation.tags && presentation.tags.length > 0
+                            ? `
                             <div class="presentation-tags-section">
                                 <h3>タグ</h3>
                                 <div class="presentation-tags">
-                                    ${presentation.tags.map(tag => 
-                                        `<span class="presentation-tag">${tag}</span>`
-                                    ).join('')}
+                                    ${presentation.tags
+                                      .map(tag => `<span class="presentation-tag">${tag}</span>`)
+                                      .join('')}
                                 </div>
                             </div>
-                        ` : ''}
+                        `
+                            : ''
+                        }
 
-                        ${presentation.materials && presentation.materials.length > 0 ? `
+                        ${
+                          presentation.materials && presentation.materials.length > 0
+                            ? `
                             <div class="presentation-materials">
                                 <h3>資料</h3>
-                                ${presentation.materials.map(material => `
+                                ${presentation.materials
+                                  .map(
+                                    material => `
                                     <div class="material-item">
                                         <a href="/api/presentations/${presentation.id}/materials/${material.filename}" 
                                            target="_blank" class="btn btn-secondary">
                                             📄 ${material.originalName}
                                         </a>
                                     </div>
-                                `).join('')}
+                                `
+                                  )
+                                  .join('')}
                             </div>
-                        ` : ''}
+                        `
+                            : ''
+                        }
 
-                        ${presentation.videoUrl ? `
+                        ${
+                          presentation.videoUrl
+                            ? `
                             <div class="presentation-video">
                                 <h3>動画</h3>
                                 <a href="${presentation.videoUrl}" target="_blank" class="btn">
                                     🎥 動画を見る
                                 </a>
                             </div>
-                        ` : ''}
+                        `
+                            : ''
+                        }
                     </div>
                 `;
-            }
+        }
 
-            showError(message) {
-                const grid = document.getElementById('presentationsGrid');
-                const loading = document.getElementById('loadingIndicator');
-                
-                loading.style.display = 'none';
-                grid.innerHTML = `
+        showError(message) {
+          const grid = document.getElementById('presentationsGrid');
+          const loading = document.getElementById('loadingIndicator');
+
+          loading.style.display = 'none';
+          grid.innerHTML = `
                     <div class="no-results">
                         <h3>❌ エラーが発生しました</h3>
                         <p>${message}</p>
                     </div>
                 `;
-                grid.style.display = 'block';
-            }
+          grid.style.display = 'block';
         }
+      }
 
-        // Initialize the archive when DOM is loaded
-        document.addEventListener('DOMContentLoaded', () => {
-            new PresentationArchive();
-        });
+      // Initialize the archive when DOM is loaded
+      document.addEventListener('DOMContentLoaded', () => {
+        new PresentationArchive();
+      });
     </script>
-</body>
+
+    <!-- Lightning Talk React Components -->
+    <script type="module" src="/build/js/main-K5f4ANmR.js"></script>
+    <script>
+      // Initialize Lightning Talk components when ready
+      window.addEventListener('DOMContentLoaded', () => {
+        if (window.LightningTalk) {
+          window.LightningTalk.init();
+        }
+      });
+    </script>
+  </body>
 </html>

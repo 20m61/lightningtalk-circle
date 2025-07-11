@@ -5,6 +5,47 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>なんでもライトニングトーク ⚡</title>
 
+    <!-- Favicon and App Icons -->
+    <link rel="icon" type="image/x-icon" href="/favicon.ico" />
+    <link rel="icon" type="image/png" sizes="16x16" href="/icons/favicon-16x16.png" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/icons/favicon-32x32.png" />
+    <link rel="icon" type="image/png" sizes="96x96" href="/icons/favicon-96x96.png" />
+
+    <!-- Apple Touch Icons -->
+    <link rel="apple-touch-icon" sizes="57x57" href="/icons/apple-touch-icon-57x57.png" />
+    <link rel="apple-touch-icon" sizes="60x60" href="/icons/apple-touch-icon-60x60.png" />
+    <link rel="apple-touch-icon" sizes="72x72" href="/icons/apple-touch-icon-72x72.png" />
+    <link rel="apple-touch-icon" sizes="76x76" href="/icons/apple-touch-icon-76x76.png" />
+    <link rel="apple-touch-icon" sizes="114x114" href="/icons/apple-touch-icon-114x114.png" />
+    <link rel="apple-touch-icon" sizes="120x120" href="/icons/apple-touch-icon-120x120.png" />
+    <link rel="apple-touch-icon" sizes="144x144" href="/icons/apple-touch-icon-144x144.png" />
+    <link rel="apple-touch-icon" sizes="152x152" href="/icons/apple-touch-icon-152x152.png" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/icons/apple-touch-icon-180x180.png" />
+
+    <!-- Android Chrome Icons -->
+    <link rel="manifest" href="/manifest.json" />
+
+    <!-- Microsoft Tiles -->
+    <meta name="msapplication-config" content="/browserconfig.xml" />
+    <meta name="msapplication-TileColor" content="#4A90E2" />
+    <meta name="msapplication-TileImage" content="/icons/mstile-144x144.png" />
+
+    <!-- Theme Colors -->
+    <meta name="theme-color" content="#4A90E2" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+    <meta name="apple-mobile-web-app-title" content="LT Circle" />
+
+    <!-- Social Media Meta Tags -->
+    <meta property="og:title" content="なんでもライトニングトーク ⚡" />
+    <meta
+      property="og:description"
+      content="5分で伝える、みんなのアイデア。ライトニングトークイベントの参加・管理プラットフォーム"
+    />
+    <meta property="og:image" content="/icons/android-chrome-512x512.png" />
+    <meta property="og:type" content="website" />
+    <meta name="twitter:card" content="summary_large_image" />
+
     <!-- Performance optimizations: Preload critical resources -->
     <link rel="preload" href="css/style.css" as="style" />
     <link rel="preload" href="js/main.js" as="script" />
@@ -19,6 +60,7 @@
       rel="stylesheet"
     />
 
+    <link rel="stylesheet" href="css/tailwind.css" />
     <link rel="stylesheet" href="css/style.css" />
   </head>
   <body>
@@ -32,6 +74,11 @@
           <li><a href="#join">参加方法</a></li>
           <li><a href="#contact">お問い合わせ</a></li>
         </ul>
+
+        <!-- Auth Header Integration -->
+        <div id="auth-header" class="auth-header">
+          <!-- This will be populated by React -->
+        </div>
         <div class="mobile-menu-toggle">
           <span></span>
           <span></span>
@@ -119,7 +166,12 @@
             </div>
 
             <div class="action-buttons">
-              <button class="btn" data-action="register">📝 当日参加申込み</button>
+              <!-- React Registration Button -->
+              <div id="registration-button"></div>
+
+              <!-- React Participant Counter -->
+              <div id="participant-counter"></div>
+
               <!-- Survey Section: Counter display is controlled in main.js config.showSurveyCounters (default: false) -->
               <div class="survey-section">
                 <h4>💭 当日参加アンケート</h4>
@@ -322,5 +374,8 @@
     </div>
 
     <script src="js/main.js"></script>
+
+    <!-- React Components Integration -->
+    <script type="module" src="js/react-integration.js"></script>
   </body>
 </html>

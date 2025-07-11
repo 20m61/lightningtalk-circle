@@ -1,18 +1,18 @@
 {
   "api": {
     "domain": {
-      "domainName": null,
-      "hostedZoneId": null,
+      "domainName": "api.xn--6wym69a.com",
+      "hostedZoneId": "Z036564723AZHFOSIARRI",
       "certificateArn": null
     }
   },
   "static": {
     "domain": {
-      "domainName": null,
-      "hostedZoneId": null,
+      "domainName": "xn--6wym69a.com",
+      "hostedZoneId": "Z036564723AZHFOSIARRI",
       "certificateArn": null
     },
-    "aliases": []
+    "aliases": ["www.xn--6wym69a.com"]
   },
   "monitoring": {
     "alertEmail": null

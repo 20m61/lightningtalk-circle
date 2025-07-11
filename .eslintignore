@@ -4,8 +4,13 @@ node_modules/
 # Build outputs
 dist/
 build/
+public/build/
 coverage/
 .jest-cache/
+
+# Generated JavaScript files
+public/js/main-*.js
+public/build/**
 
 # WordPress vendor assets
 wordpress/lightningtalk-child/assets/js/vendor/
