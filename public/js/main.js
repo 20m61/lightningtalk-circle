@@ -6,6 +6,12 @@
 class LightningTalkApp {
   constructor() {
     this.eventDate = new Date('2025-07-15T19:00:00+09:00');
+
+    // Configuration - Survey counter feature toggle
+    this.config = {
+      showSurveyCounters: false // Set to true to enable counter display
+    };
+
     this.surveyCounters = {
       online: parseInt(localStorage.getItem('onlineCount') || '0'),
       offline: parseInt(localStorage.getItem('offlineCount') || '0')
@@ -920,10 +926,17 @@ class LightningTalkApp {
     this.surveyCounters[type]++;
     localStorage.setItem(`${type}Count`, this.surveyCounters[type].toString());
     this.updateSurveyCounters();
-    this.showNotification(
-      `${type === 'online' ? 'オンライン' : '現地'}参加をカウントしました！`,
-      'success'
-    );
+
+    // Only show notification if counters are visible
+    if (this.config.showSurveyCounters) {
+      this.showNotification(
+        `${type === 'online' ? 'オンライン' : '現地'}参加をカウントしました！`,
+        'success'
+      );
+    } else {
+      // Still show a thank you message without revealing the count
+      this.showNotification(`ご回答ありがとうございます！`, 'success');
+    }
   }
 
   updateSurveyCounters() {
@@ -931,10 +944,20 @@ class LightningTalkApp {
     const { online: onlineCountEl, offline: offlineCountEl } = this.elements.surveyCounters;
 
     if (onlineCountEl) {
-      onlineCountEl.textContent = this.surveyCounters.online.toString();
+      if (this.config.showSurveyCounters) {
+        onlineCountEl.textContent = this.surveyCounters.online.toString();
+        onlineCountEl.style.display = 'inline';
+      } else {
+        onlineCountEl.style.display = 'none';
+      }
     }
     if (offlineCountEl) {
-      offlineCountEl.textContent = this.surveyCounters.offline.toString();
+      if (this.config.showSurveyCounters) {
+        offlineCountEl.textContent = this.surveyCounters.offline.toString();
+        offlineCountEl.style.display = 'inline';
+      } else {
+        offlineCountEl.style.display = 'none';
+      }
     }
   }
 

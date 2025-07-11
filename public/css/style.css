@@ -320,6 +320,41 @@ header.scrolled .nav-links a {
   flex-wrap: wrap;
 }
 
+/* Survey Section */
+.survey-section {
+  margin-top: 20px;
+}
+
+.survey-section h4 {
+  margin-bottom: 15px;
+  color: #34495e;
+  font-weight: 600;
+}
+
+.survey-buttons {
+  display: flex;
+  gap: 15px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.survey-btn {
+  position: relative;
+  padding-right: 15px;
+}
+
+.survey-btn .count {
+  display: inline-block;
+  margin-left: 8px;
+  background: rgba(255, 255, 255, 0.3);
+  padding: 2px 8px;
+  border-radius: 12px;
+  font-size: 0.9em;
+  font-weight: 600;
+  min-width: 24px;
+  text-align: center;
+}
+
 /* About Lightning Talk Section */
 .about-lt {
   background: #f8f9fa;
