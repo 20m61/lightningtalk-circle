@@ -10,17 +10,113 @@ const logger = createLogger('voting-routes');
  * Real-time Voting API Routes
  */
 
+// Participation voting for events
+router.post(
+  '/',
+  [
+    body('eventId').notEmpty().withMessage('Event ID is required'),
+    body('participationType')
+      .isIn(['online', 'onsite'])
+      .withMessage('Participation type must be online or onsite'),
+    body('participantName')
+      .notEmpty()
+      .trim()
+      .isLength({ min: 1, max: 50 })
+      .withMessage('Name must be between 1-50 characters'),
+    body('participantEmail')
+      .optional()
+      .isEmail()
+      .normalizeEmail()
+      .withMessage('Invalid email format')
+  ],
+  async (req, res) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ errors: errors.array() });
+    }
+
+    try {
+      const { eventId, participationType, participantName, participantEmail } = req.body;
+      const { votingService, websocketService } = req.app.locals;
+
+      // Check if participant already voted
+      const existingVote = await votingService.getParticipantVote(eventId, participantName);
+      if (existingVote) {
+        return res.status(409).json({
+          error: 'Already voted',
+          message: 'すでに投票済みです'
+        });
+      }
+
+      // Create vote
+      const vote = await votingService.createParticipationVote({
+        eventId,
+        participationType,
+        participantName,
+        participantEmail,
+        timestamp: new Date().toISOString()
+      });
+
+      // Get updated counts
+      const voteCounts = await votingService.getVoteCounts(eventId);
+
+      // Broadcast update via WebSocket
+      if (websocketService) {
+        websocketService.broadcast({
+          type: 'voteUpdate',
+          eventId,
+          votes: voteCounts
+        });
+      }
+
+      res.status(201).json({
+        success: true,
+        vote,
+        counts: voteCounts
+      });
+    } catch (error) {
+      logger.error('Failed to create participation vote:', error);
+      res.status(500).json({
+        error: 'Failed to submit vote',
+        message: '投票の送信に失敗しました'
+      });
+    }
+  }
+);
+
+// Get vote counts for an event
+router.get('/events/:eventId', param('eventId').notEmpty(), async (req, res) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(400).json({ errors: errors.array() });
+  }
+
+  try {
+    const { eventId } = req.params;
+    const { votingService } = req.app.locals;
+
+    const voteCounts = await votingService.getVoteCounts(eventId);
+
+    res.json({
+      eventId,
+      counts: voteCounts
+    });
+  } catch (error) {
+    logger.error('Failed to get vote counts:', error);
+    res.status(500).json({
+      error: 'Failed to get vote counts',
+      message: '投票数の取得に失敗しました'
+    });
+  }
+});
+
 // Create a new voting session
 router.post(
   '/sessions',
   authenticateToken,
   [
-    body('eventId')
-      .isUUID()
-      .withMessage('Event ID must be a valid UUID'),
-    body('talkId')
-      .isUUID()
-      .withMessage('Talk ID must be a valid UUID'),
+    body('eventId').isUUID().withMessage('Event ID must be a valid UUID'),
+    body('talkId').isUUID().withMessage('Talk ID must be a valid UUID'),
     body('duration')
       .optional()
       .isInt({ min: 30, max: 300 })
@@ -75,10 +171,7 @@ router.post(
       .isLength({ min: 1, max: 100 })
       .withMessage('Session ID must be provided')
       .trim(),
-    body('rating')
-      .isInt({ min: 1, max: 5 })
-      .withMessage('Rating must be between 1-5')
-      .toInt(),
+    body('rating').isInt({ min: 1, max: 5 }).withMessage('Rating must be between 1-5').toInt(),
     body('participantId')
       .optional()
       .isLength({ min: 1, max: 100 })
@@ -247,5 +340,35 @@ router.get('/talks/:talkId/history', param('talkId').notEmpty(), async (req, res
     });
   }
 });
+
+/**
+ * GET /api/voting/participation/:eventId
+ * Get participation votes for a specific event
+ */
+router.get(
+  '/participation/:eventId',
+  param('eventId').notEmpty().withMessage('Event ID is required'),
+  async (req, res) => {
+    try {
+      const { eventId } = req.params;
+      const { votingService } = req.app.locals;
+
+      const votes = await votingService.getParticipationVotes(eventId);
+
+      res.json({
+        eventId,
+        online: votes.online.length,
+        onsite: votes.onsite.length,
+        timestamp: new Date().toISOString()
+      });
+    } catch (error) {
+      console.error('Error fetching participation votes:', error);
+      res.status(500).json({
+        error: 'Failed to fetch participation votes',
+        message: 'Unable to retrieve current vote counts'
+      });
+    }
+  }
+);
 
 export default router;

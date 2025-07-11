@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>イベント検索 - なんでもライトニングトーク ⚡</title>
+
+    <!-- Performance optimizations: Preload critical resources -->
+    <link rel="preload" href="css/style.css" as="style" />
+    <link rel="preload" href="js/event-search.js" as="script" />
+    <link rel="dns-prefetch" href="//fonts.googleapis.com" />
+    <link rel="dns-prefetch" href="//fonts.gstatic.com" />
+
+    <!-- Optimized font loading -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;600;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <link rel="stylesheet" href="css/style.css" />
+  </head>
+  <body>
+    <header>
+      <nav class="container">
+        <div class="logo">⚡ なんでもLT</div>
+        <ul class="nav-links">
+          <li><a href="/">ホーム</a></li>
+          <li><a href="#event">イベント情報</a></li>
+          <li><a href="/search.html">イベント検索</a></li>
+          <li><a href="/presentations.html">アーカイブ</a></li>
+          <li><a href="/#contact">お問い合わせ</a></li>
+        </ul>
+        <div class="mobile-menu-toggle">
+          <span></span>
+          <span></span>
+          <span></span>
+        </div>
+      </nav>
+    </header>
+
+    <main style="padding-top: 100px">
+      <section class="search-section">
+        <div class="container">
+          <h1 class="section-title">📅 イベント検索</h1>
+
+          <div id="event-search-container">
+            <!-- Event search component will be inserted here -->
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer id="contact">
+      <div class="container">
+        <h3>✨ なんでもライトニングトーク</h3>
+        <p>5分間で世界が広がる。あなたの参加をお待ちしています！</p>
+        <div class="footer-links">
+          <a href="/privacy">プライバシーポリシー</a>
+          <a href="/terms">利用規約</a>
+          <a href="/contact">お問い合わせ</a>
+        </div>
+        <p class="copyright">© 2025 なんでもライトニングトーク. All rights reserved.</p>
+      </div>
+    </footer>
+
+    <script src="js/event-search.js"></script>
+  </body>
+</html>

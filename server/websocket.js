@@ -27,6 +27,35 @@ export function setupWebSocketServer(server) {
     const clientIP = request.socket.remoteAddress;
     logger.info(`WebSocket connection from ${clientIP}`);
 
+    // Handle incoming messages
+    ws.on('message', message => {
+      try {
+        const data = JSON.parse(message);
+
+        // Handle participation vote updates
+        if (data.type === 'vote') {
+          const { eventId, voteType, voter } = data;
+
+          // Broadcast to all connected clients
+          wss.clients.forEach(client => {
+            if (client.readyState === 1) {
+              // WebSocket.OPEN
+              client.send(
+                JSON.stringify({
+                  type: 'voteUpdate',
+                  eventId,
+                  voteType,
+                  voter
+                })
+              );
+            }
+          });
+        }
+      } catch (error) {
+        logger.error(`WebSocket message error from ${clientIP}:`, error);
+      }
+    });
+
     ws.on('error', error => {
       logger.error(`WebSocket error from ${clientIP}:`, error);
     });

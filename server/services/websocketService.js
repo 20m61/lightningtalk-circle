@@ -393,9 +393,14 @@ export class WebSocketService extends EventEmitter {
    */
   setupMetrics() {
     // Periodic metrics logging
-    setInterval(() => {
+    this.metricsInterval = setInterval(() => {
       logger.info('WebSocket metrics:', this.getMetrics());
     }, 60000); // Every minute
+
+    // Allow cleanup
+    if (this.metricsInterval.unref) {
+      this.metricsInterval.unref();
+    }
   }
 
   /**

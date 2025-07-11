@@ -25,6 +25,16 @@ import votingRouter from './routes/voting.js';
 import { errorHandler, notFoundHandler } from './middleware/errorHandler.js';
 import { logger } from './middleware/logger.js';
 import { authenticateToken, requireAdmin } from './middleware/auth.js';
+import {
+  formHoneypot,
+  timingHoneypot,
+  behavioralHoneypot,
+  createAPIHoneypot
+} from './middleware/honeypot.js';
+import {
+  addToken as addCSRFToken,
+  validateToken as validateCSRF
+} from './middleware/csrf-protection.js';
 
 // Services
 import { DatabaseService } from './services/database.js';
@@ -88,7 +98,11 @@ class LightningTalkServer {
               fontSrc: ["'self'", 'https://fonts.gstatic.com', 'data:'],
               scriptSrc: ["'self'"],
               imgSrc: ["'self'", 'data:', 'https:'],
-              connectSrc: ["'self'"],
+              connectSrc: [
+                "'self'",
+                'https://accounts.google.com',
+                'https://*.auth.ap-northeast-1.amazoncognito.com'
+              ],
               workerSrc: ["'self'", 'blob:'],
               objectSrc: ["'none'"],
               baseUri: ["'self'"],
@@ -112,7 +126,11 @@ class LightningTalkServer {
               scriptSrc: ["'self'", "'unsafe-inline'"],
               scriptSrcAttr: ["'self'", "'unsafe-inline'"],
               imgSrc: ["'self'", 'data:', 'https:'],
-              connectSrc: ["'self'"],
+              connectSrc: [
+                "'self'",
+                'https://accounts.google.com',
+                'https://*.auth.ap-northeast-1.amazoncognito.com'
+              ],
               workerSrc: ["'self'", 'blob:'],
               objectSrc: ["'none'"],
               baseUri: ["'self'"],
@@ -171,6 +189,10 @@ class LightningTalkServer {
     // Logging
     this.app.use(logger);
 
+    // Security middleware - honeypot and CSRF protection
+    this.app.use(behavioralHoneypot());
+    this.app.use(addCSRFToken());
+
     // Static files
     this.app.use(express.static(join(__dirname, '../public')));
 
@@ -182,11 +204,24 @@ class LightningTalkServer {
     // API Documentation
     this.app.use('/api/docs', swaggerRouter);
 
-    // API Routes
+    // Honeypot API endpoints (must be before real routes)
+    this.app.use('/api/admin-login', createAPIHoneypot('admin-login'));
+    this.app.use('/api/wp-admin', createAPIHoneypot('wp-admin'));
+    this.app.use('/api/administrator', createAPIHoneypot('administrator'));
+    this.app.use('/api/backup', createAPIHoneypot('backup'));
+    this.app.use('/api/config', createAPIHoneypot('config'));
+
+    // API Routes with CSRF protection for POST/PUT/DELETE
     this.app.use('/api/auth', authRouter);
     this.app.use('/api/events', eventsRouter);
-    this.app.use('/api/participants', participantsRouter);
-    this.app.use('/api/talks', talksRouter);
+    this.app.use(
+      '/api/participants',
+      validateCSRF(),
+      formHoneypot(),
+      timingHoneypot(),
+      participantsRouter
+    );
+    this.app.use('/api/talks', validateCSRF(), talksRouter);
     this.app.use('/api/voting', votingRouter);
     this.app.use('/api/admin', authenticateToken, requireAdmin, adminRouter);
     this.app.use('/api/health', healthRouter);
