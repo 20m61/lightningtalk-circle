@@ -9,6 +9,8 @@
     "start": "node server/app.js",
     "dev": "nodemon server/app.js",
     "dev:seed": "NODE_ENV=development node server/app.js --seed",
+    "build": "vite build",
+    "build:dev": "vite build --mode development",
     "seed:admin": "node server/scripts/seed-admin.js",
     "generate:secrets": "node scripts/generate-secrets.js",
     "setup:github": "node scripts/setup-github.js",

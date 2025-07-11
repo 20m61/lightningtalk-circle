@@ -10,11 +10,11 @@ import bcrypt from 'bcryptjs';
 const getJwtSecret = () => {
   const secret = process.env.JWT_SECRET;
 
-  if (!secret && process.env.NODE_ENV === 'production') {
-    throw new Error('JWT_SECRET must be set in production environment');
-  }
-
   if (!secret) {
+    if (process.env.NODE_ENV === 'production') {
+      throw new Error('JWT_SECRET environment variable is required in production');
+    }
+
     console.warn(
       '⚠️  WARNING: Using development JWT secret. Set JWT_SECRET environment variable for production.'
     );

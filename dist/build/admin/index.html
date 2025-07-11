@@ -1,0 +1,303 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>管理画面 - なんでもライトニングトーク</title>
+    <link rel="stylesheet" href="../styles.css" />
+    <style>
+      .admin-container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 2rem;
+      }
+
+      .admin-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 2rem;
+        padding-bottom: 1rem;
+        border-bottom: 2px solid #ddd;
+      }
+
+      .admin-header h1 {
+        margin: 0;
+        color: #333;
+      }
+
+      .user-info {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+      }
+
+      .logout-btn {
+        padding: 0.5rem 1rem;
+        background: #dc3545;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        text-decoration: none;
+        font-size: 0.9rem;
+      }
+
+      .logout-btn:hover {
+        background: #c82333;
+      }
+
+      .dashboard-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 2rem;
+        margin-bottom: 3rem;
+      }
+
+      .dashboard-card {
+        background: white;
+        padding: 1.5rem;
+        border-radius: 8px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+      }
+
+      .dashboard-card h3 {
+        margin-top: 0;
+        color: #555;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .stat-value {
+        font-size: 2.5rem;
+        font-weight: bold;
+        color: #007bff;
+        margin: 1rem 0;
+      }
+
+      .stat-label {
+        color: #666;
+        font-size: 0.9rem;
+      }
+
+      .recent-items {
+        background: white;
+        padding: 1.5rem;
+        border-radius: 8px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+      }
+
+      .recent-items h3 {
+        margin-top: 0;
+        color: #555;
+      }
+
+      .item-list {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+      }
+
+      .item-list li {
+        padding: 0.75rem 0;
+        border-bottom: 1px solid #eee;
+      }
+
+      .item-list li:last-child {
+        border-bottom: none;
+      }
+
+      .item-date {
+        font-size: 0.85rem;
+        color: #999;
+      }
+
+      .loading {
+        text-align: center;
+        padding: 3rem;
+        color: #666;
+      }
+
+      .error-message {
+        background: #fee;
+        color: #c33;
+        padding: 1rem;
+        border-radius: 4px;
+        margin-bottom: 1rem;
+      }
+
+      .admin-nav {
+        background: #f8f9fa;
+        padding: 1rem;
+        border-radius: 4px;
+        margin-bottom: 2rem;
+      }
+
+      .admin-nav ul {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        display: flex;
+        gap: 2rem;
+      }
+
+      .admin-nav a {
+        color: #007bff;
+        text-decoration: none;
+        font-weight: 500;
+      }
+
+      .admin-nav a:hover {
+        text-decoration: underline;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="admin-container">
+      <div class="admin-header">
+        <h1>管理画面</h1>
+        <div class="user-info">
+          <span id="userName">Loading...</span>
+          <button class="logout-btn" onclick="logout()">ログアウト</button>
+        </div>
+      </div>
+
+      <nav class="admin-nav">
+        <ul>
+          <li><a href="/admin">ダッシュボード</a></li>
+          <li><a href="/admin/events">イベント管理</a></li>
+          <li><a href="/admin/participants">参加者管理</a></li>
+          <li><a href="/admin/talks">発表管理</a></li>
+          <li><a href="/admin/analytics">アナリティクス</a></li>
+          <li><a href="/admin/settings">設定</a></li>
+        </ul>
+      </nav>
+
+      <div id="errorContainer" style="display: none" class="error-message"></div>
+
+      <div id="loadingContainer" class="loading">
+        <p>データを読み込み中...</p>
+      </div>
+
+      <div id="dashboardContent" style="display: none">
+        <div class="dashboard-grid">
+          <div class="dashboard-card">
+            <h3>総イベント数</h3>
+            <div class="stat-value" id="totalEvents">-</div>
+            <div class="stat-label">開催済み・予定を含む</div>
+          </div>
+          <div class="dashboard-card">
+            <h3>総参加者数</h3>
+            <div class="stat-value" id="totalParticipants">-</div>
+            <div class="stat-label">全イベント累計</div>
+          </div>
+          <div class="dashboard-card">
+            <h3>総発表数</h3>
+            <div class="stat-value" id="totalTalks">-</div>
+            <div class="stat-label">全イベント累計</div>
+          </div>
+          <div class="dashboard-card">
+            <h3>アクティブイベント</h3>
+            <div class="stat-value" id="activeEvents">-</div>
+            <div class="stat-label">現在募集中</div>
+          </div>
+        </div>
+
+        <div class="recent-items">
+          <h3>最近の参加者</h3>
+          <ul class="item-list" id="recentParticipants">
+            <li>データがありません</li>
+          </ul>
+        </div>
+
+        <div class="recent-items" style="margin-top: 2rem">
+          <h3>最近の発表申し込み</h3>
+          <ul class="item-list" id="recentTalks">
+            <li>データがありません</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <script type="module">
+      import auth from '../src/features/user-authentication.js';
+
+      // Check authentication
+      if (!auth.isAuthenticated() || !auth.isAdmin()) {
+        window.location.href = '/login.html';
+      }
+
+      // Display user info
+      document.getElementById('userName').textContent = auth.user ? auth.user.name : 'Unknown';
+
+      // Logout function
+      window.logout = function () {
+        auth.logout();
+        window.location.href = '/';
+      };
+
+      // Load dashboard data
+      async function loadDashboard() {
+        try {
+          const response = await auth.authenticatedFetch('/api/admin/dashboard');
+          if (!response.ok) {
+            throw new Error('Failed to load dashboard data');
+          }
+
+          const data = await response.json();
+
+          // Hide loading, show content
+          document.getElementById('loadingContainer').style.display = 'none';
+          document.getElementById('dashboardContent').style.display = 'block';
+
+          // Update statistics
+          document.getElementById('totalEvents').textContent = data.overview.totalEvents || 0;
+          document.getElementById('totalParticipants').textContent =
+            data.overview.totalParticipants || 0;
+          document.getElementById('totalTalks').textContent = data.overview.totalTalks || 0;
+          document.getElementById('activeEvents').textContent = data.overview.activeEvents || 0;
+
+          // Update recent participants
+          const participantsList = document.getElementById('recentParticipants');
+          if (data.recentActivity.participants && data.recentActivity.participants.length > 0) {
+            participantsList.innerHTML = data.recentActivity.participants
+              .map(
+                p => `
+                        <li>
+                            <strong>${p.name}</strong> - ${p.participationType}
+                            <div class="item-date">${new Date(p.registeredAt).toLocaleString('ja-JP')}</div>
+                        </li>
+                    `
+              )
+              .join('');
+          }
+
+          // Update recent talks
+          const talksList = document.getElementById('recentTalks');
+          if (data.recentActivity.talks && data.recentActivity.talks.length > 0) {
+            talksList.innerHTML = data.recentActivity.talks
+              .map(
+                t => `
+                        <li>
+                            <strong>${t.title}</strong> by ${t.speakerName}
+                            <div class="item-date">${new Date(t.submittedAt).toLocaleString('ja-JP')}</div>
+                        </li>
+                    `
+              )
+              .join('');
+          }
+        } catch (error) {
+          console.error('Dashboard error:', error);
+          document.getElementById('loadingContainer').style.display = 'none';
+          const errorContainer = document.getElementById('errorContainer');
+          errorContainer.textContent = 'ダッシュボードデータの読み込みに失敗しました';
+          errorContainer.style.display = 'block';
+        }
+      }
+
+      // Load dashboard on page load
+      loadDashboard();
+    </script>
+  </body>
+</html>

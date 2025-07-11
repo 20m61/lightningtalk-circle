@@ -10,11 +10,16 @@ export default defineConfig({
     }
   },
   build: {
-    outDir: 'public/build',
+    outDir: 'dist',
     rollupOptions: {
-      input: path.resolve(__dirname, 'src/main.jsx'),
+      input: {
+        main: path.resolve(__dirname, 'src/main.jsx'),
+        login: path.resolve(__dirname, 'src/pages/login.jsx'),
+        callback: path.resolve(__dirname, 'src/pages/callback.jsx'),
+        'react-integration': path.resolve(__dirname, 'src/react-integration.jsx')
+      },
       output: {
-        entryFileNames: 'js/[name]-[hash].js',
+        entryFileNames: 'js/[name].js',
         chunkFileNames: 'js/[name]-[hash].js',
         assetFileNames: 'assets/[name]-[hash].[ext]'
       }

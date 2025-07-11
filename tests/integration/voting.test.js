@@ -2,7 +2,6 @@ import { jest } from '@jest/globals';
 import request from 'supertest';
 import { EventEmitter } from 'events';
 import express from 'express';
-import votingRouter from '../../server/routes/voting.js';
 
 /**
  * Voting API Integration Tests
@@ -30,6 +29,9 @@ jest.unstable_mockModule('../../server/middleware/auth.js', () => ({
     next();
   }
 }));
+
+// Import voting router after mocks are set up
+const { default: votingRouter } = await import('../../server/routes/voting.js');
 
 describe('Voting API Integration Tests', () => {
   let app;
@@ -122,8 +124,8 @@ describe('Voting API Integration Tests', () => {
         'voting_session_created',
         expect.objectContaining({
           sessionId: 'test-session-id',
-          eventId: 'event-123',
-          talkId: 'talk-456'
+          eventId: '123e4567-e89b-12d3-a456-426614174000',
+          talkId: '456e4567-e89b-12d3-a456-426614174001'
         })
       );
     });

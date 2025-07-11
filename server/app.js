@@ -98,7 +98,11 @@ class LightningTalkServer {
               fontSrc: ["'self'", 'https://fonts.gstatic.com', 'data:'],
               scriptSrc: ["'self'"],
               imgSrc: ["'self'", 'data:', 'https:'],
-              connectSrc: ["'self'"],
+              connectSrc: [
+                "'self'",
+                'https://accounts.google.com',
+                'https://*.auth.ap-northeast-1.amazoncognito.com'
+              ],
               workerSrc: ["'self'", 'blob:'],
               objectSrc: ["'none'"],
               baseUri: ["'self'"],
@@ -122,7 +126,11 @@ class LightningTalkServer {
               scriptSrc: ["'self'", "'unsafe-inline'"],
               scriptSrcAttr: ["'self'", "'unsafe-inline'"],
               imgSrc: ["'self'", 'data:', 'https:'],
-              connectSrc: ["'self'"],
+              connectSrc: [
+                "'self'",
+                'https://accounts.google.com',
+                'https://*.auth.ap-northeast-1.amazoncognito.com'
+              ],
               workerSrc: ["'self'", 'blob:'],
               objectSrc: ["'none'"],
               baseUri: ["'self'"],

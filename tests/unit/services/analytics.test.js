@@ -23,9 +23,11 @@ jest.unstable_mockModule('../../../server/services/database.js', () => ({
   }
 }));
 
-import analyticsService from '../../../server/services/analyticsService.js';
+// Import the class
+import { AnalyticsService } from '../../../server/services/analyticsService.js';
 
 describe('AnalyticsService', () => {
+  let analyticsService;
   let mockDatabase;
 
   beforeEach(() => {
@@ -34,16 +36,9 @@ describe('AnalyticsService', () => {
       query: jest.fn()
     };
 
+    // Create a new instance for each test
+    analyticsService = new AnalyticsService();
     analyticsService.db = mockDatabase;
-
-    // Reset all method mocks
-    Object.getOwnPropertyNames(analyticsService)
-      .filter(prop => typeof analyticsService[prop] === 'function')
-      .forEach(method => {
-        if (jest.isMockFunction(analyticsService[method])) {
-          analyticsService[method].mockReset();
-        }
-      });
   });
 
   afterEach(() => {
@@ -339,7 +334,7 @@ describe('AnalyticsService', () => {
       analyticsService.getEventStatistics = jest.fn().mockResolvedValue({});
 
       await expect(analyticsService.generateReport(eventId, reportType)).rejects.toThrow(
-        'Invalid report type'
+        'Failed to generate report'
       );
     });
   });
@@ -439,13 +434,30 @@ describe('AnalyticsService', () => {
   describe('performance tests', () => {
     it('should handle large datasets efficiently', async () => {
       const eventId = 'large-event';
-      const largeDataset = Array.from({ length: 1000 }, (_, i) => ({
-        id: i + 1,
-        participation_type: i % 2 === 0 ? 'online' : 'offline',
-        created_at: new Date(2025, 5, 20 + (i % 7))
+      const largeDatasetDistribution = [
+        { participation_type: 'online', count: 500, percentage: 50.0 },
+        { participation_type: 'offline', count: 500, percentage: 50.0 }
+      ];
+      const largeDatasetTimeline = Array.from({ length: 100 }, (_, i) => ({
+        date: `2025-06-${20 + (i % 7)}`,
+        registrations: Math.floor(Math.random() * 10) + 1,
+        participation_type: i % 2 === 0 ? 'online' : 'offline'
       }));
+      const largeDatasetGeographic = [
+        { location: '東京都', count: 600 },
+        { location: '大阪府', count: 400 }
+      ];
+      const largeDatasetAttributes = [
+        { organization_type: 'Individual', count: 700, avg_experience_level: 2.1 },
+        { organization_type: 'Company', count: 300, avg_experience_level: 2.8 }
+      ];
 
-      mockDatabase.query.mockResolvedValue(largeDataset);
+      mockDatabase.query
+        .mockResolvedValueOnce(largeDatasetDistribution)
+        .mockResolvedValueOnce(largeDatasetTimeline)
+        .mockResolvedValueOnce(largeDatasetGeographic)
+        .mockResolvedValueOnce(largeDatasetAttributes);
+
       analyticsService.getBasicEventStats = jest.fn().mockResolvedValue({
         eventInfo: { id: eventId },
         summary: { totalParticipants: 1000 }

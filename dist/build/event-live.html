@@ -1,0 +1,296 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ライブイベント | 第1回 なんでもライトニングトーク</title>
+
+    <!-- Favicon and App Icons -->
+    <link rel="icon" type="image/x-icon" href="/favicon.ico" />
+    <link rel="icon" type="image/png" sizes="16x16" href="/icons/favicon-16x16.png" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/icons/favicon-32x32.png" />
+    <link rel="icon" type="image/png" sizes="96x96" href="/icons/favicon-96x96.png" />
+
+    <!-- Apple Touch Icons -->
+    <link rel="apple-touch-icon" sizes="57x57" href="/icons/apple-touch-icon-57x57.png" />
+    <link rel="apple-touch-icon" sizes="60x60" href="/icons/apple-touch-icon-60x60.png" />
+    <link rel="apple-touch-icon" sizes="72x72" href="/icons/apple-touch-icon-72x72.png" />
+    <link rel="apple-touch-icon" sizes="76x76" href="/icons/apple-touch-icon-76x76.png" />
+    <link rel="apple-touch-icon" sizes="114x114" href="/icons/apple-touch-icon-114x114.png" />
+    <link rel="apple-touch-icon" sizes="120x120" href="/icons/apple-touch-icon-120x120.png" />
+    <link rel="apple-touch-icon" sizes="144x144" href="/icons/apple-touch-icon-144x144.png" />
+    <link rel="apple-touch-icon" sizes="152x152" href="/icons/apple-touch-icon-152x152.png" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/icons/apple-touch-icon-180x180.png" />
+
+    <!-- Android Chrome Icons -->
+    <link rel="manifest" href="/manifest.json" />
+
+    <!-- Microsoft Tiles -->
+    <meta name="msapplication-config" content="/browserconfig.xml" />
+    <meta name="msapplication-TileColor" content="#4A90E2" />
+    <meta name="msapplication-TileImage" content="/icons/mstile-144x144.png" />
+
+    <!-- Theme Colors -->
+    <meta name="theme-color" content="#4A90E2" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+    <meta name="apple-mobile-web-app-title" content="LT Circle" />
+
+    <!-- Social Media Meta Tags -->
+    <meta property="og:title" content="ライブイベント | 第1回 なんでもライトニングトーク" />
+    <meta
+      property="og:description"
+      content="ライトニングトークイベントのライブ配信中！リアルタイムで発表を視聴できます。"
+    />
+    <meta property="og:image" content="/icons/android-chrome-512x512.png" />
+    <meta property="og:type" content="website" />
+    <meta name="twitter:card" content="summary_large_image" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="css/tailwind.css" />
+    <link rel="stylesheet" href="css/style.css" />
+    <link rel="stylesheet" href="css/event-live.css" />
+  </head>
+  <body>
+    <header class="live-header">
+      <nav class="container">
+        <div class="logo">⚡ なんでもLT LIVE</div>
+        <div class="live-status">
+          <span class="status-indicator live"></span>
+          <span class="status-text">ライブ配信中</span>
+        </div>
+        <div class="live-info">
+          <span class="viewer-count">👥 <span id="viewerCount">87</span>人視聴中</span>
+          <button class="btn-share" onclick="shareEvent()">📤 共有</button>
+        </div>
+      </nav>
+    </header>
+
+    <main class="live-main">
+      <div class="live-container">
+        <!-- 左サイドバー: プログラム -->
+        <aside class="program-sidebar">
+          <h3 class="sidebar-title">📋 プログラム</h3>
+          <div class="program-list">
+            <div class="program-item completed">
+              <span class="time">19:00</span>
+              <span class="title">オープニング</span>
+              <span class="status">✅</span>
+            </div>
+            <div class="program-item completed">
+              <span class="time">19:05</span>
+              <span class="title">Vimの効率的な使い方</span>
+              <span class="speaker">山田太郎</span>
+              <span class="status">✅</span>
+            </div>
+            <div class="program-item current">
+              <span class="time">19:10</span>
+              <span class="title">猫との暮らしの工夫</span>
+              <span class="speaker">鈴木花子</span>
+              <span class="status">▶️</span>
+            </div>
+            <div class="program-item">
+              <span class="time">19:15</span>
+              <span class="title">家庭菜園で作る野菜</span>
+              <span class="speaker">佐藤次郎</span>
+            </div>
+            <div class="program-item">
+              <span class="time">19:20</span>
+              <span class="title">効率的な読書術</span>
+              <span class="speaker">田中美咲</span>
+            </div>
+          </div>
+
+          <div class="next-up">
+            <h4>次の発表者</h4>
+            <div class="next-speaker">
+              <img src="/images/speaker-avatar.png" alt="佐藤次郎" />
+              <div>
+                <p class="name">佐藤次郎</p>
+                <p class="talk-title">家庭菜園で作る野菜</p>
+              </div>
+            </div>
+          </div>
+        </aside>
+
+        <!-- メインコンテンツ -->
+        <div class="main-content">
+          <!-- 現在の発表者情報 -->
+          <div class="current-talk-header">
+            <h2 class="current-talk-title">猫との暮らしの工夫</h2>
+            <div class="current-speaker-info">
+              <img src="/images/speaker-avatar-2.png" alt="鈴木花子" class="speaker-avatar" />
+              <span class="speaker-name">鈴木花子</span>
+              <span class="talk-category">🐱 ペット・動物</span>
+            </div>
+          </div>
+
+          <!-- タイマー表示 -->
+          <div class="timer-section">
+            <div class="main-timer">
+              <svg class="timer-svg" viewBox="0 0 200 200">
+                <circle cx="100" cy="100" r="90" fill="none" stroke="#e0e0e0" stroke-width="8" />
+                <circle
+                  class="timer-progress"
+                  cx="100"
+                  cy="100"
+                  r="90"
+                  fill="none"
+                  stroke="#4CAF50"
+                  stroke-width="8"
+                  stroke-dasharray="565.48"
+                  stroke-dashoffset="113.1"
+                  transform="rotate(-90 100 100)"
+                />
+              </svg>
+              <div class="timer-display">
+                <span id="currentTime">04:12</span>
+                <span class="timer-total">/ 05:00</span>
+              </div>
+            </div>
+            <div class="timer-status">
+              <div class="time-segments">
+                <div class="segment intro">導入 (0:30)</div>
+                <div class="segment main active">本題 (3:30)</div>
+                <div class="segment conclusion">まとめ (1:00)</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- リアクションボタン -->
+          <div class="reactions-section">
+            <h4>リアクション</h4>
+            <div class="reaction-buttons">
+              <button class="reaction-btn" onclick="sendReaction('👏')">
+                <span class="emoji">👏</span>
+                <span class="count">45</span>
+              </button>
+              <button class="reaction-btn" onclick="sendReaction('❤️')">
+                <span class="emoji">❤️</span>
+                <span class="count">23</span>
+              </button>
+              <button class="reaction-btn" onclick="sendReaction('😄')">
+                <span class="emoji">😄</span>
+                <span class="count">18</span>
+              </button>
+              <button class="reaction-btn" onclick="sendReaction('🤔')">
+                <span class="emoji">🤔</span>
+                <span class="count">5</span>
+              </button>
+              <button class="reaction-btn" onclick="sendReaction('💡')">
+                <span class="emoji">💡</span>
+                <span class="count">12</span>
+              </button>
+            </div>
+            <div id="floatingReactions" class="floating-reactions"></div>
+          </div>
+
+          <!-- 投票セクション -->
+          <div class="voting-section" id="votingSection" style="display: none">
+            <h4>この発表はいかがでしたか？</h4>
+            <div class="voting-options">
+              <button class="vote-btn" onclick="vote(5)">⭐⭐⭐⭐⭐ 素晴らしい！</button>
+              <button class="vote-btn" onclick="vote(4)">⭐⭐⭐⭐ とても良い</button>
+              <button class="vote-btn" onclick="vote(3)">⭐⭐⭐ 良い</button>
+              <button class="vote-btn" onclick="vote(2)">⭐⭐ 普通</button>
+              <button class="vote-btn" onclick="vote(1)">⭐ 改善の余地あり</button>
+            </div>
+            <div class="vote-results" id="voteResults" style="display: none">
+              <div class="result-bar">
+                <span class="label">⭐⭐⭐⭐⭐</span>
+                <div class="bar"><div class="fill" style="width: 65%"></div></div>
+                <span class="percentage">65%</span>
+              </div>
+              <div class="result-bar">
+                <span class="label">⭐⭐⭐⭐</span>
+                <div class="bar"><div class="fill" style="width: 25%"></div></div>
+                <span class="percentage">25%</span>
+              </div>
+              <div class="result-bar">
+                <span class="label">⭐⭐⭐</span>
+                <div class="bar"><div class="fill" style="width: 8%"></div></div>
+                <span class="percentage">8%</span>
+              </div>
+              <div class="result-bar">
+                <span class="label">⭐⭐</span>
+                <div class="bar"><div class="fill" style="width: 2%"></div></div>
+                <span class="percentage">2%</span>
+              </div>
+              <div class="result-bar">
+                <span class="label">⭐</span>
+                <div class="bar"><div class="fill" style="width: 0%"></div></div>
+                <span class="percentage">0%</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 右サイドバー: Q&A -->
+        <aside class="qa-sidebar">
+          <h3 class="sidebar-title">💬 Q&A</h3>
+          <div class="qa-input-section">
+            <textarea
+              id="questionInput"
+              placeholder="質問を入力してください..."
+              maxlength="200"
+            ></textarea>
+            <button class="btn btn-primary" onclick="submitQuestion()">質問を送信</button>
+          </div>
+
+          <div class="qa-list">
+            <div class="qa-item">
+              <div class="qa-header">
+                <span class="qa-author">匿名</span>
+                <span class="qa-time">2分前</span>
+              </div>
+              <p class="qa-text">猫アレルギーでも飼える方法はありますか？</p>
+              <div class="qa-actions">
+                <button class="upvote-btn" onclick="upvoteQuestion(this)">
+                  👍 <span class="vote-count">5</span>
+                </button>
+              </div>
+            </div>
+
+            <div class="qa-item answered">
+              <div class="qa-header">
+                <span class="qa-author">参加者A</span>
+                <span class="qa-time">5分前</span>
+              </div>
+              <p class="qa-text">おすすめの猫用グッズを教えてください</p>
+              <div class="qa-answer">
+                <span class="answer-label">回答済み</span>
+                <p>爪とぎと自動給餌器がおすすめです！</p>
+              </div>
+            </div>
+          </div>
+        </aside>
+      </div>
+    </main>
+
+    <!-- 管理者コントロール（管理者のみ表示） -->
+    <div class="admin-controls" id="adminControls">
+      <button class="admin-btn" onclick="nextTalk()">次の発表へ →</button>
+      <button class="admin-btn" onclick="pauseTimer()">⏸️ 一時停止</button>
+      <button class="admin-btn danger" onclick="endEvent()">イベント終了</button>
+    </div>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="js/event-live.js"></script>
+
+    <!-- Lightning Talk React Components -->
+    <script type="module" src="/build/js/main-K5f4ANmR.js"></script>
+    <script>
+      // Initialize Lightning Talk components when ready
+      window.addEventListener('DOMContentLoaded', () => {
+        if (window.LightningTalk) {
+          window.LightningTalk.init();
+        }
+      });
+    </script>
+  </body>
+</html>
