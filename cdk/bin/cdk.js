@@ -13,10 +13,10 @@ const env = {
   region: process.env.CDK_DEFAULT_REGION || process.env.AWS_REGION || 'ap-northeast-1',
 };
 
-console.log(`🚀 Deploying Lightning Talk Circle infrastructure`);
-console.log(`📍 Domain: 発表.com (xn--6wym69a.com)`);
-console.log(`🏢 AWS Account: ${env.account}`);
-console.log(`🌍 AWS Region: ${env.region}`);
+// console.log(`🚀 Deploying Lightning Talk Circle infrastructure`);
+// console.log(`📍 Domain: 発表.com (xn--6wym69a.com)`);
+// console.log(`🏢 AWS Account: ${env.account}`);
+// console.log(`🌍 AWS Region: ${env.region}`);
 
 // Create the unified stack
 new LightningTalkStack(app, 'LightningTalkStack', {
