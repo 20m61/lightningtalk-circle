@@ -230,6 +230,10 @@ web_modules/
 .env
 .env.*
 !.env.example
+!.env.production.template
+.env.backup*
+.env.local
+.env.vault
 
 # parcel-bundler cache (https://parceljs.org/)
 .cache
