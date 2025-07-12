@@ -72,7 +72,12 @@ export function sanitizeObject(obj, sanitizer = sanitizeText) {
   }
 
   if (Array.isArray(obj)) {
-    return obj.map(item => sanitizeObject(item, sanitizer));
+    return obj.map(item => {
+      if (typeof item === 'string') {
+        return sanitizer(item);
+      }
+      return sanitizeObject(item, sanitizer);
+    });
   }
 
   const sanitized = {};

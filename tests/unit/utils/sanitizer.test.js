@@ -107,7 +107,8 @@ describe('Sanitizer Utils', () => {
 
       // sanitizeObject uses sanitizeText by default, which removes ALL HTML
       expect(output.tags[0]).toBe('tag1');
-      expect(output.tags[1]).toBe('tag2');
+      // Script tags are completely removed by DOMPurify for security
+      expect(output.tags[1]).toBe('');
     });
 
     it('should handle null and non-objects', () => {
