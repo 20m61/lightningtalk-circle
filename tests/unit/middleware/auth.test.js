@@ -23,7 +23,8 @@ jest.unstable_mockModule('jsonwebtoken', () => ({
 // Mock bcryptjs
 jest.unstable_mockModule('bcryptjs', () => ({
   default: {
-    hash: jest.fn(async password => `hashed-${password}`),
+    genSalt: jest.fn(async (rounds) => 'mock-salt'),
+    hash: jest.fn(async (password, salt) => `hashed-${password}`),
     compare: jest.fn(async (password, hash) => password === 'correct-password')
   }
 }));
@@ -148,13 +149,17 @@ describe('Authentication Middleware', () => {
       expect(res.status).not.toHaveBeenCalled();
     });
 
-    it('should allow moderator user', () => {
+    it('should reject moderator user', () => {
       req.user = { id: 'mod-123', role: 'moderator' };
 
       requireAdmin(req, res, next);
 
-      expect(next).toHaveBeenCalled();
-      expect(res.status).not.toHaveBeenCalled();
+      expect(res.status).toHaveBeenCalledWith(403);
+      expect(res.json).toHaveBeenCalledWith({
+        error: 'Admin access required',
+        message: '管理者権限が必要です'
+      });
+      expect(next).not.toHaveBeenCalled();
     });
   });
 
@@ -205,45 +210,52 @@ describe('Authentication Middleware', () => {
 
   describe('validatePassword', () => {
     it('should accept strong password', () => {
-      const errors = validatePassword('MyStr0ng!Pass');
+      const result = validatePassword('MyStr0ng!Pass');
 
-      expect(errors).toEqual([]);
+      expect(result.valid).toBe(true);
+      expect(result.errors).toEqual([]);
     });
 
     it('should reject short password', () => {
-      const errors = validatePassword('Short1!');
+      const result = validatePassword('Short1!');
 
-      expect(errors).toContain('Password must be at least 8 characters long');
+      expect(result.valid).toBe(false);
+      expect(result.errors).toContain('Password must be at least 8 characters long');
     });
 
     it('should reject password without uppercase', () => {
-      const errors = validatePassword('mypassword123!');
+      const result = validatePassword('mypassword123!');
 
-      expect(errors).toContain('Password must contain at least one uppercase letter');
+      expect(result.valid).toBe(false);
+      expect(result.errors).toContain('Password must contain at least one uppercase letter');
     });
 
     it('should reject password without lowercase', () => {
-      const errors = validatePassword('MYPASSWORD123!');
+      const result = validatePassword('MYPASSWORD123!');
 
-      expect(errors).toContain('Password must contain at least one lowercase letter');
+      expect(result.valid).toBe(false);
+      expect(result.errors).toContain('Password must contain at least one lowercase letter');
     });
 
     it('should reject password without number', () => {
-      const errors = validatePassword('MyPassword!');
+      const result = validatePassword('MyPassword!');
 
-      expect(errors).toContain('Password must contain at least one number');
+      expect(result.valid).toBe(false);
+      expect(result.errors).toContain('Password must contain at least one number');
     });
 
     it('should reject password without special character', () => {
-      const errors = validatePassword('MyPassword123');
+      const result = validatePassword('MyPassword123');
 
-      expect(errors).toContain('Password must contain at least one special character');
+      expect(result.valid).toBe(false);
+      expect(result.errors).toContain('Password must contain at least one special character');
     });
 
     it('should reject password with all criteria missing', () => {
-      const errors = validatePassword('pass');
+      const result = validatePassword('pass');
 
-      expect(errors.length).toBeGreaterThan(3);
+      expect(result.valid).toBe(false);
+      expect(result.errors.length).toBeGreaterThan(3);
     });
   });
 });
