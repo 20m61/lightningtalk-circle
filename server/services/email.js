@@ -4,7 +4,9 @@
  */
 
 import nodemailer from 'nodemailer';
-import { logger } from '../middleware/logger.js';
+import { createLogger } from '../utils/logger.js';
+
+const logger = createLogger('email');
 
 export class EmailService {
   constructor(config = {}) {
