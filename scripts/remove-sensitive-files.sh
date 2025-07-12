@@ -17,10 +17,17 @@ fi
 echo "🔍 Checking for sensitive files in Git history..."
 
 # Files to remove from history
+# NOTE: .env.example and .env.production.template are intentionally NOT included
+# as they only contain template/example values
 FILES_TO_REMOVE=(
     ".env.backup.20250710-063618"
     ".env.backup.20250710-063629"
     ".env.backup.20250710-063640"
+    ".env"
+    ".env.development"
+    ".env.docker"
+    ".env.production"
+    ".env.staging"
 )
 
 # Check if git-filter-repo is available
@@ -50,6 +57,10 @@ echo "🚀 Running git-filter-repo to remove files from history..."
 git-filter-repo --invert-paths --paths-from-file /tmp/paths-to-remove.txt --force
 
 echo "✅ Files removed from Git history!"
+echo ""
+echo "📋 Files that will remain (templates only):"
+echo "   - .env.example"
+echo "   - .env.production.template"
 echo ""
 echo "⚠️  IMPORTANT NEXT STEPS:"
 echo "1. Force push to all branches:"
