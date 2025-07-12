@@ -26,9 +26,12 @@ jest.unstable_mockModule('express-validator', () => ({
     escape: jest.fn().mockReturnThis()
   })),
   query: jest.fn(() => ({
+    optional: jest.fn().mockReturnThis(),
     isLength: jest.fn().mockReturnThis(),
     matches: jest.fn().mockReturnThis(),
     isInt: jest.fn().mockReturnThis(),
+    isIn: jest.fn().mockReturnThis(),
+    isISO8601: jest.fn().mockReturnThis(),
     toInt: jest.fn().mockReturnThis(),
     custom: jest.fn().mockReturnThis(),
     withMessage: jest.fn().mockReturnThis(),

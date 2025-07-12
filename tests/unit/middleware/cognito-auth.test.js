@@ -33,10 +33,19 @@ describe('Cognito Authentication Middleware', () => {
     };
     jest.unstable_mockModule('axios', () => ({ default: mockAxios }));
 
-    // Mock bcrypt
-    jest.unstable_mockModule('bcrypt', () => ({
-      hash: jest.fn(password => `hashed-${password}`),
-      compare: jest.fn((password, hash) => hash === `hashed-${password}`)
+    // Mock auth middleware (which cognito-auth imports)
+    jest.unstable_mockModule('../../../server/middleware/auth.js', () => ({
+      hashPassword: jest.fn(password => `hashed-${password}`)
+    }));
+
+    // Mock logger
+    jest.unstable_mockModule('../../../server/utils/logger.js', () => ({
+      logger: {
+        info: jest.fn(),
+        error: jest.fn(),
+        warn: jest.fn(),
+        debug: jest.fn()
+      }
     }));
 
     // Set environment variables
