@@ -1,0 +1,70 @@
+version: '3.8'
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - ..:/workspace:cached
+      - lightningtalk-bashhistory:/commandhistory
+      - lightningtalk-node-modules:/workspace/node_modules
+      - lightningtalk-vscode-extensions:/home/node/.vscode-server/extensions
+    command: sleep infinity
+    network_mode: host
+    cap_add:
+      - NET_ADMIN
+    environment:
+      - TZ=Asia/Tokyo
+      - NODE_ENV=development
+      - DATABASE_URL=postgresql://lightningtalk:lightningtalk@localhost:5432/lightningtalk_dev
+      - REDIS_URL=redis://localhost:6379
+
+  postgres:
+    image: postgres:15-alpine
+    environment:
+      POSTGRES_USER: lightningtalk
+      POSTGRES_PASSWORD: lightningtalk
+      POSTGRES_DB: lightningtalk_dev
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U lightningtalk"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis-data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@lightningtalk.local
+      PGADMIN_DEFAULT_PASSWORD: admin
+      PGADMIN_CONFIG_SERVER_MODE: 'False'
+    ports:
+      - "5050:80"
+    volumes:
+      - pgadmin-data:/var/lib/pgadmin
+    depends_on:
+      - postgres
+
+volumes:
+  lightningtalk-bashhistory:
+  lightningtalk-node-modules:
+  lightningtalk-vscode-extensions:
+  postgres-data:
+  redis-data:
+  pgadmin-data:

@@ -48,6 +48,79 @@ and maintainability.
 - **Frontend:** Next.js, React, SASS/SCSS, Storybook
 - **Backend:** Node.js, Express.js, AWS Lambda, Amazon API Gateway
 - **Database:** Amazon Aurora Serverless v2
+
+## Development Environment
+
+### Dev Container Support
+
+This project includes Dev Container configuration for consistent development environments. Dev Containers provide:
+
+- Pre-configured development environment with all necessary tools
+- Consistent settings across team members
+- Enhanced security with network isolation
+- Integrated database and cache services
+
+#### Prerequisites
+
+- Visual Studio Code with [Remote - Containers](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers) extension
+- Docker Desktop installed and running
+
+#### Getting Started with Dev Container
+
+1. **Clone the repository**:
+   ```bash
+   git clone https://github.com/20m61/lightningtalk-circle.git
+   cd lightningtalk-circle
+   ```
+
+2. **Open in VS Code**:
+   ```bash
+   code .
+   ```
+
+3. **Reopen in Container**:
+   - VS Code will detect the Dev Container configuration
+   - Click "Reopen in Container" when prompted
+   - Or use Command Palette: `Remote-Containers: Reopen in Container`
+
+4. **Wait for container setup**:
+   - First-time setup will build the container and install dependencies
+   - This process may take a few minutes
+
+5. **Start development**:
+   ```bash
+   npm run dev
+   ```
+
+#### Dev Container Features
+
+- **Node.js 20** with TypeScript support
+- **PostgreSQL** and **Redis** services included
+- **pgAdmin** for database management (http://localhost:5050)
+- Pre-installed tools: GitHub CLI, AWS CLI, Docker-in-Docker
+- Network security with firewall rules
+- Customized terminal with helpful aliases
+- VS Code extensions for linting, formatting, and debugging
+
+#### Available Services
+
+| Service | Port | Description |
+|---------|------|-------------|
+| Application | 3000 | Main application |
+| PostgreSQL | 5432 | Database |
+| Redis | 6379 | Cache/Session store |
+| pgAdmin | 5050 | Database management UI |
+
+#### Security Features
+
+The Dev Container includes security measures based on Claude Code recommendations:
+
+- Network isolation with whitelist-only access
+- Firewall rules for external connections
+- Restricted access to approved domains only
+- Security validation on container startup
+
+To check firewall status: `check-firewall`
 - **Authentication:** Amazon Cognito
 - **CI/CD:** GitHub Actions, AWS Amplify Hosting
 - **Testing:** Jest, Playwright
