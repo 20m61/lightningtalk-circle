@@ -1,13 +1,12 @@
 {
   "name": "Lightning Talk Circle Dev Container",
-  "dockerFile": "Dockerfile",
-  "forwardPorts": [3000, 3001, 8080, 8888, 5432, 6379],
-  "appPort": [3000],
+  "dockerComposeFile": ["../docker-compose.yml", "docker-compose.extend.yml"],
+  "service": "app",
+  "workspaceFolder": "/app",
+  "forwardPorts": [3001, 8080, 5432, 6379],
   
   "mounts": [
-    "source=${localWorkspaceFolder},target=/workspace,type=bind,consistency=cached",
     "source=lightningtalk-bashhistory,target=/commandhistory,type=volume",
-    "source=lightningtalk-node-modules,target=/workspace/node_modules,type=volume",
     "source=lightningtalk-vscode-extensions,target=/home/node/.vscode-server/extensions,type=volume"
   ],
   
@@ -16,7 +15,7 @@
     "NODE_OPTIONS": "--max-old-space-size=4096"
   },
   
-  "remoteUser": "node",
+  "remoteUser": "nodeuser",
   
   "customizations": {
     "vscode": {
@@ -50,15 +49,10 @@
     }
   },
   
-  "postCreateCommand": "bash .devcontainer/init-firewall.sh && npm install",
+  "postCreateCommand": "npm install && npm run dev",
   
   "features": {
-    "ghcr.io/devcontainers/features/docker-in-docker:2": {},
     "ghcr.io/devcontainers/features/github-cli:1": {},
     "ghcr.io/devcontainers/features/aws-cli:1": {}
-  },
-  
-  "capAdd": ["NET_ADMIN"],
-  
-  "runArgs": ["--network=host"]
+  }
 }
