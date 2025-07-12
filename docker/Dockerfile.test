@@ -1,0 +1,26 @@
+# Lightning Talk Circle - Test Dockerfile
+FROM node:20-alpine
+
+# Install test dependencies
+RUN apk add --no-cache curl git
+
+WORKDIR /app
+
+# Copy package files
+COPY package*.json ./
+
+# Install all dependencies (including dev dependencies for testing)
+RUN npm ci
+
+# Copy source code
+COPY . .
+
+# Expose port for testing
+EXPOSE 3000
+
+# Health check for testing
+HEALTHCHECK --interval=10s --timeout=3s --start-period=5s --retries=3 \
+    CMD curl -f http://localhost:3000/api/health || exit 1
+
+# Default command for testing
+CMD ["npm", "test"]

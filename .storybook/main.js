@@ -1,17 +1,16 @@
-
-
-/** @type { import('@storybook/html-vite').StorybookConfig } */
+/** @type { import('@storybook/react-vite').StorybookConfig } */
 const config = {
-  "stories": [
-    "../stories/**/*.mdx",
-    "../stories/**/*.stories.@(js|jsx|mjs|ts|tsx)"
+  stories: ['../stories/**/*.stories.@(js|jsx|ts|tsx|mdx)'],
+  addons: [
+    '@storybook/addon-essentials',
+    '@storybook/addon-interactions',
+    '@storybook/addon-links'
   ],
-  "addons": [
-    "@storybook/addon-docs"
-  ],
-  "framework": {
-    "name": "@storybook/html-vite",
-    "options": {}
-  }
+  framework: {
+    name: '@storybook/react-vite',
+    options: {}
+  },
+  staticDirs: ['../public']
 };
+
 export default config;

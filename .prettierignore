@@ -70,6 +70,10 @@ LICENSE
 .prettierignore
 .eslintignore
 .gitignore
+.dockerignore
+
+# Shell scripts
+*.sh
 
 # Static theme directory - contains various file types
 theme/deploy.sh

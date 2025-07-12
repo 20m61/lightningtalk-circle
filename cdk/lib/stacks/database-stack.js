@@ -127,6 +127,53 @@ class DatabaseStack extends Stack {
       projectionType: dynamodb.ProjectionType.ALL,
     });
 
+    // Participation Votes table
+    this.participationVotesTable = new dynamodb.Table(this, 'ParticipationVotesTable', {
+      tableName: `${config.app.name}-${config.app.stage}-participation-votes`,
+      partitionKey: { name: 'id', type: dynamodb.AttributeType.STRING },
+      sortKey: { name: 'eventId', type: dynamodb.AttributeType.STRING },
+      billingMode: dynamodb.BillingMode.PAY_PER_REQUEST,
+      removalPolicy: config.app.environment === 'production' 
+        ? RemovalPolicy.RETAIN 
+        : RemovalPolicy.DESTROY,
+      pointInTimeRecoverySpecification: {
+        pointInTimeRecoveryEnabled: config.app.environment === 'production',
+      },
+      encryption: dynamodb.TableEncryption.AWS_MANAGED,
+    });
+
+    // Add GSI for event-based queries
+    this.participationVotesTable.addGlobalSecondaryIndex({
+      indexName: 'event-index',
+      partitionKey: { name: 'eventId', type: dynamodb.AttributeType.STRING },
+      sortKey: { name: 'createdAt', type: dynamodb.AttributeType.STRING },
+      projectionType: dynamodb.ProjectionType.ALL,
+    });
+
+    // Voting Sessions table
+    this.votingSessionsTable = new dynamodb.Table(this, 'VotingSessionsTable', {
+      tableName: `${config.app.name}-${config.app.stage}-voting-sessions`,
+      partitionKey: { name: 'id', type: dynamodb.AttributeType.STRING },
+      sortKey: { name: 'eventId', type: dynamodb.AttributeType.STRING },
+      billingMode: dynamodb.BillingMode.PAY_PER_REQUEST,
+      removalPolicy: config.app.environment === 'production' 
+        ? RemovalPolicy.RETAIN 
+        : RemovalPolicy.DESTROY,
+      pointInTimeRecoverySpecification: {
+        pointInTimeRecoveryEnabled: config.app.environment === 'production',
+      },
+      encryption: dynamodb.TableEncryption.AWS_MANAGED,
+      stream: dynamodb.StreamViewType.NEW_AND_OLD_IMAGES, // For real-time updates
+    });
+
+    // Add GSI for active sessions
+    this.votingSessionsTable.addGlobalSecondaryIndex({
+      indexName: 'status-index',
+      partitionKey: { name: 'status', type: dynamodb.AttributeType.STRING },
+      sortKey: { name: 'startTime', type: dynamodb.AttributeType.STRING },
+      projectionType: dynamodb.ProjectionType.ALL,
+    });
+
     // Create API credentials secret for DynamoDB access
     const apiCredentials = new secretsmanager.Secret(this, 'ApiCredentials', {
       secretName: `${config.app.name}/${config.app.stage}/api/credentials`,
@@ -199,6 +246,16 @@ class DatabaseStack extends Stack {
     new CfnOutput(this, 'TalksTableName', {
       value: this.talksTable.tableName,
       description: 'DynamoDB Talks table name',
+    });
+
+    new CfnOutput(this, 'ParticipationVotesTableName', {
+      value: this.participationVotesTable.tableName,
+      description: 'DynamoDB Participation Votes table name',
+    });
+
+    new CfnOutput(this, 'VotingSessionsTableName', {
+      value: this.votingSessionsTable.tableName,
+      description: 'DynamoDB Voting Sessions table name',
     });
 
     new CfnOutput(this, 'ApiCredentialsSecretArn', {

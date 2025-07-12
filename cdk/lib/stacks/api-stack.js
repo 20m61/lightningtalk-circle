@@ -18,10 +18,8 @@ class ApiStack extends Stack {
     const { config, databaseStack, secretsStack } = props;
     const { vpc } = databaseStack;
     
-    // Validate API URL is provided
-    if (!props.apiUrl) {
-      throw new Error('API URL is required for API Stack deployment');
-    }
+    // API URL is optional for development environments
+    // Will use AWS-generated URL if custom domain is not configured
     
     // Production safety check
     if (config.app.stage === 'production') {

@@ -26,28 +26,35 @@ const handleValidationErrors = (req, res, next) => {
  */
 router.get('/dashboard', async (req, res) => {
   try {
-    const { database } = req.app.locals;
+    const { database, votingService } = req.app.locals;
 
     // Get current event
     const currentEvent = await database.getCurrentEvent();
 
     // Get overview statistics
-    const [totalEvents, totalParticipants, totalTalks, recentParticipants, recentTalks] =
-      await Promise.all([
-        database.count('events'),
-        database.count('participants'),
-        database.count('talks'),
-        database
-          .findAll('participants', {})
-          .then(participants =>
-            participants.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)).slice(0, 10)
-          ),
-        database
-          .findAll('talks', {})
-          .then(talks =>
-            talks.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)).slice(0, 10)
-          )
-      ]);
+    const [
+      totalEvents,
+      totalParticipants,
+      totalTalks,
+      recentParticipants,
+      recentTalks,
+      participationVotes
+    ] = await Promise.all([
+      database.count('events'),
+      database.count('participants'),
+      database.count('talks'),
+      database
+        .findAll('participants', {})
+        .then(participants =>
+          participants.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)).slice(0, 10)
+        ),
+      database
+        .findAll('talks', {})
+        .then(talks =>
+          talks.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)).slice(0, 10)
+        ),
+      votingService.getAllParticipationVotes()
+    ]);
 
     // Get current event statistics if available
     let currentEventStats = null;
@@ -96,6 +103,7 @@ router.get('/dashboard', async (req, res) => {
           submittedAt: t.createdAt
         }))
       },
+      participationVotes: participationVotes,
       systemHealth: {
         uptime: process.uptime(),
         memoryUsage: process.memoryUsage(),

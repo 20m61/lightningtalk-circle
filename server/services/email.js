@@ -6,17 +6,18 @@
 import nodemailer from 'nodemailer';
 import { createLogger } from '../utils/logger.js';
 
-const logger = createLogger('email');
+const logger = createLogger('email-service');
 
 export class EmailService {
   constructor(config = {}) {
     this.enabled = process.env.EMAIL_ENABLED === 'true';
-    this.from = process.env.EMAIL_FROM || 'noreply@lightningtalk.example.com';
+    this.from = config.fromEmail || process.env.EMAIL_FROM || 'noreply@lightningtalk.example.com';
     this.templates = this.initializeTemplates();
-    this.provider = process.env.EMAIL_SERVICE || config.provider || 'mock';
+    this.provider = config.provider || process.env.EMAIL_SERVICE || 'mock';
     this.config = {
       provider: this.provider,
-      fromEmail: this.from
+      fromEmail: this.from,
+      ...config
     };
 
     if (this.enabled) {

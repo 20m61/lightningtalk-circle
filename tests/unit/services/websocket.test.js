@@ -16,7 +16,9 @@ const mockSocket = {
   leave: jest.fn(),
   emit: jest.fn(),
   to: jest.fn(() => mockSocket),
-  broadcast: jest.fn()
+  broadcast: {
+    emit: jest.fn()
+  }
 };
 
 const mockIo = {
@@ -24,14 +26,14 @@ const mockIo = {
   on: jest.fn(),
   to: jest.fn(() => mockSocket),
   emit: jest.fn(),
-  close: jest.fn((callback) => callback && callback())
+  close: jest.fn(callback => callback && callback())
 };
 
 jest.unstable_mockModule('socket.io', () => ({
   Server: jest.fn(() => mockIo)
 }));
 
-jest.unstable_mockModule('../../server/utils/logger.js', () => ({
+jest.unstable_mockModule('../../../server/utils/logger.js', () => ({
   createLogger: () => ({
     info: jest.fn(),
     error: jest.fn(),
@@ -49,11 +51,19 @@ describe('WebSocketService', () => {
   beforeEach(() => {
     websocketService = new WebSocketService();
     mockServer = { listen: jest.fn() };
-    
+
     // Reset mocks
     jest.clearAllMocks();
     mockIo.use.mockClear();
     mockIo.on.mockClear();
+  });
+
+  afterEach(() => {
+    // Clean up any timers or connections
+    if (websocketService.io) {
+      websocketService.io.close();
+    }
+    jest.clearAllTimers();
   });
 
   describe('initialize', () => {
@@ -188,7 +198,7 @@ describe('WebSocketService', () => {
 
     it('should clean up rooms on disconnect', () => {
       const roomName = 'test-room';
-      
+
       // Add socket to room
       websocketService.rooms.set(roomName, {
         name: roomName,
@@ -196,7 +206,7 @@ describe('WebSocketService', () => {
         created: new Date(),
         metadata: {}
       });
-      
+
       const connectionInfo = websocketService.connections.get(mockSocket.id);
       connectionInfo.rooms.add(roomName);
 
@@ -252,6 +262,10 @@ describe('WebSocketService', () => {
   describe('handleMessage', () => {
     beforeEach(() => {
       websocketService.initialize(mockServer);
+      // Reset mockSocket properties that may be modified during tests
+      mockSocket.messageCount = 0;
+      mockSocket.lastMessageTime = Date.now();
+      mockSocket.rateLimitExceeded = false;
       websocketService.handleConnection(mockSocket);
     });
 
@@ -302,7 +316,7 @@ describe('WebSocketService', () => {
   describe('registerMessageHandler', () => {
     it('should register custom message handler', () => {
       const handler = jest.fn();
-      
+
       websocketService.registerMessageHandler('test-type', handler);
 
       expect(websocketService.messageHandlers.has('test-type')).toBe(true);
@@ -362,17 +376,17 @@ describe('WebSocketService', () => {
 
     it('should allow authenticated users to join event rooms', async () => {
       mockSocket.authenticated = true;
-      
+
       const canJoin = await websocketService.validateRoomAccess(mockSocket, 'event:123');
-      
+
       expect(canJoin).toBe(true);
     });
 
     it('should deny unauthenticated users access to event rooms', async () => {
       mockSocket.authenticated = false;
-      
+
       const canJoin = await websocketService.validateRoomAccess(mockSocket, 'event:123');
-      
+
       expect(canJoin).toBe(false);
     });
 
@@ -380,9 +394,9 @@ describe('WebSocketService', () => {
       mockSocket.authenticated = true;
       mockSocket.userId = 'admin-user';
       mockSocket.userRole = 'admin';
-      
+
       const canJoin = await websocketService.validateRoomAccess(mockSocket, 'admin:dashboard');
-      
+
       expect(canJoin).toBe(true);
     });
 
@@ -390,9 +404,9 @@ describe('WebSocketService', () => {
       mockSocket.authenticated = true;
       mockSocket.userId = 'regular-user';
       mockSocket.userRole = 'user';
-      
+
       const canJoin = await websocketService.validateRoomAccess(mockSocket, 'admin:dashboard');
-      
+
       expect(canJoin).toBe(false);
     });
   });

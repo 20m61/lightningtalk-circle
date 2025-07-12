@@ -6,11 +6,36 @@
 class LightningTalkApp {
   constructor() {
     this.eventDate = new Date('2025-07-15T19:00:00+09:00');
+
+    // Cognito Configuration
+    this.cognitoConfig = {
+      userPoolId: 'ap-northeast-1_i4IV8ixyg',
+      clientId: '4ovq46vkld3t00o0slmr237s0l',
+      region: 'ap-northeast-1',
+      domain: 'lightningtalk-auth.auth.ap-northeast-1.amazoncognito.com'
+    };
+
+    // Configuration - Survey counter feature toggle
+    this.config = {
+      showSurveyCounters: false // Set to true to enable counter display
+    };
+
     this.surveyCounters = {
       online: parseInt(localStorage.getItem('onlineCount') || '0'),
       offline: parseInt(localStorage.getItem('offlineCount') || '0')
     };
     this.chatMessages = JSON.parse(localStorage.getItem('chatMessages') || '[]');
+
+    // Participation vote data per event
+    this.participationVotes = JSON.parse(localStorage.getItem('participationVotes') || '{}');
+
+    // WebSocket for real-time updates
+    this.ws = null;
+    this.wsReconnectInterval = null;
+
+    // Current vote context
+    this.currentVoteType = null;
+    this.currentEventId = null;
 
     // Cache frequently used DOM elements
     this.elements = {
@@ -21,6 +46,8 @@ class LightningTalkApp {
       chatContainer: null,
       chatMessages: null,
       chatInput: null,
+      voteModal: null,
+      voteForm: null,
       countdownElements: {
         days: null,
         hours: null,
@@ -52,6 +79,8 @@ class LightningTalkApp {
     this.updateSurveyCounters();
     this.setupChatWidget();
     this.setupCountdownTimer();
+    this.setupParticipationVoting();
+    this.connectWebSocket();
   }
 
   cacheDOMElements() {
@@ -78,6 +107,10 @@ class LightningTalkApp {
     // Cache survey counter elements
     this.elements.surveyCounters.online = document.getElementById('onlineCount');
     this.elements.surveyCounters.offline = document.getElementById('offlineCount');
+
+    // Cache vote modal elements
+    this.elements.voteModal = document.getElementById('voteModal');
+    this.elements.voteForm = document.getElementById('voteForm');
   }
 
   // Performance utility methods
@@ -920,10 +953,17 @@ class LightningTalkApp {
     this.surveyCounters[type]++;
     localStorage.setItem(`${type}Count`, this.surveyCounters[type].toString());
     this.updateSurveyCounters();
-    this.showNotification(
-      `${type === 'online' ? 'オンライン' : '現地'}参加をカウントしました！`,
-      'success'
-    );
+
+    // Only show notification if counters are visible
+    if (this.config.showSurveyCounters) {
+      this.showNotification(
+        `${type === 'online' ? 'オンライン' : '現地'}参加をカウントしました！`,
+        'success'
+      );
+    } else {
+      // Still show a thank you message without revealing the count
+      this.showNotification(`ご回答ありがとうございます！`, 'success');
+    }
   }
 
   updateSurveyCounters() {
@@ -931,10 +971,20 @@ class LightningTalkApp {
     const { online: onlineCountEl, offline: offlineCountEl } = this.elements.surveyCounters;
 
     if (onlineCountEl) {
-      onlineCountEl.textContent = this.surveyCounters.online.toString();
+      if (this.config.showSurveyCounters) {
+        onlineCountEl.textContent = this.surveyCounters.online.toString();
+        onlineCountEl.style.display = 'inline';
+      } else {
+        onlineCountEl.style.display = 'none';
+      }
     }
     if (offlineCountEl) {
-      offlineCountEl.textContent = this.surveyCounters.offline.toString();
+      if (this.config.showSurveyCounters) {
+        offlineCountEl.textContent = this.surveyCounters.offline.toString();
+        offlineCountEl.style.display = 'inline';
+      } else {
+        offlineCountEl.style.display = 'none';
+      }
     }
   }
 
@@ -1145,6 +1195,20 @@ class LightningTalkApp {
       this.floatingEmojiInterval = null;
     }
 
+    // Stop vote polling
+    this.stopVotePolling();
+
+    // WebSocketクリーンアップ
+    if (this.wsKeepAlive) {
+      clearInterval(this.wsKeepAlive);
+      this.wsKeepAlive = null;
+    }
+
+    if (this.ws) {
+      this.ws.close();
+      this.ws = null;
+    }
+
     // Remove event listeners that might cause memory leaks
     // (Passive listeners are automatically garbage collected,
     // but we should still clean up if needed)
@@ -1183,6 +1247,226 @@ class LightningTalkApp {
     // Placeholder for periodic update checks
     // This could check for new events, participant counts, etc.
     console.debug('Checking for updates...');
+  }
+
+  // Participation Voting Methods
+  setupParticipationVoting() {
+    // Get all vote containers
+    const voteContainers = document.querySelectorAll('.vote-container');
+
+    voteContainers.forEach(container => {
+      const eventId = container.dataset.eventId;
+
+      // Initialize vote counts for this event
+      if (!this.participationVotes[eventId]) {
+        this.participationVotes[eventId] = {
+          online: [],
+          onsite: []
+        };
+      }
+
+      // Update vote counts display
+      this.updateVoteCounts(eventId);
+
+      // Setup vote buttons
+      const voteButtons = container.querySelectorAll('.vote-btn');
+      voteButtons.forEach(btn => {
+        btn.addEventListener('click', e => {
+          this.handleVoteClick(e, eventId);
+        });
+      });
+    });
+  }
+
+  handleVoteClick(e, eventId) {
+    const btn = e.target;
+    const voteType = btn.dataset.type;
+
+    this.currentVoteType = voteType;
+    this.currentEventId = eventId;
+
+    // Show modal
+    this.elements.voteModal.style.display = 'block';
+    const voteTypeText = document.getElementById('vote-type-text');
+    voteTypeText.textContent =
+      voteType === 'online' ? '💻 オンラインで参加予定' : '🏢 現地で参加予定';
+
+    // Focus name input
+    setTimeout(() => {
+      document.getElementById('voteName').focus();
+    }, 100);
+  }
+
+  updateVoteCounts(eventId) {
+    const container = document.querySelector(`[data-event-id="${eventId}"]`);
+    if (!container) return;
+
+    const votes = this.participationVotes[eventId] || { online: [], onsite: [] };
+
+    const onlineCount = container.querySelector('#online-count');
+    const onsiteCount = container.querySelector('#onsite-count');
+
+    if (onlineCount) onlineCount.textContent = votes.online.length;
+    if (onsiteCount) onsiteCount.textContent = votes.onsite.length;
+  }
+
+  connectWebSocket() {
+    // API Gateway WebSocketを使用
+    const wsUrl = 'wss://YOUR_WEBSOCKET_API_ID.execute-api.ap-northeast-1.amazonaws.com/prod/';
+
+    try {
+      this.ws = new WebSocket(wsUrl);
+
+      this.ws.onopen = () => {
+        console.log('WebSocket connected to API Gateway');
+        // ポーリングを停止
+        this.stopVotePolling();
+      };
+
+      this.ws.onmessage = event => {
+        const data = JSON.parse(event.data);
+        if (data.type === 'voteUpdate') {
+          // 投票データを更新
+          if (data.eventId && data.votes) {
+            this.participationVotes[data.eventId] = data.votes;
+            localStorage.setItem('participationVotes', JSON.stringify(this.participationVotes));
+            this.updateVoteCounts(data.eventId);
+          }
+        }
+      };
+
+      this.ws.onclose = () => {
+        console.log('WebSocket disconnected, falling back to polling');
+        // WebSocketが切断されたらポーリングにフォールバック
+        this.startVotePolling();
+      };
+
+      this.ws.onerror = error => {
+        console.error('WebSocket error:', error);
+        // エラーが発生したらポーリングにフォールバック
+        this.startVotePolling();
+      };
+
+      // キープアライブのためのping送信
+      this.wsKeepAlive = setInterval(() => {
+        if (this.ws && this.ws.readyState === WebSocket.OPEN) {
+          this.ws.send(JSON.stringify({ type: 'ping' }));
+        }
+      }, 30000); // 30秒ごと
+    } catch (error) {
+      console.error('Failed to connect WebSocket:', error);
+      // 接続に失敗したらポーリングを使用
+      this.startVotePolling();
+    }
+  }
+
+  startVotePolling() {
+    // 既存のポーリングを停止
+    this.stopVotePolling();
+
+    // 初回は即座に更新
+    this.fetchAllVoteCounts();
+
+    // 5秒ごとに投票データを更新
+    this.votePollingInterval = setInterval(() => {
+      this.fetchAllVoteCounts();
+    }, 5000);
+  }
+
+  stopVotePolling() {
+    if (this.votePollingInterval) {
+      clearInterval(this.votePollingInterval);
+      this.votePollingInterval = null;
+    }
+  }
+
+  async fetchAllVoteCounts() {
+    try {
+      const voteContainers = document.querySelectorAll('.vote-container');
+
+      for (const container of voteContainers) {
+        const eventId = container.dataset.eventId;
+        if (!eventId) continue;
+
+        // APIから最新の投票データを取得
+        const response = await fetch(
+          `https://9qyaz7n47j.execute-api.ap-northeast-1.amazonaws.com/prod/api/voting/participation/${eventId}`
+        );
+        if (response.ok) {
+          const data = await response.json();
+
+          // ローカルストレージも更新
+          this.participationVotes[eventId] = data;
+          localStorage.setItem('participationVotes', JSON.stringify(this.participationVotes));
+
+          // UIを更新
+          this.updateVoteCounts(eventId);
+        } else {
+          // Fallback to mock data for now
+          const mockData = { eventId, online: 0, onsite: 0, timestamp: new Date().toISOString() };
+          this.participationVotes[eventId] = mockData;
+          localStorage.setItem('participationVotes', JSON.stringify(this.participationVotes));
+          this.updateVoteCounts(eventId);
+        }
+      }
+    } catch (error) {
+      console.error('Failed to fetch vote counts:', error);
+    }
+  }
+
+  submitVote(eventId, voteType, voterData) {
+    // Add vote to local storage
+    const votes = this.participationVotes[eventId];
+    const voter = {
+      name: voterData.name,
+      email: voterData.email,
+      timestamp: new Date().toISOString(),
+      id: `${Date.now()}-${Math.random().toString(36).substr(2, 9)}`
+    };
+
+    // Check if already voted
+    const hasVoted =
+      votes.online.some(v => v.name === voter.name) ||
+      votes.onsite.some(v => v.name === voter.name);
+
+    if (hasVoted) {
+      this.showNotification('すでに投票済みです', 'error');
+      return;
+    }
+
+    votes[voteType].push(voter);
+    localStorage.setItem('participationVotes', JSON.stringify(this.participationVotes));
+    this.updateVoteCounts(eventId);
+
+    // Send to server via WebSocket
+    if (this.ws && this.ws.readyState === WebSocket.OPEN) {
+      this.ws.send(
+        JSON.stringify({
+          type: 'vote',
+          eventId: eventId,
+          voteType: voteType,
+          voter: voter
+        })
+      );
+    }
+
+    // Also send via API
+    fetch('https://9qyaz7n47j.execute-api.ap-northeast-1.amazonaws.com/prod/api/voting', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        eventId: eventId,
+        participationType: voteType,
+        participantName: voter.name,
+        participantEmail: voter.email
+      })
+    }).catch(error => {
+      console.error('Failed to submit vote to API:', error);
+    });
+
+    this.showNotification('投票ありがとうございました！', 'success');
   }
 
   updateCountdown() {
@@ -1634,7 +1918,172 @@ document.head.appendChild(styleSheet);
 
 // Initialize the application when DOM is loaded
 document.addEventListener('DOMContentLoaded', () => {
-  window.lightningTalkApp = new LightningTalkApp();
+  const app = new LightningTalkApp();
+  window.lightningTalkApp = app;
+
+  // Setup vote form submission
+  const voteForm = document.getElementById('voteForm');
+  if (voteForm) {
+    voteForm.addEventListener('submit', e => {
+      e.preventDefault();
+
+      const formData = new FormData(voteForm);
+      const voterData = {
+        name: formData.get('name').trim(),
+        email: formData.get('email').trim()
+      };
+
+      if (!voterData.name) {
+        alert('お名前を入力してください');
+        return;
+      }
+
+      app.submitVote(app.currentEventId, app.currentVoteType, voterData);
+
+      // Close modal and reset form
+      app.elements.voteModal.style.display = 'none';
+      voteForm.reset();
+    });
+  }
+
+  // Setup admin login form submission
+  const adminLoginForm = document.getElementById('adminLoginForm');
+  if (adminLoginForm) {
+    adminLoginForm.addEventListener('submit', async e => {
+      e.preventDefault();
+
+      const formData = new FormData(adminLoginForm);
+      const loginData = {
+        email: formData.get('email').trim(),
+        password: formData.get('password'),
+        remember: formData.get('remember') ? true : false
+      };
+
+      // Hide error message
+      document.getElementById('loginError').style.display = 'none';
+
+      try {
+        const response = await fetch('/api/auth/login', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(loginData)
+        });
+
+        const data = await response.json();
+
+        if (response.ok) {
+          // Store token
+          localStorage.setItem('adminToken', data.token);
+          if (loginData.remember) {
+            localStorage.setItem('adminTokenExpiry', data.expiresAt);
+          }
+
+          // Redirect to admin dashboard
+          window.location.href = '/admin.html';
+        } else {
+          // Show error message
+          const errorEl = document.getElementById('loginError');
+          const errorMessageEl = document.getElementById('loginErrorMessage');
+          errorMessageEl.textContent = data.message || 'ログインに失敗しました';
+          errorEl.style.display = 'block';
+        }
+      } catch (error) {
+        console.error('Login error:', error);
+        const errorEl = document.getElementById('loginError');
+        const errorMessageEl = document.getElementById('loginErrorMessage');
+        errorMessageEl.textContent = 'ネットワークエラーが発生しました';
+        errorEl.style.display = 'block';
+      }
+    });
+  }
+
+  // Global function to close vote modal
+  window.closeVoteModal = () => {
+    const voteModal = document.getElementById('voteModal');
+    if (voteModal) {
+      voteModal.style.display = 'none';
+    }
+  };
+
+  // Global function to show admin login modal
+  window.showAdminLogin = () => {
+    const adminLoginModal = document.getElementById('adminLoginModal');
+    if (adminLoginModal) {
+      adminLoginModal.style.display = 'block';
+      // Focus email input
+      setTimeout(() => {
+        document.getElementById('adminEmail').focus();
+      }, 100);
+    }
+  };
+
+  // Global function to close admin login modal
+  window.closeAdminLogin = () => {
+    const adminLoginModal = document.getElementById('adminLoginModal');
+    if (adminLoginModal) {
+      adminLoginModal.style.display = 'none';
+      // Reset form
+      document.getElementById('adminLoginForm').reset();
+      document.getElementById('loginError').style.display = 'none';
+    }
+  };
+
+  // Admin login processing
+  window.processAdminLogin = async () => {
+    const email = document.getElementById('adminEmail').value;
+    const password = document.getElementById('adminPassword').value;
+    const errorDiv = document.getElementById('loginError');
+
+    if (!email || !password) {
+      errorDiv.textContent = 'メールアドレスとパスワードを入力してください';
+      errorDiv.style.display = 'block';
+      return;
+    }
+
+    try {
+      errorDiv.style.display = 'none';
+
+      // Simple local authentication for demo
+      if (email === 'admin@example.com' && password === 'admin123') {
+        localStorage.setItem('authToken', 'demo-admin-token');
+        localStorage.setItem('userRole', 'admin');
+
+        // Close login modal
+        window.closeAdminLogin();
+
+        // Show success notification
+        this.showNotification('ログインが成功しました！管理画面に移動しています...', 'success');
+
+        // Redirect to admin dashboard after a short delay
+        setTimeout(() => {
+          window.location.href = '/admin.html';
+        }, 1500);
+      } else {
+        errorDiv.textContent = '認証に失敗しました。\nテスト用: admin@example.com / admin123';
+        errorDiv.style.display = 'block';
+      }
+    } catch (error) {
+      console.error('Login error:', error);
+      errorDiv.textContent = 'ログイン処理中にエラーが発生しました。';
+      errorDiv.style.display = 'block';
+    }
+  };
+
+  // Close modals when clicking outside
+  window.addEventListener('click', e => {
+    const voteModal = document.getElementById('voteModal');
+    const adminLoginModal = document.getElementById('adminLoginModal');
+
+    if (e.target === voteModal) {
+      voteModal.style.display = 'none';
+    }
+
+    if (e.target === adminLoginModal) {
+      adminLoginModal.style.display = 'none';
+    }
+  });
 });
 
 // Export for potential module use

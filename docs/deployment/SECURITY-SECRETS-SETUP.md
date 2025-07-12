@@ -4,26 +4,36 @@
 
 本番環境でのセキュリティを確保するため、以下のGitHub Secretsを設定してください。
 
+⚠️ **SECURITY
+WARNING**: このドキュメントは以前に実際のシークレットを含んでいました。それらのシークレットは無効化され、新しいものに置き換える必要があります。
+
 ### 必要なSecrets
 
 #### 認証・セッション管理
+
 ```bash
-JWT_SECRET=415bf2d0f69d4df63aa5d4392e6a07264ff9077ef27bf0482fab648190697ac3f31c23667a39d4a674c42e46fa42fe8b5f3728442267ec3d6d29b3fdd00d3c86
-SESSION_SECRET=3362b7c765d48b4eba0299bcbd5c831bbb61f8c6fcb55c3b4992595f8715580e135757858c6b01ac3f71615e090bac13780a1214fb90dd1776d1d4810d042c4a
+# 新しいシークレットキーを生成してください
+JWT_SECRET=[新しい64バイトのランダムキーを生成]
+SESSION_SECRET=[新しい64バイトのランダムキーを生成]
+
+# シークレット生成コマンド:
+# node -e "console.log(require('crypto').randomBytes(64).toString('hex'))"
 ```
 
 #### GitHub統合
+
 ```bash
-GITHUB_TOKEN=ghp_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+GITHUB_TOKEN=[新しいGitHub Personal Access Tokenを生成]
 GITHUB_OWNER=20m61
 GITHUB_REPO=lightningtalk-circle
 ```
 
 #### WordPress統合
+
 ```bash
-WP_USERNAME=wpmaster
-WP_PASSWORD=fytbuh-3repRu-nucbyf
-WP_APP_PASSWORD=2XAN B2ud oVHc Y2lE 3hVb PtRd
+WP_USERNAME=[新しいWordPressユーザー名]
+WP_PASSWORD=[新しい強固なパスワード]
+WP_APP_PASSWORD=[新しいWordPressアプリケーションパスワード]
 ```
 
 ### GitHub Secrets設定手順
@@ -51,11 +61,13 @@ console.log('Secrets valid:', jwt && session && jwt.length >= 64 && session.leng
 ### セキュリティベストプラクティス
 
 #### ✅ 実装済み
+
 - 64バイト（512ビット）の強力なランダムシークレット
 - 本番・開発環境の分離
 - GitHub Secrets経由での安全な管理
 
 #### 🔄 今後の改善点
+
 - シークレットローテーション戦略
 - 環境別シークレット管理
 - 監査ログの実装
@@ -82,18 +94,21 @@ console.log('Secrets valid:', jwt && session && jwt.length >= 64 && session.leng
 ## 🛡️ Production Security Checklist
 
 ### 環境設定
+
 - [ ] JWT_SECRET設定完了
 - [ ] SESSION_SECRET設定完了
 - [ ] GitHub Secrets設定完了
 - [ ] WordPress認証情報設定完了
 
 ### セキュリティ強化
+
 - [ ] HTTPS強制設定
 - [ ] セキュリティヘッダー設定
 - [ ] レート制限実装
 - [ ] 入力検証強化
 
 ### 監視とログ
+
 - [ ] セキュリティ監視設定
 - [ ] エラーログ設定
 - [ ] アクセスログ設定

@@ -1,0 +1,38 @@
+version: "3.8"
+
+services:
+  app:
+    # Use the existing Dockerfile.dev from the project
+    build:
+      context: ..
+      dockerfile: Dockerfile.dev
+      args:
+        UID: ${UID:-1001}
+        GID: ${GID:-1001}
+    
+    # Override command to keep container running for VS Code
+    command: sleep infinity
+    
+    # Add VS Code specific environment variables
+    environment:
+      NODE_ENV: development
+      DATABASE_URL: postgresql://postgres:postgres@postgres:5432/lightningtalk
+      REDIS_URL: redis://redis:6379
+      PORT: 3000
+      # VS Code specific
+      SHELL: /bin/bash
+      EDITOR: code
+    
+    # Additional volumes for Dev Container
+    volumes:
+      - ..:/app:cached
+      - /app/node_modules
+      - lightningtalk-bashhistory:/commandhistory
+      - lightningtalk-vscode-extensions:/home/nodeuser/.vscode-server/extensions
+    
+    # Enable init process for signal handling
+    init: true
+
+volumes:
+  lightningtalk-bashhistory:
+  lightningtalk-vscode-extensions:

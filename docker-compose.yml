@@ -1,7 +1,8 @@
-# Lightning Talk Circle - Development Environment
-# Docker Compose configuration for local development with PostgreSQL
+# Lightning Talk Circle - Development Environment (Docker)
+# This file is for local development only - NOT for production deployment
+# Production uses AWS Lambda/serverless architecture via CDK
 
-version: '3.8'
+version: "3.8"
 
 services:
   # PostgreSQL Database
@@ -71,7 +72,7 @@ services:
     environment:
       PGADMIN_DEFAULT_EMAIL: admin@lightningtalk.local
       PGADMIN_DEFAULT_PASSWORD: admin
-      PGADMIN_CONFIG_SERVER_MODE: 'False'
+      PGADMIN_CONFIG_SERVER_MODE: "False"
     ports:
       - "8080:80"
     volumes:

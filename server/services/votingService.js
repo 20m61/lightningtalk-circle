@@ -15,6 +15,7 @@ export class VotingService extends EventEmitter {
     this.database = database;
     this.activeSessions = new Map(); // In-memory cache for active sessions
     this.sessionTimers = new Map(); // Timers for auto-ending sessions
+    this.participationVotes = new Map(); // In-memory cache for participation votes
   }
 
   /**
@@ -332,6 +333,145 @@ export class VotingService extends EventEmitter {
     if (cleaned > 0) {
       logger.info(`Cleaned up ${cleaned} expired voting sessions`);
     }
+  }
+
+  /**
+   * Create a participation vote for an event
+   */
+  async createParticipationVote({
+    eventId,
+    participationType,
+    participantName,
+    participantEmail,
+    timestamp
+  }) {
+    const voteId = uuidv4();
+    const vote = {
+      id: voteId,
+      eventId,
+      participationType,
+      participantName,
+      participantEmail,
+      timestamp,
+      createdAt: new Date().toISOString()
+    };
+
+    try {
+      // Store in database
+      await this.database.create('participation_votes', vote);
+
+      // Update in-memory cache
+      if (!this.participationVotes.has(eventId)) {
+        this.participationVotes.set(eventId, {
+          online: [],
+          onsite: []
+        });
+      }
+
+      const eventVotes = this.participationVotes.get(eventId);
+      eventVotes[participationType].push(vote);
+
+      // Emit event for real-time updates
+      this.emit('participationVoteCreated', { eventId, vote });
+
+      logger.info(`Created participation vote for event ${eventId}`);
+      return vote;
+    } catch (error) {
+      logger.error('Failed to create participation vote:', error);
+      throw new DatabaseError('Failed to create participation vote');
+    }
+  }
+
+  /**
+   * Get participation vote counts for an event
+   */
+  async getVoteCounts(eventId) {
+    try {
+      // Try cache first
+      if (this.participationVotes.has(eventId)) {
+        const votes = this.participationVotes.get(eventId);
+        return {
+          online: votes.online,
+          onsite: votes.onsite
+        };
+      }
+
+      // Load from database
+      const votes = await this.database.find('participation_votes', { eventId });
+
+      const counts = {
+        online: [],
+        onsite: []
+      };
+
+      votes.forEach(vote => {
+        if (vote.participationType === 'online') {
+          counts.online.push(vote);
+        } else if (vote.participationType === 'onsite') {
+          counts.onsite.push(vote);
+        }
+      });
+
+      // Update cache
+      this.participationVotes.set(eventId, counts);
+
+      return counts;
+    } catch (error) {
+      logger.error('Failed to get vote counts:', error);
+      throw new DatabaseError('Failed to get vote counts');
+    }
+  }
+
+  /**
+   * Check if a participant has already voted for an event
+   */
+  async getParticipantVote(eventId, participantName) {
+    try {
+      const vote = await this.database.findOne('participation_votes', {
+        eventId,
+        participantName
+      });
+      return vote;
+    } catch (error) {
+      logger.error('Failed to check participant vote:', error);
+      return null;
+    }
+  }
+
+  /**
+   * Get all participation votes for admin dashboard
+   */
+  async getAllParticipationVotes() {
+    try {
+      const votes = await this.database.find('participation_votes', {});
+
+      // Group by event
+      const groupedVotes = {};
+      votes.forEach(vote => {
+        if (!groupedVotes[vote.eventId]) {
+          groupedVotes[vote.eventId] = {
+            online: [],
+            onsite: [],
+            total: 0
+          };
+        }
+
+        groupedVotes[vote.eventId][vote.participationType].push(vote);
+        groupedVotes[vote.eventId].total++;
+      });
+
+      return groupedVotes;
+    } catch (error) {
+      logger.error('Failed to get all participation votes:', error);
+      throw new DatabaseError('Failed to get participation votes');
+    }
+  }
+
+  /**
+   * Get participation votes for a specific event
+   */
+  async getParticipationVotes(eventId) {
+    return this.getVoteCounts(eventId);
   }
 }
 

@@ -10,21 +10,30 @@ import bcrypt from 'bcryptjs';
 const getJwtSecret = () => {
   const secret = process.env.JWT_SECRET;
 
-  if (!secret && process.env.NODE_ENV === 'production') {
-    throw new Error('JWT_SECRET must be set in production environment');
-  }
+  if (!secret || secret.length < 32) {
+    if (process.env.NODE_ENV === 'production') {
+      throw new Error('JWT_SECRET environment variable is required in production and must be at least 32 characters long');
+    }
 
-  if (!secret) {
-    console.warn(
-      '⚠️  WARNING: Using development JWT secret. Set JWT_SECRET environment variable for production.'
-    );
-    return 'development-secret-do-not-use-in-production';
+    if (process.env.NODE_ENV !== 'test') {
+      console.warn(
+        '⚠️  WARNING: Using development JWT secret. Set JWT_SECRET environment variable for production.'
+      );
+    }
+    return 'development-secret-do-not-use-in-production-must-be-replaced';
   }
 
   return secret;
 };
 
-const JWT_SECRET = getJwtSecret();
+// Initialize JWT_SECRET on startup
+let JWT_SECRET;
+try {
+  JWT_SECRET = getJwtSecret();
+} catch (error) {
+  console.error('FATAL ERROR:', error.message);
+  process.exit(1);
+}
 
 /**
  * Verify JWT token and attach user to request
@@ -97,32 +106,37 @@ export const comparePassword = async (password, hash) => {
 
 /**
  * Validate password strength
+ * Returns validation result with errors array for consistency
  */
 export const validatePassword = password => {
-  if (password.length < 8) {
-    return { valid: false, message: 'Password must be at least 8 characters long' };
+  const errors = [];
+  
+  if (!password || password.length < 8) {
+    errors.push('Password must be at least 8 characters long');
   }
 
   if (!/[A-Z]/.test(password)) {
-    return { valid: false, message: 'Password must contain at least one uppercase letter' };
+    errors.push('Password must contain at least one uppercase letter');
   }
 
   if (!/[a-z]/.test(password)) {
-    return { valid: false, message: 'Password must contain at least one lowercase letter' };
+    errors.push('Password must contain at least one lowercase letter');
   }
 
   if (!/[0-9]/.test(password)) {
-    return { valid: false, message: 'Password must contain at least one number' };
+    errors.push('Password must contain at least one number');
   }
 
   if (!/[!@#$%^&*]/.test(password)) {
-    return {
-      valid: false,
-      message: 'Password must contain at least one special character (!@#$%^&*)'
-    };
+    errors.push('Password must contain at least one special character');
   }
 
-  return { valid: true };
+  // Return both formats for backward compatibility
+  return {
+    valid: errors.length === 0,
+    message: errors[0] || '',
+    errors: errors
+  };
 };
 
 export default {

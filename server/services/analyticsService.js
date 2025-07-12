@@ -1,5 +1,7 @@
-import { logger } from '../middleware/logger.js';
+import { createLogger } from '../utils/logger.js';
 import { DatabaseService } from './database.js';
+
+const logger = createLogger('analytics-service');
 
 /**
  * Analytics Service
@@ -534,7 +536,7 @@ class AnalyticsService {
   }
 
   findPeakRegistrationDay(timeline) {
-    if (!timeline.length) {
+    if (!timeline || !timeline.length) {
       return null;
     }
     return timeline.reduce((peak, current) =>
@@ -718,54 +720,340 @@ class AnalyticsService {
     };
   }
 
-  async getDailyRegistrations(_eventId, _options) {
-    // 実装は簡略化
-    return [];
+  async getDailyRegistrations(eventId, options = {}) {
+    const { startDate, endDate } = options;
+    let dateFilter = '';
+    const params = [eventId];
+
+    if (startDate && endDate) {
+      dateFilter = 'AND DATE(created_at) BETWEEN ? AND ?';
+      params.push(startDate, endDate);
+    }
+
+    try {
+      const results = await this.db.query(
+        `
+        SELECT
+          DATE(created_at) as date,
+          COUNT(*) as registrations
+        FROM participants
+        WHERE event_id = ? ${dateFilter}
+        GROUP BY DATE(created_at)
+        ORDER BY date
+      `,
+        params
+      );
+      return results || [];
+    } catch (error) {
+      logger.error('Failed to get daily registrations:', error);
+      return [];
+    }
   }
 
-  async getDailySubmissions(_eventId, _options) {
-    // 実装は簡略化
-    return [];
+  async getDailySubmissions(eventId, options = {}) {
+    const { startDate, endDate } = options;
+    let dateFilter = '';
+    const params = [eventId];
+
+    if (startDate && endDate) {
+      dateFilter = 'AND DATE(created_at) BETWEEN ? AND ?';
+      params.push(startDate, endDate);
+    }
+
+    try {
+      const results = await this.db.query(
+        `
+        SELECT
+          DATE(created_at) as date,
+          COUNT(*) as submissions
+        FROM talks
+        WHERE event_id = ? ${dateFilter}
+        GROUP BY DATE(created_at)
+        ORDER BY date
+      `,
+        params
+      );
+      return results || [];
+    } catch (error) {
+      logger.error('Failed to get daily submissions:', error);
+      return [];
+    }
   }
 
-  async getParticipationTypeTrends(_eventId, _options) {
-    // 実装は簡略化
-    return [];
-  }
-  async getFeedbackSummary(_eventId) {
-    // 実装は簡略化
-    return {};
-  }
-  generateParticipantsCsv(_participants) {
-    // CSV生成の実装
-    return 'CSV data';
+  async getParticipationTypeTrends(eventId, options = {}) {
+    const { startDate, endDate } = options;
+    let dateFilter = '';
+    const params = [eventId];
+
+    if (startDate && endDate) {
+      dateFilter = 'AND DATE(created_at) BETWEEN ? AND ?';
+      params.push(startDate, endDate);
+    }
+
+    try {
+      const results = await this.db.query(
+        `
+        SELECT
+          DATE(created_at) as date,
+          participation_type,
+          COUNT(*) as count
+        FROM participants
+        WHERE event_id = ? ${dateFilter}
+        GROUP BY DATE(created_at), participation_type
+        ORDER BY date, participation_type
+      `,
+        params
+      );
+      return results || [];
+    } catch (error) {
+      logger.error('Failed to get participation type trends:', error);
+      return [];
+    }
   }
 
-  generateTalksCsv(_talks) {
-    // CSV生成の実装
-    return 'CSV data';
+  async getFeedbackSummary(eventId) {
+    try {
+      const results = await this.db.query(
+        `
+        SELECT
+          rating,
+          COUNT(*) as count,
+          AVG(rating) as average_rating
+        FROM feedback
+        WHERE event_id = ?
+        GROUP BY rating
+        ORDER BY rating
+      `,
+        [eventId]
+      );
+
+      return {
+        totalFeedback: results.reduce((sum, r) => sum + r.count, 0),
+        averageRating:
+          results.length > 0
+            ? results.reduce((sum, r) => sum + r.rating * r.count, 0) /
+              results.reduce((sum, r) => sum + r.count, 0)
+            : 0,
+        distribution: results
+      };
+    } catch (error) {
+      logger.error('Failed to get feedback summary:', error);
+      return {
+        totalFeedback: 0,
+        averageRating: 0,
+        distribution: []
+      };
+    }
   }
 
-  generateDetailedReport(_stats) {
-    // 詳細レポート生成
-    return {};
+  generateParticipantsCsv(participants) {
+    if (!participants || participants.length === 0) {
+      return 'No participants data available';
+    }
+
+    const headers = [
+      'ID',
+      'Name',
+      'Email',
+      'Participation Type',
+      'Organization',
+      'Location',
+      'Experience Level',
+      'Created At'
+    ];
+    const csvRows = [headers.join(',')];
+
+    participants.forEach(p => {
+      const row = [
+        p.id,
+        `"${p.name || ''}"`,
+        `"${p.email || ''}"`,
+        p.participation_type || '',
+        `"${p.organization || ''}"`,
+        `"${p.location || ''}"`,
+        p.experience_level || '',
+        p.created_at || ''
+      ];
+      csvRows.push(row.join(','));
+    });
+
+    return csvRows.join('\n');
   }
 
-  generateExecutiveReport(_stats) {
-    // エグゼクティブレポート生成
-    return {};
+  generateTalksCsv(talks) {
+    if (!talks || talks.length === 0) {
+      return 'No talks data available';
+    }
+
+    const headers = [
+      'ID',
+      'Title',
+      'Speaker Name',
+      'Speaker Email',
+      'Category',
+      'Duration',
+      'Status',
+      'Experience Level',
+      'Created At'
+    ];
+    const csvRows = [headers.join(',')];
+
+    talks.forEach(t => {
+      const row = [
+        t.id,
+        `"${t.title || ''}"`,
+        `"${t.speaker_name || ''}"`,
+        `"${t.speaker_email || ''}"`,
+        t.category || '',
+        t.duration || '',
+        t.status || '',
+        t.experience_level || '',
+        t.created_at || ''
+      ];
+      csvRows.push(row.join(','));
+    });
+
+    return csvRows.join('\n');
   }
 
-  generateParticipantReport(_stats) {
-    // 参加者レポート生成
-    return {};
+  generateDetailedReport(stats) {
+    return {
+      type: 'detailed',
+      title: `${stats.statistics.basic.eventInfo.title} - 詳細レポート`,
+      generatedAt: new Date().toISOString(),
+      sections: {
+        eventOverview: stats.statistics.basic,
+        participantAnalysis: stats.statistics.participants,
+        talkAnalysis: stats.statistics.talks,
+        trends: stats.trends,
+        details: stats.details
+      },
+      recommendations: this.generateRecommendations(stats)
+    };
   }
 
-  generateSpeakerReport(_stats) {
-    // 発表者レポート生成
-    return {};
+  generateExecutiveReport(stats) {
+    return {
+      type: 'executive',
+      title: `${stats.statistics.basic.eventInfo.title} - エグゼクティブサマリー`,
+      generatedAt: new Date().toISOString(),
+      executiveSummary: {
+        totalParticipants: stats.statistics.basic.summary.totalParticipants,
+        totalTalks: stats.statistics.basic.summary.totalTalks,
+        successMetrics: {
+          participationRate: this.calculateParticipationRate(stats),
+          engagementScore: this.calculateEngagementScore(stats),
+          contentQuality: this.calculateContentQuality(stats)
+        }
+      },
+      keyInsights: this.generateKeyInsights(stats),
+      actionItems: this.generateActionItems(stats)
+    };
+  }
+
+  generateParticipantReport(stats) {
+    return {
+      type: 'participant',
+      title: `${stats.statistics.basic.eventInfo.title} - 参加者レポート`,
+      generatedAt: new Date().toISOString(),
+      participantMetrics: stats.statistics.participants,
+      demographics: {
+        byType: stats.statistics.participants.distribution.byType,
+        byLocation: stats.statistics.participants.distribution.byLocation,
+        byOrganization: stats.statistics.participants.distribution.byOrganization
+      },
+      registrationTrends: stats.trends?.registrations,
+      participantList: stats.details?.participants
+    };
+  }
+
+  generateSpeakerReport(stats) {
+    return {
+      type: 'speaker',
+      title: `${stats.statistics.basic.eventInfo.title} - 発表者レポート`,
+      generatedAt: new Date().toISOString(),
+      speakerMetrics: stats.statistics.talks.speakers,
+      talkDistribution: stats.statistics.talks.distribution,
+      contentAnalysis: {
+        categoryDistribution: stats.statistics.talks.distribution.byCategory,
+        durationAnalysis: stats.statistics.talks.duration
+      },
+      submissionTrends: stats.trends?.submissions,
+      speakerList: stats.details?.talks
+    };
+  }
+
+  // Additional helper methods for reports
+  generateRecommendations(stats) {
+    const recommendations = [];
+
+    if (stats.statistics.basic.summary.totalParticipants < 50) {
+      recommendations.push({
+        type: 'marketing',
+        priority: 'high',
+        message: '参加者数を増やすためのマーケティング強化を推奨します'
+      });
+    }
+
+    if (stats.statistics.basic.summary.totalTalks < 10) {
+      recommendations.push({
+        type: 'content',
+        priority: 'medium',
+        message: '発表者の募集活動を強化することを推奨します'
+      });
+    }
+
+    return recommendations;
+  }
+
+  calculateParticipationRate(stats) {
+    const registered = stats.statistics.basic.summary.totalParticipants;
+    const capacity = 100; // Assumed capacity
+    return Math.min(100, (registered / capacity) * 100);
+  }
+
+  calculateEngagementScore(stats) {
+    const talks = stats.statistics.basic.summary.totalTalks;
+    const participants = stats.statistics.basic.summary.totalParticipants;
+    return participants > 0 ? Math.min(100, (talks / participants) * 100) : 0;
+  }
+
+  calculateContentQuality(stats) {
+    const confirmedTalks = stats.statistics.basic.summary.confirmedTalks;
+    const totalTalks = stats.statistics.basic.summary.totalTalks;
+    return totalTalks > 0 ? (confirmedTalks / totalTalks) * 100 : 0;
+  }
+
+  generateKeyInsights(stats) {
+    const insights = [];
+
+    const onlineParticipants =
+      stats.statistics.participants.distribution.byType.find(t => t.type === 'online')?.count || 0;
+    const totalParticipants = stats.statistics.basic.summary.totalParticipants;
+
+    if (totalParticipants > 0) {
+      const onlineRatio = (onlineParticipants / totalParticipants) * 100;
+      insights.push(`オンライン参加者が${onlineRatio.toFixed(1)}%を占めています`);
+    }
+
+    return insights;
+  }
+
+  generateActionItems(stats) {
+    const actionItems = [];
+
+    if (stats.statistics.basic.summary.pendingTalks > 0) {
+      actionItems.push({
+        action: '保留中の発表申込みを確認し、承認プロセスを進める',
+        priority: 'high',
+        count: stats.statistics.basic.summary.pendingTalks
+      });
+    }
+
+    return actionItems;
   }
 }
 
 const analyticsService = new AnalyticsService();
 export default analyticsService;
+export { AnalyticsService };

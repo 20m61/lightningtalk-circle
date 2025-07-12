@@ -4,6 +4,7 @@
  */
 
 import express from 'express';
+import jwt from 'jsonwebtoken';
 import { body, validationResult } from 'express-validator';
 import {
   authenticateToken,
@@ -274,6 +275,7 @@ router.get('/users', authenticateToken, requireAdmin, async (req, res) => {
         email: user.email,
         name: user.name,
         role: user.role,
+        provider: user.provider || 'email',
         lastLogin: user.lastLogin,
         createdAt: user.createdAt
       }))
@@ -286,6 +288,67 @@ router.get('/users', authenticateToken, requireAdmin, async (req, res) => {
     });
   }
 });
+
+/**
+ * PUT /api/auth/users/:id
+ * Update user (admin only)
+ */
+router.put(
+  '/users/:id',
+  authenticateToken,
+  requireAdmin,
+  body('name').optional().trim().isLength({ min: 1 }).withMessage('Name cannot be empty'),
+  body('role').optional().isIn(['user', 'admin']).withMessage('Invalid role'),
+  handleValidationErrors,
+  async (req, res) => {
+    try {
+      const { database } = req.app.locals;
+      const { id } = req.params;
+      const updates = {};
+
+      // Only include fields that were provided
+      if (req.body.name !== undefined) updates.name = req.body.name;
+      if (req.body.role !== undefined) updates.role = req.body.role;
+
+      // Prevent self-demotion
+      if (id === req.user.id && updates.role === 'user') {
+        return res.status(400).json({
+          error: 'Cannot demote yourself',
+          message: '自分の権限を降格することはできません'
+        });
+      }
+
+      // Update user
+      const updatedUser = await database.update('users', id, updates);
+
+      if (!updatedUser) {
+        return res.status(404).json({
+          error: 'User not found',
+          message: 'ユーザーが見つかりません'
+        });
+      }
+
+      res.json({
+        success: true,
+        user: {
+          id: updatedUser.id,
+          email: updatedUser.email,
+          name: updatedUser.name,
+          role: updatedUser.role,
+          provider: updatedUser.provider,
+          lastLogin: updatedUser.lastLogin,
+          createdAt: updatedUser.createdAt
+        }
+      });
+    } catch (error) {
+      console.error('User update error:', error);
+      res.status(500).json({
+        error: 'User update failed',
+        message: 'ユーザーの更新に失敗しました'
+      });
+    }
+  }
+);
 
 /**
  * DELETE /api/auth/users/:id
@@ -328,5 +391,105 @@ router.delete('/users/:id', authenticateToken, requireAdmin, async (req, res) =>
     });
   }
 });
+
+/**
+ * POST /api/auth/google
+ * Google OAuth login
+ * Validates Cognito ID token and creates/updates user
+ */
+router.post(
+  '/google',
+  body('idToken').notEmpty().withMessage('ID token required'),
+  handleValidationErrors,
+  async (req, res) => {
+    try {
+      const { verifyCognitoToken, syncCognitoUser } = await import('../middleware/cognito-auth.js');
+      const { database } = req.app.locals;
+      const { idToken } = req.body;
+
+      // Verify Cognito ID token
+      const cognitoUser = await verifyCognitoToken(idToken);
+
+      // Sync user with local database
+      const user = await syncCognitoUser(cognitoUser, database);
+
+      // Generate JWT token for API access
+      const token = generateToken(user);
+      const refreshToken = generateToken(user, '7d');
+
+      res.json({
+        success: true,
+        token,
+        refreshToken,
+        user
+      });
+    } catch (error) {
+      console.error('Google authentication error:', error);
+
+      if (error.message === 'User Pool ID not configured') {
+        return res.status(500).json({
+          error: 'Configuration error',
+          message: 'Google認証が設定されていません'
+        });
+      }
+
+      if (error.name === 'TokenExpiredError') {
+        return res.status(401).json({
+          error: 'Token expired',
+          message: '認証トークンの有効期限が切れています'
+        });
+      }
+
+      res.status(401).json({
+        error: 'Authentication failed',
+        message: 'Google認証に失敗しました'
+      });
+    }
+  }
+);
+
+/**
+ * POST /api/auth/refresh
+ * Refresh JWT token
+ */
+router.post(
+  '/refresh',
+  body('refreshToken').notEmpty().withMessage('Refresh token required'),
+  handleValidationErrors,
+  async (req, res) => {
+    try {
+      const { database } = req.app.locals;
+      const { refreshToken } = req.body;
+
+      // Verify refresh token
+      const decoded = jwt.verify(refreshToken, process.env.JWT_SECRET || 'development-secret');
+
+      // Get user
+      const user = await database.findById('users', decoded.id);
+      if (!user) {
+        return res.status(404).json({
+          error: 'User not found',
+          message: 'ユーザーが見つかりません'
+        });
+      }
+
+      // Generate new tokens
+      const token = generateToken(user);
+      const newRefreshToken = generateToken(user, '7d');
+
+      res.json({
+        success: true,
+        token,
+        refreshToken: newRefreshToken
+      });
+    } catch (error) {
+      console.error('Token refresh error:', error);
+      res.status(401).json({
+        error: 'Invalid refresh token',
+        message: '無効なリフレッシュトークンです'
+      });
+    }
+  }
+);
 
 export default router;

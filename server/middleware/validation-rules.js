@@ -4,6 +4,7 @@
  */
 
 import { body, param, query } from 'express-validator';
+import { sanitizeHtml, sanitizeText } from '../utils/sanitizer.js';
 
 // Common validation patterns
 const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -27,7 +28,7 @@ export const eventValidationRules = {
       .trim()
       .isLength({ min: 10, max: 2000 })
       .withMessage('Event description must be between 10 and 2000 characters')
-      .escape(),
+      .customSanitizer(value => sanitizeHtml(value)),
 
     body('eventDate')
       .isISO8601()
@@ -70,13 +71,13 @@ export const eventValidationRules = {
       .trim()
       .isLength({ min: 2, max: 100 })
       .withMessage('Venue name must be between 2 and 100 characters')
-      .escape(),
+      .customSanitizer(value => sanitizeText(value)),
 
     body('venue.address')
       .trim()
       .isLength({ min: 5, max: 200 })
       .withMessage('Venue address must be between 5 and 200 characters')
-      .escape(),
+      .customSanitizer(value => sanitizeText(value)),
 
     body('venue.capacity')
       .isInt({ min: 1, max: 10000 })
@@ -152,7 +153,7 @@ export const eventValidationRules = {
       .trim()
       .isLength({ min: 10, max: 2000 })
       .withMessage('Event description must be between 10 and 2000 characters')
-      .escape(),
+      .customSanitizer(value => sanitizeText(value)),
 
     body('eventDate')
       .optional()
@@ -179,7 +180,7 @@ export const participantValidationRules = {
       .withMessage('Name must be between 2 and 100 characters')
       .matches(/^[a-zA-Z\u3040-\u309F\u30A0-\u30FF\u4E00-\u9FAF\s\-'.]+$/)
       .withMessage('Name contains invalid characters')
-      .escape(),
+      .customSanitizer(value => sanitizeText(value)),
 
     body('email')
       .trim()
@@ -202,14 +203,14 @@ export const participantValidationRules = {
       .trim()
       .isLength({ max: 100 })
       .withMessage('Company name must not exceed 100 characters')
-      .escape(),
+      .customSanitizer(value => sanitizeText(value)),
 
     body('jobTitle')
       .optional()
       .trim()
       .isLength({ max: 100 })
       .withMessage('Job title must not exceed 100 characters')
-      .escape(),
+      .customSanitizer(value => sanitizeText(value)),
 
     body('participationType')
       .isIn(['online', 'offline', 'hybrid'])
@@ -220,14 +221,14 @@ export const participantValidationRules = {
       .trim()
       .isLength({ max: 500 })
       .withMessage('Dietary restrictions must not exceed 500 characters')
-      .escape(),
+      .customSanitizer(value => sanitizeText(value)),
 
     body('emergencyContact.name')
       .optional()
       .trim()
       .isLength({ min: 2, max: 100 })
       .withMessage('Emergency contact name must be between 2 and 100 characters')
-      .escape(),
+      .customSanitizer(value => sanitizeText(value)),
 
     body('emergencyContact.phone')
       .optional()
@@ -278,7 +279,7 @@ export const participantValidationRules = {
       .trim()
       .isLength({ min: 2, max: 100 })
       .withMessage('Name must be between 2 and 100 characters')
-      .escape(),
+      .customSanitizer(value => sanitizeText(value)),
 
     body('phone')
       .optional()
@@ -306,7 +307,7 @@ export const talkValidationRules = {
       .withMessage('Speaker name must be between 2 and 100 characters')
       .matches(/^[a-zA-Z\u3040-\u309F\u30A0-\u30FF\u4E00-\u9FAF\s\-'.]+$/)
       .withMessage('Speaker name contains invalid characters')
-      .escape(),
+      .customSanitizer(value => sanitizeText(value)),
 
     body('speakerEmail')
       .trim()
@@ -322,13 +323,13 @@ export const talkValidationRules = {
         /^[a-zA-Z0-9\s\u3040-\u309F\u30A0-\u30FF\u4E00-\u9FAF！？・（）()[\]「」『』【】〈〉《》、。,.\-_:;]+$/
       )
       .withMessage('Talk title contains invalid characters')
-      .escape(),
+      .customSanitizer(value => sanitizeText(value)),
 
     body('description')
       .trim()
       .isLength({ min: 20, max: 2000 })
       .withMessage('Talk description must be between 20 and 2000 characters')
-      .escape(),
+      .customSanitizer(value => sanitizeText(value)),
 
     body('category')
       .isIn([
@@ -389,7 +390,7 @@ export const talkValidationRules = {
       .trim()
       .isLength({ max: 500 })
       .withMessage('Speaker bio must not exceed 500 characters')
-      .escape(),
+      .customSanitizer(value => sanitizeText(value)),
 
     body('previousExperience')
       .optional()
@@ -401,7 +402,7 @@ export const talkValidationRules = {
       .trim()
       .isLength({ max: 500 })
       .withMessage('Special requirements must not exceed 500 characters')
-      .escape()
+      .customSanitizer(value => sanitizeText(value))
   ],
 
   update: [
@@ -414,14 +415,14 @@ export const talkValidationRules = {
       .trim()
       .isLength({ min: 5, max: 100 })
       .withMessage('Talk title must be between 5 and 100 characters')
-      .escape(),
+      .customSanitizer(value => sanitizeText(value)),
 
     body('description')
       .optional()
       .trim()
       .isLength({ min: 20, max: 2000 })
       .withMessage('Talk description must be between 20 and 2000 characters')
-      .escape(),
+      .customSanitizer(value => sanitizeText(value)),
 
     body('category')
       .optional()
@@ -456,7 +457,7 @@ export const adminValidationRules = {
       .trim()
       .isLength({ max: 1000 })
       .withMessage('Notes must not exceed 1000 characters')
-      .escape(),
+      .customSanitizer(value => sanitizeText(value)),
 
     body('checkedIn').optional().isBoolean().withMessage('Checked in must be a boolean'),
 
@@ -486,7 +487,7 @@ export const adminValidationRules = {
       .trim()
       .isLength({ max: 1000 })
       .withMessage('Feedback must not exceed 1000 characters')
-      .escape(),
+      .customSanitizer(value => sanitizeText(value)),
 
     body('rating')
       .optional()
@@ -522,7 +523,7 @@ export const queryValidationRules = {
       .trim()
       .isLength({ min: 1, max: 100 })
       .withMessage('Search query must be between 1 and 100 characters')
-      .escape(),
+      .customSanitizer(value => sanitizeText(value)),
 
     query('category')
       .optional()
