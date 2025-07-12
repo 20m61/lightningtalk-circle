@@ -9,20 +9,14 @@ export function createLogger(moduleName) {
 
   const formatMessage = (level, message, ...args) => {
     const timestamp = new Date().toISOString();
-    const formatted = {
-      timestamp,
-      level,
-      module: moduleName,
-      message,
-      data: args.length > 0 ? args : undefined
-    };
-
-    return isProduction ? JSON.stringify(formatted) : `${timestamp} ${prefix} ${level}: ${message}`;
+    const formattedArgs = args.length > 0 ? ' ' + JSON.stringify(args) : '';
+    return `${timestamp} ${prefix} ${level}: ${message}${formattedArgs}`;
   };
 
   return {
     info: (message, ...args) => {
       if (isProduction) {
+        // In production, write structured logs to stdout
         process.stdout.write(formatMessage('INFO', message, ...args) + '\n');
       } else {
         console.log(`${prefix} INFO:`, message, ...args);
@@ -31,6 +25,7 @@ export function createLogger(moduleName) {
 
     error: (message, ...args) => {
       if (isProduction) {
+        // In production, write structured logs to stderr
         process.stderr.write(formatMessage('ERROR', message, ...args) + '\n');
       } else {
         console.error(`${prefix} ERROR:`, message, ...args);
@@ -53,4 +48,21 @@ export function createLogger(moduleName) {
   };
 }
 
-export default createLogger;
+// Middleware for Express logging
+export const logger = (req, res, next) => {
+  const start = Date.now();
+  const requestLogger = createLogger('http');
+
+  res.on('finish', () => {
+    const duration = Date.now() - start;
+    const message = `${req.method} ${req.originalUrl} ${res.statusCode} ${duration}ms`;
+
+    if (res.statusCode >= 400) {
+      requestLogger.error(message);
+    } else {
+      requestLogger.info(message);
+    }
+  });
+
+  next();
+};

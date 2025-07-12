@@ -466,6 +466,13 @@ export class VotingService extends EventEmitter {
       throw new DatabaseError('Failed to get participation votes');
     }
   }
+
+  /**
+   * Get participation votes for a specific event
+   */
+  async getParticipationVotes(eventId) {
+    return this.getVoteCounts(eventId);
+  }
 }
 
 export default VotingService;

@@ -109,14 +109,17 @@ router.get('/events/:eventId', param('eventId').notEmpty(), async (req, res) => 
     });
   }
 });
-
 // Create a new voting session
 router.post(
   '/sessions',
   authenticateToken,
   [
-    body('eventId').isUUID().withMessage('Event ID must be a valid UUID'),
-    body('talkId').isUUID().withMessage('Talk ID must be a valid UUID'),
+    body('eventId')
+      .isUUID()
+      .withMessage('Event ID must be a valid UUID'),
+    body('talkId')
+      .isUUID()
+      .withMessage('Talk ID must be a valid UUID'),
     body('duration')
       .optional()
       .isInt({ min: 30, max: 300 })
@@ -168,10 +171,12 @@ router.post(
   '/sessions/:sessionId/vote',
   [
     param('sessionId')
-      .isLength({ min: 1, max: 100 })
-      .withMessage('Session ID must be provided')
-      .trim(),
-    body('rating').isInt({ min: 1, max: 5 }).withMessage('Rating must be between 1-5').toInt(),
+      .isUUID()
+      .withMessage('Session ID must be a valid UUID'),
+    body('rating')
+      .isInt({ min: 1, max: 5 })
+      .withMessage('Rating must be between 1-5')
+      .toInt(),
     body('participantId')
       .optional()
       .isLength({ min: 1, max: 100 })
