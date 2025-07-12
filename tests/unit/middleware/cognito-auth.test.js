@@ -35,10 +35,8 @@ describe('Cognito Authentication Middleware', () => {
 
     // Mock bcrypt
     jest.unstable_mockModule('bcrypt', () => ({
-      default: {
-        hash: jest.fn(password => `hashed-${password}`),
-        compare: jest.fn((password, hash) => hash === `hashed-${password}`)
-      }
+      hash: jest.fn(password => `hashed-${password}`),
+      compare: jest.fn((password, hash) => hash === `hashed-${password}`)
     }));
 
     // Set environment variables

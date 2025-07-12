@@ -16,6 +16,25 @@ jest.unstable_mockModule('express-validator', () => ({
     trim: jest.fn().mockReturnThis(),
     escape: jest.fn().mockReturnThis()
   })),
+  param: jest.fn(() => ({
+    isLength: jest.fn().mockReturnThis(),
+    matches: jest.fn().mockReturnThis(),
+    isUUID: jest.fn().mockReturnThis(),
+    custom: jest.fn().mockReturnThis(),
+    withMessage: jest.fn().mockReturnThis(),
+    trim: jest.fn().mockReturnThis(),
+    escape: jest.fn().mockReturnThis()
+  })),
+  query: jest.fn(() => ({
+    isLength: jest.fn().mockReturnThis(),
+    matches: jest.fn().mockReturnThis(),
+    isInt: jest.fn().mockReturnThis(),
+    toInt: jest.fn().mockReturnThis(),
+    custom: jest.fn().mockReturnThis(),
+    withMessage: jest.fn().mockReturnThis(),
+    trim: jest.fn().mockReturnThis(),
+    escape: jest.fn().mockReturnThis()
+  })),
   validationResult: jest.fn(() => ({ isEmpty: () => true, array: () => [] }))
 }));
 
