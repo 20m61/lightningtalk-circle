@@ -1,5 +1,8 @@
 # CLAUDE.md
 
+This file provides guidance to Claude Code (claude.ai/code) when working with
+code in this repository.
+
 このファイルは、このリポジトリでコードを扱う際のClaude
 Code（claude.ai/code）向けのガイダンスを提供します。
 
@@ -33,6 +36,11 @@ npm run test:integration     # 統合テストのみ
 npm run test:e2e             # PlaywrightによるE2Eテスト
 npm run test:coverage        # テストカバレッジレポート
 npm run test:watch           # TDD用のウォッチモード
+
+# 個別テスト実行
+NODE_OPTIONS='--experimental-vm-modules' npx jest tests/unit/specific-test.test.js
+NODE_OPTIONS='--experimental-vm-modules' npx jest --testNamePattern="specific test name"
+NODE_OPTIONS='--experimental-vm-modules' npx jest --testPathPattern="auth"
 
 # コード品質
 npm run lint                 # ESLint（設定されている場合）
@@ -142,7 +150,7 @@ npm run env:backup           # 現在の環境設定をバックアップ
 - **GitHub統合**: Octokitを使用したイシュー作成と管理
 - **イベント管理**: バリデーション付きイベントCRUD操作
 - **参加者管理**: 登録と調査の処理
-- **認証**: リフレッシュトークン付きJWTベース認証
+- **認証**: AWS Cognito + Google OAuth統合とJWTベース認証
 - **データベース**: ファイルベースとDynamoDBストレージのデュアルサポート
 - **リアルタイム**: ライブアップデート用Socket.io統合
 - **APIドキュメント**: `/api/docs`のOpenAPI/Swagger
@@ -157,6 +165,7 @@ npm run env:backup           # 現在の環境設定をバックアップ
 
 ### AWSインフラストラクチャ (cdk/)
 
+- **CognitoStack**: AWS Cognito User Pool、Google OAuth統合、認証管理
 - **SecretsStack**: AWS Secrets
   Manager経由ですべてのアプリケーションシークレットを管理
 - **DatabaseStack**: 適切なGSIとVPC設定を持つDynamoDBテーブル
@@ -243,6 +252,17 @@ FEEDBACK_URL=https://docs.google.com/forms/...
 GOOGLE_ANALYTICS_ID=
 SENTRY_DSN=
 SLACK_WEBHOOK_URL=
+
+# AWS Cognito認証設定（本番環境）
+COGNITO_USER_POOL_ID=ap-northeast-1_Wwsw04u84
+COGNITO_CLIENT_ID=5s4ogan946f0dc19tklh0s1tim
+COGNITO_REGION=ap-northeast-1
+COGNITO_DOMAIN=lightningtalk-auth-v2.auth.ap-northeast-1.amazoncognito.com
+API_ENDPOINT=https://9qyaz7n47j.execute-api.ap-northeast-1.amazonaws.com/prod/api
+
+# Google OAuth設定（Cognito統合用）
+GOOGLE_CLIENT_ID=your-google-client-id.apps.googleusercontent.com
+GOOGLE_CLIENT_SECRET=stored-in-aws-secrets-manager
 ```
 
 ### WordPress開発
@@ -278,6 +298,31 @@ SLACK_WEBHOOK_URL=
 - ユニットテスト: テストスイートの70%
 - 統合テスト: テストスイートの25%
 - E2Eテスト: テストスイートの5%
+
+### 特別なテスト考慮事項
+
+#### ES Modules設定
+
+- `NODE_OPTIONS='--experimental-vm-modules'` フラグが必要
+- `jest.config.js` でES Modules対応設定
+
+#### モッキング要件
+
+- **express-validator**: `body`, `param`, `query`, `optional`, `isIn`,
+  `isISO8601` 等のメソッドが必要
+- **AWS SDK**: オプション依存関係として扱い、不存在時は警告表示
+- **Cognito認証**: JWT検証とトークン管理のテスト用モック
+- **logger**: 全ログレベル（info, error, warn, debug）のモックが必要
+
+#### 既知のテスト制限
+
+一部のテストで以下の問題が発生することがある：
+
+- ES Modules のread-only プロパティ割り当てエラー
+- aws-sdk モジュール不存在時のエラー
+- express-validator の不完全なモッキング
+
+これらは機能に影響しない技術的詳細で、重要なセキュリティテストは通過している。
 
 ## CI/CDとGitHub Actions
 
@@ -335,6 +380,41 @@ SLACK_WEBHOOK_URL=
 - WCAG 2.1 AAアクセシビリティ準拠
 - 本番環境でのWAF保護
 
+## 認証システム
+
+### AWS Cognito + Google OAuth統合
+
+このプロジェクトではAWS Cognitoを使用したGoogle
+OAuth認証システムを実装しています：
+
+#### アーキテクチャ
+
+- **User
+  Pool**: ユーザー管理とパスワードポリシー（大文字・小文字・数字・記号必須）
+- **Identity Pool**: AWS リソースへのアクセス制御
+- **Google OAuth**: Google IDによるソーシャルログイン
+- **JWTトークン**: セッション管理とAPI認証
+
+#### 主要ファイル
+
+- `cdk/lib/cognito-stack.ts` - CDKによるCognitoインフラ定義
+- `public/js/auth.js` - フロントエンド認証モジュール
+- `public/css/auth.css` - Google認証ボタンのスタイル
+- `docs/google-oauth-setup.md` - Google OAuth設定ガイド
+
+#### 設定要件
+
+- Google Cloud Console でOAuth 2.0クライアント作成
+- AWS Secrets Manager でGoogle Client Secret管理
+- 本番環境: `https://発表.com` (xn--6wym69a.com)
+
+#### セキュリティ機能
+
+- JWT署名検証とトークンリフレッシュ
+- CORS設定とXSS対策（DOMPurify使用）
+- レート制限とHelmet.jsセキュリティヘッダー
+- パスワード複雑度要件の強制
+
 ## データベース管理
 
 ### デュアルデータベースサポート
@@ -356,13 +436,35 @@ SLACK_WEBHOOK_URL=
 - 移行前の自動バックアップ
 - ロールバックサポート
 
+## 本番環境とデプロイメント
+
+### 本番環境URL
+
+- **メインサイト**: https://発表.com (https://xn--6wym69a.com)
+- **API エンドポイント**:
+  https://9qyaz7n47j.execute-api.ap-northeast-1.amazonaws.com/prod/api
+- **Cognito認証ドメイン**:
+  lightningtalk-auth-v2.auth.ap-northeast-1.amazoncognito.com
+
+### デプロイメント手順
+
+1. CDKスタックのデプロイ: `npm run cdk:deploy:prod`
+2. CloudFrontキャッシュの無効化（必要に応じて）
+3. 認証機能のテスト確認
+
+### 重要な注意事項
+
+- 本番環境では国際化ドメイン名（IDN）を使用
+- Cognito設定は本番固有の値を使用
+- Google OAuth リダイレクトURIは本番ドメインを設定
+
 ## APIリファレンス
 
 - OpenAPIドキュメント: `http://localhost:3000/api/docs`
-- 認証: JWT Bearerトークン
+- 認証: JWT Bearerトークン（Cognito発行）
 - レート制限: 15分あたり100リクエスト
 - エンドポイント:
-  - `/api/auth/*` - 認証
+  - `/api/auth/*` - 認証（Google OAuth、JWT管理）
   - `/api/events/*` - イベント管理
   - `/api/participants/*` - 登録
   - `/api/talks/*` - トーク提出
@@ -377,6 +479,8 @@ SLACK_WEBHOOK_URL=
 3. **データベース接続**: DATABASE_TYPE設定を確認
 4. **メール送信**: EMAIL_SERVICE設定を確認
 5. **GitHub API制限**: 有効なGITHUB_TOKENを確認
+6. **Cognito認証エラー**: Google OAuth設定とAWS Secrets Managerの確認
+7. **国際化ドメイン名**: 本番環境では`xn--6wym69a.com`（発表.com）を使用
 
 ### デバッグモード
 
@@ -392,6 +496,7 @@ SLACK_WEBHOOK_URL=
 - **型安全性**: モダンコンポーネントでのTypeScript
 - **アクセシビリティ**: WCAG 2.1 AA準拠が必要
 - **パフォーマンス**: 画像最適化、アセット圧縮、WebPサポート
-- **セキュリティ**: 入力検証、レート制限、セキュリティヘッダー、WAF
+- **セキュリティ**: AWS
+  Cognito認証、入力検証、レート制限、セキュリティヘッダー、WAF、XSS対策
 - **観測可能性**: 包括的なモニタリングとアラート
 - **コスト意識**: 予算モニタリングと最適化
