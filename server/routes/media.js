@@ -143,8 +143,8 @@ router.post(
     body('category')
       .optional()
       .isString()
-      .isIn(['event', 'profile', 'speaker', 'general'])
-      .withMessage('Category must be one of: event, profile, speaker, general'),
+      .isIn(['event', 'profile', 'speaker', 'general', 'studio'])
+      .withMessage('Category must be one of: event, profile, speaker, general, studio'),
     body('alt')
       .optional()
       .isString()
@@ -684,6 +684,154 @@ router.post(
       res.status(500).json({
         success: false,
         error: 'Failed to perform bulk deletion'
+      });
+    }
+  }
+);
+
+/**
+ * @swagger
+ * /api/media/images/{imageId}:
+ *   put:
+ *     summary: Update an existing image with edited version
+ *     tags: [Media]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: imageId
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: Image ID to update
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         multipart/form-data:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               image:
+ *                 type: string
+ *                 format: binary
+ *                 description: Updated image file (JPEG, PNG, WebP, max 10MB)
+ *               category:
+ *                 type: string
+ *                 description: Image category
+ *               alt:
+ *                 type: string
+ *                 description: Alt text for accessibility
+ *               caption:
+ *                 type: string
+ *                 description: Image caption
+ *     responses:
+ *       200:
+ *         description: Image updated successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ImageUploadResponse'
+ *       404:
+ *         description: Image not found
+ *       403:
+ *         description: Permission denied
+ */
+router.put(
+  '/images/:imageId',
+  upload.single('image'),
+  [
+    param('imageId').isString().notEmpty().withMessage('Image ID is required'),
+    body('category')
+      .optional()
+      .isString()
+      .isIn(['event', 'profile', 'speaker', 'general', 'studio'])
+      .withMessage('Category must be one of: event, profile, speaker, general, studio'),
+    body('alt')
+      .optional()
+      .isString()
+      .isLength({ max: 200 })
+      .withMessage('Alt text must be less than 200 characters'),
+    body('caption')
+      .optional()
+      .isString()
+      .isLength({ max: 500 })
+      .withMessage('Caption must be less than 500 characters')
+  ],
+  async (req, res) => {
+    try {
+      const errors = validationResult(req);
+      if (!errors.isEmpty()) {
+        return res.status(400).json({
+          success: false,
+          errors: errors.array()
+        });
+      }
+
+      if (!req.file) {
+        return res.status(400).json({
+          success: false,
+          error: 'No image file provided'
+        });
+      }
+
+      const { imageId } = req.params;
+      const userId = req.user.id;
+
+      // Get existing image record
+      const existingImage = await req.app.locals.database.read('images', imageId);
+      if (!existingImage) {
+        return res.status(404).json({
+          success: false,
+          error: 'Image not found'
+        });
+      }
+
+      // Check permissions
+      if (existingImage.uploadedBy !== userId && req.user.role !== 'admin') {
+        return res.status(403).json({
+          success: false,
+          error: 'Permission denied'
+        });
+      }
+
+      // Delete old image variants from storage
+      await imageService.deleteImage(existingImage);
+
+      // Process new image with same ID
+      const imageRecord = await imageService.processAndUploadImage(
+        req.file.buffer,
+        req.file.originalname,
+        {
+          category: req.body.category || existingImage.category,
+          alt: req.body.alt || existingImage.alt,
+          caption: req.body.caption || existingImage.caption,
+          uploadedBy: existingImage.uploadedBy,
+          eventId: existingImage.eventId
+        }
+      );
+
+      // Update database record (preserve original ID and timestamps)
+      const updatedImage = {
+        ...imageRecord,
+        id: imageId, // Keep original ID
+        createdAt: existingImage.createdAt, // Preserve creation time
+        updatedAt: new Date()
+      };
+
+      await req.app.locals.database.update('images', imageId, updatedImage);
+
+      res.json({
+        success: true,
+        data: updatedImage,
+        message: 'Image updated successfully'
+      });
+
+      logger.info(`Image updated: ${imageId} by user ${userId}`);
+    } catch (error) {
+      logger.error('Error updating image:', error);
+      res.status(500).json({
+        success: false,
+        error: 'Failed to update image'
       });
     }
   }

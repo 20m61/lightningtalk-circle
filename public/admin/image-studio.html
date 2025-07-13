@@ -1,0 +1,906 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Image Studio - Lightning Talk Circle</title>
+    <link rel="stylesheet" href="../css/style.css" />
+    <link rel="stylesheet" href="../css/image-uploader.css" />
+    <link rel="stylesheet" href="../css/image-editor.css" />
+    <style>
+      .image-studio {
+        max-width: 1400px;
+        margin: 0 auto;
+        padding: var(--space-6);
+      }
+
+      .studio-header {
+        text-align: center;
+        margin-bottom: var(--space-8);
+      }
+
+      .studio-header h1 {
+        font-size: var(--font-size-3xl);
+        font-weight: var(--font-weight-bold);
+        color: var(--color-neutral-900);
+        margin-bottom: var(--space-2);
+      }
+
+      .studio-header p {
+        font-size: var(--font-size-lg);
+        color: var(--color-neutral-600);
+        max-width: 600px;
+        margin: 0 auto;
+      }
+
+      .studio-workflow {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: var(--space-6);
+        margin-bottom: var(--space-8);
+      }
+
+      .workflow-step {
+        background: var(--color-neutral-0);
+        border: 1px solid var(--color-neutral-200);
+        border-radius: var(--radius-lg);
+        overflow: hidden;
+      }
+
+      .step-header {
+        background: var(--color-primary-50);
+        padding: var(--space-4);
+        border-bottom: 1px solid var(--color-primary-200);
+      }
+
+      .step-header h3 {
+        margin: 0;
+        font-size: var(--font-size-lg);
+        font-weight: var(--font-weight-semibold);
+        color: var(--color-primary-900);
+        display: flex;
+        align-items: center;
+        gap: var(--space-2);
+      }
+
+      .step-number {
+        width: var(--size-8);
+        height: var(--size-8);
+        background: var(--color-primary-500);
+        color: var(--color-neutral-0);
+        border-radius: var(--radius-full);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: var(--font-weight-bold);
+        font-size: var(--font-size-sm);
+      }
+
+      .step-content {
+        padding: var(--space-4);
+        min-height: 400px;
+      }
+
+      .editor-section {
+        margin-top: var(--space-6);
+        border: 1px solid var(--color-neutral-200);
+        border-radius: var(--radius-lg);
+        overflow: hidden;
+      }
+
+      .editor-header {
+        background: var(--color-neutral-50);
+        padding: var(--space-4);
+        border-bottom: 1px solid var(--color-neutral-200);
+        display: flex;
+        justify-content: between;
+        align-items: center;
+      }
+
+      .editor-actions {
+        display: flex;
+        gap: var(--space-2);
+      }
+
+      .action-button {
+        padding: var(--space-2) var(--space-4);
+        border: 1px solid var(--color-neutral-300);
+        border-radius: var(--radius-md);
+        background: var(--color-neutral-0);
+        color: var(--color-neutral-700);
+        cursor: pointer;
+        font-size: var(--font-size-sm);
+        font-weight: var(--font-weight-medium);
+        transition: var(--transition-colors);
+      }
+
+      .action-button:hover {
+        background: var(--color-neutral-100);
+        border-color: var(--color-primary-400);
+        color: var(--color-primary-700);
+      }
+
+      .action-button.primary {
+        background: var(--color-primary-500);
+        border-color: var(--color-primary-500);
+        color: var(--color-neutral-0);
+      }
+
+      .action-button.primary:hover {
+        background: var(--color-primary-600);
+      }
+
+      .action-button:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+        background: var(--color-neutral-100);
+        color: var(--color-neutral-400);
+      }
+
+      .action-button:disabled:hover {
+        background: var(--color-neutral-100);
+        border-color: var(--color-neutral-300);
+        color: var(--color-neutral-400);
+      }
+
+      .gallery-section {
+        margin-top: var(--space-6);
+      }
+
+      .gallery-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: var(--space-4);
+      }
+
+      .gallery-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+        gap: var(--space-4);
+      }
+
+      .gallery-item {
+        background: var(--color-neutral-0);
+        border: 1px solid var(--color-neutral-200);
+        border-radius: var(--radius-md);
+        overflow: hidden;
+        transition: var(--transition-transform);
+      }
+
+      .gallery-item:hover {
+        transform: translateY(-2px);
+        box-shadow: var(--shadow-lg);
+      }
+
+      .gallery-item img {
+        width: 100%;
+        height: 150px;
+        object-fit: cover;
+      }
+
+      .gallery-item-info {
+        padding: var(--space-3);
+      }
+
+      .gallery-item-name {
+        font-size: var(--font-size-sm);
+        font-weight: var(--font-weight-medium);
+        color: var(--color-neutral-900);
+        margin-bottom: var(--space-1);
+      }
+
+      .gallery-item-meta {
+        font-size: var(--font-size-xs);
+        color: var(--color-neutral-600);
+      }
+
+      .gallery-item-actions {
+        padding: var(--space-2) var(--space-3);
+        border-top: 1px solid var(--color-neutral-200);
+        display: flex;
+        gap: var(--space-2);
+      }
+
+      .gallery-action-btn {
+        flex: 1;
+        padding: var(--space-1) var(--space-2);
+        border: 1px solid var(--color-neutral-300);
+        border-radius: var(--radius-sm);
+        background: var(--color-neutral-0);
+        color: var(--color-neutral-700);
+        cursor: pointer;
+        font-size: var(--font-size-xs);
+        text-align: center;
+        transition: var(--transition-colors);
+      }
+
+      .gallery-action-btn:hover {
+        background: var(--color-neutral-100);
+        border-color: var(--color-primary-400);
+        color: var(--color-primary-700);
+      }
+
+      /* Responsive Design */
+      @media (max-width: 1024px) {
+        .studio-workflow {
+          grid-template-columns: 1fr;
+        }
+
+        .gallery-grid {
+          grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+        }
+      }
+
+      @media (max-width: 768px) {
+        .image-studio {
+          padding: var(--space-4);
+        }
+
+        .studio-header h1 {
+          font-size: var(--font-size-2xl);
+        }
+
+        .step-content {
+          min-height: 300px;
+        }
+
+        .editor-actions {
+          flex-wrap: wrap;
+          gap: var(--space-1);
+        }
+
+        .action-button {
+          padding: var(--space-1) var(--space-3);
+          font-size: var(--font-size-xs);
+        }
+      }
+
+      /* Status indicators */
+      .status-indicator {
+        display: inline-flex;
+        align-items: center;
+        gap: var(--space-1);
+        padding: var(--space-1) var(--space-2);
+        border-radius: var(--radius-sm);
+        font-size: var(--font-size-xs);
+        font-weight: var(--font-weight-medium);
+      }
+
+      .status-indicator.ready {
+        background: var(--color-success-100);
+        color: var(--color-success-700);
+      }
+
+      .status-indicator.editing {
+        background: var(--color-warning-100);
+        color: var(--color-warning-700);
+      }
+
+      .status-indicator.saving {
+        background: var(--color-info-100);
+        color: var(--color-info-700);
+      }
+    </style>
+  </head>
+  <body>
+    <header class="header">
+      <nav class="nav">
+        <div class="nav-brand">
+          <a href="/" class="brand-link">⚡ Lightning Talk Circle</a>
+        </div>
+        <div class="nav-menu">
+          <a href="/admin/" class="nav-link">管理者ダッシュボード</a>
+          <a href="/admin/events.html" class="nav-link">イベント管理</a>
+          <a href="/admin/image-studio.html" class="nav-link active">Image Studio</a>
+          <a href="#" class="nav-link" onclick="logout()">ログアウト</a>
+        </div>
+      </nav>
+    </header>
+
+    <main class="main">
+      <div class="image-studio">
+        <div class="studio-header">
+          <h1>🎨 Image Studio</h1>
+          <p>
+            Lightning Talk Circle の包括的な画像管理・編集システム。
+            ドラッグ&ドロップでアップロード、プロ級の編集ツール、最適化されたストレージ管理をひとつのプラットフォームで。
+          </p>
+        </div>
+
+        <div class="studio-workflow">
+          <!-- Step 1: Upload -->
+          <div class="workflow-step">
+            <div class="step-header">
+              <h3>
+                <span class="step-number">1</span>
+                画像アップロード
+              </h3>
+            </div>
+            <div class="step-content">
+              <div
+                id="imageUploader"
+                data-image-uploader='{
+              "maxFileSize": 10485760,
+              "acceptedTypes": ["image/jpeg", "image/png", "image/webp"],
+              "multiple": true,
+              "category": "studio",
+              "showProgress": true,
+              "allowDelete": true,
+              "onSuccess": "handleUploadSuccess"
+            }'
+              ></div>
+            </div>
+          </div>
+
+          <!-- Step 2: Edit -->
+          <div class="workflow-step">
+            <div class="step-header">
+              <h3>
+                <span class="step-number">2</span>
+                画像編集
+                <span class="status-indicator ready" id="editorStatus"> 編集待機中 </span>
+              </h3>
+            </div>
+            <div class="step-content">
+              <div id="imageEditor" style="display: none"></div>
+              <div id="editorPlaceholder" class="text-center" style="padding: var(--space-8)">
+                <div style="font-size: var(--font-size-4xl); margin-bottom: var(--space-4)">🖼️</div>
+                <h4>画像を選択して編集を開始</h4>
+                <p>
+                  左側から画像をアップロードするか、下のギャラリーから既存の画像を選択してください。
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Editor Actions -->
+        <div class="editor-section" id="editorSection" style="display: none">
+          <div class="editor-header">
+            <h3>編集アクション</h3>
+            <div class="editor-actions">
+              <button class="action-button" id="newEditBtn" disabled>新しい編集</button>
+              <button class="action-button" id="saveAsNewBtn" disabled>新規保存</button>
+              <button class="action-button" id="updateOriginalBtn" disabled>元画像を更新</button>
+              <button class="action-button primary" id="finalSaveBtn" disabled>完了して保存</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Gallery -->
+        <div class="gallery-section">
+          <div class="gallery-header">
+            <h3>📁 画像ギャラリー</h3>
+            <div class="gallery-actions">
+              <button class="action-button" onclick="refreshGallery()">🔄 更新</button>
+              <button class="action-button" onclick="clearGallery()">🗑️ すべてクリア</button>
+            </div>
+          </div>
+          <div class="gallery-grid" id="galleryGrid">
+            <!-- Gallery items will be populated here -->
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <!-- Scripts -->
+    <script src="../js/auth.js"></script>
+    <script src="../js/image-uploader.js"></script>
+    <script src="../js/image-editor.js"></script>
+    <script>
+      class ImageStudio {
+        constructor() {
+          this.uploader = null;
+          this.editor = null;
+          this.currentImage = null;
+          this.authToken = localStorage.getItem('authToken');
+
+          this.init();
+        }
+
+        async init() {
+          // Check authentication
+          if (!this.authToken) {
+            window.location.href = '/login.html';
+            return;
+          }
+
+          // Initialize components
+          this.initializeUploader();
+          this.initializeEditor();
+          this.attachEventListeners();
+
+          // Load existing images
+          await this.loadGallery();
+
+          console.log('Image Studio initialized successfully');
+        }
+
+        initializeUploader() {
+          const uploaderContainer = document.getElementById('imageUploader');
+          this.uploader = new ImageUploader(uploaderContainer, {
+            maxFileSize: 10 * 1024 * 1024,
+            acceptedTypes: ['image/jpeg', 'image/png', 'image/webp'],
+            multiple: true,
+            category: 'studio',
+            showProgress: true,
+            allowDelete: true,
+            onSuccess: imageData => this.handleUploadSuccess(imageData)
+          });
+        }
+
+        initializeEditor() {
+          const editorContainer = document.getElementById('imageEditor');
+          this.editor = new ImageEditor(editorContainer, {
+            maxWidth: 1920,
+            maxHeight: 1080,
+            backgroundColor: '#ffffff',
+            allowUndo: true,
+            maxUndoSteps: 20
+          });
+        }
+
+        attachEventListeners() {
+          // Editor action buttons
+          document
+            .getElementById('newEditBtn')
+            .addEventListener('click', () => this.startNewEdit());
+          document.getElementById('saveAsNewBtn').addEventListener('click', () => this.saveAsNew());
+          document
+            .getElementById('updateOriginalBtn')
+            .addEventListener('click', () => this.updateOriginal());
+          document.getElementById('finalSaveBtn').addEventListener('click', () => this.finalSave());
+
+          // Editor events
+          const editorContainer = document.getElementById('imageEditor');
+          editorContainer.addEventListener('imageLoaded', () => this.onImageLoaded());
+        }
+
+        handleUploadSuccess(imageData) {
+          // Add to gallery
+          this.addToGallery(imageData);
+
+          // Auto-load into editor if no current image
+          if (!this.currentImage) {
+            this.loadImageIntoEditor(imageData);
+          }
+        }
+
+        async loadImageIntoEditor(imageData) {
+          try {
+            this.currentImage = imageData;
+
+            // Get optimized URL for editing
+            const imageUrl = this.getOptimizedUrl(imageData, 'large');
+
+            // Load into editor
+            await this.editor.loadImage(imageUrl);
+
+            // Update UI
+            this.showEditor();
+            this.updateEditorStatus('editing', '編集中');
+            this.enableEditorActions();
+
+            console.log('Image loaded into editor:', imageData.id);
+          } catch (error) {
+            console.error('Error loading image into editor:', error);
+            this.showError('画像の読み込みに失敗しました');
+          }
+        }
+
+        showEditor() {
+          document.getElementById('editorPlaceholder').style.display = 'none';
+          document.getElementById('imageEditor').style.display = 'block';
+          document.getElementById('editorSection').style.display = 'block';
+        }
+
+        hideEditor() {
+          document.getElementById('editorPlaceholder').style.display = 'block';
+          document.getElementById('imageEditor').style.display = 'none';
+          document.getElementById('editorSection').style.display = 'none';
+        }
+
+        updateEditorStatus(type, text) {
+          const statusEl = document.getElementById('editorStatus');
+          statusEl.className = `status-indicator ${type}`;
+          statusEl.textContent = text;
+        }
+
+        enableEditorActions() {
+          document.getElementById('newEditBtn').disabled = false;
+          document.getElementById('saveAsNewBtn').disabled = false;
+          document.getElementById('updateOriginalBtn').disabled = false;
+          document.getElementById('finalSaveBtn').disabled = false;
+        }
+
+        disableEditorActions() {
+          document.getElementById('newEditBtn').disabled = true;
+          document.getElementById('saveAsNewBtn').disabled = true;
+          document.getElementById('updateOriginalBtn').disabled = true;
+          document.getElementById('finalSaveBtn').disabled = true;
+        }
+
+        onImageLoaded() {
+          this.updateEditorStatus('ready', '編集可能');
+          this.enableEditorActions();
+        }
+
+        async startNewEdit() {
+          if (!this.currentImage) return;
+
+          // Reset editor to original image
+          const imageUrl = this.getOptimizedUrl(this.currentImage, 'large');
+          await this.editor.loadImage(imageUrl);
+          this.updateEditorStatus('ready', '新しい編集開始');
+        }
+
+        async saveAsNew() {
+          if (!this.editor.isModified()) {
+            this.showError('変更がありません');
+            return;
+          }
+
+          try {
+            this.updateEditorStatus('saving', '保存中...');
+            this.disableEditorActions();
+
+            // Get edited image as blob
+            const editedBlob = await this.editor.getEditedImage('image/png', 0.9);
+
+            // Create new filename
+            const originalName = this.currentImage.originalName;
+            const nameWithoutExt = originalName.substring(0, originalName.lastIndexOf('.'));
+            const newName = `${nameWithoutExt}_edited_${Date.now()}.png`;
+
+            // Upload as new image
+            const formData = new FormData();
+            formData.append('image', editedBlob, newName);
+            formData.append('category', 'studio');
+            formData.append('originalImageId', this.currentImage.id);
+
+            const response = await fetch('/api/media/upload', {
+              method: 'POST',
+              headers: {
+                Authorization: `Bearer ${this.authToken}`
+              },
+              body: formData
+            });
+
+            if (response.ok) {
+              const result = await response.json();
+              this.addToGallery(result.data);
+              this.showSuccess('新しい画像として保存しました');
+              this.updateEditorStatus('ready', '保存完了');
+            } else {
+              throw new Error('アップロードに失敗しました');
+            }
+          } catch (error) {
+            this.showError(error.message);
+            this.updateEditorStatus('ready', '保存エラー');
+          } finally {
+            this.enableEditorActions();
+          }
+        }
+
+        async updateOriginal() {
+          if (!this.editor.isModified()) {
+            this.showError('変更がありません');
+            return;
+          }
+
+          if (!confirm('元の画像を編集内容で置き換えますか？この操作は取り消せません。')) {
+            return;
+          }
+
+          try {
+            this.updateEditorStatus('saving', '更新中...');
+            this.disableEditorActions();
+
+            // Get edited image as blob
+            const editedBlob = await this.editor.getEditedImage('image/png', 0.9);
+
+            // Update original image
+            const formData = new FormData();
+            formData.append('image', editedBlob, this.currentImage.originalName);
+            formData.append('category', 'studio');
+
+            const response = await fetch(`/api/media/images/${this.currentImage.id}`, {
+              method: 'PUT',
+              headers: {
+                Authorization: `Bearer ${this.authToken}`
+              },
+              body: formData
+            });
+
+            if (response.ok) {
+              const result = await response.json();
+              this.currentImage = result.data;
+              this.refreshGalleryItem(result.data);
+              this.showSuccess('元画像を更新しました');
+              this.updateEditorStatus('ready', '更新完了');
+            } else {
+              throw new Error('更新に失敗しました');
+            }
+          } catch (error) {
+            this.showError(error.message);
+            this.updateEditorStatus('ready', '更新エラー');
+          } finally {
+            this.enableEditorActions();
+          }
+        }
+
+        async finalSave() {
+          // If modified, ask user what to do
+          if (this.editor.isModified()) {
+            const action = confirm(
+              '変更を保存してから完了しますか？\n\nOK: 新規保存\nキャンセル: 変更を破棄して完了'
+            );
+
+            if (action) {
+              await this.saveAsNew();
+            }
+          }
+
+          // Reset editor
+          this.currentImage = null;
+          this.hideEditor();
+          this.updateEditorStatus('ready', '編集待機中');
+          this.disableEditorActions();
+
+          this.showSuccess('編集を完了しました');
+        }
+
+        async loadGallery() {
+          try {
+            const response = await fetch('/api/media/images?category=studio', {
+              headers: {
+                Authorization: `Bearer ${this.authToken}`
+              }
+            });
+
+            if (response.ok) {
+              const result = await response.json();
+              result.data.forEach(imageData => {
+                this.addToGallery(imageData);
+              });
+            }
+          } catch (error) {
+            console.error('Error loading gallery:', error);
+          }
+        }
+
+        addToGallery(imageData) {
+          const galleryGrid = document.getElementById('galleryGrid');
+
+          // Check if item already exists
+          const existing = galleryGrid.querySelector(`[data-image-id="${imageData.id}"]`);
+          if (existing) {
+            existing.remove();
+          }
+
+          const thumbnailUrl = this.getOptimizedUrl(imageData, 'thumbnail');
+
+          const galleryItem = document.createElement('div');
+          galleryItem.className = 'gallery-item';
+          galleryItem.dataset.imageId = imageData.id;
+          galleryItem.innerHTML = `
+          <img src="${thumbnailUrl}" alt="${imageData.originalName}">
+          <div class="gallery-item-info">
+            <div class="gallery-item-name">${imageData.originalName}</div>
+            <div class="gallery-item-meta">
+              ${this.formatFileSize(imageData.fileSize)} •
+              ${imageData.metadata.width} × ${imageData.metadata.height}
+            </div>
+          </div>
+          <div class="gallery-item-actions">
+            <button class="gallery-action-btn" onclick="studio.editImage('${imageData.id}')">
+              編集
+            </button>
+            <button class="gallery-action-btn" onclick="studio.downloadImage('${imageData.id}')">
+              ダウンロード
+            </button>
+            <button class="gallery-action-btn" onclick="studio.deleteImage('${imageData.id}')">
+              削除
+            </button>
+          </div>
+        `;
+
+          galleryGrid.appendChild(galleryItem);
+        }
+
+        refreshGalleryItem(imageData) {
+          const galleryGrid = document.getElementById('galleryGrid');
+          const existing = galleryGrid.querySelector(`[data-image-id="${imageData.id}"]`);
+          if (existing) {
+            existing.remove();
+          }
+          this.addToGallery(imageData);
+        }
+
+        async editImage(imageId) {
+          try {
+            const response = await fetch(`/api/media/images/${imageId}`, {
+              headers: {
+                Authorization: `Bearer ${this.authToken}`
+              }
+            });
+
+            if (response.ok) {
+              const result = await response.json();
+              await this.loadImageIntoEditor(result.data);
+            } else {
+              throw new Error('画像の取得に失敗しました');
+            }
+          } catch (error) {
+            this.showError(error.message);
+          }
+        }
+
+        async downloadImage(imageId) {
+          try {
+            const galleryItem = document.querySelector(`[data-image-id="${imageId}"]`);
+            const imageName = galleryItem.querySelector('.gallery-item-name').textContent;
+
+            const response = await fetch(`/api/media/images/${imageId}`, {
+              headers: {
+                Authorization: `Bearer ${this.authToken}`
+              }
+            });
+
+            if (response.ok) {
+              const result = await response.json();
+              const imageUrl = this.getOptimizedUrl(result.data, 'large');
+
+              // Download image
+              const a = document.createElement('a');
+              a.href = imageUrl;
+              a.download = imageName;
+              document.body.appendChild(a);
+              a.click();
+              document.body.removeChild(a);
+            }
+          } catch (error) {
+            this.showError('ダウンロードに失敗しました');
+          }
+        }
+
+        async deleteImage(imageId) {
+          if (!confirm('この画像を削除しますか？')) {
+            return;
+          }
+
+          try {
+            const response = await fetch(`/api/media/images/${imageId}`, {
+              method: 'DELETE',
+              headers: {
+                Authorization: `Bearer ${this.authToken}`
+              }
+            });
+
+            if (response.ok) {
+              const galleryItem = document.querySelector(`[data-image-id="${imageId}"]`);
+              if (galleryItem) {
+                galleryItem.remove();
+              }
+
+              // Clear editor if this was the current image
+              if (this.currentImage && this.currentImage.id === imageId) {
+                this.currentImage = null;
+                this.hideEditor();
+                this.updateEditorStatus('ready', '編集待機中');
+              }
+
+              this.showSuccess('画像を削除しました');
+            } else {
+              throw new Error('削除に失敗しました');
+            }
+          } catch (error) {
+            this.showError(error.message);
+          }
+        }
+
+        getOptimizedUrl(imageData, size = 'medium') {
+          if (imageData.variants) {
+            // Try WebP first, then fall back to original format
+            const webpVariant = imageData.variants[`${size}-webp`];
+            if (webpVariant) return webpVariant.url;
+
+            // Try other formats
+            for (const format of ['jpeg', 'jpg', 'png']) {
+              const variant = imageData.variants[`${size}-${format}`];
+              if (variant) return variant.url;
+            }
+          }
+
+          return imageData.url || '';
+        }
+
+        formatFileSize(bytes) {
+          if (bytes === 0) return '0 Bytes';
+          const k = 1024;
+          const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+          const i = Math.floor(Math.log(bytes) / Math.log(k));
+          return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+        }
+
+        showSuccess(message) {
+          // Create success notification
+          const notification = document.createElement('div');
+          notification.className = 'notification success';
+          notification.style.cssText = `
+          position: fixed;
+          top: var(--space-4);
+          right: var(--space-4);
+          background: var(--color-success-500);
+          color: var(--color-neutral-0);
+          padding: var(--space-3) var(--space-4);
+          border-radius: var(--radius-md);
+          z-index: 1000;
+          font-weight: var(--font-weight-medium);
+        `;
+          notification.textContent = message;
+
+          document.body.appendChild(notification);
+
+          setTimeout(() => {
+            if (notification.parentNode) {
+              notification.remove();
+            }
+          }, 3000);
+        }
+
+        showError(message) {
+          // Create error notification
+          const notification = document.createElement('div');
+          notification.className = 'notification error';
+          notification.style.cssText = `
+          position: fixed;
+          top: var(--space-4);
+          right: var(--space-4);
+          background: var(--color-error-500);
+          color: var(--color-neutral-0);
+          padding: var(--space-3) var(--space-4);
+          border-radius: var(--radius-md);
+          z-index: 1000;
+          font-weight: var(--font-weight-medium);
+        `;
+          notification.textContent = message;
+
+          document.body.appendChild(notification);
+
+          setTimeout(() => {
+            if (notification.parentNode) {
+              notification.remove();
+            }
+          }, 5000);
+        }
+      }
+
+      // Global functions for gallery actions
+      let studio;
+
+      // Utility functions
+      function refreshGallery() {
+        document.getElementById('galleryGrid').innerHTML = '';
+        studio.loadGallery();
+      }
+
+      function clearGallery() {
+        if (confirm('ギャラリーをクリアしますか？（画像は削除されません）')) {
+          document.getElementById('galleryGrid').innerHTML = '';
+        }
+      }
+
+      function logout() {
+        localStorage.removeItem('authToken');
+        window.location.href = '/login.html';
+      }
+
+      // Initialize when DOM is ready
+      document.addEventListener('DOMContentLoaded', () => {
+        studio = new ImageStudio();
+      });
+    </script>
+  </body>
+</html>
