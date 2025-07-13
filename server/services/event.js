@@ -25,6 +25,16 @@ export class EventService {
       maxTalks: event.maxTalks
     });
 
+    // Create chat room for event (if chat service is available)
+    try {
+      const { default: chatService } = await import('./chatService.js');
+      if (chatService && chatService.initialized) {
+        await chatService.createEventChatRoom(event);
+      }
+    } catch (error) {
+      console.warn('Could not create chat room for event:', error.message);
+    }
+
     return event;
   }
 
