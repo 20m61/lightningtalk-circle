@@ -134,7 +134,8 @@ export class DatabaseService extends EventEmitter {
         presentations: 'presentations.json',
         presentation_interactions: 'presentation_interactions.json',
         settings: 'settings.json',
-        analytics: 'analytics.json'
+        analytics: 'analytics.json',
+        voting_sessions: 'voting_sessions.json'
       };
 
       // Load or create each collection

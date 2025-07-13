@@ -3,13 +3,16 @@
  * Express.js backend with event management functionality
  */
 
+import dotenv from 'dotenv';
+// Load environment variables first, before any other imports
+dotenv.config();
+
 import express from 'express';
 import cors from 'cors';
 import helmet from 'helmet';
 import rateLimit from 'express-rate-limit';
 import { fileURLToPath } from 'url';
 import { dirname, join } from 'path';
-import dotenv from 'dotenv';
 
 // Routes
 import eventsRouter from './routes/events.js';
@@ -44,8 +47,6 @@ import { VotingService } from './services/votingService.js';
 
 // Performance monitoring
 import { performanceMonitor } from './utils/performanceMonitor.js';
-
-dotenv.config();
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
