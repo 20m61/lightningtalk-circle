@@ -1172,46 +1172,64 @@ class LightningTalkApp {
     }, 1000);
   }
 
-  // Cleanup methods for memory leak prevention
+  // Enhanced cleanup methods for comprehensive memory leak prevention
   cleanup() {
-    // Clear all intervals
-    if (this.countdownInterval) {
-      clearInterval(this.countdownInterval);
-      this.countdownInterval = null;
-    }
+    // Clear all intervals with logging for debugging
+    const intervals = [
+      'countdownInterval',
+      'periodicUpdateInterval',
+      'feedbackUpdateInterval',
+      'floatingEmojiInterval',
+      'wsKeepAlive',
+      'votePollingInterval',
+      'wsReconnectInterval'
+    ];
 
-    if (this.periodicUpdateInterval) {
-      clearInterval(this.periodicUpdateInterval);
-      this.periodicUpdateInterval = null;
-    }
+    intervals.forEach(intervalName => {
+      if (this[intervalName]) {
+        clearInterval(this[intervalName]);
+        this[intervalName] = null;
+      }
+    });
 
-    if (this.feedbackUpdateInterval) {
-      clearInterval(this.feedbackUpdateInterval);
-      this.feedbackUpdateInterval = null;
-    }
-
-    if (this.floatingEmojiInterval) {
-      clearInterval(this.floatingEmojiInterval);
-      this.floatingEmojiInterval = null;
-    }
-
-    // Stop vote polling
+    // Stop vote polling with cleanup
     this.stopVotePolling();
 
-    // WebSocketクリーンアップ
-    if (this.wsKeepAlive) {
-      clearInterval(this.wsKeepAlive);
-      this.wsKeepAlive = null;
-    }
-
+    // WebSocket cleanup with error handling
     if (this.ws) {
-      this.ws.close();
+      try {
+        this.ws.removeEventListener('open', this.onWebSocketOpen);
+        this.ws.removeEventListener('message', this.onWebSocketMessage);
+        this.ws.removeEventListener('close', this.onWebSocketClose);
+        this.ws.removeEventListener('error', this.onWebSocketError);
+        this.ws.close(1000, 'Page unloading');
+      } catch (error) {
+        console.warn('WebSocket cleanup error:', error);
+      }
       this.ws = null;
     }
 
-    // Remove event listeners that might cause memory leaks
-    // (Passive listeners are automatically garbage collected,
-    // but we should still clean up if needed)
+    // Clear cached DOM elements to prevent memory leaks
+    this.elements = {};
+
+    // Clear data caches
+    this.chatMessages = [];
+    this.participationVotes = {};
+
+    // Remove global event listeners
+    if (typeof window !== 'undefined') {
+      window.removeEventListener('beforeunload', this.cleanup.bind(this));
+      window.removeEventListener('unload', this.cleanup.bind(this));
+      window.removeEventListener('pagehide', this.cleanup.bind(this));
+    }
+
+    // Clear any remaining timeouts
+    if (this.messageTimeout) {
+      clearTimeout(this.messageTimeout);
+      this.messageTimeout = null;
+    }
+
+    console.log('LightningTalkApp cleanup completed');
   }
 
   // Enhanced periodic updates with proper cleanup
@@ -1311,53 +1329,198 @@ class LightningTalkApp {
   }
 
   connectWebSocket() {
+    // Prevent multiple connection attempts
+    if (
+      this.ws &&
+      (this.ws.readyState === WebSocket.CONNECTING || this.ws.readyState === WebSocket.OPEN)
+    ) {
+      return;
+    }
+
     // API Gateway WebSocketを使用
     const wsUrl = 'wss://YOUR_WEBSOCKET_API_ID.execute-api.ap-northeast-1.amazonaws.com/prod/';
+
+    // Initialize reconnection state
+    this.reconnectAttempts = 0;
+    this.maxReconnectAttempts = 5;
+    this.reconnectDelay = 1000; // Start with 1 second
 
     try {
       this.ws = new WebSocket(wsUrl);
 
-      this.ws.onopen = () => {
-        console.log('WebSocket connected to API Gateway');
-        // ポーリングを停止
-        this.stopVotePolling();
-      };
+      // Bind event handlers to preserve 'this' context
+      this.onWebSocketOpen = this.handleWebSocketOpen.bind(this);
+      this.onWebSocketMessage = this.handleWebSocketMessage.bind(this);
+      this.onWebSocketClose = this.handleWebSocketClose.bind(this);
+      this.onWebSocketError = this.handleWebSocketError.bind(this);
 
-      this.ws.onmessage = event => {
-        const data = JSON.parse(event.data);
-        if (data.type === 'voteUpdate') {
-          // 投票データを更新
-          if (data.eventId && data.votes) {
-            this.participationVotes[data.eventId] = data.votes;
-            localStorage.setItem('participationVotes', JSON.stringify(this.participationVotes));
-            this.updateVoteCounts(data.eventId);
+      this.ws.addEventListener('open', this.onWebSocketOpen);
+      this.ws.addEventListener('message', this.onWebSocketMessage);
+      this.ws.addEventListener('close', this.onWebSocketClose);
+      this.ws.addEventListener('error', this.onWebSocketError);
+    } catch (error) {
+      console.error('Failed to create WebSocket:', error);
+      this.fallbackToPolling();
+    }
+  }
+
+  handleWebSocketOpen() {
+    console.log('WebSocket connected to API Gateway');
+    this.reconnectAttempts = 0; // Reset reconnection attempts
+    this.stopVotePolling();
+
+    // Start optimized keep-alive with exponential backoff protection
+    this.startKeepAlive();
+  }
+
+  handleWebSocketMessage(event) {
+    try {
+      const data = JSON.parse(event.data);
+
+      // Handle different message types efficiently
+      switch (data.type) {
+        case 'voteUpdate':
+          this.handleVoteUpdate(data);
+          break;
+        case 'pong':
+          // Keep-alive response, no action needed
+          break;
+        default:
+          console.log('Unknown WebSocket message type:', data.type);
+      }
+    } catch (error) {
+      console.error('Error parsing WebSocket message:', error);
+    }
+  }
+
+  handleWebSocketClose(event) {
+    console.log('WebSocket disconnected, code:', event.code, 'reason:', event.reason);
+
+    // Clean up keep-alive
+    this.stopKeepAlive();
+
+    // Attempt reconnection with exponential backoff (unless manually closed)
+    if (event.code !== 1000 && this.reconnectAttempts < this.maxReconnectAttempts) {
+      this.scheduleReconnection();
+    } else {
+      this.fallbackToPolling();
+    }
+  }
+
+  handleWebSocketError(error) {
+    console.error('WebSocket error:', error);
+    this.fallbackToPolling();
+  }
+
+  scheduleReconnection() {
+    if (this.wsReconnectInterval) {
+      clearTimeout(this.wsReconnectInterval);
+    }
+
+    const delay = this.reconnectDelay * Math.pow(2, this.reconnectAttempts); // Exponential backoff
+
+    this.wsReconnectInterval = setTimeout(
+      () => {
+        this.reconnectAttempts++;
+        console.log(
+          `Attempting WebSocket reconnection (${this.reconnectAttempts}/${this.maxReconnectAttempts})`
+        );
+        this.connectWebSocket();
+      },
+      Math.min(delay, 30000)
+    ); // Cap at 30 seconds
+  }
+
+  startKeepAlive() {
+    this.stopKeepAlive();
+
+    this.wsKeepAlive = setInterval(() => {
+      if (this.ws && this.ws.readyState === WebSocket.OPEN) {
+        this.ws.send(JSON.stringify({ type: 'ping', timestamp: Date.now() }));
+      }
+    }, 30000); // 30秒ごと
+  }
+
+  stopKeepAlive() {
+    if (this.wsKeepAlive) {
+      clearInterval(this.wsKeepAlive);
+      this.wsKeepAlive = null;
+    }
+  }
+
+  handleVoteUpdate(data) {
+    if (data.eventId && data.votes) {
+      this.participationVotes[data.eventId] = data.votes;
+
+      // Batch localStorage updates to improve performance
+      this.batchUpdateLocalStorage();
+      this.updateVoteCounts(data.eventId);
+    }
+  }
+
+  fallbackToPolling() {
+    console.log('Falling back to polling mode');
+    this.startVotePolling();
+  }
+
+  // Performance optimization: Batch localStorage updates
+  batchUpdateLocalStorage() {
+    if (this.localStorageUpdateTimeout) {
+      clearTimeout(this.localStorageUpdateTimeout);
+    }
+
+    // Debounce localStorage updates to avoid excessive writes
+    this.localStorageUpdateTimeout = setTimeout(() => {
+      try {
+        localStorage.setItem('participationVotes', JSON.stringify(this.participationVotes));
+        localStorage.setItem('chatMessages', JSON.stringify(this.chatMessages));
+        localStorage.setItem('onlineCount', this.surveyCounters.online.toString());
+        localStorage.setItem('offlineCount', this.surveyCounters.offline.toString());
+      } catch (error) {
+        console.warn('localStorage update failed:', error);
+      }
+    }, 100); // Batch updates every 100ms
+  }
+
+  // Optimized DOM element caching with lazy loading
+  getElement(key, selector) {
+    if (!this.elements[key]) {
+      this.elements[key] = document.querySelector(selector);
+    }
+    return this.elements[key];
+  }
+
+  // Memory-efficient event delegation for dynamic content
+  setupEventDelegation() {
+    // Use event delegation to handle clicks on dynamically added elements
+    document.addEventListener(
+      'click',
+      event => {
+        const target = event.target;
+
+        // Handle vote buttons
+        if (target.classList.contains('vote-btn')) {
+          event.preventDefault();
+          const voteType = target.dataset.voteType;
+          const eventId = target.dataset.eventId;
+          if (voteType && eventId) {
+            this.openVoteModal(voteType, eventId);
           }
         }
-      };
 
-      this.ws.onclose = () => {
-        console.log('WebSocket disconnected, falling back to polling');
-        // WebSocketが切断されたらポーリングにフォールバック
-        this.startVotePolling();
-      };
-
-      this.ws.onerror = error => {
-        console.error('WebSocket error:', error);
-        // エラーが発生したらポーリングにフォールバック
-        this.startVotePolling();
-      };
-
-      // キープアライブのためのping送信
-      this.wsKeepAlive = setInterval(() => {
-        if (this.ws && this.ws.readyState === WebSocket.OPEN) {
-          this.ws.send(JSON.stringify({ type: 'ping' }));
+        // Handle modal close buttons
+        if (
+          target.classList.contains('close-modal') ||
+          target.classList.contains('modal-backdrop')
+        ) {
+          const modal = target.closest('.modal');
+          if (modal) {
+            modal.style.display = 'none';
+          }
         }
-      }, 30000); // 30秒ごと
-    } catch (error) {
-      console.error('Failed to connect WebSocket:', error);
-      // 接続に失敗したらポーリングを使用
-      this.startVotePolling();
-    }
+      },
+      { passive: false }
+    );
   }
 
   startVotePolling() {

@@ -70,6 +70,18 @@ export class DatabaseService extends EventEmitter {
     this.saveTimeout = null;
     this.isClosing = false;
     this.lockManager = new Map(); // For handling concurrent operations
+
+    // Performance optimization: Add indexes and query cache
+    this.indexes = new Map();
+    this.queryCache = new Map();
+    this.maxCacheSize = 1000;
+    this.cacheHits = 0;
+    this.cacheMisses = 0;
+    this.statistics = {
+      queries: 0,
+      cacheHitRate: 0,
+      avgQueryTime: 0
+    };
   }
 
   _validateConfig(config) {
@@ -222,16 +234,64 @@ export class DatabaseService extends EventEmitter {
     });
   }
 
-  // CRUD Operations
-  async findAll(collection, filter = {}) {
-    this.validateCollection(collection);
-    const data = this.cache.get(collection) || [];
+  // CRUD Operations with performance optimizations
+  async find(collection, filter = {}, options = {}) {
+    return this.findAll(collection, filter, options);
+  }
 
-    if (Object.keys(filter).length === 0) {
-      return data;
+  async findAll(collection, filter = {}, options = {}) {
+    const startTime = Date.now();
+    this.statistics.queries++;
+
+    this.validateCollection(collection);
+
+    // Generate cache key for query result caching
+    const cacheKey = `${collection}:${JSON.stringify(filter)}:${JSON.stringify(options)}`;
+
+    // Check query cache first
+    if (this.queryCache.has(cacheKey)) {
+      this.cacheHits++;
+      this._updateCacheStats();
+      return this.queryCache.get(cacheKey);
     }
 
-    return data.filter(item => this.matchesFilter(item, filter));
+    this.cacheMisses++;
+    const data = this.cache.get(collection) || [];
+
+    let result;
+    if (Object.keys(filter).length === 0) {
+      result = data;
+    } else {
+      // Use index if available for better performance
+      const indexKey = this._getIndexKey(collection, filter);
+      if (indexKey && this.indexes.has(indexKey)) {
+        result = this._queryWithIndex(collection, filter, options);
+      } else {
+        result = data.filter(item => this.matchesFilter(item, filter));
+      }
+    }
+
+    // Apply options (limit, sort, etc.)
+    if (options.sort) {
+      result = this._applySorting(result, options.sort);
+    }
+
+    if (options.limit) {
+      result = result.slice(0, options.limit);
+    }
+
+    if (options.skip) {
+      result = result.slice(options.skip);
+    }
+
+    // Cache the result
+    this._cacheQuery(cacheKey, result);
+
+    // Update performance statistics
+    const queryTime = Date.now() - startTime;
+    this._updateQueryStats(queryTime);
+
+    return result;
   }
 
   async findById(collection, id) {
@@ -729,6 +789,139 @@ export class DatabaseService extends EventEmitter {
     } finally {
       this.isClosing = false;
     }
+  }
+
+  /**
+   * Performance optimization helper methods
+   */
+
+  _getIndexKey(collection, filter) {
+    // Generate index key based on filter fields
+    const fields = Object.keys(filter).sort();
+    return `${collection}:${fields.join(',')}`;
+  }
+
+  _queryWithIndex(collection, filter, options) {
+    const indexKey = this._getIndexKey(collection, filter);
+    const index = this.indexes.get(indexKey);
+
+    if (!index) {
+      // Fallback to linear search
+      const data = this.cache.get(collection) || [];
+      return data.filter(item => this.matchesFilter(item, filter));
+    }
+
+    // Use index for faster lookups
+    const results = [];
+    for (const [value, ids] of index.entries()) {
+      if (this._matchesIndexValue(value, filter)) {
+        for (const id of ids) {
+          const item = this._getItemById(collection, id);
+          if (item && this.matchesFilter(item, filter)) {
+            results.push(item);
+          }
+        }
+      }
+    }
+
+    return results;
+  }
+
+  _matchesIndexValue(value, filter) {
+    // Simple equality check for now - can be extended for complex queries
+    return Object.values(filter).some(
+      filterValue =>
+        filterValue === value ||
+        (typeof filterValue === 'object' &&
+          filterValue !== null &&
+          Object.values(filterValue).includes(value))
+    );
+  }
+
+  _getItemById(collection, id) {
+    const data = this.cache.get(collection) || [];
+    return data.find(item => item.id === id);
+  }
+
+  _applySorting(data, sortOptions) {
+    return data.sort((a, b) => {
+      for (const [field, direction] of Object.entries(sortOptions)) {
+        const aVal = a[field];
+        const bVal = b[field];
+
+        if (aVal < bVal) return direction === 1 ? -1 : 1;
+        if (aVal > bVal) return direction === 1 ? 1 : -1;
+      }
+      return 0;
+    });
+  }
+
+  _cacheQuery(key, result) {
+    // Implement LRU cache eviction
+    if (this.queryCache.size >= this.maxCacheSize) {
+      const firstKey = this.queryCache.keys().next().value;
+      this.queryCache.delete(firstKey);
+    }
+
+    this.queryCache.set(key, result);
+  }
+
+  _updateCacheStats() {
+    const total = this.cacheHits + this.cacheMisses;
+    this.statistics.cacheHitRate = total > 0 ? (this.cacheHits / total) * 100 : 0;
+  }
+
+  _updateQueryStats(queryTime) {
+    const prevAvg = this.statistics.avgQueryTime || 0;
+    const count = this.statistics.queries;
+    this.statistics.avgQueryTime = (prevAvg * (count - 1) + queryTime) / count;
+  }
+
+  createIndex(collection, fields) {
+    this.validateCollection(collection);
+
+    const indexKey = `${collection}:${fields.sort().join(',')}`;
+    const index = new Map();
+
+    const data = this.cache.get(collection) || [];
+    for (const item of data) {
+      const indexValue = fields.map(field => item[field]).join('|');
+
+      if (!index.has(indexValue)) {
+        index.set(indexValue, new Set());
+      }
+      index.get(indexValue).add(item.id);
+    }
+
+    this.indexes.set(indexKey, index);
+    console.log(`📊 Created index for ${collection} on fields: ${fields.join(', ')}`);
+  }
+
+  dropIndex(collection, fields) {
+    const indexKey = `${collection}:${fields.sort().join(',')}`;
+    const deleted = this.indexes.delete(indexKey);
+
+    if (deleted) {
+      console.log(`📊 Dropped index for ${collection} on fields: ${fields.join(', ')}`);
+    }
+
+    return deleted;
+  }
+
+  getPerformanceStats() {
+    return {
+      ...this.statistics,
+      cacheSize: this.queryCache.size,
+      indexCount: this.indexes.size,
+      totalCacheRequests: this.cacheHits + this.cacheMisses
+    };
+  }
+
+  clearQueryCache() {
+    this.queryCache.clear();
+    this.cacheHits = 0;
+    this.cacheMisses = 0;
+    console.log('🧹 Query cache cleared');
   }
 
   /**
