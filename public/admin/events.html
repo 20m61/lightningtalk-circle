@@ -1,0 +1,802 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>イベント管理 - なんでもライトニングトーク</title>
+    <link rel="stylesheet" href="../css/style.css" />
+    <link rel="stylesheet" href="../css/image-uploader.css" />
+    <style>
+      .admin-container {
+        max-width: 1400px;
+        margin: 0 auto;
+        padding: 2rem;
+      }
+
+      .admin-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 2rem;
+        padding-bottom: 1rem;
+        border-bottom: 2px solid #ddd;
+      }
+
+      .admin-header h1 {
+        margin: 0;
+        color: #333;
+      }
+
+      .user-info {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+      }
+
+      .logout-btn {
+        padding: 0.5rem 1rem;
+        background: #dc3545;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        text-decoration: none;
+        font-size: 0.9rem;
+      }
+
+      .logout-btn:hover {
+        background: #c82333;
+      }
+
+      .admin-nav {
+        background: #f8f9fa;
+        padding: 1rem;
+        border-radius: 4px;
+        margin-bottom: 2rem;
+      }
+
+      .admin-nav ul {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        display: flex;
+        gap: 2rem;
+      }
+
+      .admin-nav a {
+        color: #007bff;
+        text-decoration: none;
+        font-weight: 500;
+      }
+
+      .admin-nav a:hover,
+      .admin-nav a.active {
+        text-decoration: underline;
+        font-weight: bold;
+      }
+
+      .events-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 2rem;
+      }
+
+      .events-header h2 {
+        margin: 0;
+        color: #333;
+      }
+
+      .btn {
+        padding: 0.75rem 1.5rem;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 0.9rem;
+        text-decoration: none;
+        display: inline-block;
+        transition: background-color 0.2s;
+      }
+
+      .btn-primary {
+        background: #007bff;
+        color: white;
+      }
+
+      .btn-primary:hover {
+        background: #0056b3;
+      }
+
+      .btn-secondary {
+        background: #6c757d;
+        color: white;
+      }
+
+      .btn-secondary:hover {
+        background: #545b62;
+      }
+
+      .btn-danger {
+        background: #dc3545;
+        color: white;
+      }
+
+      .btn-danger:hover {
+        background: #c82333;
+      }
+
+      .events-grid {
+        display: grid;
+        gap: 1.5rem;
+        margin-bottom: 2rem;
+      }
+
+      .event-card {
+        background: white;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        padding: 1.5rem;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      }
+
+      .event-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        margin-bottom: 1rem;
+      }
+
+      .event-title {
+        font-size: 1.25rem;
+        font-weight: bold;
+        color: #333;
+        margin: 0 0 0.5rem 0;
+      }
+
+      .event-status {
+        padding: 0.25rem 0.75rem;
+        border-radius: 12px;
+        font-size: 0.8rem;
+        font-weight: bold;
+        text-transform: uppercase;
+      }
+
+      .event-status.active {
+        background: #d4edda;
+        color: #155724;
+      }
+
+      .event-status.draft {
+        background: #f8d7da;
+        color: #721c24;
+      }
+
+      .event-status.archived {
+        background: #e2e3e5;
+        color: #383d41;
+      }
+
+      .event-info {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+        gap: 1rem;
+        margin-bottom: 1rem;
+        font-size: 0.9rem;
+        color: #666;
+      }
+
+      .event-info div {
+        display: flex;
+        flex-direction: column;
+      }
+
+      .event-info label {
+        font-weight: bold;
+        color: #333;
+        margin-bottom: 0.25rem;
+      }
+
+      .event-actions {
+        display: flex;
+        gap: 0.75rem;
+        flex-wrap: wrap;
+      }
+
+      .event-actions .btn {
+        padding: 0.5rem 1rem;
+        font-size: 0.8rem;
+      }
+
+      .modal {
+        display: none;
+        position: fixed;
+        z-index: 1000;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5);
+      }
+
+      .modal-content {
+        background-color: white;
+        margin: 5% auto;
+        padding: 2rem;
+        border-radius: 8px;
+        width: 90%;
+        max-width: 800px;
+        max-height: 80vh;
+        overflow-y: auto;
+      }
+
+      .modal-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 2rem;
+        padding-bottom: 1rem;
+        border-bottom: 1px solid #ddd;
+      }
+
+      .modal-header h3 {
+        margin: 0;
+        color: #333;
+      }
+
+      .close {
+        color: #aaa;
+        font-size: 28px;
+        font-weight: bold;
+        cursor: pointer;
+      }
+
+      .close:hover {
+        color: #000;
+      }
+
+      .form-group {
+        margin-bottom: 1.5rem;
+      }
+
+      .form-group label {
+        display: block;
+        margin-bottom: 0.5rem;
+        font-weight: bold;
+        color: #333;
+      }
+
+      .form-group input,
+      .form-group textarea,
+      .form-group select {
+        width: 100%;
+        padding: 0.75rem;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        font-size: 1rem;
+      }
+
+      .form-group textarea {
+        resize: vertical;
+        min-height: 100px;
+      }
+
+      .form-row {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 1rem;
+      }
+
+      .form-actions {
+        display: flex;
+        justify-content: flex-end;
+        gap: 1rem;
+        margin-top: 2rem;
+        padding-top: 1rem;
+        border-top: 1px solid #ddd;
+      }
+
+      .loading {
+        text-align: center;
+        padding: 3rem;
+        color: #666;
+      }
+
+      .error-message {
+        background: #fee;
+        color: #c33;
+        padding: 1rem;
+        border-radius: 4px;
+        margin-bottom: 1rem;
+      }
+
+      .success-message {
+        background: #d4edda;
+        color: #155724;
+        padding: 1rem;
+        border-radius: 4px;
+        margin-bottom: 1rem;
+      }
+
+      .image-upload-section {
+        margin-top: 1.5rem;
+        padding-top: 1.5rem;
+        border-top: 1px solid #ddd;
+      }
+
+      .image-upload-section h4 {
+        margin: 0 0 1rem 0;
+        color: #333;
+      }
+
+      @media (max-width: 768px) {
+        .admin-container {
+          padding: 1rem;
+        }
+
+        .events-header {
+          flex-direction: column;
+          gap: 1rem;
+          align-items: flex-start;
+        }
+
+        .admin-nav ul {
+          flex-wrap: wrap;
+          gap: 1rem;
+        }
+
+        .form-row {
+          grid-template-columns: 1fr;
+        }
+
+        .event-actions {
+          justify-content: flex-start;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="admin-container">
+      <div class="admin-header">
+        <h1>イベント管理</h1>
+        <div class="user-info">
+          <span id="userName">Loading...</span>
+          <button class="logout-btn" onclick="logout()">ログアウト</button>
+        </div>
+      </div>
+
+      <nav class="admin-nav">
+        <ul>
+          <li><a href="/admin">ダッシュボード</a></li>
+          <li><a href="/admin/events" class="active">イベント管理</a></li>
+          <li><a href="/admin/participants">参加者管理</a></li>
+          <li><a href="/admin/talks">発表管理</a></li>
+          <li><a href="/admin/analytics">アナリティクス</a></li>
+          <li><a href="/admin/settings">設定</a></li>
+        </ul>
+      </nav>
+
+      <div id="alertContainer"></div>
+
+      <div class="events-header">
+        <h2>イベント一覧</h2>
+        <button class="btn btn-primary" onclick="openCreateModal()">新規イベント作成</button>
+      </div>
+
+      <div id="loadingContainer" class="loading">
+        <p>イベントを読み込み中...</p>
+      </div>
+
+      <div id="eventsContainer" class="events-grid"></div>
+    </div>
+
+    <!-- イベント作成・編集モーダル -->
+    <div id="eventModal" class="modal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h3 id="modalTitle">新規イベント作成</h3>
+          <span class="close" onclick="closeModal()">&times;</span>
+        </div>
+
+        <form id="eventForm">
+          <div class="form-group">
+            <label for="eventTitle">イベントタイトル *</label>
+            <input type="text" id="eventTitle" name="title" required />
+          </div>
+
+          <div class="form-group">
+            <label for="eventDescription">イベント説明</label>
+            <textarea id="eventDescription" name="description" rows="4"></textarea>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="eventDate">開催日 *</label>
+              <input type="date" id="eventDate" name="date" required />
+            </div>
+            <div class="form-group">
+              <label for="eventTime">開催時間 *</label>
+              <input type="time" id="eventTime" name="time" required />
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="eventLocation">開催場所</label>
+              <input type="text" id="eventLocation" name="location" />
+            </div>
+            <div class="form-group">
+              <label for="eventCapacity">定員</label>
+              <input type="number" id="eventCapacity" name="capacity" min="1" />
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="registrationStart">参加登録開始</label>
+              <input type="datetime-local" id="registrationStart" name="registrationStart" />
+            </div>
+            <div class="form-group">
+              <label for="registrationEnd">参加登録終了</label>
+              <input type="datetime-local" id="registrationEnd" name="registrationEnd" />
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="eventStatus">ステータス</label>
+            <select id="eventStatus" name="status">
+              <option value="draft">下書き</option>
+              <option value="active">公開中</option>
+              <option value="archived">アーカイブ</option>
+            </select>
+          </div>
+
+          <!-- 画像アップロードセクション -->
+          <div class="image-upload-section">
+            <h4>イベント画像</h4>
+            <div
+              id="imageUploader"
+              data-image-uploader='{"category": "event", "multiple": false, "allowDelete": true}'
+            ></div>
+          </div>
+
+          <div class="form-actions">
+            <button type="button" class="btn btn-secondary" onclick="closeModal()">
+              キャンセル
+            </button>
+            <button type="submit" class="btn btn-primary" id="submitBtn">作成</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- 削除確認モーダル -->
+    <div id="deleteModal" class="modal">
+      <div class="modal-content" style="max-width: 400px">
+        <div class="modal-header">
+          <h3>イベント削除</h3>
+          <span class="close" onclick="closeDeleteModal()">&times;</span>
+        </div>
+        <p>このイベントを削除してもよろしいですか？</p>
+        <p><strong id="deleteEventTitle"></strong></p>
+        <div class="form-actions">
+          <button type="button" class="btn btn-secondary" onclick="closeDeleteModal()">
+            キャンセル
+          </button>
+          <button type="button" class="btn btn-danger" onclick="confirmDelete()">削除</button>
+        </div>
+      </div>
+    </div>
+
+    <script src="../js/image-uploader.js"></script>
+    <script type="module">
+      import auth from '../src/features/user-authentication.js';
+
+      // Check authentication
+      if (!auth.isAuthenticated() || !auth.isAdmin()) {
+        window.location.href = '/login.html';
+      }
+
+      // Display user info
+      document.getElementById('userName').textContent = auth.user ? auth.user.name : 'Unknown';
+
+      // Logout function
+      window.logout = function () {
+        auth.logout();
+        window.location.href = '/';
+      };
+
+      // Global variables
+      let events = [];
+      let editingEventId = null;
+      let deletingEventId = null;
+      let imageUploader = null;
+
+      // Load events
+      async function loadEvents() {
+        try {
+          const response = await auth.authenticatedFetch('/api/events');
+          if (!response.ok) {
+            throw new Error('Failed to load events');
+          }
+
+          events = await response.json();
+          renderEvents();
+        } catch (error) {
+          console.error('Error loading events:', error);
+          showAlert('イベントの読み込みに失敗しました', 'error');
+        } finally {
+          document.getElementById('loadingContainer').style.display = 'none';
+        }
+      }
+
+      // Render events
+      function renderEvents() {
+        const container = document.getElementById('eventsContainer');
+
+        if (events.length === 0) {
+          container.innerHTML =
+            '<p style="text-align: center; color: #666; padding: 2rem;">イベントが見つかりません</p>';
+          return;
+        }
+
+        container.innerHTML = events
+          .map(
+            event => `
+          <div class="event-card">
+            <div class="event-header">
+              <h3 class="event-title">${event.title}</h3>
+              <span class="event-status ${event.status}">${getStatusText(event.status)}</span>
+            </div>
+            <div class="event-info">
+              <div>
+                <label>開催日時</label>
+                <span>${formatDateTime(event.date, event.time)}</span>
+              </div>
+              <div>
+                <label>場所</label>
+                <span>${event.location || '未設定'}</span>
+              </div>
+              <div>
+                <label>定員</label>
+                <span>${event.capacity || '制限なし'}</span>
+              </div>
+              <div>
+                <label>参加者数</label>
+                <span>${event.participantCount || 0}人</span>
+              </div>
+            </div>
+            <p style="color: #666; margin-bottom: 1rem;">${event.description || 'なし'}</p>
+            <div class="event-actions">
+              <button class="btn btn-primary" onclick="editEvent('${event.id}')">編集</button>
+              <button class="btn btn-secondary" onclick="viewEvent('${event.id}')">詳細</button>
+              <button class="btn btn-danger" onclick="deleteEvent('${event.id}')">削除</button>
+            </div>
+          </div>
+        `
+          )
+          .join('');
+      }
+
+      // Utility functions
+      function getStatusText(status) {
+        const statusMap = {
+          draft: '下書き',
+          active: '公開中',
+          archived: 'アーカイブ'
+        };
+        return statusMap[status] || status;
+      }
+
+      function formatDateTime(date, time) {
+        if (!date) return '未設定';
+        const dateObj = new Date(date);
+        const timeStr = time ? ` ${time}` : '';
+        return dateObj.toLocaleDateString('ja-JP') + timeStr;
+      }
+
+      function showAlert(message, type = 'info') {
+        const alertContainer = document.getElementById('alertContainer');
+        const alertClass = type === 'error' ? 'error-message' : 'success-message';
+        alertContainer.innerHTML = `<div class="${alertClass}">${message}</div>`;
+        setTimeout(() => {
+          alertContainer.innerHTML = '';
+        }, 5000);
+      }
+
+      // Modal functions
+      window.openCreateModal = function () {
+        editingEventId = null;
+        document.getElementById('modalTitle').textContent = '新規イベント作成';
+        document.getElementById('submitBtn').textContent = '作成';
+        document.getElementById('eventForm').reset();
+        document.getElementById('eventModal').style.display = 'block';
+
+        // Initialize image uploader
+        if (imageUploader) {
+          imageUploader.clearImages();
+        } else {
+          initializeImageUploader();
+        }
+      };
+
+      window.closeModal = function () {
+        document.getElementById('eventModal').style.display = 'none';
+      };
+
+      window.editEvent = function (eventId) {
+        const event = events.find(e => e.id === eventId);
+        if (!event) return;
+
+        editingEventId = eventId;
+        document.getElementById('modalTitle').textContent = 'イベント編集';
+        document.getElementById('submitBtn').textContent = '更新';
+
+        // Populate form
+        document.getElementById('eventTitle').value = event.title || '';
+        document.getElementById('eventDescription').value = event.description || '';
+        document.getElementById('eventDate').value = event.date || '';
+        document.getElementById('eventTime').value = event.time || '';
+        document.getElementById('eventLocation').value = event.location || '';
+        document.getElementById('eventCapacity').value = event.capacity || '';
+        document.getElementById('eventStatus').value = event.status || 'draft';
+
+        // Handle datetime fields
+        if (event.registrationStart) {
+          document.getElementById('registrationStart').value = formatDateTimeLocal(
+            event.registrationStart
+          );
+        }
+        if (event.registrationEnd) {
+          document.getElementById('registrationEnd').value = formatDateTimeLocal(
+            event.registrationEnd
+          );
+        }
+
+        document.getElementById('eventModal').style.display = 'block';
+
+        // Initialize image uploader and load existing images
+        if (!imageUploader) {
+          initializeImageUploader();
+        }
+        // Load existing event images if any
+        if (event.mainImage) {
+          // Add existing image to uploader display
+          setTimeout(() => {
+            imageUploader.addToImageGrid({
+              id: event.mainImage.imageId,
+              originalName: 'Event Image',
+              url: event.mainImage.url,
+              thumbnailUrl: event.mainImage.thumbnailUrl,
+              fileSize: 0,
+              metadata: { width: 0, height: 0 }
+            });
+          }, 100);
+        }
+      };
+
+      window.deleteEvent = function (eventId) {
+        const event = events.find(e => e.id === eventId);
+        if (!event) return;
+
+        deletingEventId = eventId;
+        document.getElementById('deleteEventTitle').textContent = event.title;
+        document.getElementById('deleteModal').style.display = 'block';
+      };
+
+      window.closeDeleteModal = function () {
+        document.getElementById('deleteModal').style.display = 'none';
+        deletingEventId = null;
+      };
+
+      window.confirmDelete = async function () {
+        if (!deletingEventId) return;
+
+        try {
+          const response = await auth.authenticatedFetch(`/api/events/${deletingEventId}`, {
+            method: 'DELETE'
+          });
+
+          if (!response.ok) {
+            throw new Error('Failed to delete event');
+          }
+
+          showAlert('イベントを削除しました', 'success');
+          closeDeleteModal();
+          loadEvents();
+        } catch (error) {
+          console.error('Error deleting event:', error);
+          showAlert('イベントの削除に失敗しました', 'error');
+        }
+      };
+
+      window.viewEvent = function (eventId) {
+        window.open(`/events/${eventId}`, '_blank');
+      };
+
+      // Form submission
+      document.getElementById('eventForm').addEventListener('submit', async e => {
+        e.preventDefault();
+
+        const formData = new FormData(e.target);
+        const eventData = Object.fromEntries(formData.entries());
+
+        // Get uploaded images
+        const uploadedImages = imageUploader ? imageUploader.getUploadedImages() : [];
+        if (uploadedImages.length > 0) {
+          eventData.mainImageId = uploadedImages[0].id;
+        }
+
+        try {
+          const method = editingEventId ? 'PUT' : 'POST';
+          const url = editingEventId ? `/api/events/${editingEventId}` : '/api/events';
+
+          const response = await auth.authenticatedFetch(url, {
+            method,
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(eventData)
+          });
+
+          if (!response.ok) {
+            const error = await response.json();
+            throw new Error(error.message || 'Failed to save event');
+          }
+
+          showAlert(
+            editingEventId ? 'イベントを更新しました' : 'イベントを作成しました',
+            'success'
+          );
+          closeModal();
+          loadEvents();
+        } catch (error) {
+          console.error('Error saving event:', error);
+          showAlert('イベントの保存に失敗しました: ' + error.message, 'error');
+        }
+      });
+
+      // Utility function to format datetime for input
+      function formatDateTimeLocal(isoString) {
+        const date = new Date(isoString);
+        const year = date.getFullYear();
+        const month = String(date.getMonth() + 1).padStart(2, '0');
+        const day = String(date.getDate()).padStart(2, '0');
+        const hours = String(date.getHours()).padStart(2, '0');
+        const minutes = String(date.getMinutes()).padStart(2, '0');
+        return `${year}-${month}-${day}T${hours}:${minutes}`;
+      }
+
+      // Initialize image uploader
+      function initializeImageUploader() {
+        const uploaderContainer = document.getElementById('imageUploader');
+        if (uploaderContainer && !imageUploader) {
+          imageUploader = new ImageUploader('#imageUploader', {
+            category: 'event',
+            multiple: false,
+            allowDelete: true,
+            onSuccess: imageData => {
+              console.log('Image uploaded successfully:', imageData);
+            },
+            onError: error => {
+              console.error('Image upload error:', error);
+              showAlert('画像のアップロードに失敗しました', 'error');
+            }
+          });
+        }
+      }
+
+      // Close modal when clicking outside
+      window.addEventListener('click', e => {
+        if (e.target === document.getElementById('eventModal')) {
+          closeModal();
+        }
+        if (e.target === document.getElementById('deleteModal')) {
+          closeDeleteModal();
+        }
+      });
+
+      // Load events on page load
+      loadEvents();
+    </script>
+  </body>
+</html>

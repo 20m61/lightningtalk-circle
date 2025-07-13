@@ -24,6 +24,7 @@ import authRouter from './routes/auth.js';
 import swaggerRouter from './routes/swagger.js';
 import votingRouter from './routes/voting.js';
 import chatRouter from './routes/chat.js';
+import mediaRouter from './routes/media.js';
 
 // Middleware
 import { errorHandler, notFoundHandler } from './middleware/errorHandler.js';
@@ -47,6 +48,7 @@ import { EventService } from './services/event.js';
 import { VotingService } from './services/votingService.js';
 import websocketService from './services/websocketService.js';
 import chatService from './services/chatService.js';
+import imageService from './services/imageService.js';
 
 // Performance monitoring
 import { performanceMonitor } from './utils/performanceMonitor.js';
@@ -89,6 +91,9 @@ class LightningTalkServer {
     // Initialize chat service
     await chatService.initialize(this.database);
 
+    // Initialize image service
+    await imageService.initialize();
+
     // Make services available to routes
     this.app.locals.database = this.database;
     this.app.locals.emailService = this.emailService;
@@ -96,6 +101,7 @@ class LightningTalkServer {
     this.app.locals.votingService = this.votingService;
     this.app.locals.websocketService = websocketService;
     this.app.locals.chatService = chatService;
+    this.app.locals.imageService = imageService;
 
     // Initialize performance monitoring
     if (this.environment !== 'production' || process.env.ENABLE_PERFORMANCE_MONITORING === 'true') {
@@ -252,6 +258,7 @@ class LightningTalkServer {
     this.app.use('/api/talks', validateCSRF(), talksRouter);
     this.app.use('/api/voting', votingRouter);
     this.app.use('/api/chat', chatRouter);
+    this.app.use('/api/media', mediaRouter);
     this.app.use('/api/admin', authenticateToken, requireAdmin, adminRouter);
     this.app.use('/api/health', healthRouter);
 
