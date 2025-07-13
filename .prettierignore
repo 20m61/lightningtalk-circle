@@ -85,3 +85,19 @@ theme/*.sql
 # PHP files in WordPress child theme
 wordpress/lightningtalk-child/*.php
 wordpress/lightningtalk-child/**/*.php
+
+# Image and media files
+*.jpg
+*.jpeg
+*.png
+*.gif
+*.webp
+*.svg
+*.ico
+*.bmp
+*.tiff
+*.pdf
+*.mp4
+*.mp3
+*.avi
+*.mov

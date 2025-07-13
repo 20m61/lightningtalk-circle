@@ -27,11 +27,11 @@
 
     <!-- Microsoft Tiles -->
     <meta name="msapplication-config" content="/browserconfig.xml" />
-    <meta name="msapplication-TileColor" content="#4A90E2" />
+    <meta name="msapplication-TileColor" content="#22c55e" />
     <meta name="msapplication-TileImage" content="/icons/mstile-144x144.png" />
 
     <!-- Theme Colors -->
-    <meta name="theme-color" content="#4A90E2" />
+    <meta name="theme-color" content="#22c55e" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="default" />
     <meta name="apple-mobile-web-app-title" content="LT Circle" />
@@ -47,6 +47,7 @@
     <meta name="twitter:card" content="summary_large_image" />
 
     <!-- Performance optimizations: Preload critical resources -->
+    <link rel="preload" href="css/design-tokens.css" as="style" />
     <link rel="preload" href="css/style.css" as="style" />
     <link rel="preload" href="js/main.js" as="script" />
     <link rel="dns-prefetch" href="//fonts.googleapis.com" />
@@ -60,20 +61,27 @@
       rel="stylesheet"
     />
 
+    <!-- Design System CSS - Load first -->
+    <link rel="stylesheet" href="css/design-tokens.css" />
+    <link rel="stylesheet" href="css/architecture-integration.css" />
+    <link rel="stylesheet" href="css/components/button.css" />
+    <link rel="stylesheet" href="css/components/card.css" />
+
+    <!-- Legacy CSS - To be migrated -->
     <link rel="stylesheet" href="css/tailwind.css" />
     <link rel="stylesheet" href="css/style.css" />
     <link rel="stylesheet" href="css/auth.css" />
   </head>
   <body>
-    <header>
-      <nav class="container">
-        <div class="logo">⚡ なんでもLT</div>
-        <ul class="nav-links">
-          <li><a href="#event">イベント情報</a></li>
-          <li><a href="/presentations.html">アーカイブ</a></li>
-          <li><a href="#about">ライトニングトークとは</a></li>
-          <li><a href="#join">参加方法</a></li>
-          <li><a href="#contact">お問い合わせ</a></li>
+    <header class="header">
+      <nav class="container flex flex--items-center flex--justify-between">
+        <div class="logo text-primary font-bold">⚡ なんでもLT</div>
+        <ul class="nav-links flex flex--items-center">
+          <li><a href="#event" class="nav-link">イベント情報</a></li>
+          <li><a href="/presentations.html" class="nav-link">アーカイブ</a></li>
+          <li><a href="#about" class="nav-link">ライトニングトークとは</a></li>
+          <li><a href="#join" class="nav-link">参加方法</a></li>
+          <li><a href="#contact" class="nav-link">お問い合わせ</a></li>
         </ul>
 
         <!-- Auth Header Integration -->
@@ -98,7 +106,7 @@
           </div>
           <h1>なんでもライトニングトーク ⚡</h1>
           <p>5分間で世界を変える！あなたの「なんでも」を聞かせて！</p>
-          <a href="#event" class="btn">第1回イベント詳細を見る 🚀</a>
+          <a href="#event" class="btn btn-primary btn-lg">第1回イベント詳細を見る 🚀</a>
         </div>
       </section>
 
@@ -173,11 +181,13 @@
                     <span class="vote-count" id="onsite-count">0</span>人
                   </div>
                 </div>
-                <div class="vote-buttons">
-                  <button class="vote-btn online-btn" data-type="online">
+                <div class="vote-buttons flex flex--justify-center">
+                  <button class="btn btn-outline vote-btn online-btn" data-type="online">
                     💻 オンラインで参加予定
                   </button>
-                  <button class="vote-btn onsite-btn" data-type="onsite">🏢 現地で参加予定</button>
+                  <button class="btn btn-outline vote-btn onsite-btn" data-type="onsite">
+                    🏢 現地で参加予定
+                  </button>
                 </div>
                 <div class="vote-message" id="vote-message"></div>
               </div>
@@ -202,11 +212,19 @@
               <!-- Survey Section: Counter display is controlled in main.js config.showSurveyCounters (default: false) -->
               <div class="survey-section">
                 <h4>💭 当日参加アンケート</h4>
-                <div class="survey-buttons">
-                  <button id="onlineBtn" class="btn survey-btn" data-action="survey-online">
+                <div class="survey-buttons flex flex--justify-center">
+                  <button
+                    id="onlineBtn"
+                    class="btn btn-secondary survey-btn"
+                    data-action="survey-online"
+                  >
                     💻 オンライン参加 <span id="onlineCount" class="count">0</span>
                   </button>
-                  <button id="offlineBtn" class="btn survey-btn" data-action="survey-offline">
+                  <button
+                    id="offlineBtn"
+                    class="btn btn-secondary survey-btn"
+                    data-action="survey-offline"
+                  >
                     🏢 現地参加 <span id="offlineCount" class="count">0</span>
                   </button>
                 </div>
@@ -303,7 +321,7 @@
                 新しい発見や学びがいっぱい！
               </p>
               <p class="card-note">現地参加・オンライン参加どちらでもOK</p>
-              <button class="btn" data-action="register-listener">参加登録</button>
+              <button class="btn btn-primary" data-action="register-listener">参加登録</button>
             </div>
 
             <div class="participation-card fade-in" data-type="speaker">
@@ -314,7 +332,7 @@
                 あなたの「なんでも」を発表！
               </p>
               <p class="card-note">技術・趣味・日常・なんでもOK！</p>
-              <button class="btn" data-action="register-speaker">発表申込み</button>
+              <button class="btn btn-primary" data-action="register-speaker">発表申込み</button>
             </div>
 
             <div class="participation-card fade-in" data-type="walkin">
@@ -325,7 +343,7 @@
                 スポンテイニアスな発表も大歓迎！
               </p>
               <p class="card-note">準備不要！思いついたことを5分で！</p>
-              <button class="btn" data-action="walkin-info">詳細を見る</button>
+              <button class="btn btn-outline" data-action="walkin-info">詳細を見る</button>
             </div>
           </div>
 

@@ -44,7 +44,7 @@ async function seedAdmin() {
 
     console.log('✅ Admin user created successfully!');
     console.log('📧 Email:', adminEmail);
-    console.log('🔑 Password:', adminPassword);
+    console.log('🔑 Password: [HIDDEN]');
     console.log('');
     console.log('⚠️  IMPORTANT: Please change the admin password after first login!');
     console.log('');

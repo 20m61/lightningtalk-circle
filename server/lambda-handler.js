@@ -149,7 +149,7 @@ app.post('/api/voting/*', (req, res) => {
 // Auth endpoints
 app.post('/api/auth/login', (req, res) => {
   const { email, password } = req.body;
-  console.log('Login attempt:', { email, password: '***' });
+  console.log('Login attempt:', { email });
 
   // Simple demo authentication - replace with Cognito
   if (email === 'admin@example.com' && password === 'admin123') {

@@ -149,11 +149,13 @@ describe('Events Routes', () => {
 
       expect(mockDatabase.getCurrentEvent).toHaveBeenCalled();
       expect(res.json).toHaveBeenCalledWith({
-        ...mockEvent,
-        stats: {
-          participantCount: 0,
-          talkCount: 0,
-          spotsRemaining: 20
+        event: {
+          ...mockEvent,
+          stats: {
+            participantCount: 0,
+            talkCount: 0,
+            spotsRemaining: 20
+          }
         }
       });
     });
@@ -289,15 +291,27 @@ describe('Events Routes', () => {
       req.params.id = 'event-123';
       mockDatabase.findById.mockResolvedValue(existingEvent);
       mockDatabase.count.mockResolvedValue(0); // Mock participant count
+      mockDatabase.findAll.mockResolvedValue([]); // Mock related talks
       mockDatabase.delete.mockResolvedValue(true);
+
+      // Mock eventService.trackAnalytics
+      const mockEventService = {
+        trackAnalytics: jest.fn().mockResolvedValue(true)
+      };
+      req.app.locals.eventService = mockEventService;
 
       const handler = getRouteHandler(eventsRouter, 'delete', '/:id');
       await handler(req, res, next);
 
       expect(mockDatabase.findById).toHaveBeenCalledWith('events', 'event-123');
+      expect(mockDatabase.count).toHaveBeenCalledWith('participants', { eventId: 'event-123' });
+      expect(mockDatabase.findAll).toHaveBeenCalledWith('talks', { eventId: 'event-123' });
       expect(mockDatabase.delete).toHaveBeenCalledWith('events', 'event-123');
-      expect(res.status).toHaveBeenCalledWith(204);
-      expect(res.json).toHaveBeenCalledWith({ success: true });
+      expect(res.json).toHaveBeenCalledWith({
+        success: true,
+        message: 'Event deleted successfully',
+        eventId: 'event-123'
+      });
     });
   });
 });
