@@ -641,4 +641,16 @@ export class EmailService {
     };
     return categories[category] || category;
   }
+
+  /**
+   * Check if email service is properly configured
+   * @returns {boolean} True if configured and ready to send emails
+   */
+  isConfigured() {
+    if (!this.enabled) {
+      return false;
+    }
+
+    return this.transporter !== null && this.transporter !== undefined;
+  }
 }

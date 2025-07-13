@@ -45,16 +45,25 @@ jest.unstable_mockModule('express-validator', () => ({
 const mockDatabase = {
   findAll: jest.fn(),
   findOne: jest.fn(),
+  findById: jest.fn(),
   create: jest.fn(),
   update: jest.fn(),
   delete: jest.fn(),
-  getCurrentEvent: jest.fn()
+  count: jest.fn(),
+  getCurrentEvent: jest.fn(),
+  getEventAnalytics: jest.fn()
+};
+
+// Mock eventService
+const mockEventService = {
+  trackAnalytics: jest.fn()
 };
 
 // Mock app locals
 const app = {
   locals: {
-    database: mockDatabase
+    database: mockDatabase,
+    eventService: mockEventService
   }
 };
 
@@ -69,7 +78,8 @@ describe('Events Routes', () => {
       app,
       params: {},
       body: {},
-      query: {}
+      query: {},
+      user: { name: 'Test User' } // Mock user for authentication
     };
     res = {
       status: jest.fn().mockReturnThis(),
@@ -79,6 +89,8 @@ describe('Events Routes', () => {
     next = jest.fn();
 
     jest.clearAllMocks();
+    mockEventService.trackAnalytics.mockResolvedValue();
+    mockDatabase.getEventAnalytics.mockResolvedValue({});
   });
 
   describe('GET /api/events', () => {
@@ -88,14 +100,27 @@ describe('Events Routes', () => {
         { id: '2', title: 'Event 2' }
       ];
       mockDatabase.findAll.mockResolvedValue(mockEvents);
+      mockDatabase.count.mockResolvedValue(0); // Mock counts for participants and talks
 
       const handler = getRouteHandler(eventsRouter, 'get', '/');
       await handler(req, res, next);
 
       expect(mockDatabase.findAll).toHaveBeenCalledWith('events', {});
       expect(res.json).toHaveBeenCalledWith({
-        events: mockEvents,
-        total: 2
+        events: mockEvents.map(event => ({
+          ...event,
+          stats: {
+            participantCount: 0,
+            talkCount: 0,
+            spotsRemaining: 20
+          }
+        })),
+        pagination: {
+          total: 2,
+          offset: 0,
+          limit: 10,
+          hasMore: false
+        }
       });
     });
 
@@ -108,7 +133,7 @@ describe('Events Routes', () => {
       expect(res.status).toHaveBeenCalledWith(500);
       expect(res.json).toHaveBeenCalledWith({
         error: 'Failed to fetch events',
-        message: 'イベントの取得に失敗しました'
+        message: 'イベント情報の取得に失敗しました'
       });
     });
   });
@@ -117,12 +142,20 @@ describe('Events Routes', () => {
     it('should return current event', async () => {
       const mockEvent = { id: 'current', title: 'Current Event' };
       mockDatabase.getCurrentEvent.mockResolvedValue(mockEvent);
+      mockDatabase.count.mockResolvedValue(0); // Mock counts for participants and talks
 
       const handler = getRouteHandler(eventsRouter, 'get', '/current');
       await handler(req, res, next);
 
       expect(mockDatabase.getCurrentEvent).toHaveBeenCalled();
-      expect(res.json).toHaveBeenCalledWith(mockEvent);
+      expect(res.json).toHaveBeenCalledWith({
+        ...mockEvent,
+        stats: {
+          participantCount: 0,
+          talkCount: 0,
+          spotsRemaining: 20
+        }
+      });
     });
 
     it('should return 404 when no current event', async () => {
@@ -133,8 +166,8 @@ describe('Events Routes', () => {
 
       expect(res.status).toHaveBeenCalledWith(404);
       expect(res.json).toHaveBeenCalledWith({
-        error: 'No current event found',
-        message: '現在開催中のイベントはありません'
+        error: 'No current event',
+        message: '現在開催予定のイベントはありません'
       });
     });
   });
@@ -142,18 +175,28 @@ describe('Events Routes', () => {
   describe('GET /api/events/:id', () => {
     it('should return specific event', async () => {
       const mockEvent = { id: 'event-123', title: 'Test Event' };
-      mockDatabase.findOne.mockResolvedValue(mockEvent);
+      mockDatabase.findById.mockResolvedValue(mockEvent);
+      mockDatabase.count.mockResolvedValue(0); // Mock counts for participants and talks
       req.params.id = 'event-123';
 
       const handler = getRouteHandler(eventsRouter, 'get', '/:id');
       await handler(req, res, next);
 
-      expect(mockDatabase.findOne).toHaveBeenCalledWith('events', { id: 'event-123' });
-      expect(res.json).toHaveBeenCalledWith(mockEvent);
+      expect(mockDatabase.findById).toHaveBeenCalledWith('events', 'event-123');
+      expect(res.json).toHaveBeenCalledWith({
+        event: {
+          ...mockEvent,
+          stats: {
+            participantCount: 0,
+            talkCount: 0,
+            spotsRemaining: 20
+          }
+        }
+      });
     });
 
     it('should return 404 when event not found', async () => {
-      mockDatabase.findOne.mockResolvedValue(null);
+      mockDatabase.findById.mockResolvedValue(null);
       req.params.id = 'non-existent';
 
       const handler = getRouteHandler(eventsRouter, 'get', '/:id');
@@ -172,7 +215,13 @@ describe('Events Routes', () => {
       const newEvent = {
         title: 'New Event',
         description: 'Test description',
-        eventDate: '2025-12-01T10:00:00Z'
+        eventDate: '2025-12-01T10:00:00Z',
+        venue: {
+          name: 'Test Venue',
+          address: '123 Test St',
+          capacity: 50,
+          online: false
+        }
       };
       const createdEvent = { id: 'new-id', ...newEvent };
 
@@ -190,46 +239,62 @@ describe('Events Routes', () => {
         })
       );
       expect(res.status).toHaveBeenCalledWith(201);
-      expect(res.json).toHaveBeenCalledWith(createdEvent);
+      expect(res.json).toHaveBeenCalledWith({
+        success: true,
+        message: 'Event created successfully',
+        event: createdEvent
+      });
     });
   });
 
   describe('PUT /api/events/:id', () => {
     it('should update existing event', async () => {
+      const existingEvent = { id: 'event-123', title: 'Original Title' };
       const updates = { title: 'Updated Title' };
       const updatedEvent = { id: 'event-123', ...updates };
 
       req.params.id = 'event-123';
       req.body = updates;
+      mockDatabase.findById.mockResolvedValue(existingEvent);
       mockDatabase.update.mockResolvedValue(updatedEvent);
 
       const handler = getRouteHandler(eventsRouter, 'put', '/:id');
       await handler(req, res, next);
 
+      expect(mockDatabase.findById).toHaveBeenCalledWith('events', 'event-123');
       expect(mockDatabase.update).toHaveBeenCalledWith('events', 'event-123', updates);
-      expect(res.json).toHaveBeenCalledWith(updatedEvent);
+      expect(res.json).toHaveBeenCalledWith({
+        success: true,
+        message: 'Event updated successfully',
+        event: updatedEvent
+      });
     });
 
     it('should return 404 when updating non-existent event', async () => {
       req.params.id = 'non-existent';
       req.body = { title: 'Updated' };
-      mockDatabase.update.mockResolvedValue(null);
+      mockDatabase.findById.mockResolvedValue(null);
 
       const handler = getRouteHandler(eventsRouter, 'put', '/:id');
       await handler(req, res, next);
 
+      expect(mockDatabase.findById).toHaveBeenCalledWith('events', 'non-existent');
       expect(res.status).toHaveBeenCalledWith(404);
     });
   });
 
   describe('DELETE /api/events/:id', () => {
     it('should delete event', async () => {
+      const existingEvent = { id: 'event-123', title: 'Test Event' };
       req.params.id = 'event-123';
+      mockDatabase.findById.mockResolvedValue(existingEvent);
+      mockDatabase.count.mockResolvedValue(0); // Mock participant count
       mockDatabase.delete.mockResolvedValue(true);
 
       const handler = getRouteHandler(eventsRouter, 'delete', '/:id');
       await handler(req, res, next);
 
+      expect(mockDatabase.findById).toHaveBeenCalledWith('events', 'event-123');
       expect(mockDatabase.delete).toHaveBeenCalledWith('events', 'event-123');
       expect(res.status).toHaveBeenCalledWith(204);
       expect(res.json).toHaveBeenCalledWith({ success: true });

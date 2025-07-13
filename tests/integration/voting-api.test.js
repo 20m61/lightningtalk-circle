@@ -88,7 +88,7 @@ describe('Voting API Integration Tests', () => {
       };
 
       const mockResults = {
-        sessionId: 'test-session-id',
+        sessionId: '550e8400-e29b-41d4-a716-446655440000',
         status: 'active',
         totalVotes: 1,
         averageRating: 5.0,
@@ -100,10 +100,12 @@ describe('Voting API Integration Tests', () => {
       mockVotingService.submitVote.mockResolvedValue(mockVote);
       mockVotingService.getResults.mockResolvedValue(mockResults);
 
-      const response = await request(app).post('/api/voting/sessions/test-session-id/vote').send({
-        rating: 5,
-        participantId: 'participant-123'
-      });
+      const response = await request(app)
+        .post('/api/voting/sessions/550e8400-e29b-41d4-a716-446655440000/vote')
+        .send({
+          rating: 5,
+          participantId: 'participant-123'
+        });
 
       expect(response.status).toBe(200);
       expect(response.body).toEqual({
@@ -112,15 +114,17 @@ describe('Voting API Integration Tests', () => {
         results: mockResults
       });
       expect(mockNotificationService.broadcast).toHaveBeenCalledWith('vote_submitted', {
-        sessionId: 'test-session-id',
+        sessionId: '550e8400-e29b-41d4-a716-446655440000',
         results: mockResults
       });
     });
 
     it('should validate rating range', async () => {
-      const response = await request(app).post('/api/voting/sessions/test-session-id/vote').send({
-        rating: 6 // Invalid rating
-      });
+      const response = await request(app)
+        .post('/api/voting/sessions/550e8400-e29b-41d4-a716-446655440000/vote')
+        .send({
+          rating: 6 // Invalid rating
+        });
 
       expect(response.status).toBe(400);
       expect(response.body.errors).toBeDefined();
@@ -130,9 +134,11 @@ describe('Voting API Integration Tests', () => {
     it('should handle voting errors appropriately', async () => {
       mockVotingService.submitVote.mockRejectedValue(new Error('Already voted'));
 
-      const response = await request(app).post('/api/voting/sessions/test-session-id/vote').send({
-        rating: 5
-      });
+      const response = await request(app)
+        .post('/api/voting/sessions/550e8400-e29b-41d4-a716-446655440000/vote')
+        .send({
+          rating: 5
+        });
 
       expect(response.status).toBe(409);
       expect(response.body.error).toBe('Already voted');
@@ -141,9 +147,11 @@ describe('Voting API Integration Tests', () => {
     it('should handle session not found', async () => {
       mockVotingService.submitVote.mockRejectedValue(new Error('Voting session not found'));
 
-      const response = await request(app).post('/api/voting/sessions/non-existent/vote').send({
-        rating: 5
-      });
+      const response = await request(app)
+        .post('/api/voting/sessions/550e8400-e29b-41d4-a716-446655440001/vote')
+        .send({
+          rating: 5
+        });
 
       expect(response.status).toBe(404);
       expect(response.body.error).toBe('Voting session not found');
@@ -152,18 +160,22 @@ describe('Voting API Integration Tests', () => {
     it('should handle ended session', async () => {
       mockVotingService.submitVote.mockRejectedValue(new Error('Voting session has ended'));
 
-      const response = await request(app).post('/api/voting/sessions/test-session-id/vote').send({
-        rating: 5
-      });
+      const response = await request(app)
+        .post('/api/voting/sessions/550e8400-e29b-41d4-a716-446655440000/vote')
+        .send({
+          rating: 5
+        });
 
       expect(response.status).toBe(400);
       expect(response.body.error).toBe('Voting session has ended');
     });
 
     it('should handle missing rating', async () => {
-      const response = await request(app).post('/api/voting/sessions/test-session-id/vote').send({
-        // Missing rating
-      });
+      const response = await request(app)
+        .post('/api/voting/sessions/550e8400-e29b-41d4-a716-446655440000/vote')
+        .send({
+          // Missing rating
+        });
 
       expect(response.status).toBe(400);
       expect(response.body.errors).toBeDefined();
@@ -173,7 +185,7 @@ describe('Voting API Integration Tests', () => {
   describe('GET /api/voting/sessions/:sessionId/results', () => {
     it('should return voting results', async () => {
       const mockResults = {
-        sessionId: 'test-session-id',
+        sessionId: '550e8400-e29b-41d4-a716-446655440000',
         status: 'active',
         totalVotes: 10,
         averageRating: 4.5,
@@ -184,7 +196,9 @@ describe('Voting API Integration Tests', () => {
 
       mockVotingService.getResults.mockResolvedValue(mockResults);
 
-      const response = await request(app).get('/api/voting/sessions/test-session-id/results');
+      const response = await request(app).get(
+        '/api/voting/sessions/550e8400-e29b-41d4-a716-446655440000/results'
+      );
 
       expect(response.status).toBe(200);
       expect(response.body).toEqual({
@@ -205,7 +219,9 @@ describe('Voting API Integration Tests', () => {
     it('should handle general errors', async () => {
       mockVotingService.getResults.mockRejectedValue(new Error('Database error'));
 
-      const response = await request(app).get('/api/voting/sessions/test-session-id/results');
+      const response = await request(app).get(
+        '/api/voting/sessions/550e8400-e29b-41d4-a716-446655440000/results'
+      );
 
       expect(response.status).toBe(500);
       expect(response.body.error).toBe('Failed to get voting results');
@@ -331,7 +347,7 @@ describe('Voting API Integration Tests', () => {
       };
 
       const mockResults = {
-        sessionId: 'test-session-id',
+        sessionId: '550e8400-e29b-41d4-a716-446655440000',
         status: 'active',
         totalVotes: 1,
         averageRating: 5.0,
@@ -346,7 +362,7 @@ describe('Voting API Integration Tests', () => {
         .fill(null)
         .map((_, i) =>
           request(app)
-            .post('/api/voting/sessions/test-session-id/vote')
+            .post('/api/voting/sessions/550e8400-e29b-41d4-a716-446655440000/vote')
             .send({
               rating: 5,
               participantId: `participant-${i}`
@@ -365,7 +381,7 @@ describe('Voting API Integration Tests', () => {
   describe('Edge cases', () => {
     it('should handle invalid JSON in request body', async () => {
       const response = await request(app)
-        .post('/api/voting/sessions/test-session-id/vote')
+        .post('/api/voting/sessions/550e8400-e29b-41d4-a716-446655440000/vote')
         .set('Content-Type', 'application/json')
         .send('invalid json');
 

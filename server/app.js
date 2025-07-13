@@ -3,13 +3,16 @@
  * Express.js backend with event management functionality
  */
 
+import dotenv from 'dotenv';
+// Load environment variables first, before any other imports
+dotenv.config();
+
 import express from 'express';
 import cors from 'cors';
 import helmet from 'helmet';
 import rateLimit from 'express-rate-limit';
 import { fileURLToPath } from 'url';
 import { dirname, join } from 'path';
-import dotenv from 'dotenv';
 
 // Routes
 import eventsRouter from './routes/events.js';
@@ -42,7 +45,8 @@ import { EmailService } from './services/email.js';
 import { EventService } from './services/event.js';
 import { VotingService } from './services/votingService.js';
 
-dotenv.config();
+// Performance monitoring
+import { performanceMonitor } from './utils/performanceMonitor.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -83,6 +87,16 @@ class LightningTalkServer {
     this.app.locals.emailService = this.emailService;
     this.app.locals.eventService = this.eventService;
     this.app.locals.votingService = this.votingService;
+
+    // Initialize performance monitoring
+    if (this.environment !== 'production' || process.env.ENABLE_PERFORMANCE_MONITORING === 'true') {
+      performanceMonitor.start();
+
+      // Set up performance alerts
+      performanceMonitor.on('alert', alert => {
+        console.warn(`🚨 Performance Alert [${alert.level}]: ${alert.message}`);
+      });
+    }
   }
 
   setupMiddleware() {
@@ -189,6 +203,11 @@ class LightningTalkServer {
     // Logging
     this.app.use(logger);
 
+    // Performance monitoring (in development/staging)
+    if (this.environment !== 'production' || process.env.ENABLE_PERFORMANCE_MONITORING === 'true') {
+      this.app.use(performanceMonitor.requestMiddleware());
+    }
+
     // Security middleware - honeypot and CSRF protection
     this.app.use(behavioralHoneypot());
     this.app.use(addCSRFToken());
@@ -248,10 +267,30 @@ class LightningTalkServer {
             'GET /api/health/metrics': 'Prometheus metrics',
             'GET /api/health/database': 'Database health check',
             'GET /api/health/dependencies': 'External dependencies check'
-          }
+          },
+          performance: this.environment !== 'production' ? 'GET /api/performance' : 'disabled'
         }
       });
     });
+
+    // Performance monitoring endpoint (development/staging only)
+    if (this.environment !== 'production' || process.env.ENABLE_PERFORMANCE_MONITORING === 'true') {
+      this.app.get('/api/performance', (req, res) => {
+        const summary = performanceMonitor.getSummary();
+        const dbStats = this.database?.getPerformanceStats?.() || {};
+
+        res.json({
+          timestamp: new Date().toISOString(),
+          system: summary,
+          database: dbStats,
+          details: {
+            memory: performanceMonitor.getStats('memory', 'heapUsed'),
+            requests: performanceMonitor.getStats('http', 'request'),
+            eventloop: performanceMonitor.getStats('eventloop', 'lag')
+          }
+        });
+      });
+    }
 
     // Catch-all route for SPA
     this.app.get('*', (req, res) => {
