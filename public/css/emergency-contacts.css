@@ -1,0 +1,935 @@
+/**
+ * Emergency Contact System v1 - CSS Styles
+ * Safety and emergency communication interface styling
+ */
+
+/* ========================================
+   Quick Access Widget
+   ======================================== */
+
+.emergency-quick-access {
+  position: fixed;
+  bottom: var(--space-6);
+  right: var(--space-6);
+  z-index: var(--z-index-emergency);
+  font-family: var(--font-family-sans);
+}
+
+.emergency-toggle {
+  width: var(--size-14);
+  height: var(--size-14);
+  border: 2px solid var(--color-error-500);
+  border-radius: var(--radius-full);
+  background: var(--color-error-500);
+  color: var(--color-neutral-0);
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  box-shadow: var(--shadow-xl);
+  transition: var(--transition-transform), var(--transition-colors);
+  animation: emergencyPulse 2s infinite;
+}
+
+.emergency-toggle:hover {
+  transform: scale(1.05);
+  background: var(--color-error-600);
+  border-color: var(--color-error-600);
+}
+
+.emergency-toggle.active {
+  background: var(--color-error-600);
+  transform: scale(0.95);
+}
+
+.emergency-icon {
+  font-size: var(--font-size-lg);
+  margin-bottom: var(--space-1);
+}
+
+.emergency-text {
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-bold);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+@keyframes emergencyPulse {
+  0%, 100% {
+    box-shadow: var(--shadow-xl);
+  }
+  50% {
+    box-shadow: var(--shadow-xl), 0 0 0 8px rgba(239, 68, 68, 0.2);
+  }
+}
+
+/* ========================================
+   Emergency Panel
+   ======================================== */
+
+.emergency-panel {
+  position: absolute;
+  bottom: calc(100% + var(--space-3));
+  right: 0;
+  width: 320px;
+  background: var(--color-neutral-0);
+  border: 1px solid var(--color-neutral-200);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-2xl);
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(var(--space-4)) scale(0.95);
+  transition: var(--transition-all);
+  max-height: 80vh;
+  overflow-y: auto;
+}
+
+.emergency-panel.open {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0) scale(1);
+}
+
+.emergency-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: var(--space-4);
+  border-bottom: 1px solid var(--color-neutral-200);
+}
+
+.emergency-header h3 {
+  margin: 0;
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-error-700);
+}
+
+.emergency-all-btn {
+  padding: var(--space-1) var(--space-3);
+  border: 1px solid var(--color-primary-300);
+  border-radius: var(--radius-md);
+  background: var(--color-primary-50);
+  color: var(--color-primary-700);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-medium);
+  cursor: pointer;
+  transition: var(--transition-colors);
+}
+
+.emergency-all-btn:hover {
+  background: var(--color-primary-100);
+  border-color: var(--color-primary-400);
+}
+
+/* ========================================
+   Quick Contact Items
+   ======================================== */
+
+.emergency-quick-contacts {
+  padding: var(--space-2);
+}
+
+.emergency-contact-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--space-3);
+  margin-bottom: var(--space-2);
+  border: 1px solid var(--color-neutral-200);
+  border-radius: var(--radius-md);
+  background: var(--color-neutral-0);
+  transition: var(--transition-colors);
+}
+
+.emergency-contact-item:hover {
+  background: var(--color-neutral-50);
+  border-color: var(--color-error-300);
+}
+
+.emergency-contact-item:last-child {
+  margin-bottom: 0;
+}
+
+.contact-info {
+  display: flex;
+  align-items: center;
+  flex: 1;
+}
+
+.contact-icon {
+  font-size: var(--font-size-xl);
+  margin-right: var(--space-3);
+}
+
+.contact-details {
+  flex: 1;
+}
+
+.contact-name {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-neutral-900);
+  margin-bottom: var(--space-1);
+}
+
+.contact-description {
+  font-size: var(--font-size-xs);
+  color: var(--color-neutral-600);
+}
+
+.contact-call-btn {
+  padding: var(--space-2) var(--space-3);
+  border: 1px solid var(--color-error-300);
+  border-radius: var(--radius-md);
+  background: var(--color-error-50);
+  color: var(--color-error-700);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-bold);
+  cursor: pointer;
+  transition: var(--transition-colors);
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+  white-space: nowrap;
+}
+
+.contact-call-btn:hover {
+  background: var(--color-error-500);
+  border-color: var(--color-error-500);
+  color: var(--color-neutral-0);
+}
+
+.call-icon {
+  font-size: var(--font-size-sm);
+}
+
+.phone-number {
+  font-family: var(--font-family-mono);
+  font-weight: var(--font-weight-bold);
+}
+
+/* ========================================
+   Emergency Actions
+   ======================================== */
+
+.emergency-actions {
+  padding: var(--space-3);
+  border-top: 1px solid var(--color-neutral-200);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.emergency-action-btn {
+  padding: var(--space-2) var(--space-3);
+  border: 1px solid var(--color-warning-300);
+  border-radius: var(--radius-md);
+  background: var(--color-warning-50);
+  color: var(--color-warning-700);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  cursor: pointer;
+  transition: var(--transition-colors);
+  text-align: center;
+}
+
+.emergency-action-btn:hover {
+  background: var(--color-warning-100);
+  border-color: var(--color-warning-400);
+}
+
+/* ========================================
+   All Contacts Modal
+   ======================================== */
+
+.emergency-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(4px);
+  z-index: var(--z-index-modal);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-4);
+}
+
+.emergency-modal {
+  background: var(--color-neutral-0);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-2xl);
+  max-width: 800px;
+  width: 100%;
+  max-height: 90vh;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: var(--space-6);
+  border-bottom: 1px solid var(--color-neutral-200);
+}
+
+.modal-header h2 {
+  margin: 0;
+  font-size: var(--font-size-2xl);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-error-700);
+}
+
+.modal-close {
+  width: var(--size-10);
+  height: var(--size-10);
+  border: none;
+  background: var(--color-neutral-100);
+  color: var(--color-neutral-600);
+  border-radius: var(--radius-full);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: var(--font-size-lg);
+  transition: var(--transition-colors);
+}
+
+.modal-close:hover {
+  background: var(--color-neutral-200);
+  color: var(--color-neutral-800);
+}
+
+.modal-content {
+  flex: 1;
+  overflow-y: auto;
+  padding: var(--space-6);
+}
+
+/* ========================================
+   Contact Type Sections
+   ======================================== */
+
+.contact-type-section {
+  margin-bottom: var(--space-6);
+}
+
+.contact-type-section:last-child {
+  margin-bottom: 0;
+}
+
+.contact-type-section h3 {
+  margin: 0 0 var(--space-4) 0;
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-neutral-900);
+  padding-bottom: var(--space-2);
+  border-bottom: 2px solid var(--color-primary-200);
+}
+
+.contact-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.contact-item {
+  padding: var(--space-4);
+  border: 1px solid var(--color-neutral-200);
+  border-radius: var(--radius-lg);
+  background: var(--color-neutral-0);
+  transition: var(--transition-colors);
+}
+
+.contact-item:hover {
+  background: var(--color-neutral-50);
+  border-color: var(--color-primary-300);
+}
+
+.contact-item.system {
+  border-color: var(--color-info-300);
+  background: var(--color-info-50);
+}
+
+.contact-item.event {
+  border-color: var(--color-success-300);
+  background: var(--color-success-50);
+}
+
+.contact-main-info {
+  margin-bottom: var(--space-3);
+}
+
+.contact-name-phone {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--space-2);
+}
+
+.contact-name {
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-neutral-900);
+}
+
+.contact-phone-display {
+  font-family: var(--font-family-mono);
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-error-600);
+}
+
+.contact-description {
+  font-size: var(--font-size-sm);
+  color: var(--color-neutral-600);
+  line-height: 1.5;
+}
+
+.contact-actions {
+  display: flex;
+  gap: var(--space-2);
+  margin-bottom: var(--space-3);
+}
+
+.contact-action-btn {
+  padding: var(--space-2) var(--space-4);
+  border: 1px solid;
+  border-radius: var(--radius-md);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  cursor: pointer;
+  transition: var(--transition-colors);
+}
+
+.contact-action-btn.call {
+  border-color: var(--color-error-300);
+  background: var(--color-error-50);
+  color: var(--color-error-700);
+}
+
+.contact-action-btn.call:hover {
+  background: var(--color-error-500);
+  border-color: var(--color-error-500);
+  color: var(--color-neutral-0);
+}
+
+.contact-action-btn.edit {
+  border-color: var(--color-warning-300);
+  background: var(--color-warning-50);
+  color: var(--color-warning-700);
+}
+
+.contact-action-btn.edit:hover {
+  background: var(--color-warning-100);
+  border-color: var(--color-warning-400);
+}
+
+.contact-meta {
+  display: flex;
+  gap: var(--space-2);
+  flex-wrap: wrap;
+}
+
+.verified-badge,
+.system-badge,
+.event-badge {
+  padding: var(--space-1) var(--space-2);
+  border-radius: var(--radius-sm);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-medium);
+}
+
+.verified-badge {
+  background: var(--color-success-100);
+  color: var(--color-success-700);
+}
+
+.system-badge {
+  background: var(--color-info-100);
+  color: var(--color-info-700);
+}
+
+.event-badge {
+  background: var(--color-warning-100);
+  color: var(--color-warning-700);
+}
+
+/* ========================================
+   Modal Footer
+   ======================================== */
+
+.modal-footer {
+  padding: var(--space-4) var(--space-6);
+  border-top: 1px solid var(--color-neutral-200);
+  display: flex;
+  gap: var(--space-3);
+  justify-content: center;
+}
+
+.modal-action-btn {
+  padding: var(--space-3) var(--space-6);
+  border: 1px solid var(--color-primary-500);
+  border-radius: var(--radius-md);
+  background: var(--color-primary-500);
+  color: var(--color-neutral-0);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  cursor: pointer;
+  transition: var(--transition-colors);
+}
+
+.modal-action-btn:hover {
+  background: var(--color-primary-600);
+  border-color: var(--color-primary-600);
+}
+
+.modal-action-btn.secondary {
+  background: var(--color-neutral-0);
+  color: var(--color-neutral-700);
+  border-color: var(--color-neutral-300);
+}
+
+.modal-action-btn.secondary:hover {
+  background: var(--color-neutral-100);
+  border-color: var(--color-neutral-400);
+}
+
+/* ========================================
+   Alert Type Modal
+   ======================================== */
+
+.alert-type-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(4px);
+  z-index: var(--z-index-modal-high);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-4);
+}
+
+.alert-type-content {
+  background: var(--color-neutral-0);
+  border-radius: var(--radius-lg);
+  padding: var(--space-6);
+  max-width: 500px;
+  width: 100%;
+  text-align: center;
+}
+
+.alert-type-content h3 {
+  margin: 0 0 var(--space-6) 0;
+  font-size: var(--font-size-xl);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-error-700);
+}
+
+.alert-types {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: var(--space-3);
+  margin-bottom: var(--space-6);
+}
+
+.alert-type-btn {
+  padding: var(--space-4);
+  border: 2px solid var(--color-neutral-300);
+  border-radius: var(--radius-lg);
+  background: var(--color-neutral-0);
+  cursor: pointer;
+  transition: var(--transition-colors);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.alert-type-btn:hover {
+  border-color: var(--color-error-400);
+  background: var(--color-error-50);
+}
+
+.alert-type-icon {
+  font-size: var(--font-size-3xl);
+}
+
+.alert-type-name {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-neutral-700);
+}
+
+.alert-cancel-btn {
+  padding: var(--space-2) var(--space-6);
+  border: 1px solid var(--color-neutral-300);
+  border-radius: var(--radius-md);
+  background: var(--color-neutral-0);
+  color: var(--color-neutral-700);
+  font-size: var(--font-size-sm);
+  cursor: pointer;
+  transition: var(--transition-colors);
+}
+
+.alert-cancel-btn:hover {
+  background: var(--color-neutral-100);
+  border-color: var(--color-neutral-400);
+}
+
+/* ========================================
+   Call Notification
+   ======================================== */
+
+.emergency-call-notification {
+  position: fixed;
+  top: var(--space-6);
+  right: var(--space-6);
+  z-index: var(--z-index-notification);
+  background: var(--color-neutral-0);
+  border: 1px solid var(--color-error-300);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-xl);
+  min-width: 300px;
+}
+
+.call-notification-content {
+  display: flex;
+  align-items: center;
+  padding: var(--space-4);
+  gap: var(--space-3);
+}
+
+.call-icon {
+  font-size: var(--font-size-2xl);
+  color: var(--color-error-500);
+}
+
+.call-info {
+  flex: 1;
+}
+
+.call-contact {
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-neutral-900);
+  margin-bottom: var(--space-1);
+}
+
+.call-number {
+  font-family: var(--font-family-mono);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-error-600);
+  margin-bottom: var(--space-1);
+}
+
+.call-status {
+  font-size: var(--font-size-xs);
+  color: var(--color-neutral-600);
+}
+
+.call-close {
+  width: var(--size-8);
+  height: var(--size-8);
+  border: none;
+  background: var(--color-neutral-100);
+  color: var(--color-neutral-600);
+  border-radius: var(--radius-full);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: var(--transition-colors);
+}
+
+.call-close:hover {
+  background: var(--color-neutral-200);
+  color: var(--color-neutral-800);
+}
+
+/* ========================================
+   Notifications
+   ======================================== */
+
+.emergency-notification {
+  position: fixed;
+  top: var(--space-6);
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: var(--z-index-notification);
+  padding: var(--space-3) var(--space-6);
+  border-radius: var(--radius-lg);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  box-shadow: var(--shadow-lg);
+  animation: slideDown 0.3s ease-out;
+}
+
+.emergency-notification.success {
+  background: var(--color-success-500);
+  color: var(--color-neutral-0);
+}
+
+.emergency-notification.error {
+  background: var(--color-error-500);
+  color: var(--color-neutral-0);
+}
+
+.emergency-notification.info {
+  background: var(--color-info-500);
+  color: var(--color-neutral-0);
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateX(-50%) translateY(-100%);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+}
+
+/* ========================================
+   Responsive Design
+   ======================================== */
+
+@media (max-width: 768px) {
+  .emergency-quick-access {
+    bottom: var(--space-4);
+    right: var(--space-4);
+  }
+
+  .emergency-toggle {
+    width: var(--size-12);
+    height: var(--size-12);
+  }
+
+  .emergency-panel {
+    width: 280px;
+    right: 0;
+  }
+
+  .emergency-modal {
+    margin: var(--space-2);
+    max-height: 95vh;
+  }
+
+  .modal-header,
+  .modal-content,
+  .modal-footer {
+    padding: var(--space-4);
+  }
+
+  .contact-actions {
+    flex-direction: column;
+  }
+
+  .modal-footer {
+    flex-direction: column;
+  }
+
+  .alert-types {
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-2);
+  }
+
+  .alert-type-btn {
+    padding: var(--space-3);
+  }
+
+  .emergency-call-notification {
+    top: var(--space-4);
+    right: var(--space-4);
+    left: var(--space-4);
+    min-width: auto;
+  }
+}
+
+@media (max-width: 480px) {
+  .emergency-panel {
+    width: calc(100vw - var(--space-8));
+    left: var(--space-4);
+    right: var(--space-4);
+  }
+
+  .emergency-contact-item {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-2);
+  }
+
+  .contact-call-btn {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .contact-name-phone {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-1);
+  }
+
+  .alert-types {
+    grid-template-columns: 1fr;
+  }
+
+  .emergency-notification {
+    left: var(--space-2);
+    right: var(--space-2);
+    transform: none;
+  }
+}
+
+/* ========================================
+   Dark Theme Support
+   ======================================== */
+
+@media (prefers-color-scheme: dark) {
+  .emergency-panel,
+  .emergency-modal,
+  .alert-type-content,
+  .emergency-call-notification {
+    background: var(--color-neutral-800);
+    border-color: var(--color-neutral-600);
+    color: var(--color-neutral-100);
+  }
+
+  .emergency-header,
+  .modal-header {
+    border-color: var(--color-neutral-600);
+  }
+
+  .emergency-contact-item,
+  .contact-item {
+    background: var(--color-neutral-700);
+    border-color: var(--color-neutral-600);
+    color: var(--color-neutral-100);
+  }
+
+  .emergency-contact-item:hover,
+  .contact-item:hover {
+    background: var(--color-neutral-600);
+  }
+
+  .contact-item.system {
+    background: var(--color-info-900);
+    border-color: var(--color-info-600);
+  }
+
+  .contact-item.event {
+    background: var(--color-success-900);
+    border-color: var(--color-success-600);
+  }
+
+  .contact-name,
+  .call-contact {
+    color: var(--color-neutral-100);
+  }
+
+  .contact-description,
+  .call-status {
+    color: var(--color-neutral-400);
+  }
+
+  .contact-phone-display,
+  .call-number {
+    color: var(--color-error-400);
+  }
+
+  .modal-close,
+  .call-close {
+    background: var(--color-neutral-700);
+    color: var(--color-neutral-400);
+  }
+
+  .modal-close:hover,
+  .call-close:hover {
+    background: var(--color-neutral-600);
+    color: var(--color-neutral-200);
+  }
+}
+
+/* ========================================
+   High Contrast Mode
+   ======================================== */
+
+@media (prefers-contrast: high) {
+  .emergency-toggle,
+  .contact-call-btn,
+  .contact-action-btn,
+  .modal-action-btn {
+    border: 3px solid currentColor;
+  }
+
+  .emergency-panel,
+  .emergency-modal,
+  .emergency-contact-item,
+  .contact-item {
+    border: 2px solid currentColor;
+  }
+}
+
+/* ========================================
+   Reduced Motion
+   ======================================== */
+
+@media (prefers-reduced-motion: reduce) {
+  .emergency-toggle,
+  .emergency-panel,
+  .emergency-contact-item,
+  .contact-item,
+  .contact-call-btn,
+  .contact-action-btn,
+  .modal-close,
+  .call-close {
+    transition: none;
+  }
+
+  .emergency-toggle {
+    animation: none;
+  }
+
+  @keyframes emergencyPulse,
+  @keyframes slideDown {
+    from, to {
+      transform: none;
+    }
+  }
+}
+
+/* ========================================
+   CSS Custom Properties for Emergency System
+   ======================================== */
+
+:root {
+  --z-index-emergency: 9000;
+  --z-index-modal-high: 10500;
+  --z-index-notification: 10000;
+}
+
+/* ========================================
+   Print Styles
+   ======================================== */
+
+@media print {
+  .emergency-quick-access,
+  .emergency-modal-overlay,
+  .alert-type-modal,
+  .emergency-call-notification,
+  .emergency-notification {
+    display: none;
+  }
+}

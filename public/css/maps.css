@@ -1,0 +1,689 @@
+/**
+ * Google Maps Integration v1 - CSS Styles
+ * Comprehensive styling for venue mapping and navigation system
+ */
+
+/* ========================================
+   Map Container
+   ======================================== */
+
+.maps-container {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  box-shadow: var(--shadow-lg);
+}
+
+#map-container {
+  width: 100%;
+  height: 400px;
+  min-height: 300px;
+  border-radius: var(--radius-lg);
+  background: var(--color-neutral-100);
+  position: relative;
+}
+
+.map-fullscreen {
+  height: 80vh !important;
+  min-height: 600px !important;
+}
+
+/* ========================================
+   Venue Info Window
+   ======================================== */
+
+.venue-info-window {
+  max-width: 300px;
+  font-family: var(--font-family-sans);
+  line-height: 1.5;
+}
+
+.venue-header {
+  margin-bottom: var(--space-3);
+  padding-bottom: var(--space-2);
+  border-bottom: 1px solid var(--color-neutral-200);
+}
+
+.venue-header h3 {
+  margin: 0 0 var(--space-1) 0;
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-neutral-900);
+}
+
+.event-badge {
+  display: inline-block;
+  padding: var(--space-1) var(--space-2);
+  background: var(--color-primary-100);
+  color: var(--color-primary-700);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-medium);
+  border-radius: var(--radius-sm);
+}
+
+.venue-details {
+  margin-bottom: var(--space-3);
+}
+
+.venue-details > div {
+  display: flex;
+  align-items: center;
+  margin-bottom: var(--space-2);
+  font-size: var(--font-size-sm);
+}
+
+.venue-details .icon {
+  margin-right: var(--space-2);
+  font-size: var(--font-size-base);
+}
+
+.venue-phone a {
+  color: var(--color-primary-500);
+  text-decoration: none;
+}
+
+.venue-phone a:hover {
+  text-decoration: underline;
+}
+
+.venue-actions {
+  display: flex;
+  gap: var(--space-2);
+  margin-bottom: var(--space-3);
+  flex-wrap: wrap;
+}
+
+.map-btn {
+  padding: var(--space-2) var(--space-3);
+  border: 1px solid var(--color-neutral-300);
+  border-radius: var(--radius-md);
+  background: var(--color-neutral-0);
+  color: var(--color-neutral-700);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-medium);
+  cursor: pointer;
+  transition: var(--transition-colors);
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  white-space: nowrap;
+}
+
+.map-btn:hover {
+  background: var(--color-neutral-100);
+  border-color: var(--color-primary-400);
+  color: var(--color-primary-700);
+}
+
+.map-btn.primary {
+  background: var(--color-primary-500);
+  border-color: var(--color-primary-500);
+  color: var(--color-neutral-0);
+}
+
+.map-btn.primary:hover {
+  background: var(--color-primary-600);
+  border-color: var(--color-primary-600);
+}
+
+/* ========================================
+   Emergency Contacts
+   ======================================== */
+
+.emergency-contacts {
+  padding-top: var(--space-3);
+  border-top: 1px solid var(--color-neutral-200);
+}
+
+.emergency-contacts h4 {
+  margin: 0 0 var(--space-2) 0;
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-error-700);
+}
+
+.emergency-contact {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: var(--space-1) 0;
+  font-size: var(--font-size-xs);
+}
+
+.contact-name {
+  color: var(--color-neutral-700);
+  font-weight: var(--font-weight-medium);
+}
+
+.contact-phone {
+  color: var(--color-error-600);
+  text-decoration: none;
+  font-weight: var(--font-weight-medium);
+}
+
+.contact-phone:hover {
+  text-decoration: underline;
+}
+
+/* ========================================
+   Service Info Window
+   ======================================== */
+
+.service-info {
+  max-width: 250px;
+  font-family: var(--font-family-sans);
+}
+
+.service-info h4 {
+  margin: 0 0 var(--space-1) 0;
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-neutral-900);
+}
+
+.service-type {
+  margin: 0 0 var(--space-2) 0;
+  font-size: var(--font-size-xs);
+  color: var(--color-neutral-600);
+}
+
+.rating {
+  margin-bottom: var(--space-1);
+  font-size: var(--font-size-xs);
+  color: var(--color-warning-600);
+  font-weight: var(--font-weight-medium);
+}
+
+.address {
+  margin-bottom: var(--space-2);
+  font-size: var(--font-size-xs);
+  color: var(--color-neutral-600);
+}
+
+/* ========================================
+   Directions Panel
+   ======================================== */
+
+.directions-panel {
+  background: var(--color-neutral-0);
+  border: 1px solid var(--color-neutral-200);
+  border-radius: var(--radius-lg);
+  padding: var(--space-4);
+  margin-top: var(--space-4);
+  display: none;
+}
+
+.directions-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--space-3);
+  padding-bottom: var(--space-2);
+  border-bottom: 1px solid var(--color-neutral-200);
+}
+
+.directions-header h3 {
+  margin: 0;
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-neutral-900);
+}
+
+.directions-close {
+  width: var(--size-8);
+  height: var(--size-8);
+  border: none;
+  background: var(--color-neutral-100);
+  color: var(--color-neutral-600);
+  border-radius: var(--radius-full);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: var(--transition-colors);
+}
+
+.directions-close:hover {
+  background: var(--color-neutral-200);
+  color: var(--color-neutral-800);
+}
+
+.directions-content {
+  font-size: var(--font-size-sm);
+  line-height: 1.6;
+}
+
+/* ========================================
+   Map Controls
+   ======================================== */
+
+.map-controls {
+  position: absolute;
+  top: var(--space-3);
+  left: var(--space-3);
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.map-control-group {
+  background: var(--color-neutral-0);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-md);
+  overflow: hidden;
+}
+
+.map-control-btn {
+  padding: var(--space-2) var(--space-3);
+  border: none;
+  background: var(--color-neutral-0);
+  color: var(--color-neutral-700);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  cursor: pointer;
+  transition: var(--transition-colors);
+  border-bottom: 1px solid var(--color-neutral-200);
+}
+
+.map-control-btn:last-child {
+  border-bottom: none;
+}
+
+.map-control-btn:hover {
+  background: var(--color-neutral-100);
+  color: var(--color-primary-700);
+}
+
+.map-control-btn.active {
+  background: var(--color-primary-500);
+  color: var(--color-neutral-0);
+}
+
+/* ========================================
+   Service Filters
+   ======================================== */
+
+.service-filters {
+  position: absolute;
+  top: var(--space-3);
+  right: var(--space-3);
+  z-index: 1;
+  background: var(--color-neutral-0);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-md);
+  padding: var(--space-2);
+}
+
+.service-filter {
+  display: flex;
+  align-items: center;
+  padding: var(--space-1) var(--space-2);
+  margin-bottom: var(--space-1);
+  font-size: var(--font-size-xs);
+  color: var(--color-neutral-700);
+  cursor: pointer;
+  border-radius: var(--radius-sm);
+  transition: var(--transition-colors);
+}
+
+.service-filter:hover {
+  background: var(--color-neutral-100);
+}
+
+.service-filter input[type="checkbox"] {
+  margin-right: var(--space-2);
+}
+
+.service-filter-icon {
+  margin-right: var(--space-1);
+}
+
+/* ========================================
+   Loading State
+   ======================================== */
+
+.maps-loading {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(255, 255, 255, 0.9);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  z-index: 10;
+  border-radius: var(--radius-lg);
+}
+
+.maps-loading-spinner {
+  width: var(--size-10);
+  height: var(--size-10);
+  border: 3px solid var(--color-neutral-200);
+  border-top-color: var(--color-primary-500);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin-bottom: var(--space-4);
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.maps-loading p {
+  margin: 0;
+  font-size: var(--font-size-sm);
+  color: var(--color-neutral-600);
+  font-weight: var(--font-weight-medium);
+}
+
+/* ========================================
+   Error State
+   ======================================== */
+
+.maps-error {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  padding: var(--space-6);
+  text-align: center;
+}
+
+.maps-error-icon {
+  font-size: var(--font-size-4xl);
+  margin-bottom: var(--space-4);
+}
+
+.maps-error h3 {
+  margin: 0 0 var(--space-2) 0;
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-neutral-900);
+}
+
+.maps-error p {
+  margin: 0 0 var(--space-4) 0;
+  font-size: var(--font-size-sm);
+  color: var(--color-neutral-600);
+  max-width: 300px;
+}
+
+.maps-retry-btn {
+  padding: var(--space-2) var(--space-4);
+  border: 1px solid var(--color-primary-500);
+  border-radius: var(--radius-md);
+  background: var(--color-primary-500);
+  color: var(--color-neutral-0);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  cursor: pointer;
+  transition: var(--transition-colors);
+}
+
+.maps-retry-btn:hover {
+  background: var(--color-primary-600);
+  border-color: var(--color-primary-600);
+}
+
+/* ========================================
+   Responsive Design
+   ======================================== */
+
+@media (max-width: 768px) {
+  #map-container {
+    height: 300px;
+    border-radius: var(--radius-md);
+  }
+
+  .venue-info-window {
+    max-width: 250px;
+  }
+
+  .venue-actions {
+    flex-direction: column;
+  }
+
+  .map-btn {
+    text-align: center;
+    justify-content: center;
+  }
+
+  .map-controls {
+    top: var(--space-2);
+    left: var(--space-2);
+  }
+
+  .service-filters {
+    top: var(--space-2);
+    right: var(--space-2);
+    max-height: 200px;
+    overflow-y: auto;
+  }
+
+  .directions-panel {
+    padding: var(--space-3);
+    margin-top: var(--space-3);
+  }
+
+  .directions-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-2);
+  }
+
+  .emergency-contact {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-1);
+  }
+}
+
+@media (max-width: 480px) {
+  #map-container {
+    height: 250px;
+  }
+
+  .venue-info-window {
+    max-width: 200px;
+  }
+
+  .venue-header h3 {
+    font-size: var(--font-size-base);
+  }
+
+  .map-btn {
+    padding: var(--space-1) var(--space-2);
+    font-size: var(--font-size-xs);
+  }
+
+  .service-filters {
+    display: none; /* Hide on very small screens */
+  }
+
+  .map-controls {
+    flex-direction: row;
+    gap: var(--space-1);
+  }
+
+  .map-control-group {
+    flex-direction: row;
+  }
+
+  .map-control-btn {
+    padding: var(--space-1) var(--space-2);
+    font-size: var(--font-size-xs);
+    border-bottom: none;
+    border-right: 1px solid var(--color-neutral-200);
+  }
+
+  .map-control-btn:last-child {
+    border-right: none;
+  }
+
+  .maps-error {
+    padding: var(--space-4);
+  }
+
+  .maps-error h3 {
+    font-size: var(--font-size-base);
+  }
+}
+
+/* ========================================
+   Dark Theme Support
+   ======================================== */
+
+@media (prefers-color-scheme: dark) {
+  .venue-info-window,
+  .service-info {
+    background: var(--color-neutral-800);
+    color: var(--color-neutral-100);
+  }
+
+  .venue-header {
+    border-color: var(--color-neutral-600);
+  }
+
+  .venue-header h3 {
+    color: var(--color-neutral-100);
+  }
+
+  .emergency-contacts {
+    border-color: var(--color-neutral-600);
+  }
+
+  .emergency-contacts h4 {
+    color: var(--color-error-400);
+  }
+
+  .contact-name {
+    color: var(--color-neutral-300);
+  }
+
+  .contact-phone {
+    color: var(--color-error-400);
+  }
+
+  .map-btn {
+    background: var(--color-neutral-700);
+    border-color: var(--color-neutral-600);
+    color: var(--color-neutral-200);
+  }
+
+  .map-btn:hover {
+    background: var(--color-neutral-600);
+    border-color: var(--color-primary-400);
+    color: var(--color-primary-300);
+  }
+
+  .directions-panel {
+    background: var(--color-neutral-800);
+    border-color: var(--color-neutral-600);
+  }
+
+  .directions-header {
+    border-color: var(--color-neutral-600);
+  }
+
+  .directions-header h3 {
+    color: var(--color-neutral-100);
+  }
+
+  .directions-close {
+    background: var(--color-neutral-700);
+    color: var(--color-neutral-400);
+  }
+
+  .directions-close:hover {
+    background: var(--color-neutral-600);
+    color: var(--color-neutral-200);
+  }
+
+  .map-control-group,
+  .service-filters {
+    background: var(--color-neutral-800);
+    box-shadow: var(--shadow-lg);
+  }
+
+  .map-control-btn {
+    background: var(--color-neutral-800);
+    color: var(--color-neutral-200);
+    border-color: var(--color-neutral-600);
+  }
+
+  .map-control-btn:hover {
+    background: var(--color-neutral-700);
+    color: var(--color-primary-300);
+  }
+
+  .service-filter {
+    color: var(--color-neutral-200);
+  }
+
+  .service-filter:hover {
+    background: var(--color-neutral-700);
+  }
+}
+
+/* ========================================
+   High Contrast Mode
+   ======================================== */
+
+@media (prefers-contrast: high) {
+  .map-btn,
+  .map-control-btn,
+  .maps-retry-btn {
+    border: 2px solid currentColor;
+  }
+
+  .venue-info-window,
+  .service-info,
+  .directions-panel {
+    border: 2px solid currentColor;
+  }
+}
+
+/* ========================================
+   Reduced Motion
+   ======================================== */
+
+@media (prefers-reduced-motion: reduce) {
+  .map-btn,
+  .map-control-btn,
+  .service-filter,
+  .directions-close {
+    transition: none;
+  }
+
+  .maps-loading-spinner {
+    animation: none;
+  }
+
+  @keyframes spin {
+    to {
+      transform: none;
+    }
+  }
+}
+
+/* ========================================
+   Print Styles
+   ======================================== */
+
+@media print {
+  .maps-container {
+    display: none;
+  }
+
+  .directions-panel {
+    page-break-inside: avoid;
+  }
+}
