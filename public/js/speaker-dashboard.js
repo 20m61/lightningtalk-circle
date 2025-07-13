@@ -37,10 +37,10 @@ class SpeakerDashboard {
     this.setupNavigation();
     this.setupTimer();
     this.setupEventListeners();
-    
+
     // Load initial data
     await this.loadDashboardData();
-    
+
     // Subscribe to real-time updates
     this.subscribeToUpdates();
   }
@@ -49,7 +49,7 @@ class SpeakerDashboard {
     try {
       const response = await fetch(`${this.apiEndpoint}/auth/profile`, {
         headers: {
-          'Authorization': `Bearer ${this.authToken}`
+          Authorization: `Bearer ${this.authToken}`
         }
       });
 
@@ -70,7 +70,7 @@ class SpeakerDashboard {
     try {
       const response = await fetch(`${this.apiEndpoint}/speakers/profile`, {
         headers: {
-          'Authorization': `Bearer ${this.authToken}`
+          Authorization: `Bearer ${this.authToken}`
         }
       });
 
@@ -92,11 +92,11 @@ class SpeakerDashboard {
 
     const userAvatar = document.querySelector('.user-avatar');
     const userName = document.querySelector('.user-name');
-    
+
     if (userAvatar) {
       userAvatar.src = this.currentUser.avatar || '/images/default-avatar.png';
     }
-    
+
     if (userName) {
       userName.textContent = this.currentUser.name;
     }
@@ -187,7 +187,7 @@ class SpeakerDashboard {
       // Load analytics
       const analyticsResponse = await fetch(`${this.apiEndpoint}/speakers/analytics`, {
         headers: {
-          'Authorization': `Bearer ${this.authToken}`
+          Authorization: `Bearer ${this.authToken}`
         }
       });
 
@@ -198,11 +198,14 @@ class SpeakerDashboard {
       }
 
       // Load recent talks
-      const talksResponse = await fetch(`${this.apiEndpoint}/speakers/talks?limit=5&status=presented`, {
-        headers: {
-          'Authorization': `Bearer ${this.authToken}`
+      const talksResponse = await fetch(
+        `${this.apiEndpoint}/speakers/talks?limit=5&status=presented`,
+        {
+          headers: {
+            Authorization: `Bearer ${this.authToken}`
+          }
         }
-      });
+      );
 
       if (talksResponse.ok) {
         const data = await talksResponse.json();
@@ -210,17 +213,19 @@ class SpeakerDashboard {
       }
 
       // Load upcoming talks
-      const upcomingResponse = await fetch(`${this.apiEndpoint}/speakers/talks?limit=3&status=approved`, {
-        headers: {
-          'Authorization': `Bearer ${this.authToken}`
+      const upcomingResponse = await fetch(
+        `${this.apiEndpoint}/speakers/talks?limit=3&status=approved`,
+        {
+          headers: {
+            Authorization: `Bearer ${this.authToken}`
+          }
         }
-      });
+      );
 
       if (upcomingResponse.ok) {
         const data = await upcomingResponse.json();
         this.updateUpcomingTalks(data.data);
       }
-
     } catch (error) {
       console.error('Error loading dashboard data:', error);
       this.showNotification('ダッシュボードデータの読み込みに失敗しました', 'error');
@@ -232,10 +237,14 @@ class SpeakerDashboard {
 
     // Update stat cards
     const statNumbers = document.querySelectorAll('.stat-number');
-    if (statNumbers[0]) statNumbers[0].textContent = this.analytics.talksBy?.Status?.approved || 0;
+    if (statNumbers[0]) statNumbers[0].textContent = this.analytics.talksByStatus?.approved || 0;
     if (statNumbers[1]) statNumbers[1].textContent = this.analytics.totalVotes || 0;
-    if (statNumbers[2]) statNumbers[2].textContent = `${this.analytics.averageRating.toFixed(1)}/5.0`;
-    if (statNumbers[3]) statNumbers[3].textContent = this.analytics.recentActivity?.reduce((sum, activity) => sum + activity.feedbackCount, 0) || 0;
+    if (statNumbers[2])
+      statNumbers[2].textContent = `${this.analytics.averageRating.toFixed(1)}/5.0`;
+    if (statNumbers[3])
+      statNumbers[3].textContent =
+        this.analytics.recentActivity?.reduce((sum, activity) => sum + activity.feedbackCount, 0) ||
+        0;
   }
 
   updateUpcomingTalks(talks) {
@@ -306,7 +315,7 @@ class SpeakerDashboard {
 
       const response = await fetch(url, {
         headers: {
-          'Authorization': `Bearer ${this.authToken}`
+          Authorization: `Bearer ${this.authToken}`
         }
       });
 
@@ -337,26 +346,34 @@ class SpeakerDashboard {
     this.talks.forEach(talk => {
       const talkItem = document.createElement('div');
       talkItem.className = 'talk-item';
-      
+
       const statusClass = this.getStatusClass(talk.status);
       const statusText = this.getStatusText(talk.status);
-      
+
       talkItem.innerHTML = `
         <div class="talk-status ${statusClass}">${statusText}</div>
         <div class="talk-info">
           <h4>${this.escapeHtml(talk.title)}</h4>
           <p class="talk-event">Event ID: ${talk.eventId} - ${this.formatDateTime(talk.createdAt)}</p>
-          ${talk.tags && talk.tags.length > 0 ? `
+          ${
+            talk.tags && talk.tags.length > 0
+              ? `
             <div class="talk-tags">
               ${talk.tags.map(tag => `<span class="tag">${this.escapeHtml(tag)}</span>`).join('')}
             </div>
-          ` : ''}
-          ${talk.voting ? `
+          `
+              : ''
+          }
+          ${
+            talk.voting
+              ? `
             <div class="talk-metrics">
               <span>👥 ${talk.voting.voteCount}票</span>
               <span>⭐ ${talk.voting.averageRating.toFixed(1)}評価</span>
             </div>
-          ` : ''}
+          `
+              : ''
+          }
         </div>
         <div class="talk-actions">
           <button class="btn-icon" title="編集" onclick="speakerDashboard.editTalk('${talk.id}')">✏️</button>
@@ -364,29 +381,29 @@ class SpeakerDashboard {
           <button class="btn-icon" title="フィードバック" onclick="speakerDashboard.viewFeedback('${talk.id}')">💬</button>
         </div>
       `;
-      
+
       talksList.appendChild(talkItem);
     });
   }
 
   getStatusClass(status) {
     const statusMap = {
-      'draft': 'draft',
-      'submitted': 'upcoming',
-      'approved': 'upcoming',
-      'rejected': 'rejected',
-      'presented': 'past'
+      draft: 'draft',
+      submitted: 'upcoming',
+      approved: 'upcoming',
+      rejected: 'rejected',
+      presented: 'past'
     };
     return statusMap[status] || 'draft';
   }
 
   getStatusText(status) {
     const statusMap = {
-      'draft': '下書き',
-      'submitted': '提出済み',
-      'approved': '承認済み',
-      'rejected': '却下',
-      'presented': '完了'
+      draft: '下書き',
+      submitted: '提出済み',
+      approved: '承認済み',
+      rejected: '却下',
+      presented: '完了'
     };
     return statusMap[status] || status;
   }
@@ -395,11 +412,11 @@ class SpeakerDashboard {
     const fullStars = Math.floor(rating);
     const hasHalfStar = rating % 1 >= 0.5;
     const emptyStars = 5 - fullStars - (hasHalfStar ? 1 : 0);
-    
+
     let stars = '⭐'.repeat(fullStars);
     if (hasHalfStar) stars += '⭐'; // Could use half-star emoji if available
     stars += '☆'.repeat(emptyStars);
-    
+
     return stars;
   }
 
@@ -447,12 +464,12 @@ class SpeakerDashboard {
         </form>
       </div>
     `;
-    
+
     document.body.appendChild(modal);
-    
+
     // Handle form submission
     const form = document.getElementById('newTalkForm');
-    form.addEventListener('submit', async (e) => {
+    form.addEventListener('submit', async e => {
       e.preventDefault();
       await this.submitNewTalk(new FormData(form));
       modal.remove();
@@ -461,8 +478,13 @@ class SpeakerDashboard {
 
   async submitNewTalk(formData) {
     try {
-      const tags = formData.get('tags') ? formData.get('tags').split(',').map(tag => tag.trim()) : [];
-      
+      const tags = formData.get('tags')
+        ? formData
+            .get('tags')
+            .split(',')
+            .map(tag => tag.trim())
+        : [];
+
       const talkData = {
         title: formData.get('title'),
         description: formData.get('description'),
@@ -475,7 +497,7 @@ class SpeakerDashboard {
       const response = await fetch(`${this.apiEndpoint}/speakers/talks`, {
         method: 'POST',
         headers: {
-          'Authorization': `Bearer ${this.authToken}`,
+          Authorization: `Bearer ${this.authToken}`,
           'Content-Type': 'application/json'
         },
         body: JSON.stringify(talkData)
@@ -488,7 +510,7 @@ class SpeakerDashboard {
 
       const result = await response.json();
       this.showNotification('発表が正常に作成されました', 'success');
-      
+
       // Reload talks list
       if (this.currentSection === 'my-talks') {
         this.loadMyTalks();
@@ -515,7 +537,7 @@ class SpeakerDashboard {
     try {
       const response = await fetch(`${this.apiEndpoint}/speakers/feedback/${talkId}`, {
         headers: {
-          'Authorization': `Bearer ${this.authToken}`
+          Authorization: `Bearer ${this.authToken}`
         }
       });
 
@@ -534,24 +556,32 @@ class SpeakerDashboard {
   showFeedbackModal(talkId, feedback) {
     const modal = document.createElement('div');
     modal.className = 'modal active';
-    
-    const commentsHtml = feedback.comments.map(comment => `
+
+    const commentsHtml = feedback.comments
+      .map(
+        comment => `
       <div class="feedback-comment">
         <div class="comment-header">
           <span class="comment-type">${comment.type === 'vote' ? '投票' : 'フィードバック'}</span>
           <span class="comment-date">${this.formatDateTime(comment.createdAt)}</span>
         </div>
         ${comment.rating ? `<div class="comment-rating">評価: ${comment.rating}/5</div>` : ''}
-        ${comment.ratings ? `
+        ${
+          comment.ratings
+            ? `
           <div class="detailed-ratings">
             <span>内容: ${comment.ratings.content || 'N/A'}</span>
             <span>発表: ${comment.ratings.delivery || 'N/A'}</span>
             <span>エンゲージメント: ${comment.ratings.engagement || 'N/A'}</span>
           </div>
-        ` : ''}
+        `
+            : ''
+        }
         <p class="comment-text">${this.escapeHtml(comment.comment)}</p>
       </div>
-    `).join('');
+    `
+      )
+      .join('');
 
     modal.innerHTML = `
       <div class="modal-content feedback-modal">
@@ -583,7 +613,7 @@ class SpeakerDashboard {
         </div>
       </div>
     `;
-    
+
     document.body.appendChild(modal);
   }
 
@@ -592,8 +622,8 @@ class SpeakerDashboard {
     const input = document.createElement('input');
     input.type = 'file';
     input.accept = '.pdf,.ppt,.pptx,.key';
-    
-    input.addEventListener('change', async (e) => {
+
+    input.addEventListener('change', async e => {
       const file = e.target.files[0];
       if (!file) return;
 
@@ -604,7 +634,7 @@ class SpeakerDashboard {
         const response = await fetch(`${this.apiEndpoint}/speakers/talks/${talkId}/presentation`, {
           method: 'POST',
           headers: {
-            'Authorization': `Bearer ${this.authToken}`
+            Authorization: `Bearer ${this.authToken}`
           },
           body: formData
         });
@@ -677,7 +707,7 @@ class SpeakerDashboard {
       modal.classList.remove('active');
     }
     this.pauseTimer();
-    
+
     // Save practice session if there was elapsed time
     if (this.practiceElapsed > 0 && this.currentTalkId) {
       this.savePracticeSession();
@@ -689,13 +719,13 @@ class SpeakerDashboard {
 
     const startBtn = document.getElementById('startTimer');
     const pauseBtn = document.getElementById('pauseTimer');
-    
+
     if (startBtn) startBtn.disabled = true;
     if (pauseBtn) pauseBtn.disabled = false;
-    
+
     this.isTimerRunning = true;
     this.practiceStartTime = Date.now();
-    
+
     this.timer = setInterval(() => {
       this.timerRemaining--;
       const elapsed = this.practiceElapsed + (Date.now() - this.practiceStartTime);
@@ -713,14 +743,14 @@ class SpeakerDashboard {
     clearInterval(this.timer);
     this.timer = null;
     this.isTimerRunning = false;
-    
+
     if (this.practiceStartTime) {
       this.practiceElapsed += Date.now() - this.practiceStartTime;
     }
-    
+
     const startBtn = document.getElementById('startTimer');
     const pauseBtn = document.getElementById('pauseTimer');
-    
+
     if (startBtn) startBtn.disabled = false;
     if (pauseBtn) pauseBtn.disabled = true;
   }
@@ -730,16 +760,16 @@ class SpeakerDashboard {
       clearInterval(this.timer);
       this.timer = null;
     }
-    
+
     this.isTimerRunning = false;
     this.timerRemaining = this.timerDuration;
     this.practiceElapsed = 0;
     this.practiceStartTime = null;
     this.updateTimerDisplay();
-    
+
     const startBtn = document.getElementById('startTimer');
     const pauseBtn = document.getElementById('pauseTimer');
-    
+
     if (startBtn) startBtn.disabled = false;
     if (pauseBtn) pauseBtn.disabled = true;
   }
@@ -778,7 +808,7 @@ class SpeakerDashboard {
     audio.play().catch(() => {
       // Ignore audio play errors
     });
-    
+
     // Save practice session
     if (this.currentTalkId) {
       this.savePracticeSession();
@@ -790,11 +820,11 @@ class SpeakerDashboard {
 
     try {
       const duration = Math.floor(this.practiceElapsed / 1000);
-      
+
       const response = await fetch(`${this.apiEndpoint}/speakers/practice-timer`, {
         method: 'POST',
         headers: {
-          'Authorization': `Bearer ${this.authToken}`,
+          Authorization: `Bearer ${this.authToken}`,
           'Content-Type': 'application/json'
         },
         body: JSON.stringify({
@@ -836,7 +866,7 @@ class SpeakerDashboard {
     // Filter select
     const filterSelect = document.querySelector('.filter-select');
     if (filterSelect) {
-      filterSelect.addEventListener('change', (e) => this.filterTalks(e.target.value));
+      filterSelect.addEventListener('change', e => this.filterTalks(e.target.value));
     }
 
     // Practice timer buttons
@@ -851,13 +881,13 @@ class SpeakerDashboard {
   subscribeToUpdates() {
     // Subscribe to real-time updates if WebSocket is available
     if (window.WebSocket && window.socketService) {
-      window.socketService.on('talk:updated', (data) => {
+      window.socketService.on('talk:updated', data => {
         if (this.currentSection === 'my-talks') {
           this.loadMyTalks();
         }
       });
 
-      window.socketService.on('vote:submitted', (data) => {
+      window.socketService.on('vote:submitted', data => {
         // Update vote counts in real-time
         const talk = this.talks.find(t => t.id === data.talkId);
         if (talk && talk.voting) {
@@ -881,7 +911,7 @@ class SpeakerDashboard {
       await fetch(`${this.apiEndpoint}/auth/logout`, {
         method: 'POST',
         headers: {
-          'Authorization': `Bearer ${this.authToken}`
+          Authorization: `Bearer ${this.authToken}`
         }
       });
     } catch (error) {
@@ -896,13 +926,13 @@ class SpeakerDashboard {
     const notification = document.createElement('div');
     notification.className = `notification ${type}`;
     notification.textContent = message;
-    
+
     document.body.appendChild(notification);
-    
+
     setTimeout(() => {
       notification.classList.add('show');
     }, 100);
-    
+
     setTimeout(() => {
       notification.classList.remove('show');
       setTimeout(() => notification.remove(), 300);
@@ -911,12 +941,12 @@ class SpeakerDashboard {
 
   formatDateTime(dateString) {
     const date = new Date(dateString);
-    const options = { 
-      year: 'numeric', 
-      month: '2-digit', 
-      day: '2-digit', 
-      hour: '2-digit', 
-      minute: '2-digit' 
+    const options = {
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit',
+      hour: '2-digit',
+      minute: '2-digit'
     };
     return date.toLocaleDateString('ja-JP', options);
   }

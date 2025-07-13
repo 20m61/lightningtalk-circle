@@ -1,0 +1,409 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>インタラクティブ投票 - Lightning Talk Circle</title>
+
+    <!-- Core Styles -->
+    <link rel="stylesheet" href="/css/design-tokens.css" />
+    <link rel="stylesheet" href="/css/style.css" />
+    <link rel="stylesheet" href="/css/interactive-polls.css" />
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="/images/favicon.svg" />
+    <link rel="icon" type="image/png" href="/images/favicon.png" />
+
+    <!-- Meta Tags -->
+    <meta
+      name="description"
+      content="Lightning Talk Circleのリアルタイム投票・フィードバックシステム"
+    />
+    <meta
+      name="keywords"
+      content="ライトニングトーク, 投票, フィードバック, リアルタイム, 技術発表"
+    />
+
+    <!-- Social Media -->
+    <meta property="og:title" content="インタラクティブ投票 - Lightning Talk Circle" />
+    <meta property="og:description" content="リアルタイム投票・フィードバックシステム" />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://lightningtalk-circle.com/interactive-polls.html" />
+
+    <!-- API Configuration -->
+    <script>
+      window.API_CONFIG = {
+        apiEndpoint: '/api'
+      };
+    </script>
+  </head>
+  <body>
+    <!-- Navigation -->
+    <nav class="main-nav">
+      <div class="nav-container">
+        <div class="nav-brand">
+          <a href="/index.html" class="brand-link">
+            <img
+              src="/images/lightning-talk-logo.svg"
+              alt="Lightning Talk Circle"
+              class="brand-logo"
+            />
+            <span class="brand-text">Lightning Talk Circle</span>
+          </a>
+        </div>
+
+        <div class="nav-links">
+          <a href="/index.html" class="nav-link">ホーム</a>
+          <a href="/events.html" class="nav-link">イベント</a>
+          <a href="/interactive-polls.html" class="nav-link active">投票</a>
+          <a href="/speaker-dashboard.html" class="nav-link">スピーカー</a>
+          <a href="/chat.html" class="nav-link">チャット</a>
+        </div>
+
+        <div class="nav-auth">
+          <div class="user-menu" style="display: none">
+            <img src="/images/default-avatar.png" alt="ユーザーアバター" class="user-avatar" />
+            <span class="user-name"></span>
+            <button class="logout-btn">ログアウト</button>
+          </div>
+          <div class="auth-buttons">
+            <a href="/login.html" class="btn btn-outline">ログイン</a>
+            <a href="/register.html" class="btn btn-primary">登録</a>
+          </div>
+        </div>
+
+        <button class="mobile-menu-toggle">
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
+      </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main-content">
+      <div class="container">
+        <!-- Page Header -->
+        <section class="page-header">
+          <h1>📊 インタラクティブ投票・フィードバック</h1>
+          <p>リアルタイムで投票に参加して、イベントを盛り上げよう！</p>
+        </section>
+
+        <!-- Polls Section -->
+        <section class="polls-section">
+          <div class="polls-header">
+            <h2>投票一覧</h2>
+            <div class="polls-controls">
+              <select id="eventSelector" class="event-selector">
+                <option value="">イベントを選択...</option>
+                <!-- Events will be populated by JavaScript -->
+              </select>
+              <button id="createPollBtn" class="btn btn-primary" style="display: none">
+                ➕ 新しい投票を作成
+              </button>
+            </div>
+          </div>
+
+          <div id="pollsContainer">
+            <!-- Polls will be populated by JavaScript -->
+            <div class="loading-state">
+              <p>投票を読み込み中...</p>
+            </div>
+          </div>
+        </section>
+
+        <!-- Features Section -->
+        <section class="features-section">
+          <h2>🎯 投票システムの特徴</h2>
+          <div class="features-grid">
+            <div class="feature-card">
+              <div class="feature-icon">🗳️</div>
+              <h3>多様な投票形式</h3>
+              <p>
+                複数選択、評価スケール、テキスト入力、はい/いいえ、ランキングなど、様々な形式の投票に対応
+              </p>
+            </div>
+
+            <div class="feature-card">
+              <div class="feature-icon">⚡</div>
+              <h3>リアルタイム更新</h3>
+              <p>投票結果がリアルタイムで更新され、ライブ感のある参加体験を提供</p>
+            </div>
+
+            <div class="feature-card">
+              <div class="feature-icon">🔒</div>
+              <h3>匿名投票対応</h3>
+              <p>匿名での投票が可能で、参加者が安心して意見を表明できる環境を提供</p>
+            </div>
+
+            <div class="feature-card">
+              <div class="feature-icon">📈</div>
+              <h3>詳細な分析</h3>
+              <p>投票結果の詳細分析、トレンド表示、キーワード分析など豊富な分析機能</p>
+            </div>
+
+            <div class="feature-card">
+              <div class="feature-icon">💬</div>
+              <h3>Q&Aシステム</h3>
+              <p>質問投稿とモデレーション機能で、効率的なQ&Aセッションをサポート</p>
+            </div>
+
+            <div class="feature-card">
+              <div class="feature-icon">🎮</div>
+              <h3>ゲーミフィケーション</h3>
+              <p>参加バッジ、エンゲージメントリーダーボード、報酬システムで参加を促進</p>
+            </div>
+          </div>
+        </section>
+
+        <!-- Instructions Section -->
+        <section class="instructions-section">
+          <h2>📋 使い方ガイド</h2>
+          <div class="instructions-content">
+            <div class="instruction-step">
+              <div class="step-number">1</div>
+              <div class="step-content">
+                <h3>イベントを選択</h3>
+                <p>
+                  参加したいイベントを上部のドロップダウンから選択してください。そのイベントで作成された投票が表示されます。
+                </p>
+              </div>
+            </div>
+
+            <div class="instruction-step">
+              <div class="step-number">2</div>
+              <div class="step-content">
+                <h3>投票に参加</h3>
+                <p>
+                  アクティブな投票に回答できます。投票形式に応じて、選択肢を選んだり、評価を付けたり、テキストを入力してください。
+                </p>
+              </div>
+            </div>
+
+            <div class="instruction-step">
+              <div class="step-number">3</div>
+              <div class="step-content">
+                <h3>結果を確認</h3>
+                <p>
+                  投票の設定に応じて、即座に結果が表示されたり、投票終了後に結果を確認できます。
+                </p>
+              </div>
+            </div>
+
+            <div class="instruction-step">
+              <div class="step-number">4</div>
+              <div class="step-content">
+                <h3>フィードバック提供</h3>
+                <p>
+                  投票以外にも、発表やイベントに対するフィードバックを提供して、コミュニティの向上に貢献しましょう。
+                </p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Tips Section -->
+        <section class="tips-section">
+          <h2>💡 投票のコツ</h2>
+          <div class="tips-grid">
+            <div class="tip-card">
+              <h4>🎯 明確な意見表明</h4>
+              <p>質問をよく読んで、自分の考えを明確に表現しましょう。</p>
+            </div>
+
+            <div class="tip-card">
+              <h4>⏰ タイムリーな参加</h4>
+              <p>制限時間がある投票は、早めに参加することをお勧めします。</p>
+            </div>
+
+            <div class="tip-card">
+              <h4>💭 建設的なフィードバック</h4>
+              <p>テキスト回答では、建設的で具体的なフィードバックを心がけましょう。</p>
+            </div>
+
+            <div class="tip-card">
+              <h4>🔄 リアルタイム参加</h4>
+              <p>ライブイベント中の投票は、発表と連動してリアルタイムで参加しましょう。</p>
+            </div>
+          </div>
+        </section>
+      </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="main-footer">
+      <div class="footer-container">
+        <div class="footer-content">
+          <div class="footer-section">
+            <h3>Lightning Talk Circle</h3>
+            <p>技術の魅力を短時間で伝える、学びと発見の場</p>
+          </div>
+
+          <div class="footer-section">
+            <h4>機能</h4>
+            <ul>
+              <li><a href="/events.html">イベント管理</a></li>
+              <li><a href="/interactive-polls.html">投票システム</a></li>
+              <li><a href="/speaker-dashboard.html">スピーカーダッシュボード</a></li>
+              <li><a href="/chat.html">リアルタイムチャット</a></li>
+            </ul>
+          </div>
+
+          <div class="footer-section">
+            <h4>サポート</h4>
+            <ul>
+              <li><a href="/help.html">ヘルプ</a></li>
+              <li><a href="/contact.html">お問い合わせ</a></li>
+              <li><a href="/privacy.html">プライバシーポリシー</a></li>
+              <li><a href="/terms.html">利用規約</a></li>
+            </ul>
+          </div>
+
+          <div class="footer-section">
+            <h4>フォロー</h4>
+            <div class="social-links">
+              <a href="#" class="social-link" aria-label="Twitter">🐦</a>
+              <a href="#" class="social-link" aria-label="GitHub">🐙</a>
+              <a href="#" class="social-link" aria-label="Discord">💬</a>
+            </div>
+          </div>
+        </div>
+
+        <div class="footer-bottom">
+          <p>&copy; 2024 Lightning Talk Circle. All rights reserved.</p>
+        </div>
+      </div>
+    </footer>
+
+    <!-- Practice Timer Modal -->
+    <div id="practiceTimerModal" class="modal">
+      <div class="modal-content timer-modal">
+        <span class="close">&times;</span>
+        <h2>🎯 練習タイマー</h2>
+
+        <div class="timer-display">
+          <div class="timer-circle">
+            <svg width="200" height="200">
+              <circle cx="100" cy="100" r="90" stroke="#e8ecf0" stroke-width="8" fill="none" />
+              <circle
+                id="timerProgress"
+                cx="100"
+                cy="100"
+                r="90"
+                stroke="#4CAF50"
+                stroke-width="8"
+                fill="none"
+                stroke-dasharray="565.48"
+                stroke-dashoffset="565.48"
+              />
+            </svg>
+            <div class="timer-text">
+              <span id="timerMinutes">05</span>:<span id="timerSeconds">00</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="timer-controls">
+          <button id="startTimer" class="btn btn-success">▶️ 開始</button>
+          <button id="pauseTimer" class="btn btn-warning" disabled>⏸️ 一時停止</button>
+          <button id="resetTimer" class="btn btn-secondary">🔄 リセット</button>
+        </div>
+
+        <div class="timer-tips">
+          <h4>💡 練習のコツ</h4>
+          <ul>
+            <li>🎯 時間内に要点をまとめて話す練習をしましょう</li>
+            <li>📊 最初と最後の30秒は特に重要です</li>
+            <li>🗣️ 聞き手を意識した話し方を心がけましょう</li>
+            <li>💪 繰り返し練習で自信をつけましょう</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="/js/utils/logger.js"></script>
+    <script src="/js/utils/websocket.js"></script>
+    <script src="/js/auth.js"></script>
+    <script src="/js/interactive-polls.js"></script>
+
+    <script>
+      // Initialize page-specific functionality
+      document.addEventListener('DOMContentLoaded', async () => {
+        // Load available events for selector
+        await loadEventsForSelector();
+
+        // Handle authentication state
+        const authToken = localStorage.getItem('authToken');
+        const userInfo = localStorage.getItem('userInfo');
+
+        if (authToken && userInfo) {
+          const user = JSON.parse(userInfo);
+          updateAuthUI(user);
+
+          // Show create poll button for authenticated users
+          const createPollBtn = document.getElementById('createPollBtn');
+          if (createPollBtn) {
+            createPollBtn.style.display = 'block';
+          }
+        }
+      });
+
+      async function loadEventsForSelector() {
+        try {
+          const response = await fetch('/api/events');
+          if (!response.ok) throw new Error('Failed to load events');
+
+          const data = await response.json();
+          const eventSelector = document.getElementById('eventSelector');
+
+          if (eventSelector && data.events) {
+            // Clear existing options except the first one
+            eventSelector.innerHTML = '<option value="">イベントを選択...</option>';
+
+            data.events.forEach(event => {
+              const option = document.createElement('option');
+              option.value = event.id;
+              option.textContent = `${event.title} (${new Date(event.date).toLocaleDateString('ja-JP')})`;
+              eventSelector.appendChild(option);
+            });
+          }
+        } catch (error) {
+          console.error('Error loading events:', error);
+        }
+      }
+
+      function updateAuthUI(user) {
+        const userMenu = document.querySelector('.user-menu');
+        const authButtons = document.querySelector('.auth-buttons');
+        const userAvatar = document.querySelector('.user-avatar');
+        const userName = document.querySelector('.user-name');
+
+        if (userMenu && authButtons) {
+          userMenu.style.display = 'flex';
+          authButtons.style.display = 'none';
+
+          if (userAvatar) userAvatar.src = user.avatar || '/images/default-avatar.png';
+          if (userName) userName.textContent = user.name;
+        }
+      }
+
+      // Setup logout functionality
+      document.addEventListener('click', e => {
+        if (e.target.classList.contains('logout-btn')) {
+          localStorage.removeItem('authToken');
+          localStorage.removeItem('userInfo');
+          window.location.reload();
+        }
+      });
+
+      // Mobile menu toggle
+      document.addEventListener('click', e => {
+        if (e.target.classList.contains('mobile-menu-toggle')) {
+          const navLinks = document.querySelector('.nav-links');
+          navLinks.classList.toggle('active');
+        }
+      });
+    </script>
+  </body>
+</html>

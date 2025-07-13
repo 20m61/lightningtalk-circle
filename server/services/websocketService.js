@@ -117,7 +117,18 @@ export class WebSocketService extends EventEmitter {
 
       // Message routing
       socket.on('message', data => this.handleMessage(socket, data));
+
+      // Poll-specific events
+      socket.on('poll:subscribe', data => this.handlePollSubscribe(socket, data));
+      socket.on('poll:unsubscribe', data => this.handlePollUnsubscribe(socket, data));
+
+      // Chat events (existing)
+      socket.on('chat:message', data => this.handleChatMessage(socket, data));
+      socket.on('chat:typing', data => this.handleChatTyping(socket, data));
     });
+
+    // Register default poll message handlers
+    this.registerPollHandlers();
   }
 
   /**
@@ -442,6 +453,151 @@ export class WebSocketService extends EventEmitter {
   }
 
   /**
+   * Handle poll subscription
+   */
+  handlePollSubscribe(socket, data) {
+    const { eventId, pollId } = data;
+
+    if (eventId) {
+      const eventRoom = `event:${eventId}`;
+      socket.join(eventRoom);
+      logger.info(`Socket ${socket.id} subscribed to event polls: ${eventId}`);
+    }
+
+    if (pollId) {
+      const pollRoom = `poll:${pollId}`;
+      socket.join(pollRoom);
+      logger.info(`Socket ${socket.id} subscribed to poll: ${pollId}`);
+    }
+
+    socket.emit('poll:subscribed', { eventId, pollId });
+  }
+
+  /**
+   * Handle poll unsubscription
+   */
+  handlePollUnsubscribe(socket, data) {
+    const { eventId, pollId } = data;
+
+    if (eventId) {
+      const eventRoom = `event:${eventId}`;
+      socket.leave(eventRoom);
+      logger.info(`Socket ${socket.id} unsubscribed from event polls: ${eventId}`);
+    }
+
+    if (pollId) {
+      const pollRoom = `poll:${pollId}`;
+      socket.leave(pollRoom);
+      logger.info(`Socket ${socket.id} unsubscribed from poll: ${pollId}`);
+    }
+
+    socket.emit('poll:unsubscribed', { eventId, pollId });
+  }
+
+  /**
+   * Handle chat message (existing functionality)
+   */
+  handleChatMessage(socket, data) {
+    const { room, message, metadata } = data;
+
+    if (!room || !message) return;
+
+    // Broadcast to room
+    socket.to(room).emit('chat:message', {
+      id: `msg_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
+      userId: socket.userId,
+      message,
+      metadata,
+      timestamp: new Date().toISOString()
+    });
+  }
+
+  /**
+   * Handle chat typing indicator
+   */
+  handleChatTyping(socket, data) {
+    const { room, isTyping } = data;
+
+    if (!room) return;
+
+    socket.to(room).emit('chat:typing', {
+      userId: socket.userId,
+      isTyping,
+      timestamp: new Date().toISOString()
+    });
+  }
+
+  /**
+   * Register poll-specific message handlers
+   */
+  registerPollHandlers() {
+    // Poll lifecycle events
+    this.registerMessageHandler('pollStarted', (socket, payload, options) => {
+      const { eventId } = payload;
+      this.broadcastToRoom(`event:${eventId}`, 'pollStarted', payload);
+    });
+
+    this.registerMessageHandler('pollEnded', (socket, payload, options) => {
+      const { eventId } = payload;
+      this.broadcastToRoom(`event:${eventId}`, 'pollEnded', payload);
+    });
+
+    this.registerMessageHandler('pollResponse', (socket, payload, options) => {
+      const { eventId, pollId } = payload;
+
+      // Broadcast to event room
+      this.broadcastToRoom(`event:${eventId}`, 'pollResponse', payload);
+
+      // Broadcast to specific poll room
+      this.broadcastToRoom(`poll:${pollId}`, 'pollResponse', payload);
+    });
+
+    // Q&A events
+    this.registerMessageHandler('questionSubmitted', (socket, payload, options) => {
+      const { eventId } = payload;
+      this.broadcastToRoom(`event:${eventId}`, 'questionSubmitted', payload);
+    });
+
+    this.registerMessageHandler('questionApproved', (socket, payload, options) => {
+      const { eventId } = payload;
+      this.broadcastToRoom(`event:${eventId}`, 'questionApproved', payload);
+    });
+
+    // Feedback events
+    this.registerMessageHandler('feedbackSubmitted', (socket, payload, options) => {
+      const { eventId, talkId } = payload;
+      this.broadcastToRoom(`event:${eventId}`, 'feedbackSubmitted', payload);
+      if (talkId) {
+        this.broadcastToRoom(`talk:${talkId}`, 'feedbackSubmitted', payload);
+      }
+    });
+  }
+
+  /**
+   * Broadcast poll update
+   */
+  broadcastPollUpdate(pollData) {
+    const { eventId, id: pollId } = pollData;
+
+    // Broadcast to event subscribers
+    this.broadcastToRoom(`event:${eventId}`, 'pollUpdate', pollData);
+
+    // Broadcast to specific poll subscribers
+    this.broadcastToRoom(`poll:${pollId}`, 'pollUpdate', pollData);
+  }
+
+  /**
+   * Broadcast poll results
+   */
+  broadcastPollResults(pollId, results) {
+    this.broadcastToRoom(`poll:${pollId}`, 'pollResults', {
+      pollId,
+      results,
+      timestamp: new Date().toISOString()
+    });
+  }
+
+  /**
    * Graceful shutdown
    */
   async shutdown() {
@@ -461,6 +617,11 @@ export class WebSocketService extends EventEmitter {
           resolve();
         });
       });
+    }
+
+    // Clear intervals
+    if (this.metricsInterval) {
+      clearInterval(this.metricsInterval);
     }
 
     // Clear data
