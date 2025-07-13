@@ -25,6 +25,7 @@ import swaggerRouter from './routes/swagger.js';
 import votingRouter from './routes/voting.js';
 import chatRouter from './routes/chat.js';
 import mediaRouter from './routes/media.js';
+import speakersRouter from './routes/speakers.js';
 
 // Middleware
 import { errorHandler, notFoundHandler } from './middleware/errorHandler.js';
@@ -259,6 +260,7 @@ class LightningTalkServer {
     this.app.use('/api/voting', votingRouter);
     this.app.use('/api/chat', chatRouter);
     this.app.use('/api/media', mediaRouter);
+    this.app.use('/api/speakers', validateCSRF(), speakersRouter);
     this.app.use('/api/admin', authenticateToken, requireAdmin, adminRouter);
     this.app.use('/api/health', healthRouter);
 
