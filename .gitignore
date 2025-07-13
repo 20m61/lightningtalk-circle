@@ -72,6 +72,10 @@ out/
 # Testing
 coverage/
 test-results/
+test-results.json
+test-results.xml
+test-archives/
+playwright-report/
 *.heapsnapshot
 .jest-cache/
 
@@ -130,6 +134,9 @@ server/lambda-handler.js
 *.pid
 *.lock
 .cache/
+
+# Dynamic data files
+server/data/voting_sessions.json
 
 # Backup files
 *.backup
