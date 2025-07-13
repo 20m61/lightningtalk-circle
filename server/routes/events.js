@@ -110,14 +110,34 @@ router.get(
   '/search',
   [
     query('q').optional().trim().isLength({ max: 200 }).withMessage('Search query too long'),
-    query('status').optional().isIn(['upcoming', 'ongoing', 'completed', 'cancelled', 'all']),
-    query('venue').optional().isIn(['online', 'offline', 'hybrid', 'all']),
+    query('status')
+      .optional()
+      .isIn(['upcoming', 'ongoing', 'completed', 'cancelled', 'all'])
+      .withMessage('Invalid status'),
+    query('venue')
+      .optional()
+      .isIn(['online', 'offline', 'hybrid', 'all'])
+      .withMessage('Invalid venue type'),
     query('dateFrom').optional().isISO8601().withMessage('Invalid date format'),
     query('dateTo').optional().isISO8601().withMessage('Invalid date format'),
-    query('page').optional().isInt({ min: 1 }).toInt(),
-    query('perPage').optional().isInt({ min: 1, max: 100 }).toInt(),
-    query('sortBy').optional().isIn(['date', 'createdAt', 'title']),
-    query('sortOrder').optional().isIn(['asc', 'desc'])
+    query('page')
+      .optional()
+      .isInt({ min: 1 })
+      .withMessage('Page must be a positive integer')
+      .toInt(),
+    query('perPage')
+      .optional()
+      .isInt({ min: 1, max: 100 })
+      .withMessage('Per page must be 1-100')
+      .toInt(),
+    query('sortBy')
+      .optional()
+      .isIn(['date', 'createdAt', 'title'])
+      .withMessage('Invalid sort field'),
+    query('sortOrder')
+      .optional()
+      .isIn(['asc', 'desc'])
+      .withMessage('Sort order must be asc or desc')
   ],
   handleValidationErrors,
   async (req, res) => {
