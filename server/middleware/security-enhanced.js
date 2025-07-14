@@ -3,8 +3,10 @@
  * 追加のセキュリティ強化機能を提供
  */
 
-const crypto = require('crypto');
-const { logger } = require('../utils/logger');
+import crypto from 'crypto';
+import { createLogger } from '../utils/logger.js';
+
+const logger = createLogger('Security');
 
 /**
  * HTTPS Redirect Middleware
@@ -329,7 +331,7 @@ const auditLogger = action => {
   };
 };
 
-module.exports = {
+export {
   enforceHTTPS,
   enhancedSecurityHeaders,
   verifyRequestSignature,

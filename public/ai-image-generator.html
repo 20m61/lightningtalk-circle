@@ -1,0 +1,482 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>AI画像生成 - Lightning Talk Circle</title>
+    <meta
+      name="description"
+      content="DALL-E 3を使用したAI画像生成システム。イベントポスター、ソーシャルメディア、プレゼンテーション用の画像を自動生成。"
+    />
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="/css/style.css" />
+    <link rel="stylesheet" href="/css/ai-image-generator.css" />
+
+    <!-- Preload critical resources -->
+    <link rel="preload" href="/js/ai-image-generator.js" as="script" />
+    <link
+      rel="preload"
+      href="/fonts/NotoSansJP-Regular.woff2"
+      as="font"
+      type="font/woff2"
+      crossorigin
+    />
+
+    <!-- Meta tags for SEO and social sharing -->
+    <meta property="og:title" content="AI画像生成 - Lightning Talk Circle" />
+    <meta property="og:description" content="DALL-E 3を使用したプロフェッショナルなAI画像生成" />
+    <meta property="og:type" content="website" />
+    <meta property="og:image" content="/images/ai-generator-og.jpg" />
+    <meta name="twitter:card" content="summary_large_image" />
+
+    <!-- PWA tags -->
+    <meta name="theme-color" content="#2563eb" />
+    <link rel="manifest" href="/manifest.json" />
+
+    <!-- API Configuration -->
+    <script>
+      window.API_CONFIG = {
+        apiEndpoint: '/api',
+        wsEndpoint:
+          window.location.protocol === 'https:' ? 'wss:' : 'ws:' + '//' + window.location.host
+      };
+    </script>
+  </head>
+  <body>
+    <!-- Skip link for accessibility -->
+    <a href="#main-content" class="skip-link">メインコンテンツへスキップ</a>
+
+    <!-- Header -->
+    <header class="header" role="banner">
+      <div class="container">
+        <div class="header-content">
+          <div class="header-left">
+            <a href="/" class="logo" aria-label="Lightning Talk Circle ホームへ戻る">
+              <span class="logo-text">Lightning Talk Circle</span>
+            </a>
+            <nav class="breadcrumb" aria-label="パンくずリスト">
+              <ol class="breadcrumb-list">
+                <li><a href="/">ホーム</a></li>
+                <li><a href="/dashboard.html">ダッシュボード</a></li>
+                <li aria-current="page">AI画像生成</li>
+              </ol>
+            </nav>
+          </div>
+          <div class="header-right">
+            <div class="usage-stats" role="status" aria-label="使用状況">
+              <!-- Dynamic usage stats will be inserted here -->
+            </div>
+            <div class="user-menu">
+              <button class="user-menu-trigger" aria-expanded="false" aria-haspopup="true">
+                <img src="/images/default-avatar.png" alt="ユーザーアバター" class="user-avatar" />
+                <span class="user-name">ユーザー</span>
+              </button>
+            </div>
+          </div>
+        </div>
+        <div class="usage-progress">
+          <div class="usage-progress-bar" role="progressbar" aria-label="今日の使用量"></div>
+        </div>
+      </div>
+    </header>
+
+    <!-- Main Content -->
+    <main id="main-content" class="main-content" role="main">
+      <div class="container">
+        <!-- Hero Section -->
+        <section class="hero-section" aria-labelledby="hero-title">
+          <div class="hero-content">
+            <h1 id="hero-title" class="hero-title">
+              <span class="hero-icon">🎨</span>
+              AI画像生成
+            </h1>
+            <p class="hero-description">
+              DALL-E 3を使用して、プロフェッショナルなイベント画像を自動生成。
+              テンプレートから選択して、あなたのライトニングトークイベントを魅力的に演出しましょう。
+            </p>
+            <div class="hero-features">
+              <div class="feature-item">
+                <span class="feature-icon">⚡</span>
+                <span class="feature-text">30-60秒で生成</span>
+              </div>
+              <div class="feature-item">
+                <span class="feature-icon">🎯</span>
+                <span class="feature-text">プロ品質</span>
+              </div>
+              <div class="feature-item">
+                <span class="feature-icon">🎨</span>
+                <span class="feature-text">カスタマイズ可能</span>
+              </div>
+              <div class="feature-item">
+                <span class="feature-icon">📱</span>
+                <span class="feature-text">モバイル対応</span>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Navigation Tabs -->
+        <nav class="tabs-nav" role="tablist" aria-label="AI画像生成のタブ">
+          <button
+            class="tab-button active"
+            role="tab"
+            aria-selected="true"
+            aria-controls="templates-panel"
+            id="templates-tab"
+          >
+            <span class="tab-icon">📋</span>
+            <span class="tab-text">テンプレート</span>
+          </button>
+          <button
+            class="tab-button"
+            role="tab"
+            aria-selected="false"
+            aria-controls="generations-panel"
+            id="generations-tab"
+          >
+            <span class="tab-icon">🖼️</span>
+            <span class="tab-text">生成履歴</span>
+          </button>
+          <button
+            class="tab-button"
+            role="tab"
+            aria-selected="false"
+            aria-controls="help-panel"
+            id="help-tab"
+          >
+            <span class="tab-icon">❓</span>
+            <span class="tab-text">ヘルプ</span>
+          </button>
+        </nav>
+
+        <!-- Tab Panels -->
+        <div class="tab-panels">
+          <!-- Templates Panel -->
+          <section
+            id="templates-panel"
+            class="tab-panel active"
+            role="tabpanel"
+            aria-labelledby="templates-tab"
+          >
+            <div class="panel-header">
+              <h2 class="panel-title">AI画像テンプレート</h2>
+              <p class="panel-description">
+                用途に応じてテンプレートを選択し、AI画像生成を開始してください。
+              </p>
+            </div>
+
+            <!-- Template Filters -->
+            <div class="template-filters" role="group" aria-label="テンプレートフィルター">
+              <label for="category-filter" class="filter-label">カテゴリ:</label>
+              <select id="category-filter" class="filter-select" aria-label="カテゴリでフィルター">
+                <option value="">すべて</option>
+                <option value="event-poster">イベントポスター</option>
+                <option value="social-media">ソーシャルメディア</option>
+                <option value="presentation">プレゼンテーション</option>
+                <option value="banner">バナー</option>
+                <option value="logo">ロゴ</option>
+              </select>
+            </div>
+
+            <!-- Templates Grid -->
+            <div class="templates-grid" role="grid" aria-label="テンプレート一覧">
+              <!-- Templates will be dynamically inserted here -->
+              <div class="loading-placeholder" aria-hidden="true">
+                <div class="loading-spinner"></div>
+                <span>テンプレートを読み込み中...</span>
+              </div>
+            </div>
+          </section>
+
+          <!-- Generations Panel -->
+          <section
+            id="generations-panel"
+            class="tab-panel"
+            role="tabpanel"
+            aria-labelledby="generations-tab"
+          >
+            <div class="panel-header">
+              <h2 class="panel-title">生成履歴</h2>
+              <p class="panel-description">これまでに生成したAI画像の履歴です。</p>
+
+              <div class="generations-filters" role="group" aria-label="生成履歴フィルター">
+                <label for="status-filter" class="filter-label">ステータス:</label>
+                <select
+                  id="status-filter"
+                  class="filter-select"
+                  aria-label="ステータスでフィルター"
+                >
+                  <option value="">すべて</option>
+                  <option value="completed">完了</option>
+                  <option value="pending">待機中</option>
+                  <option value="generating">生成中</option>
+                  <option value="failed">失敗</option>
+                </select>
+
+                <button class="btn btn-secondary refresh-btn" aria-label="履歴を更新">
+                  <span class="btn-icon">🔄</span>
+                  <span class="btn-text">更新</span>
+                </button>
+              </div>
+            </div>
+
+            <!-- Generations Grid -->
+            <div class="generations-grid" role="grid" aria-label="生成履歴一覧">
+              <!-- Generations will be dynamically inserted here -->
+              <div class="loading-placeholder" aria-hidden="true">
+                <div class="loading-spinner"></div>
+                <span>生成履歴を読み込み中...</span>
+              </div>
+            </div>
+          </section>
+
+          <!-- Help Panel -->
+          <section id="help-panel" class="tab-panel" role="tabpanel" aria-labelledby="help-tab">
+            <div class="panel-header">
+              <h2 class="panel-title">AI画像生成ヘルプ</h2>
+              <p class="panel-description">AI画像生成システムの使い方とベストプラクティス</p>
+            </div>
+
+            <div class="help-content">
+              <div class="help-section">
+                <h3 class="help-section-title">🚀 はじめ方</h3>
+                <ol class="help-steps">
+                  <li>テンプレートタブから用途に適したテンプレートを選択</li>
+                  <li>画像の説明を詳しく入力（10文字以上推奨）</li>
+                  <li>スタイル、サイズ、品質を選択</li>
+                  <li>必要に応じてカスタマイズ項目を入力</li>
+                  <li>「画像を生成」ボタンをクリック</li>
+                  <li>30-60秒で生成完了</li>
+                </ol>
+              </div>
+
+              <div class="help-section">
+                <h3 class="help-section-title">💡 効果的なプロンプトのコツ</h3>
+                <div class="tips-grid">
+                  <div class="tip-card">
+                    <h4>具体的に描写</h4>
+                    <p>
+                      「青いポスター」ではなく「深い青のグラデーション背景にモダンな白文字」のように詳しく記述
+                    </p>
+                  </div>
+                  <div class="tip-card">
+                    <h4>スタイルを指定</h4>
+                    <p>
+                      「ミニマリスト」「コーポレート」「クリエイティブ」など、求めるデザインスタイルを明記
+                    </p>
+                  </div>
+                  <div class="tip-card">
+                    <h4>色合いを指定</h4>
+                    <p>「暖かい色調」「クールトーン」「パステルカラー」など、色の方向性を指定</p>
+                  </div>
+                  <div class="tip-card">
+                    <h4>雰囲気を伝える</h4>
+                    <p>
+                      「プロフェッショナル」「エネルギッシュ」「親しみやすい」など、伝えたい雰囲気を記述
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              <div class="help-section">
+                <h3 class="help-section-title">⚙️ 設定オプション</h3>
+                <div class="settings-info">
+                  <div class="setting-item">
+                    <strong>スタイル:</strong>
+                    <ul>
+                      <li><strong>ビビッド:</strong> 鮮やかで印象的な色合い、ダイナミックな構図</li>
+                      <li><strong>ナチュラル:</strong> 自然で落ち着いた色合い、リアルな表現</li>
+                    </ul>
+                  </div>
+                  <div class="setting-item">
+                    <strong>サイズ:</strong>
+                    <ul>
+                      <li><strong>正方形 (1024x1024):</strong> Instagram投稿、プロフィール画像</li>
+                      <li><strong>横長 (1792x1024):</strong> Webバナー、プレゼンテーション</li>
+                      <li><strong>縦長 (1024x1792):</strong> ポスター、ストーリー投稿</li>
+                    </ul>
+                  </div>
+                  <div class="setting-item">
+                    <strong>品質:</strong>
+                    <ul>
+                      <li><strong>標準:</strong> 一般的な用途、コスト効率重視</li>
+                      <li><strong>HD:</strong> 印刷用途、最高品質</li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+
+              <div class="help-section">
+                <h3 class="help-section-title">📊 使用制限と料金</h3>
+                <div class="usage-info">
+                  <div class="usage-tier">
+                    <h4>フリープラン</h4>
+                    <ul>
+                      <li>1日5回まで生成可能</li>
+                      <li>標準品質のみ</li>
+                      <li>基本テンプレート</li>
+                    </ul>
+                  </div>
+                  <div class="usage-tier">
+                    <h4>プレミアムプラン</h4>
+                    <ul>
+                      <li>1日20回まで生成可能</li>
+                      <li>HD品質対応</li>
+                      <li>すべてのテンプレート</li>
+                      <li>バリエーション生成</li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+
+              <div class="help-section">
+                <h3 class="help-section-title">🛡️ コンテンツポリシー</h3>
+                <div class="policy-info">
+                  <p>以下のコンテンツは生成できません：</p>
+                  <ul>
+                    <li>暴力的・不適切なコンテンツ</li>
+                    <li>著作権・商標権を侵害するコンテンツ</li>
+                    <li>個人のプライバシーを侵害するコンテンツ</li>
+                    <li>有名人の肖像を模倣するコンテンツ</li>
+                  </ul>
+                </div>
+              </div>
+
+              <div class="help-section">
+                <h3 class="help-section-title">🔧 トラブルシューティング</h3>
+                <div class="troubleshooting">
+                  <details class="faq-item">
+                    <summary>生成に失敗しました</summary>
+                    <p>
+                      プロンプトがコンテンツポリシーに違反していないか確認してください。また、一時的なサーバー負荷が原因の場合は、少し時間をおいて再試行してください。
+                    </p>
+                  </details>
+                  <details class="faq-item">
+                    <summary>期待した画像と違う</summary>
+                    <p>
+                      より具体的なプロンプトを入力するか、バリエーション機能を使用して別のパターンを生成してみてください。
+                    </p>
+                  </details>
+                  <details class="faq-item">
+                    <summary>生成に時間がかかる</summary>
+                    <p>
+                      通常30-60秒で完了しますが、サーバー負荷によっては時間がかかる場合があります。ページを閉じずにお待ちください。
+                    </p>
+                  </details>
+                </div>
+              </div>
+            </div>
+          </section>
+        </div>
+      </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer" role="contentinfo">
+      <div class="container">
+        <div class="footer-content">
+          <div class="footer-section">
+            <h3>AI画像生成について</h3>
+            <p>OpenAI DALL-E 3を使用したプロフェッショナルな画像生成サービス</p>
+          </div>
+          <div class="footer-section">
+            <h3>サポート</h3>
+            <ul>
+              <li><a href="/help">ヘルプセンター</a></li>
+              <li><a href="/contact">お問い合わせ</a></li>
+              <li><a href="/privacy">プライバシーポリシー</a></li>
+            </ul>
+          </div>
+          <div class="footer-section">
+            <h3>関連サービス</h3>
+            <ul>
+              <li><a href="/image-editor.html">画像エディター</a></li>
+              <li><a href="/event-creation.html">イベント作成</a></li>
+              <li><a href="/interactive-polls.html">投票システム</a></li>
+            </ul>
+          </div>
+        </div>
+        <div class="footer-bottom">
+          <p>&copy; 2024 Lightning Talk Circle. All rights reserved.</p>
+          <p>Powered by OpenAI DALL-E 3</p>
+        </div>
+      </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="/js/utils/websocket.js"></script>
+    <script src="/js/ai-image-generator.js"></script>
+    <script src="/js/common.js"></script>
+
+    <!-- Tab functionality -->
+    <script>
+      document.addEventListener('DOMContentLoaded', () => {
+        // Tab switching
+        const tabButtons = document.querySelectorAll('.tab-button');
+        const tabPanels = document.querySelectorAll('.tab-panel');
+
+        tabButtons.forEach(button => {
+          button.addEventListener('click', () => {
+            const targetId = button.getAttribute('aria-controls');
+
+            // Update buttons
+            tabButtons.forEach(btn => {
+              btn.classList.remove('active');
+              btn.setAttribute('aria-selected', 'false');
+            });
+            button.classList.add('active');
+            button.setAttribute('aria-selected', 'true');
+
+            // Update panels
+            tabPanels.forEach(panel => {
+              panel.classList.remove('active');
+            });
+            document.getElementById(targetId).classList.add('active');
+          });
+        });
+
+        // Filter functionality
+        const categoryFilter = document.getElementById('category-filter');
+        if (categoryFilter) {
+          categoryFilter.addEventListener('change', e => {
+            // This will be handled by the AI Image Generator class
+            if (window.aiImageGenerator) {
+              window.aiImageGenerator.filterTemplates(e.target.value);
+            }
+          });
+        }
+
+        const statusFilter = document.getElementById('status-filter');
+        if (statusFilter) {
+          statusFilter.addEventListener('change', e => {
+            // This will be handled by the AI Image Generator class
+            if (window.aiImageGenerator) {
+              window.aiImageGenerator.filterGenerations(e.target.value);
+            }
+          });
+        }
+
+        // Refresh button
+        const refreshBtn = document.querySelector('.refresh-btn');
+        if (refreshBtn) {
+          refreshBtn.addEventListener('click', () => {
+            if (window.aiImageGenerator) {
+              window.aiImageGenerator.loadUserGenerations().then(() => {
+                window.aiImageGenerator.renderGenerations();
+              });
+            }
+          });
+        }
+      });
+    </script>
+
+    <!-- Analytics -->
+    <script src="/js/analytics.js"></script>
+    <script>
+      if (window.analytics) {
+        window.analytics.trackPageView('ai-image-generator');
+      }
+    </script>
+  </body>
+</html>

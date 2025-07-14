@@ -3,11 +3,13 @@
  * アナリティクスデータの収集と処理
  */
 
-const express = require('express');
+import express from 'express';
+import { body, validationResult } from 'express-validator';
+import { createLogger } from '../utils/logger.js';
+import { v4 as uuidv4 } from 'uuid';
+
 const router = express.Router();
-const { body, validationResult } = require('express-validator');
-const { logger } = require('../utils/logger');
-const { v4: uuidv4 } = require('uuid');
+const logger = createLogger('Analytics');
 
 // In-memory storage for demo (replace with database in production)
 const analyticsStore = {
@@ -541,4 +543,4 @@ function average(arr) {
   return arr.reduce((a, b) => a + b, 0) / arr.length;
 }
 
-module.exports = router;
+export default router;

@@ -127,6 +127,19 @@ npm run env:switch           # 環境間をインタラクティブに切り替�
 npm run env:backup           # 現在の環境設定をバックアップ
 ```
 
+### 監視とセキュリティ
+
+```bash
+# CloudWatch監視
+npm run monitoring:init      # 監視サービスとCloudWatchアラームの初期化
+npm run monitoring:test      # 監視接続性テスト
+npm run monitoring:setup     # AWS監視インフラのセットアップ
+npm run monitoring:dashboard # 監視ダッシュボードを開く
+
+# セキュリティ設定
+npm run security:setup       # 本番環境用のセキュア設定生成
+```
+
 ## アーキテクチャと主要コンポーネント
 
 ### ルートレベル構造
@@ -153,6 +166,8 @@ npm run env:backup           # 現在の環境設定をバックアップ
 - **認証**: AWS Cognito + Google OAuth統合とJWTベース認証
 - **データベース**: ファイルベースとDynamoDBストレージのデュアルサポート
 - **リアルタイム**: ライブアップデート用Socket.io統合
+- **監視**: CloudWatch統合とリアルタイムメトリクス収集
+- **セキュリティ**: 強化されたセキュリティミドルウェアとロギング
 - **APIドキュメント**: `/api/docs`のOpenAPI/Swagger
 
 ### モダンWordPressアーキテクチャ (lightningtalk-modern/)
@@ -191,6 +206,44 @@ npm run env:backup           # 現在の環境設定をバックアップ
 - **Webpack**: レガシービルドサポート
 - **Storybook**: コンポーネントライブラリ開発
 - **Docker**: 本番最適化用マルチステージビルド
+
+### 監視・セキュリティアーキテクチャ
+
+#### CloudWatch統合監視システム
+
+- **CloudWatchService** (`server/services/cloudWatchService.js`)
+  - 構造化ログをCloudWatch Logsに送信
+  - カスタムメトリクスをCloudWatch Metricsに送信
+  - アラーム管理と作成の自動化
+  - オプションAWS SDK依存関係（ローカル開発時は無効化）
+
+- **MonitoringService** (`server/services/monitoringService.js`)
+  - リアルタイムメトリクス収集（CPU、メモリ、レスポンス時間）
+  - ヘルスチェックとデータベース接続監視
+  - しきい値ベースアラート生成
+  - WebSocketを使用したリアルタイムダッシュボード
+
+#### セキュリティ強化システム
+
+- **Enhanced Security Middleware** (`server/middleware/security-enhanced.js`)
+  - HTTPS強制とセキュリティヘッダー拡張
+  - リクエスト署名検証
+  - IPアクセス制御（ホワイトリスト/ブラックリスト）
+  - セキュリティイベント監視とログ記録
+
+- **CloudWatch Middleware** (`server/middleware/cloudWatchMiddleware.js`)
+  - APIリクエスト自動ログ記録
+  - 認証イベント追跡
+  - パフォーマンスメトリクス収集
+  - セキュリティイベント自動検知
+
+#### 監視エンドポイント
+
+- `/api/monitoring/health` - 拡張ヘルスチェック
+- `/api/monitoring/dashboard` - リアルタイムダッシュボード
+- `/api/monitoring/metrics` - メトリクス取得
+- `/api/monitoring/alerts` - アラート管理
+- `/api/monitoring/performance` - パフォーマンス分析
 
 ## 環境設定
 
@@ -263,6 +316,14 @@ API_ENDPOINT=https://9qyaz7n47j.execute-api.ap-northeast-1.amazonaws.com/prod/ap
 # Google OAuth設定（Cognito統合用）
 GOOGLE_CLIENT_ID=your-google-client-id.apps.googleusercontent.com
 GOOGLE_CLIENT_SECRET=stored-in-aws-secrets-manager
+
+# 監視とロギング設定
+ENABLE_CLOUDWATCH_LOGS=true
+ENABLE_CLOUDWATCH_METRICS=true
+CLOUDWATCH_LOG_GROUP=/aws/lambda/lightningtalk-circle
+CLOUDWATCH_NAMESPACE=LightningTalkCircle/Application
+MONITORING_ENABLED=true
+MONITORING_INTERVAL=30000
 ```
 
 ### WordPress開発
@@ -469,6 +530,7 @@ OAuth認証システムを実装しています：
   - `/api/participants/*` - 登録
   - `/api/talks/*` - トーク提出
   - `/api/admin/*` - 管理機能
+  - `/api/monitoring/*` - 監視とヘルスチェック
 
 ## トラブルシューティング
 
@@ -481,6 +543,8 @@ OAuth認証システムを実装しています：
 5. **GitHub API制限**: 有効なGITHUB_TOKENを確認
 6. **Cognito認証エラー**: Google OAuth設定とAWS Secrets Managerの確認
 7. **国際化ドメイン名**: 本番環境では`xn--6wym69a.com`（発表.com）を使用
+8. **CloudWatch接続エラー**: AWS認証情報とリージョン設定を確認
+9. **監視メトリクス未表示**: `ENABLE_CLOUDWATCH_METRICS=true`の設定を確認
 
 ### デバッグモード
 
@@ -498,5 +562,31 @@ OAuth認証システムを実装しています：
 - **パフォーマンス**: 画像最適化、アセット圧縮、WebPサポート
 - **セキュリティ**: AWS
   Cognito認証、入力検証、レート制限、セキュリティヘッダー、WAF、XSS対策
-- **観測可能性**: 包括的なモニタリングとアラート
+- **観測可能性**:
+  CloudWatch統合、リアルタイム監視、構造化ログ、カスタムメトリクス
 - **コスト意識**: 予算モニタリングと最適化
+
+## AWS専用実装ポリシー
+
+このプロジェクトはAWS専用サービス構成として開発されています：
+
+### 制限事項
+
+- 外部APIサービス（OpenAI、その他AI サービス）は使用しません
+- サードパーティサービスとの統合は最小限に抑制（Google OAuth は除く）
+- AI機能は将来的にAWSネイティブサービスで実装予定
+
+### 推奨AWSサービス
+
+- **AI/ML**: AWS Bedrock、AWS Rekognition、AWS Textract
+- **認証**: AWS Cognito（Google OAuth統合済み）
+- **ストレージ**: Amazon S3、Amazon EFS
+- **データベース**: Amazon DynamoDB、Amazon RDS
+- **コンピューティング**: AWS Lambda、Amazon ECS Fargate
+- **監視**: Amazon CloudWatch、AWS X-Ray
+
+### AI画像生成機能の現状
+
+- OpenAI DALL-E統合は無効化済み
+- AWS Bedrockベースの実装を計画中
+- 現在はプレースホルダー実装を提供

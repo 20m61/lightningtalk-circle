@@ -96,10 +96,14 @@ export class MonitoringService extends EventEmitter {
     // Track by status code
     this.metrics.requests.byStatus[status] = (this.metrics.requests.byStatus[status] || 0) + 1;
 
-    // Update performance metrics
+    // Update performance metrics with size limit
     this.metrics.performance.responseTimes.push(duration);
-    if (this.metrics.performance.responseTimes.length > 1000) {
-      this.metrics.performance.responseTimes.shift();
+    
+    // Prevent memory leak by limiting array size
+    const MAX_RESPONSE_TIMES = 1000;
+    if (this.metrics.performance.responseTimes.length > MAX_RESPONSE_TIMES) {
+      this.metrics.performance.responseTimes = 
+        this.metrics.performance.responseTimes.slice(-MAX_RESPONSE_TIMES);
     }
 
     this.calculatePerformanceMetrics();

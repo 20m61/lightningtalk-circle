@@ -409,14 +409,15 @@ describe('Analytics Module', () => {
       // Disable analytics
       analytics.disable();
 
-      // Track should not work when disabled due to sampling = 0
+      // Track should not work when disabled
       analytics.track('test', {});
       analytics.flush();
 
-      // Since sampling is 0, nothing should be sent
+      // Since analytics is disabled, nothing should be sent
       expect(global.fetch).not.toHaveBeenCalled();
 
-      // Re-enable analytics
+      // Re-enable analytics and clear mock again to ensure clean state
+      global.fetch.mockClear();
       analytics.enable();
       analytics.track('test', {});
       analytics.flush();
