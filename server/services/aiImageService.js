@@ -8,6 +8,7 @@ import { createLogger } from '../utils/logger.js';
 import sharp from 'sharp';
 import fs from 'fs/promises';
 import path from 'path';
+import bedrockImageService from './bedrockImageService.js';
 
 const logger = createLogger('AIImageService');
 
@@ -19,15 +20,23 @@ class AIImageService {
       premium: 20,
       admin: 100
     };
-    this.isEnabled = false; // Disabled for AWS-only implementation
+    this.isEnabled = false; // Will be enabled when Bedrock is available
+    this.bedrockService = bedrockImageService;
     this.init();
   }
 
   async init() {
-    // AI image generation disabled - using placeholder implementation
-    logger.info('AI Image Service initialized (AWS-only mode - external AI services disabled)');
+    // Check if Bedrock service is available
+    if (this.bedrockService && this.bedrockService.getStatus().enabled) {
+      this.isEnabled = true;
+      logger.info('AI Image Service initialized with AWS Bedrock support');
+    } else {
+      logger.info(
+        'AI Image Service initialized (AWS Bedrock not available - using placeholder mode)'
+      );
+    }
 
-    // Load templates for future AWS-based implementation
+    // Load templates for AWS-based implementation
     await this.loadTemplates();
   }
 
@@ -175,16 +184,22 @@ class AIImageService {
   }
 
   /**
-   * Generate AI image (AWS-only placeholder implementation)
+   * Generate AI image (AWS Bedrock implementation)
    */
   async generateImage(generation) {
     const startTime = Date.now();
 
     try {
+      // Check if Bedrock is available
+      if (this.bedrockService && this.bedrockService.getStatus().enabled) {
+        // Use Bedrock service for generation
+        logger.info('Using AWS Bedrock for image generation');
+        return await this.bedrockService.generateImage(generation);
+      }
+
+      // Fallback to placeholder if Bedrock is not available
       if (!this.isEnabled) {
-        throw new Error(
-          'AI image generation is disabled (AWS-only mode - external services not available)'
-        );
+        throw new Error('AI image generation is not available (AWS Bedrock not configured)');
       }
 
       // Get template
@@ -193,20 +208,13 @@ class AIImageService {
         throw new Error('Template not found');
       }
 
-      // TODO: Implement AWS-based image generation
-      // This could use:
-      // - AWS Rekognition for image analysis
-      // - AWS Bedrock for AI model access (when available)
-      // - AWS Lambda for processing
-      // - S3 for storage
-
       const generationTime = Date.now() - startTime;
 
-      logger.info('AI image generation requested but disabled (AWS-only mode)');
+      logger.info('AI image generation requested but Bedrock not available');
 
       return {
         success: false,
-        error: 'AI image generation temporarily disabled - AWS-only services under development',
+        error: 'AI image generation requires AWS Bedrock configuration',
         generationTime
       };
     } catch (error) {
@@ -306,14 +314,32 @@ class AIImageService {
    * Get user's tier/role
    */
   async getUserTier(userId) {
-    // Implement based on your user system
-    // For now, return 'free' as default
     try {
-      // You would query your user database here
-      // const user = await database.read('users', userId);
-      // return user.tier || 'free';
+      const database = await import('./database.js').then(m => m.getDatabase());
+      const user = await database.read('users', userId);
+
+      if (!user) {
+        return 'free';
+      }
+
+      // Check user role
+      if (user.role === 'admin') {
+        return 'admin';
+      }
+
+      // Check for premium subscription
+      if (user.subscription && user.subscription.tier === 'premium') {
+        const now = new Date();
+        const expiresAt = new Date(user.subscription.expiresAt);
+        if (expiresAt > now) {
+          return 'premium';
+        }
+      }
+
+      // Default to free tier
       return 'free';
     } catch (error) {
+      logger.error('Error getting user tier:', error);
       return 'free';
     }
   }
@@ -322,16 +348,23 @@ class AIImageService {
    * Count user's generations today
    */
   async countUserGenerationsToday(userId, startDate, endDate) {
-    // Implement based on your database
-    // This is a placeholder - you'll need to implement the actual query
     try {
-      // const count = await database.query('aiImageGenerations', {
-      //   userId,
-      //   createdAt: { $gte: startDate, $lt: endDate }
-      // });
-      // return count.length;
-      return 0;
+      const database = await import('./database.js').then(m => m.getDatabase());
+
+      // Query generations for the user within the date range
+      const generations = await database.query('aiImageGenerations', {
+        userId
+      });
+
+      // Filter by date range
+      const todayGenerations = generations.filter(gen => {
+        const createdAt = new Date(gen.createdAt);
+        return createdAt >= startDate && createdAt < endDate;
+      });
+
+      return todayGenerations.length;
     } catch (error) {
+      logger.error('Error counting user generations today:', error);
       return 0;
     }
   }

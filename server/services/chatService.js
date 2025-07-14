@@ -69,7 +69,7 @@ export class ChatService extends EventEmitter {
       'chat:leave-room': this.handleLeaveRoom.bind(this),
       'chat:send-message': this.handleSendMessage.bind(this),
       'chat:edit-message': this.handleEditMessage.bind(this),
-      'chat:delete-message': this.handleDeleteMessage.bind(this),
+      // 'chat:delete-message': this.handleDeleteMessage.bind(this), // TODO: Implement
       'chat:add-reaction': this.handleAddReaction.bind(this),
       'chat:remove-reaction': this.handleRemoveReaction.bind(this),
       'chat:typing-start': this.handleTypingStart.bind(this),
@@ -413,6 +413,37 @@ export class ChatService extends EventEmitter {
   }
 
   /**
+   * Handle user presence updates
+   */
+  async handleUserPresence(socket, payload) {
+    const { roomId, status } = payload;
+    const userId = socket.userId;
+
+    try {
+      // Update user presence in room
+      const room = await this.getChatRoom(roomId);
+      if (!room) return;
+
+      const participant = room.participants.find(p => p.userId === userId);
+      if (participant) {
+        participant.lastSeenAt = new Date();
+        participant.status = status || 'online';
+        await this.database.update('chatRooms', roomId, room);
+      }
+
+      // Broadcast presence update to room
+      socket.to(roomId).emit('chat:presence-update', {
+        roomId,
+        userId,
+        status: status || 'online',
+        timestamp: new Date()
+      });
+    } catch (error) {
+      logger.error(`Error handling user presence:`, error);
+    }
+  }
+
+  /**
    * Handle reactions
    */
   async handleAddReaction(socket, payload) {
@@ -449,6 +480,44 @@ export class ChatService extends EventEmitter {
       }
     } catch (error) {
       logger.error(`Error adding reaction:`, error);
+      socket.emit('chat:error', { error: error.message, code: 'REACTION_FAILED' });
+    }
+  }
+
+  /**
+   * Handle remove reaction
+   */
+  async handleRemoveReaction(socket, payload) {
+    const { messageId, emoji } = payload;
+    const userId = socket.userId;
+
+    try {
+      const message = await this.getMessage(messageId);
+      if (!message) {
+        socket.emit('chat:error', { error: 'Message not found', code: 'MESSAGE_NOT_FOUND' });
+        return;
+      }
+
+      const reaction = message.reactions.find(r => r.emoji === emoji);
+      if (reaction && reaction.users.includes(userId)) {
+        reaction.users = reaction.users.filter(id => id !== userId);
+        reaction.count = reaction.users.length;
+
+        if (reaction.count === 0) {
+          message.reactions = message.reactions.filter(r => r.emoji !== emoji);
+        }
+
+        await this.updateMessage(message);
+
+        websocketService.broadcastToRoom(message.roomId, 'chat:reaction-removed', {
+          messageId,
+          emoji,
+          userId,
+          count: reaction.count
+        });
+      }
+    } catch (error) {
+      logger.error(`Error removing reaction:`, error);
       socket.emit('chat:error', { error: error.message, code: 'REACTION_FAILED' });
     }
   }

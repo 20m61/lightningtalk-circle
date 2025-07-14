@@ -933,3 +933,15 @@ export class DatabaseService extends EventEmitter {
     this.removeAllListeners();
   }
 }
+
+// Export singleton instance
+let databaseInstance = null;
+
+export function getDatabase() {
+  if (!databaseInstance) {
+    databaseInstance = new DatabaseService();
+  }
+  return databaseInstance;
+}
+
+export default DatabaseService;

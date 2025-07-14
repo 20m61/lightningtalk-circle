@@ -1005,3 +1005,61 @@
   color: #333;
   line-height: 1.4;
 }
+
+/* AWS Ready Notice */
+.aws-ready-notice {
+  background: linear-gradient(135deg, #232f3e 0%, #131a22 100%);
+  color: white;
+  padding: 1rem;
+  border-radius: 8px;
+  margin-bottom: 1.5rem;
+  box-shadow: 0 4px 12px rgba(255, 153, 0, 0.2);
+  border: 1px solid #ff9900;
+  position: relative;
+  overflow: hidden;
+}
+
+.aws-ready-notice::before {
+  content: "";
+  position: absolute;
+  top: -50%;
+  right: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(circle, rgba(255, 153, 0, 0.1) 0%, transparent 70%);
+  animation: shimmer 3s ease-in-out infinite;
+}
+
+@keyframes shimmer {
+  0%,
+  100% {
+    transform: translate(0, 0);
+    opacity: 0.5;
+  }
+  50% {
+    transform: translate(-20%, -20%);
+    opacity: 1;
+  }
+}
+
+.aws-ready-notice .notice-content {
+  position: relative;
+  z-index: 1;
+}
+
+.aws-ready-notice .notice-icon {
+  font-size: 1.5rem;
+  margin-right: 0.75rem;
+}
+
+.aws-ready-notice .notice-text strong {
+  display: block;
+  font-size: 1.1rem;
+  margin-bottom: 0.25rem;
+  color: #ff9900;
+}
+
+.aws-ready-notice .notice-text p {
+  margin: 0;
+  opacity: 0.95;
+}

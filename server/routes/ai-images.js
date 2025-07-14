@@ -9,9 +9,12 @@ import rateLimit from 'express-rate-limit';
 import { createLogger } from '../utils/logger.js';
 import { authenticateToken } from '../middleware/auth.js';
 import { AIImageService } from '../services/aiImageService.js';
+import { getDatabase } from '../services/database.js';
+import { v4 as uuidv4 } from 'uuid';
 
 const router = express.Router();
 const logger = createLogger('AIImages');
+const database = getDatabase();
 
 // Rate limiting for AI image generation (more restrictive due to API costs)
 const aiImageRateLimit = rateLimit({
@@ -271,8 +274,8 @@ router.post(
         completedAt: null
       };
 
-      // Save generation request
-      await req.app.locals.database.create('aiImageGenerations', generation);
+      // Save generation request to database
+      await database.create('aiImageGenerations', generation);
 
       // Start async generation process
       AIImageService.generateImage(generation)
@@ -285,7 +288,7 @@ router.post(
           generation.metadata.generation_time = result.generationTime;
           generation.metadata.cost = result.cost;
 
-          await req.app.locals.database.update('aiImageGenerations', generationId, generation);
+          await database.update('aiImageGenerations', generationId, generation);
 
           // Broadcast completion via WebSocket
           if (req.app.locals.websocketService) {
@@ -305,7 +308,7 @@ router.post(
           generation.metadata.error = error.message;
           generation.completedAt = new Date();
 
-          await req.app.locals.database.update('aiImageGenerations', generationId, generation);
+          await database.update('aiImageGenerations', generationId, generation);
 
           logger.error(`AI image generation failed: ${generationId}`, error);
         });
@@ -446,8 +449,8 @@ router.get(
         queryParams.status = status;
       }
 
-      // Get generations
-      let generations = await req.app.locals.database.query('aiImageGenerations', queryParams);
+      // Get generations from database
+      let generations = await database.query('aiImageGenerations', queryParams);
 
       // Sort by creation date (newest first)
       generations.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
@@ -637,6 +640,57 @@ router.post(
     }
   }
 );
+
+/**
+ * @swagger
+ * /api/ai-images/status:
+ *   get:
+ *     summary: Get AI image generation service status
+ *     tags: [AI Images]
+ *     security:
+ *       - bearerAuth: []
+ */
+router.get('/status', async (req, res) => {
+  try {
+    // Check if AI image service is enabled
+    const serviceEnabled = AIImageService.isEnabled;
+
+    // Check Bedrock status if available
+    let bedrockStatus = null;
+    if (AIImageService.bedrockService) {
+      bedrockStatus = AIImageService.bedrockService.getStatus();
+    }
+
+    const status = {
+      enabled: serviceEnabled,
+      service: 'AWS Bedrock',
+      bedrock: bedrockStatus,
+      features: {
+        templates: true,
+        customization: true,
+        variations: false, // Variations not supported in Bedrock mode
+        history: true,
+        rateLimit: true
+      },
+      limits: AIImageService.dailyLimits,
+      models: bedrockStatus?.models || {},
+      timestamp: new Date().toISOString()
+    };
+
+    res.json({
+      success: true,
+      data: status
+    });
+
+    logger.info('AI image service status checked');
+  } catch (error) {
+    logger.error('Error checking AI image service status:', error);
+    res.status(500).json({
+      success: false,
+      error: 'Failed to check service status'
+    });
+  }
+});
 
 /**
  * @swagger

@@ -48,19 +48,36 @@ class AIImageGenerator {
   /**
    * Show AWS-only mode notice
    */
-  showAWSOnlyNotice() {
+  async showAWSOnlyNotice() {
+    // Check service status first
+    const status = await this.checkServiceStatus();
+
     const notice = document.createElement('div');
-    notice.className = 'aws-only-notice';
-    notice.innerHTML = `
-      <div class="notice-content">
-        <span class="notice-icon">🔧</span>
-        <div class="notice-text">
-          <strong>開発中機能</strong>
-          <p>AI画像生成機能は現在AWS専用サービスとして開発中です。外部APIサービスは一時的に無効化されています。</p>
+    notice.className = status.bedrock?.enabled ? 'aws-ready-notice' : 'aws-only-notice';
+
+    if (status.bedrock?.enabled) {
+      notice.innerHTML = `
+        <div class="notice-content">
+          <span class="notice-icon">✨</span>
+          <div class="notice-text">
+            <strong>AWS Bedrock 画像生成</strong>
+            <p>Claude 3とStable Diffusion XLを使用した高品質な画像生成が利用可能です。</p>
+          </div>
+          <button class="notice-close">&times;</button>
         </div>
-        <button class="notice-close">&times;</button>
-      </div>
-    `;
+      `;
+    } else {
+      notice.innerHTML = `
+        <div class="notice-content">
+          <span class="notice-icon">🔧</span>
+          <div class="notice-text">
+            <strong>開発中機能</strong>
+            <p>AI画像生成機能は現在AWS Bedrockとの統合を準備中です。まもなく利用可能になります。</p>
+          </div>
+          <button class="notice-close">&times;</button>
+        </div>
+      `;
+    }
 
     const container = document.querySelector('.container');
     if (container) {
@@ -79,6 +96,29 @@ class AIImageGenerator {
         notice.remove();
       }
     }, 10000);
+  }
+
+  /**
+   * Check service status
+   */
+  async checkServiceStatus() {
+    try {
+      const response = await fetch(`${this.apiEndpoint}/ai-images/status`, {
+        headers: {
+          Authorization: `Bearer ${this.authToken}`
+        }
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to check service status');
+      }
+
+      const data = await response.json();
+      return data;
+    } catch (error) {
+      console.error('Error checking service status:', error);
+      return { enabled: false };
+    }
   }
 
   /**

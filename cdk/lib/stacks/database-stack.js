@@ -174,6 +174,37 @@ class DatabaseStack extends Stack {
       projectionType: dynamodb.ProjectionType.ALL,
     });
 
+    // AI Image Generations table
+    this.aiImageGenerationsTable = new dynamodb.Table(this, 'AIImageGenerationsTable', {
+      tableName: `${config.app.name}-${config.app.stage}-ai-image-generations`,
+      partitionKey: { name: 'id', type: dynamodb.AttributeType.STRING },
+      sortKey: { name: 'userId', type: dynamodb.AttributeType.STRING },
+      billingMode: dynamodb.BillingMode.PAY_PER_REQUEST,
+      removalPolicy: config.app.environment === 'production' 
+        ? RemovalPolicy.RETAIN 
+        : RemovalPolicy.DESTROY,
+      pointInTimeRecoverySpecification: {
+        pointInTimeRecoveryEnabled: config.app.environment === 'production',
+      },
+      encryption: dynamodb.TableEncryption.AWS_MANAGED,
+    });
+
+    // Add GSI for user-based queries
+    this.aiImageGenerationsTable.addGlobalSecondaryIndex({
+      indexName: 'user-date-index',
+      partitionKey: { name: 'userId', type: dynamodb.AttributeType.STRING },
+      sortKey: { name: 'createdAt', type: dynamodb.AttributeType.STRING },
+      projectionType: dynamodb.ProjectionType.ALL,
+    });
+
+    // Add GSI for status-based queries
+    this.aiImageGenerationsTable.addGlobalSecondaryIndex({
+      indexName: 'status-index',
+      partitionKey: { name: 'status', type: dynamodb.AttributeType.STRING },
+      sortKey: { name: 'createdAt', type: dynamodb.AttributeType.STRING },
+      projectionType: dynamodb.ProjectionType.ALL,
+    });
+
     // Create API credentials secret for DynamoDB access
     const apiCredentials = new secretsmanager.Secret(this, 'ApiCredentials', {
       secretName: `${config.app.name}/${config.app.stage}/api/credentials`,
@@ -246,6 +277,11 @@ class DatabaseStack extends Stack {
     new CfnOutput(this, 'TalksTableName', {
       value: this.talksTable.tableName,
       description: 'DynamoDB Talks table name',
+    });
+
+    new CfnOutput(this, 'AIImageGenerationsTableName', {
+      value: this.aiImageGenerationsTable.tableName,
+      description: 'DynamoDB AI Image Generations table name',
     });
 
     new CfnOutput(this, 'ParticipationVotesTableName', {
