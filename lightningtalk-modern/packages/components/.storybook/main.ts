@@ -74,7 +74,7 @@ const config: StorybookConfig = {
       },
       // minify設定を調整
       minify: 'esbuild',
-      target: 'es2015',
+      target: 'es2020',
       // ソースマップを無効化してビルドエラーを回避
       sourcemap: false,
       // chunkSizeLimitを調整

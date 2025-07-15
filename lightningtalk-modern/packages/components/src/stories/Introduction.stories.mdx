@@ -1,0 +1,362 @@
+import { Meta, Story, Canvas, IconGallery, IconItem } from '@storybook/blocks';
+
+<Meta title="Introduction" />
+
+# Lightning Talk Circle UI コンポーネントライブラリ
+
+<div
+  style={{
+    background: 'linear-gradient(135deg, #FF6B35 0%, #4ECDC4 100%)',
+    padding: '3rem',
+    borderRadius: '1rem',
+    color: 'white',
+    marginBottom: '2rem',
+    textAlign: 'center'
+  }}
+>
+  <h1 style={{ fontSize: '3rem', marginBottom: '1rem' }}>⚡ Lightning Talk Circle</h1>
+  <p style={{ fontSize: '1.25rem', opacity: 0.9 }}>
+    最高に楽しくて、リッチで使いやすい、マルチデバイス対応のUIコンポーネント集
+  </p>
+</div>
+
+## 🎯 ミッション
+
+Lightning Talk Circleは、ライトニングトークイベントを**もっと楽しく、もっと魅力的に**するためのWebプラットフォームです。
+このコンポーネントライブラリは、そのビジョンを実現するために作られました。
+
+## ✨ 特徴
+
+<div
+  style={{
+    display: 'grid',
+    gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))',
+    gap: '1.5rem',
+    marginTop: '2rem'
+  }}
+>
+  <div
+    style={{
+      background: 'white',
+      padding: '2rem',
+      borderRadius: '0.75rem',
+      boxShadow: '0 4px 6px rgba(0,0,0,0.1)',
+      border: '2px solid transparent',
+      backgroundImage: 'linear-gradient(white, white), linear-gradient(135deg, #FF6B35, #4ECDC4)',
+      backgroundOrigin: 'border-box',
+      backgroundClip: 'padding-box, border-box'
+    }}
+  >
+    <h3 style={{ color: '#FF6B35', marginBottom: '0.5rem' }}>🎨 美しいデザイン</h3>
+    <p>グラデーション、アニメーション、インタラクティブな要素で視覚的に魅力的な体験を提供</p>
+  </div>
+
+  <div
+    style={{
+      background: 'white',
+      padding: '2rem',
+      borderRadius: '0.75rem',
+      boxShadow: '0 4px 6px rgba(0,0,0,0.1)',
+      border: '2px solid transparent',
+      backgroundImage: 'linear-gradient(white, white), linear-gradient(135deg, #4ECDC4, #44A08D)',
+      backgroundOrigin: 'border-box',
+      backgroundClip: 'padding-box, border-box'
+    }}
+  >
+    <h3 style={{ color: '#4ECDC4', marginBottom: '0.5rem' }}>📱 マルチデバイス対応</h3>
+    <p>モバイル、タブレット、デスクトップ、全てのデバイスで最適な表示とインタラクション</p>
+  </div>
+
+  <div
+    style={{
+      background: 'white',
+      padding: '2rem',
+      borderRadius: '0.75rem',
+      boxShadow: '0 4px 6px rgba(0,0,0,0.1)',
+      border: '2px solid transparent',
+      backgroundImage: 'linear-gradient(white, white), linear-gradient(135deg, #F7931E, #F27121)',
+      backgroundOrigin: 'border-box',
+      backgroundClip: 'padding-box, border-box'
+    }}
+  >
+    <h3 style={{ color: '#F7931E', marginBottom: '0.5rem' }}>♿ アクセシビリティ</h3>
+    <p>WCAG 2.1 AA準拠、キーボードナビゲーション、スクリーンリーダー対応</p>
+  </div>
+
+  <div
+    style={{
+      background: 'white',
+      padding: '2rem',
+      borderRadius: '0.75rem',
+      boxShadow: '0 4px 6px rgba(0,0,0,0.1)',
+      border: '2px solid transparent',
+      backgroundImage: 'linear-gradient(white, white), linear-gradient(135deg, #0099CC, #006BA6)',
+      backgroundOrigin: 'border-box',
+      backgroundClip: 'padding-box, border-box'
+    }}
+  >
+    <h3 style={{ color: '#0099CC', marginBottom: '0.5rem' }}>⚡ 高速パフォーマンス</h3>
+    <p>最適化されたアニメーション、遅延読み込み、効率的なレンダリング</p>
+  </div>
+</div>
+
+## 🚀 はじめに
+
+### インストール
+
+```bash
+npm install @lightningtalk/components
+```
+
+### 基本的な使い方
+
+```tsx
+import { Button, Header, EventCard } from '@lightningtalk/components';
+
+function App() {
+  return (
+    <>
+      <Header
+        navItems={[
+          { label: 'ホーム', href: '/' },
+          { label: 'イベント', href: '/events' }
+        ]}
+      />
+
+      <Button variant="primary" size="large">
+        イベントに参加する
+      </Button>
+
+      <EventCard
+        event={{
+          title: '第10回ライトニングトーク大会',
+          date: '2024-03-15',
+          participants: 42
+        }}
+      />
+    </>
+  );
+}
+```
+
+## 🎨 デザインシステム
+
+### カラーパレット
+
+<div style={{ marginTop: '1rem' }}>
+  <h4>プライマリカラー</h4>
+  <div style={{ display: 'flex', gap: '1rem', marginBottom: '2rem' }}>
+    <div style={{ textAlign: 'center' }}>
+      <div
+        style={{ width: '100px', height: '100px', borderRadius: '0.5rem', background: '#FF6B35' }}
+      ></div>
+      <p style={{ marginTop: '0.5rem', fontSize: '0.875rem' }}>
+        Primary
+        <br />
+        #FF6B35
+      </p>
+    </div>
+    <div style={{ textAlign: 'center' }}>
+      <div
+        style={{ width: '100px', height: '100px', borderRadius: '0.5rem', background: '#E85320' }}
+      ></div>
+      <p style={{ marginTop: '0.5rem', fontSize: '0.875rem' }}>
+        Primary Dark
+        <br />
+        #E85320
+      </p>
+    </div>
+    <div style={{ textAlign: 'center' }}>
+      <div
+        style={{ width: '100px', height: '100px', borderRadius: '0.5rem', background: '#FF8F5C' }}
+      ></div>
+      <p style={{ marginTop: '0.5rem', fontSize: '0.875rem' }}>
+        Primary Light
+        <br />
+        #FF8F5C
+      </p>
+    </div>
+  </div>
+
+  <h4>セカンダリカラー</h4>
+  <div style={{ display: 'flex', gap: '1rem', marginBottom: '2rem' }}>
+    <div style={{ textAlign: 'center' }}>
+      <div
+        style={{ width: '100px', height: '100px', borderRadius: '0.5rem', background: '#4ECDC4' }}
+      ></div>
+      <p style={{ marginTop: '0.5rem', fontSize: '0.875rem' }}>
+        Secondary
+        <br />
+        #4ECDC4
+      </p>
+    </div>
+    <div style={{ textAlign: 'center' }}>
+      <div
+        style={{ width: '100px', height: '100px', borderRadius: '0.5rem', background: '#39B0A8' }}
+      ></div>
+      <p style={{ marginTop: '0.5rem', fontSize: '0.875rem' }}>
+        Secondary Dark
+        <br />
+        #39B0A8
+      </p>
+    </div>
+    <div style={{ textAlign: 'center' }}>
+      <div
+        style={{ width: '100px', height: '100px', borderRadius: '0.5rem', background: '#6FE3DB' }}
+      ></div>
+      <p style={{ marginTop: '0.5rem', fontSize: '0.875rem' }}>
+        Secondary Light
+        <br />
+        #6FE3DB
+      </p>
+    </div>
+  </div>
+</div>
+
+### タイポグラフィ
+
+<div style={{ marginTop: '2rem' }}>
+  <div style={{ marginBottom: '1rem' }}>
+    <h1 style={{ fontSize: 'clamp(3rem, 8vw, 3.75rem)', fontWeight: 900 }}>見出し特大</h1>
+    <code style={{ fontSize: '0.875rem' }}>font-size: var(--text-5xl)</code>
+  </div>
+  <div style={{ marginBottom: '1rem' }}>
+    <h2 style={{ fontSize: 'clamp(2.25rem, 6vw, 3rem)', fontWeight: 700 }}>見出し大</h2>
+    <code style={{ fontSize: '0.875rem' }}>font-size: var(--text-4xl)</code>
+  </div>
+  <div style={{ marginBottom: '1rem' }}>
+    <h3 style={{ fontSize: 'clamp(1.875rem, 5vw, 2.25rem)', fontWeight: 600 }}>見出し中</h3>
+    <code style={{ fontSize: '0.875rem' }}>font-size: var(--text-3xl)</code>
+  </div>
+  <div style={{ marginBottom: '1rem' }}>
+    <p style={{ fontSize: 'clamp(1rem, 2.5vw, 1.125rem)' }}>本文テキスト</p>
+    <code style={{ fontSize: '0.875rem' }}>font-size: var(--text-base)</code>
+  </div>
+</div>
+
+## 🎉 インタラクティブ要素
+
+### アニメーション効果
+
+<div
+  style={{
+    display: 'grid',
+    gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
+    gap: '1rem',
+    marginTop: '2rem'
+  }}
+>
+  <div
+    className="hover-lift"
+    style={{
+      background: 'white',
+      padding: '2rem',
+      borderRadius: '0.75rem',
+      boxShadow: '0 4px 6px rgba(0,0,0,0.1)',
+      cursor: 'pointer',
+      textAlign: 'center'
+    }}
+  >
+    <p>ホバーリフト</p>
+    <code style={{ fontSize: '0.75rem' }}>.hover-lift</code>
+  </div>
+
+  <div
+    className="hover-glow"
+    style={{
+      background: 'white',
+      padding: '2rem',
+      borderRadius: '0.75rem',
+      boxShadow: '0 4px 6px rgba(0,0,0,0.1)',
+      cursor: 'pointer',
+      textAlign: 'center'
+    }}
+  >
+    <p>ホバーグロー</p>
+    <code style={{ fontSize: '0.75rem' }}>.hover-glow</code>
+  </div>
+
+  <div
+    className="hover-scale"
+    style={{
+      background: 'white',
+      padding: '2rem',
+      borderRadius: '0.75rem',
+      boxShadow: '0 4px 6px rgba(0,0,0,0.1)',
+      cursor: 'pointer',
+      textAlign: 'center'
+    }}
+  >
+    <p>ホバースケール</p>
+    <code style={{ fontSize: '0.75rem' }}>.hover-scale</code>
+  </div>
+</div>
+
+## 📚 コンポーネントカテゴリ
+
+### Atoms（基本要素）
+
+- **Button**: ボタンコンポーネント
+- **Input**: 入力フィールド
+- **Badge**: バッジ表示
+- **Icon**: アイコン
+
+### Molecules（複合要素）
+
+- **Card**: カードコンテナ
+- **Modal**: モーダルダイアログ
+- **Toast**: 通知メッセージ
+- **Dropdown**: ドロップダウンメニュー
+
+### Organisms（機能単位）
+
+- **Header**: ヘッダーナビゲーション
+- **EventCard**: イベント情報カード
+- **ParticipantList**: 参加者リスト
+- **SpeakerDashboard**: スピーカーダッシュボード
+
+### Templates（ページテンプレート）
+
+- **EventPage**: イベントページレイアウト
+- **DashboardLayout**: ダッシュボードレイアウト
+- **LandingPage**: ランディングページ
+
+## 🌟 ベストプラクティス
+
+1. **レスポンシブファースト**: 全てのコンポーネントはモバイルファーストで設計
+2. **アクセシビリティ**: 適切なARIA属性とキーボードナビゲーション
+3. **パフォーマンス**: 遅延読み込みとコード分割を活用
+4. **一貫性**: デザイントークンを使用して統一感のあるUI
+5. **カスタマイズ性**: CSS変数とpropsで柔軟にカスタマイズ可能
+
+## 🛠️ 開発ツール
+
+- **React 18+**: 最新のReact機能を活用
+- **TypeScript**: 型安全な開発
+- **CSS Modules**: スコープ化されたスタイリング
+- **Storybook**: コンポーネントの開発とテスト
+- **Vitest**: ユニットテスト
+- **Playwright**: E2Eテストとビジュアルリグレッション
+
+## 📝 貢献ガイドライン
+
+1. フィーチャーブランチで開発
+2. コンポーネントには必ずStorybookストーリーを追加
+3. テストカバレッジ80%以上を維持
+4. アクセシビリティチェックを実施
+5. レビュー後にマージ
+
+---
+
+<div
+  style={{
+    textAlign: 'center',
+    marginTop: '4rem',
+    padding: '2rem',
+    background: 'linear-gradient(135deg, rgba(255, 107, 53, 0.1), rgba(78, 205, 196, 0.1))',
+    borderRadius: '1rem'
+  }}
+>
+  <h2>🚀 さあ、始めましょう！</h2>
+  <p>左側のサイドバーからコンポーネントを選んで、Lightning Talk Circleの世界を探索してください。</p>
+</div>

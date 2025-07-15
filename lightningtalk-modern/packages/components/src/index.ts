@@ -1,9 +1,19 @@
+// Main entry point for Lightning Talk UI Component Library
+
+// Basic UI Components
+export { Button } from './components/Button';
+export type { ButtonProps } from './components/Button';
+
+export { Card, CardHeader, CardContent, CardFooter } from './components/Card';
+export type {
+  CardProps,
+  CardHeaderProps,
+  CardContentProps,
+  CardFooterProps
+} from './components/Card';
+
 // Design Tokens
 export * from './tokens';
 
-// Components
-export * from './components';
-
-// Theme provider and utilities (to be implemented)
-// export { ThemeProvider } from './theme';
-// export { useTheme } from './hooks';
+// Version
+export const version = '1.0.0';

@@ -14,9 +14,9 @@ export const colors = {
     600: '#EA580C',
     700: '#C2410C',
     800: '#9A3412',
-    900: '#7C2D12',
+    900: '#7C2D12'
   },
-  
+
   // Secondary Colors
   secondary: {
     50: '#F0FDFA',
@@ -28,9 +28,9 @@ export const colors = {
     600: '#0D9488',
     700: '#0F766E',
     800: '#115E59',
-    900: '#134E4A',
+    900: '#134E4A'
   },
-  
+
   // Semantic Colors
   success: {
     50: '#F0FDF4',
@@ -42,9 +42,9 @@ export const colors = {
     600: '#059669',
     700: '#047857',
     800: '#065F46',
-    900: '#064E3B',
+    900: '#064E3B'
   },
-  
+
   warning: {
     50: '#FFFBEB',
     100: '#FEF3C7',
@@ -55,9 +55,9 @@ export const colors = {
     600: '#D97706',
     700: '#B45309',
     800: '#92400E',
-    900: '#78350F',
+    900: '#78350F'
   },
-  
+
   error: {
     50: '#FEF2F2',
     100: '#FEE2E2',
@@ -68,9 +68,9 @@ export const colors = {
     600: '#DC2626',
     700: '#B91C1C',
     800: '#991B1B',
-    900: '#7F1D1D',
+    900: '#7F1D1D'
   },
-  
+
   // Neutral Grays
   gray: {
     50: '#F9FAFB',
@@ -82,9 +82,9 @@ export const colors = {
     600: '#4B5563',
     700: '#374151',
     800: '#1F2937',
-    900: '#111827',
+    900: '#111827'
   },
-  
+
   // Text Colors
   text: {
     primary: '#1F2937',
@@ -93,8 +93,9 @@ export const colors = {
     inverse: '#FFFFFF',
     link: '#2563EB',
     linkHover: '#1D4ED8',
+    placeholder: '#9CA3AF'
   },
-  
+
   // Background Colors
   background: {
     primary: '#FFFFFF',
@@ -102,9 +103,9 @@ export const colors = {
     tertiary: '#F3F4F6',
     overlay: 'rgba(0, 0, 0, 0.5)',
     card: '#FFFFFF',
-    input: '#FFFFFF',
+    input: '#FFFFFF'
   },
-  
+
   // Border Colors
   border: {
     light: '#E5E7EB',
@@ -112,9 +113,9 @@ export const colors = {
     dark: '#9CA3AF',
     focus: '#2563EB',
     error: '#EF4444',
-    success: '#10B981',
+    success: '#10B981'
   },
-  
+
   // WordPress Admin Colors
   wordpress: {
     adminBlue: '#0073AA',
@@ -122,17 +123,17 @@ export const colors = {
     adminLight: '#F0F0F1',
     noticeYellow: '#F7DA00',
     noticeRed: '#DC3232',
-    noticeGreen: '#46B450',
+    noticeGreen: '#46B450'
   },
-  
+
   // Lightning Talk Specific
   lightningTalk: {
     electric: '#FFD700', // Gold/Electric
     speaker: '#8B5CF6', // Purple for speakers
     audience: '#06B6D4', // Cyan for audience
     stage: '#F59E0B', // Amber for stage/presentation
-    network: '#10B981', // Green for networking
-  },
+    network: '#10B981' // Green for networking
+  }
 } as const;
 
 // Type definitions
@@ -143,12 +144,12 @@ export type ColorToken = keyof typeof colors;
 export const getColor = (token: string, shade?: number): string => {
   const [colorName, colorShade] = token.split('.');
   const colorGroup = colors[colorName as keyof typeof colors];
-  
+
   if (!colorGroup) return '#000000';
-  
+
   if (typeof colorGroup === 'string') return colorGroup;
-  
-  const shadeKey = shade || parseInt(colorShade) || 500;
+
+  const shadeKey = shade || (colorShade ? parseInt(colorShade) : 500);
   return (colorGroup as any)[shadeKey] || '#000000';
 };
 
