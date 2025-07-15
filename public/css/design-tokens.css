@@ -8,31 +8,31 @@
      Color System - Lightning Talk Brand
      ======================================== */
 
-  /* Primary Colors - Lightning Talk Green */
-  --color-primary-50: #f0fdf4;
-  --color-primary-100: #dcfce7;
-  --color-primary-200: #bbf7d0;
-  --color-primary-300: #86efac;
-  --color-primary-400: #4ade80;
-  --color-primary-500: #22c55e; /* Main brand color */
-  --color-primary-600: #16a34a;
-  --color-primary-700: #15803d;
-  --color-primary-800: #166534;
-  --color-primary-900: #14532d;
-  --color-primary-950: #052e16;
+  /* Primary Colors - Lightning Talk Electric Orange */
+  --color-primary-50: #fff7ed;
+  --color-primary-100: #ffedd5;
+  --color-primary-200: #fed7aa;
+  --color-primary-300: #fdba74;
+  --color-primary-400: #fb923c;
+  --color-primary-500: #ff6b35; /* Main brand color - Electric Lightning */
+  --color-primary-600: #ea580c;
+  --color-primary-700: #c2410c;
+  --color-primary-800: #9a3412;
+  --color-primary-900: #7c2d12;
+  --color-primary-950: #431407;
 
-  /* Secondary Colors - Electric Blue */
-  --color-secondary-50: #eff6ff;
-  --color-secondary-100: #dbeafe;
-  --color-secondary-200: #bfdbfe;
-  --color-secondary-300: #93c5fd;
-  --color-secondary-400: #60a5fa;
-  --color-secondary-500: #3b82f6;
-  --color-secondary-600: #2563eb;
-  --color-secondary-700: #1d4ed8;
-  --color-secondary-800: #1e40af;
-  --color-secondary-900: #1e3a8a;
-  --color-secondary-950: #172554;
+  /* Secondary Colors - Electric Turquoise */
+  --color-secondary-50: #f0fdfa;
+  --color-secondary-100: #ccfbf1;
+  --color-secondary-200: #99f6e4;
+  --color-secondary-300: #5eead4;
+  --color-secondary-400: #2dd4bf;
+  --color-secondary-500: #4ecdc4; /* Lightning Talk turquoise */
+  --color-secondary-600: #0d9488;
+  --color-secondary-700: #0f766e;
+  --color-secondary-800: #115e59;
+  --color-secondary-900: #134e4a;
+  --color-secondary-950: #042f2e;
 
   /* Neutral Colors */
   --color-neutral-0: #ffffff;
@@ -387,6 +387,399 @@
     --card-border: 1px solid var(--color-neutral-200);
     --form-input-border: 1px solid var(--color-neutral-300);
   }
+  /* ========================================
+     Advanced Animation System
+     ======================================== */
+
+  /* Lightning Talk Brand Animations */
+  --animation-lightning-pulse: lightning-pulse var(--duration-1000) var(--ease-in-out) infinite;
+  --animation-lightning-glow: lightning-glow var(--duration-700) var(--ease-out) infinite alternate;
+  --animation-spark-trail: spark-trail var(--duration-300) var(--ease-out);
+  --animation-electric-slide: electric-slide var(--duration-500) var(--ease-back);
+  --animation-talk-bounce: talk-bounce var(--duration-200) var(--ease-back);
+
+  /* Micro-interactions */
+  --animation-button-press: scale(0.98);
+  --animation-button-hover: scale(1.02);
+  --animation-card-lift: translateY(-4px);
+  --animation-icon-spin: rotate(360deg);
+  --animation-shake: shake var(--duration-300) ease-in-out;
+
+  /* Loading animations */
+  --animation-skeleton: skeleton-pulse 1.5s ease-in-out infinite;
+  --animation-loading-dots: loading-dots 1.4s ease-in-out infinite;
+  --animation-progress-bar: progress-bar var(--duration-1000) ease-out;
+
+  /* Page transitions */
+  --animation-page-enter: slideInRight var(--duration-300) var(--ease-out);
+  --animation-page-exit: slideOutLeft var(--duration-300) var(--ease-in);
+  --animation-modal-enter: modal-scale-in var(--duration-200) var(--ease-out);
+  --animation-modal-exit: modal-scale-out var(--duration-150) var(--ease-in);
+
+  /* Fun interactive elements */
+  --animation-confetti: confetti var(--duration-1000) ease-out;
+  --animation-celebration: celebration var(--duration-500) var(--ease-back);
+  --animation-success-checkmark: checkmark-draw var(--duration-500) ease-in-out;
+
+  /* ========================================
+     Advanced Multi-Device System
+     ======================================== */
+
+  /* Responsive Breakpoints with Container Queries Support */
+  --mobile-xs: 320px; /* Small phones */
+  --mobile-sm: 375px; /* iPhone SE, older phones */
+  --mobile-md: 390px; /* iPhone 12/13/14 Pro */
+  --mobile-lg: 414px; /* iPhone Plus models */
+  --mobile-xl: 480px; /* Large phones landscape */
+
+  --tablet-sm: 768px; /* iPad Mini, small tablets */
+  --tablet-md: 834px; /* iPad Air */
+  --tablet-lg: 1024px; /* iPad Pro, large tablets */
+  --tablet-xl: 1180px; /* Tablet landscape + sidebar */
+
+  --desktop-sm: 1280px; /* Small desktop, laptop */
+  --desktop-md: 1440px; /* Standard desktop */
+  --desktop-lg: 1680px; /* Large desktop */
+  --desktop-xl: 1920px; /* Full HD displays */
+  --desktop-2xl: 2560px; /* 4K displays */
+
+  /* Device-specific optimizations */
+  --touch-target-min: 44px; /* iOS HIG minimum */
+  --touch-target-comfortable: 48px; /* Comfortable touch */
+  --mouse-target-min: 24px; /* Mouse precision */
+
+  /* Device capability detection */
+  --supports-hover: false; /* Will be overridden by CSS */
+  --supports-touch: true; /* Will be overridden by CSS */
+  --prefers-motion: true; /* Will be overridden by CSS */
+
+  /* Responsive spacing scales */
+  --space-responsive-xs: clamp(0.25rem, 1vw, 0.5rem);
+  --space-responsive-sm: clamp(0.5rem, 2vw, 1rem);
+  --space-responsive-md: clamp(1rem, 3vw, 1.5rem);
+  --space-responsive-lg: clamp(1.5rem, 4vw, 2.5rem);
+  --space-responsive-xl: clamp(2rem, 6vw, 4rem);
+  --space-responsive-2xl: clamp(3rem, 8vw, 6rem);
+
+  /* Responsive font scaling */
+  --font-scale-mobile: 0.9;
+  --font-scale-tablet: 1;
+  --font-scale-desktop: 1.1;
+
+  /* Container sizing for different screens */
+  --container-mobile: min(100% - 2rem, 480px);
+  --container-tablet: min(100% - 4rem, 768px);
+  --container-desktop: min(100% - 6rem, 1200px);
+  --container-wide: min(100% - 8rem, 1400px);
+
+  /* ========================================
+     Advanced Interactive Elements
+     ======================================== */
+
+  /* Lightning Talk Brand Interactions */
+  --interaction-lightning-strike: 0 0 20px var(--color-primary-500);
+  --interaction-electric-border: 2px solid var(--color-primary-400);
+  --interaction-spark-shadow: 0 0 15px rgba(255, 107, 53, 0.4);
+  --interaction-glow-intense: 0 0 30px var(--color-secondary-400);
+
+  /* Hover effects */
+  --hover-lift-distance: -2px;
+  --hover-scale-factor: 1.02;
+  --hover-brightness-boost: 1.1;
+  --hover-shadow-expansion: 0 8px 25px rgba(0, 0, 0, 0.15);
+
+  /* Focus states */
+  --focus-ring-width: 3px;
+  --focus-ring-offset: 2px;
+  --focus-ring-color: var(--color-primary-500);
+  --focus-ring-shadow:
+    0 0 0 var(--focus-ring-offset) white,
+    0 0 0 calc(var(--focus-ring-offset) + var(--focus-ring-width)) var(--focus-ring-color);
+
+  /* Active states */
+  --active-scale: 0.95;
+  --active-brightness: 0.9;
+  --active-shadow-inset: inset 0 2px 4px rgba(0, 0, 0, 0.1);
+
+  /* Loading states */
+  --loading-shimmer: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+  --loading-pulse-opacity: 0.6;
+  --loading-spinner-speed: var(--duration-1000);
+
+  /* Fun micro-interactions */
+  --wiggle-amplitude: 2deg;
+  --bounce-height: -4px;
+  --rubber-band-scale: 1.1;
+  --jello-skew: 12.5deg;
+
+  /* Success/Error feedback */
+  --success-celebration-scale: 1.2;
+  --error-shake-distance: 4px;
+  --warning-pulse-scale: 1.05;
+}
+
+/* ========================================
+   Animation Keyframes Definitions
+   ======================================== */
+
+@keyframes lightning-pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.7;
+    box-shadow: var(--interaction-lightning-strike);
+  }
+}
+
+@keyframes lightning-glow {
+  from {
+    box-shadow: 0 0 5px var(--color-primary-500);
+  }
+  to {
+    box-shadow: var(--interaction-lightning-strike);
+  }
+}
+
+@keyframes spark-trail {
+  0% {
+    transform: translateX(-100%) rotate(0deg);
+    opacity: 0;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateX(100%) rotate(180deg);
+    opacity: 0;
+  }
+}
+
+@keyframes electric-slide {
+  0% {
+    transform: translateX(-10px);
+    opacity: 0;
+  }
+  100% {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes talk-bounce {
+  0% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(var(--bounce-height));
+  }
+  100% {
+    transform: translateY(0);
+  }
+}
+
+@keyframes shake {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  25% {
+    transform: translateX(var(--error-shake-distance));
+  }
+  75% {
+    transform: translateX(calc(-1 * var(--error-shake-distance)));
+  }
+}
+
+@keyframes skeleton-pulse {
+  0% {
+    opacity: 1;
+  }
+  50% {
+    opacity: var(--loading-pulse-opacity);
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+@keyframes loading-dots {
+  0%,
+  80%,
+  100% {
+    transform: scale(0);
+  }
+  40% {
+    transform: scale(1);
+  }
+}
+
+@keyframes progress-bar {
+  0% {
+    width: 0%;
+  }
+  100% {
+    width: 100%;
+  }
+}
+
+@keyframes slideInRight {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes slideOutLeft {
+  from {
+    transform: translateX(0);
+    opacity: 1;
+  }
+  to {
+    transform: translateX(-100%);
+    opacity: 0;
+  }
+}
+
+@keyframes modal-scale-in {
+  from {
+    transform: scale(0.9);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes modal-scale-out {
+  from {
+    transform: scale(1);
+    opacity: 1;
+  }
+  to {
+    transform: scale(0.9);
+    opacity: 0;
+  }
+}
+
+@keyframes confetti {
+  0% {
+    transform: rotateZ(0deg) translateY(0px) rotateX(0deg);
+    opacity: 1;
+  }
+  100% {
+    transform: rotateZ(720deg) translateY(500px) rotateX(360deg);
+    opacity: 0;
+  }
+}
+
+@keyframes celebration {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(var(--success-celebration-scale));
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+@keyframes checkmark-draw {
+  0% {
+    stroke-dashoffset: 100;
+  }
+  100% {
+    stroke-dashoffset: 0;
+  }
+}
+
+/* ========================================
+   Media Queries for Multi-Device Support
+   ======================================== */
+
+/* Touch device optimizations */
+@media (hover: none) and (pointer: coarse) {
+  :root {
+    --supports-hover: false;
+    --supports-touch: true;
+    /* Larger touch targets */
+    --button-padding-sm: var(--space-3) var(--space-5);
+    --button-padding-base: var(--space-4) var(--space-6);
+    --button-padding-lg: var(--space-5) var(--space-8);
+  }
+}
+
+/* Hover-capable devices */
+@media (hover: hover) and (pointer: fine) {
+  :root {
+    --supports-hover: true;
+    --supports-touch: false;
+  }
+}
+
+/* Reduced motion preferences */
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --prefers-motion: false;
+    --duration-75: 0ms;
+    --duration-100: 0ms;
+    --duration-150: 0ms;
+    --duration-200: 0ms;
+    --duration-300: 0ms;
+    --duration-500: 0ms;
+    --duration-700: 0ms;
+    --duration-1000: 0ms;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* High contrast mode */
+@media (prefers-contrast: high) {
+  :root {
+    --color-primary-500: #ff4500;
+    --color-secondary-500: #008b8b;
+    --shadow-focus: 0 0 0 3px #ffd700;
+  }
+}
+
+/* Dark mode optimizations */
+@media (prefers-color-scheme: dark) {
+  :root {
+    /* Enhanced dark mode animations */
+    --interaction-lightning-strike: 0 0 25px var(--color-primary-400);
+    --interaction-spark-shadow: 0 0 20px rgba(255, 107, 53, 0.6);
+    --interaction-glow-intense: 0 0 35px var(--color-secondary-300);
+  }
+}
+
+/* Container queries for component-level responsiveness */
+@container (max-width: 480px) {
+  .lightning-talk-component {
+    --font-size-base: var(--font-size-sm);
+    --space-component: var(--space-responsive-sm);
+  }
+}
+
+@container (min-width: 768px) {
+  .lightning-talk-component {
+    --font-size-base: var(--font-size-lg);
+    --space-component: var(--space-responsive-lg);
+  }
 }
 
 /* ========================================
@@ -448,4 +841,122 @@
 }
 .border-info {
   border-color: var(--color-info-500);
+}
+
+/* ========================================
+   Advanced Interactive Classes
+   ======================================== */
+
+/* Lightning effects */
+.lightning-effect {
+  position: relative;
+  overflow: hidden;
+}
+
+.lightning-effect::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: var(--loading-shimmer);
+  animation: spark-trail var(--duration-700) ease-out;
+  pointer-events: none;
+}
+
+.lightning-effect:hover::before {
+  animation: spark-trail var(--duration-300) ease-out;
+}
+
+/* Bounce interaction */
+.bounce-on-click {
+  transition: var(--transition-transform);
+}
+
+.bounce-on-click:active {
+  animation: var(--animation-talk-bounce);
+}
+
+/* Glow effect */
+.glow-on-hover {
+  transition: box-shadow var(--duration-300) ease-out;
+}
+
+.glow-on-hover:hover {
+  box-shadow: var(--interaction-glow-intense);
+}
+
+/* Scale interaction */
+.scale-on-hover {
+  transition: transform var(--duration-200) var(--ease-out);
+}
+
+.scale-on-hover:hover {
+  transform: scale(var(--hover-scale-factor));
+}
+
+/* Loading states */
+.loading-skeleton {
+  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+  background-size: 200% 100%;
+  animation: var(--animation-skeleton);
+}
+
+.loading-dots::after {
+  content: "";
+  display: inline-block;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: currentColor;
+  animation: var(--animation-loading-dots);
+}
+
+/* Success celebration */
+.celebration-trigger {
+  position: relative;
+}
+
+.celebration-trigger.celebrating {
+  animation: var(--animation-celebration);
+}
+
+/* Fun micro-interactions */
+.wiggle-on-error {
+  animation: var(--animation-shake);
+}
+
+.pulse-on-focus:focus {
+  animation: lightning-pulse var(--duration-1000) ease-in-out 3;
+}
+
+/* Responsive visibility */
+.mobile-only {
+  display: block;
+}
+
+.tablet-only,
+.desktop-only {
+  display: none;
+}
+
+@media (min-width: 768px) {
+  .mobile-only {
+    display: none;
+  }
+
+  .tablet-only {
+    display: block;
+  }
+}
+
+@media (min-width: 1024px) {
+  .tablet-only {
+    display: none;
+  }
+
+  .desktop-only {
+    display: block;
+  }
 }

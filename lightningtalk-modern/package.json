@@ -33,7 +33,7 @@
     "wp:cli": "docker-compose exec wordpress wp",
     "theme:package": "cd packages/theme && npm run build && npm run package",
     "theme:deploy": "cd packages/theme && npm run deploy",
-    "postinstall": "husky install"
+    "postinstall": "test -d .git && husky install || true"
   },
   "devDependencies": {
     "@playwright/test": "^1.40.0",

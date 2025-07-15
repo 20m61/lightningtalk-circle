@@ -4,14 +4,16 @@ const { LightningTalkStack } = require('../lib/lightning-talk-stack');
 const { CognitoStack } = require('../lib/cognito-stack');
 const { ApiOnlyStack } = require('../lib/api-only-stack');
 const { WebSocketStack } = require('../lib/websocket-stack');
+const { getEnvironmentConfig, validateEnvironment } = require('../lib/config/environment');
 
 const app = new cdk.App();
 
-// Get configuration from context or environment
-const env = {
-  account: process.env.CDK_DEFAULT_ACCOUNT || process.env.AWS_ACCOUNT_ID || '822063948773',
-  region: process.env.CDK_DEFAULT_REGION || process.env.AWS_REGION || 'ap-northeast-1',
-};
+// Get stage from context or default to 'dev'
+const stage = app.node.tryGetContext('env') || process.env.CDK_STAGE || 'dev';
+
+// Get environment configuration
+const config = validateEnvironment(getEnvironmentConfig(stage));
+const env = config.env;
 
 // console.log(`🚀 Deploying Lightning Talk Circle infrastructure`);
 // console.log(`📍 Domain: 発表.com (xn--6wym69a.com)`);
@@ -19,45 +21,49 @@ const env = {
 // console.log(`🌍 AWS Region: ${env.region}`);
 
 // Create the unified stack
-new LightningTalkStack(app, 'LightningTalkStack', {
+new LightningTalkStack(app, `LightningTalkStack-${stage}`, {
   env: env,
-  description: 'Lightning Talk Circle - Complete Infrastructure (発表.com)',
+  description: `Lightning Talk Circle - Complete Infrastructure (${stage})`,
+  config: config,
   tags: {
-    Project: 'lightning-talk-circle',
-    Environment: 'production',
+    Project: config.projectName,
+    Environment: stage,
     ManagedBy: 'cdk',
   },
 });
 
 // Create Cognito stack
-new CognitoStack(app, 'LightningTalkCognitoStack', {
+new CognitoStack(app, `LightningTalkCognitoStack-${stage}`, {
   env: env,
-  description: 'Lightning Talk Circle - Authentication Infrastructure',
+  description: `Lightning Talk Circle - Authentication Infrastructure (${stage})`,
+  config: config,
   tags: {
-    Project: 'lightning-talk-circle',
-    Environment: 'production',
+    Project: config.projectName,
+    Environment: stage,
     ManagedBy: 'cdk',
   },
 });
 
 // Create API-only stack (for quick deployment)
-new ApiOnlyStack(app, 'LightningTalkApiOnlyStack', {
+new ApiOnlyStack(app, `LightningTalkApiOnlyStack-${stage}`, {
   env: env,
-  description: 'Lightning Talk Circle - API Only Stack',
+  description: `Lightning Talk Circle - API Only Stack (${stage})`,
+  config: config,
   tags: {
-    Project: 'lightning-talk-circle',
-    Environment: 'production',
+    Project: config.projectName,
+    Environment: stage,
     ManagedBy: 'cdk',
   },
 });
 
 // Create WebSocket stack for real-time updates
-new WebSocketStack(app, 'LightningTalkWebSocketStack', {
+new WebSocketStack(app, `LightningTalkWebSocketStack-${stage}`, {
   env: env,
-  description: 'Lightning Talk Circle - WebSocket API for Real-time Updates',
+  description: `Lightning Talk Circle - WebSocket API for Real-time Updates (${stage})`,
+  config: config,
   tags: {
-    Project: 'lightning-talk-circle',
-    Environment: 'production',
+    Project: config.projectName,
+    Environment: stage,
     ManagedBy: 'cdk',
   },
 });

@@ -20,10 +20,10 @@
     "type-check": "tsc --noEmit"
   },
   "dependencies": {
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0",
     "clsx": "^2.0.0",
-    "date-fns": "^3.0.0"
+    "date-fns": "^3.6.0",
+    "react": ">=17.0.0",
+    "react-dom": ">=17.0.0"
   },
   "devDependencies": {
     "@storybook/addon-a11y": "^8.0.0",
@@ -39,6 +39,7 @@
     "@testing-library/user-event": "^14.5.0",
     "@types/react": "^18.2.0",
     "@types/react-dom": "^18.2.0",
+    "@vitejs/plugin-react": "^4.2.0",
     "eslint": "^8.55.0",
     "jsdom": "^23.0.0",
     "rollup": "^4.0.0",

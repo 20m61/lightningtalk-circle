@@ -7,12 +7,7 @@
     "abstract": "毎日の料理から学んだ人生の教訓について。失敗から学ぶこと、創意工夫の大切さ、そして美味しいものを作る喜びについて語ります。技術的な話ではありませんが、心温まる5分間をお届けします。",
     "materials": [],
     "videoUrl": null,
-    "tags": [
-      "料理",
-      "人生",
-      "ライフハック",
-      "日常"
-    ],
+    "tags": ["料理", "人生", "ライフハック", "日常"],
     "presentationDate": "2025-06-25T10:15:00Z",
     "duration": 5,
     "skillLevel": "beginner",
@@ -39,13 +34,7 @@
       }
     ],
     "videoUrl": null,
-    "tags": [
-      "機械学習",
-      "TensorFlow.js",
-      "画像認識",
-      "猫",
-      "AI"
-    ],
+    "tags": ["機械学習", "TensorFlow.js", "画像認識", "猫", "AI"],
     "presentationDate": "2025-06-25T10:05:00Z",
     "duration": 5,
     "skillLevel": "intermediate",
@@ -72,12 +61,7 @@
       }
     ],
     "videoUrl": "https://www.youtube.com/watch?v=example123",
-    "tags": [
-      "Next.js",
-      "React",
-      "Web開発",
-      "フロントエンド"
-    ],
+    "tags": ["Next.js", "React", "Web開発", "フロントエンド"],
     "presentationDate": "2025-06-25T10:00:00Z",
     "duration": 5,
     "skillLevel": "beginner",
@@ -104,12 +88,7 @@
       }
     ],
     "videoUrl": "https://www.youtube.com/watch?v=example456",
-    "tags": [
-      "Docker",
-      "コンテナ",
-      "DevOps",
-      "インフラ"
-    ],
+    "tags": ["Docker", "コンテナ", "DevOps", "インフラ"],
     "presentationDate": "2025-05-15T11:00:00Z",
     "duration": 5,
     "skillLevel": "beginner",
@@ -136,12 +115,7 @@
       }
     ],
     "videoUrl": "https://www.youtube.com/watch?v=example789",
-    "tags": [
-      "GraphQL",
-      "API",
-      "バックエンド",
-      "Web開発"
-    ],
+    "tags": ["GraphQL", "API", "バックエンド", "Web開発"],
     "presentationDate": "2025-04-20T10:30:00Z",
     "duration": 5,
     "skillLevel": "advanced",

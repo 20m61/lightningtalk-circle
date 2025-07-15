@@ -9,7 +9,7 @@
     "isolatedModules": true,
     "noEmit": true,
     "jsx": "react-jsx",
-    
+
     "strict": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
@@ -18,17 +18,16 @@
     "noFallthroughCasesInSwitch": true,
     "noUncheckedIndexedAccess": true,
     "noImplicitOverride": true,
-    
+
     "allowSyntheticDefaultImports": true,
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
     "skipLibCheck": true,
-    
+
     "types": ["vite/client", "node", "@types/wordpress"],
-    
+
     "baseUrl": ".",
     "paths": {
-      "@/*": ["./packages/*/src/*"],
       "@components/*": ["./packages/components/src/*"],
       "@theme/*": ["./packages/theme/src/*"],
       "@admin/*": ["./packages/admin-panel/src/*"],
@@ -36,24 +35,11 @@
       "@shared/*": ["./shared/*"]
     }
   },
-  "include": [
-    "packages/*/src/**/*",
-    "tests/**/*",
-    "shared/**/*",
-    "*.config.ts"
-  ],
-  "exclude": [
-    "node_modules",
-    "dist",
-    "build",
-    "**/dist/**",
-    "**/build/**",
-    "**/*.config.js"
-  ],
+  "include": ["packages/*/src/**/*", "tests/**/*", "shared/**/*", "*.config.ts"],
+  "exclude": ["node_modules", "dist", "build", "**/dist/**", "**/build/**", "**/*.config.js"],
   "references": [
     { "path": "./packages/components" },
     { "path": "./packages/theme" },
-    { "path": "./packages/admin-panel" },
-    { "path": "./packages/api" }
+    { "path": "./packages/admin-panel" }
   ]
 }
