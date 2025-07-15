@@ -100,7 +100,7 @@ cd lightningtalk-modern && npm run wp:down       # コンテナの停止
 cd lightningtalk-modern && npm run wp:reset      # データベースのリセット
 ```
 
-### AWS CDKデプロイメント
+### AWS CDKデプロイメント（統合スタック v2.0）
 
 ```bash
 # CDKインフラストラクチャ管理
@@ -108,10 +108,23 @@ npm run cdk:install          # CDK依存関係のインストール
 npm run cdk:build            # CDK TypeScriptのビルド
 npm run cdk:synth            # CloudFormationテンプレートの合成
 npm run cdk:diff             # デプロイメント変更の表示
-npm run cdk:deploy:dev       # 開発環境のデプロイ
-npm run cdk:deploy:staging   # ステージング環境のデプロイ
-npm run cdk:deploy:prod      # 本番環境のデプロイ
+
+# 統合スタックデプロイメント（v2.0アーキテクチャ）
+npm run cdk:deploy:dev       # 開発環境（Lambda + DynamoDB + S3/CloudFront）
+npm run cdk:deploy:prod      # 本番環境（ECS Fargate + ALB + WAF +監視）
 npm run cdk:destroy:dev      # 開発スタックの削除
+
+# 個別スタックデプロイメント
+cd cdk && cdk deploy LightningTalkDev-dev      # 開発環境メインスタック
+cd cdk && cdk deploy LightningTalkProd-prod    # 本番環境メインスタック
+cd cdk && cdk deploy LightningTalkCognito-dev  # 認証スタック（開発）
+cd cdk && cdk deploy LightningTalkCognito-prod # 認証スタック（本番）
+cd cdk && cdk deploy LightningTalkWebSocket-dev # WebSocketスタック（開発）
+
+# スタック統合・移行
+cd cdk && node scripts/migrate-stacks.js dev --dry-run  # 移行のドライラン
+cd cdk && node scripts/migrate-stacks.js prod           # 本番環境の移行実行
+cd cdk && node scripts/migrate-stacks.js dev --destroy-old  # 旧スタックの削除
 
 # デプロイメントテスト
 ./scripts/cdk-deployment-test.sh  # CDKデプロイメントの検証
