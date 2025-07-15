@@ -1,0 +1,442 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ログイン - Lightning Talk Circle</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700&display=swap"
+      rel="stylesheet"
+    />
+    <link href="./css/tailwind.css" rel="stylesheet" />
+    <link href="./css/component-library.css" rel="stylesheet" />
+    <link href="./css/auth-v2.css" rel="stylesheet" />
+    <link rel="icon" href="./images/favicon.ico" type="image/x-icon" />
+    <meta name="theme-color" content="#FF6B35" />
+  </head>
+  <body class="min-h-screen bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50">
+    <!-- Enhanced Header -->
+    <header class="ltc-header ltc-header--sticky">
+      <div class="ltc-header__container">
+        <a href="/" class="ltc-header__logo">
+          <div class="ltc-header__logo-icon">
+            <span class="ltc-header__logo-emoji">⚡</span>
+          </div>
+          <div class="ltc-header__logo-text">
+            <h1 class="ltc-header__title">Lightning Talk Circle</h1>
+            <p class="ltc-header__subtitle">5分間で世界を変える</p>
+          </div>
+        </a>
+
+        <nav class="ltc-header__nav">
+          <a href="/" class="ltc-header__nav-item">ホーム</a>
+          <a href="/events.html" class="ltc-header__nav-item">イベント</a>
+          <a href="/signup.html" class="ltc-header__nav-item">新規登録</a>
+        </nav>
+
+        <button class="ltc-header__mobile-toggle" aria-label="メニュー">
+          <span class="ltc-header__burger"></span>
+        </button>
+      </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="auth-main">
+      <div class="auth-container">
+        <!-- Left Side - Login Form -->
+        <div class="auth-form-section">
+          <div class="auth-form-card">
+            <!-- Form Header -->
+            <div class="auth-form-header">
+              <div class="auth-icon-wrapper">
+                <svg
+                  class="auth-icon"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                >
+                  <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"></path>
+                  <polyline points="10 17 15 12 10 7"></polyline>
+                  <line x1="15" y1="12" x2="3" y2="12"></line>
+                </svg>
+              </div>
+              <h2 class="auth-title">おかえりなさい！</h2>
+              <p class="auth-subtitle">Lightning Talk Circleへログイン</p>
+            </div>
+
+            <!-- Google OAuth Button -->
+            <div class="auth-oauth-section">
+              <button class="btn-google-auth" type="button" onclick="handleGoogleLogin()">
+                <img
+                  src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg"
+                  alt="Google"
+                />
+                <span>Googleでログイン</span>
+              </button>
+            </div>
+
+            <div class="auth-divider">
+              <span>または</span>
+            </div>
+
+            <!-- Email/Password Form -->
+            <form id="login-form" class="auth-form">
+              <div class="ltc-input-container">
+                <label class="ltc-input-label" for="email">メールアドレス</label>
+                <div class="ltc-input-wrapper">
+                  <input
+                    type="email"
+                    id="email"
+                    name="email"
+                    class="ltc-input ltc-input--md"
+                    placeholder="your@email.com"
+                    required
+                    autocomplete="email"
+                  />
+                  <span class="ltc-input-icon">
+                    <svg
+                      width="20"
+                      height="20"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                    >
+                      <rect x="2" y="4" width="20" height="16" rx="2"></rect>
+                      <path d="m22 7-10 5L2 7"></path>
+                    </svg>
+                  </span>
+                </div>
+                <div class="ltc-input-helper ltc-input-helper--error" style="display: none"></div>
+              </div>
+
+              <div class="ltc-input-container">
+                <label class="ltc-input-label" for="password">パスワード</label>
+                <div class="ltc-input-wrapper">
+                  <input
+                    type="password"
+                    id="password"
+                    name="password"
+                    class="ltc-input ltc-input--md"
+                    placeholder="••••••••"
+                    required
+                    autocomplete="current-password"
+                  />
+                  <button
+                    type="button"
+                    class="ltc-input-icon password-toggle"
+                    onclick="togglePassword('password')"
+                  >
+                    <svg
+                      class="eye-icon"
+                      width="20"
+                      height="20"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                    >
+                      <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                      <circle cx="12" cy="12" r="3"></circle>
+                    </svg>
+                    <svg
+                      class="eye-off-icon"
+                      style="display: none"
+                      width="20"
+                      height="20"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                    >
+                      <path
+                        d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"
+                      ></path>
+                      <line x1="1" y1="1" x2="23" y2="23"></line>
+                    </svg>
+                  </button>
+                </div>
+                <div class="ltc-input-helper ltc-input-helper--error" style="display: none"></div>
+              </div>
+
+              <div class="auth-options">
+                <label class="auth-checkbox">
+                  <input type="checkbox" name="remember" />
+                  <span class="auth-checkbox-label">ログイン状態を保持</span>
+                </label>
+                <a href="/forgot-password.html" class="auth-link">パスワードを忘れた方</a>
+              </div>
+
+              <button
+                type="submit"
+                class="ltc-button ltc-button--primary ltc-button--lg ltc-button--full auth-submit"
+              >
+                <span class="button-content">ログイン</span>
+                <div class="button-loader" style="display: none">
+                  <span class="loader-spinner"></span>
+                </div>
+              </button>
+            </form>
+
+            <!-- Sign Up Link -->
+            <div class="auth-footer">
+              <p>
+                アカウントをお持ちでない方は
+                <a href="/signup.html" class="auth-link auth-link--primary">新規登録</a>
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right Side - Feature Showcase -->
+        <div class="auth-feature-section">
+          <div class="auth-feature-content">
+            <h3 class="auth-feature-title">Lightning Talk Circleで、あなたの声を届けよう</h3>
+
+            <div class="auth-features">
+              <div class="auth-feature-item">
+                <div class="auth-feature-icon">
+                  <svg
+                    width="24"
+                    height="24"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                  >
+                    <path d="M12 2L2 7l10 5 10-5-10-5z"></path>
+                    <path d="M2 17l10 5 10-5"></path>
+                    <path d="M2 12l10 5 10-5"></path>
+                  </svg>
+                </div>
+                <div class="auth-feature-text">
+                  <h4>イベント管理</h4>
+                  <p>独自のライトニングトークイベントを簡単に作成・管理</p>
+                </div>
+              </div>
+
+              <div class="auth-feature-item">
+                <div class="auth-feature-icon">
+                  <svg
+                    width="24"
+                    height="24"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                  >
+                    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                    <circle cx="9" cy="7" r="4"></circle>
+                    <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                    <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                  </svg>
+                </div>
+                <div class="auth-feature-text">
+                  <h4>コミュニティ</h4>
+                  <p>同じ興味を持つ仲間と繋がり、知識を共有</p>
+                </div>
+              </div>
+
+              <div class="auth-feature-item">
+                <div class="auth-feature-icon">
+                  <svg
+                    width="24"
+                    height="24"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                  >
+                    <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
+                  </svg>
+                </div>
+                <div class="auth-feature-text">
+                  <h4>発表分析</h4>
+                  <p>発表の反響や参加者のフィードバックを可視化</p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Animated Background -->
+            <div class="auth-bg-animation">
+              <div class="floating-shape shape-1"></div>
+              <div class="floating-shape shape-2"></div>
+              <div class="floating-shape shape-3"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <!-- Toast Container -->
+    <div id="toast-container" class="ltc-toast-container ltc-toast--top-right"></div>
+
+    <!-- Scripts -->
+    <script src="./js/component-library.js"></script>
+    <script src="./js/auth-v2.js"></script>
+    <script>
+      // Initialize components
+      document.addEventListener('DOMContentLoaded', function () {
+        // Initialize header
+        const header = document.querySelector('.ltc-header');
+        if (header) {
+          const toggle = header.querySelector('.ltc-header__mobile-toggle');
+          const nav = header.querySelector('.ltc-header__nav');
+
+          toggle?.addEventListener('click', () => {
+            nav?.classList.toggle('ltc-header__nav--open');
+            toggle.classList.toggle('ltc-header__mobile-toggle--open');
+          });
+        }
+
+        // Initialize form
+        initializeAuthForm();
+      });
+
+      // Password toggle
+      function togglePassword(fieldId) {
+        const field = document.getElementById(fieldId);
+        const wrapper = field.closest('.ltc-input-wrapper');
+        const eyeIcon = wrapper.querySelector('.eye-icon');
+        const eyeOffIcon = wrapper.querySelector('.eye-off-icon');
+
+        if (field.type === 'password') {
+          field.type = 'text';
+          eyeIcon.style.display = 'none';
+          eyeOffIcon.style.display = 'block';
+        } else {
+          field.type = 'password';
+          eyeIcon.style.display = 'block';
+          eyeOffIcon.style.display = 'none';
+        }
+      }
+
+      // Handle Google login
+      function handleGoogleLogin() {
+        showToast('Google認証を開始しています...', 'info');
+        // Integrate with existing auth.js
+        if (window.authModule && window.authModule.signInWithGoogle) {
+          window.authModule.signInWithGoogle();
+        } else {
+          console.error('Google auth not initialized');
+          showToast('Google認証の初期化に失敗しました', 'error');
+        }
+      }
+
+      // Initialize auth form
+      function initializeAuthForm() {
+        const form = document.getElementById('login-form');
+        if (!form) return;
+
+        form.addEventListener('submit', async e => {
+          e.preventDefault();
+
+          const submitButton = form.querySelector('.auth-submit');
+          const buttonContent = submitButton.querySelector('.button-content');
+          const buttonLoader = submitButton.querySelector('.button-loader');
+
+          // Show loading state
+          submitButton.disabled = true;
+          buttonContent.style.display = 'none';
+          buttonLoader.style.display = 'block';
+
+          // Get form data
+          const formData = new FormData(form);
+          const email = formData.get('email');
+          const password = formData.get('password');
+
+          try {
+            // Simulate login (replace with actual API call)
+            await new Promise(resolve => setTimeout(resolve, 1500));
+
+            // Success
+            showToast('ログインに成功しました！', 'success');
+
+            // Redirect after delay
+            setTimeout(() => {
+              window.location.href = '/';
+            }, 1000);
+          } catch (error) {
+            showToast(
+              'ログインに失敗しました。メールアドレスとパスワードを確認してください。',
+              'error'
+            );
+
+            // Reset button state
+            submitButton.disabled = false;
+            buttonContent.style.display = 'block';
+            buttonLoader.style.display = 'none';
+          }
+        });
+
+        // Real-time validation
+        const inputs = form.querySelectorAll('input[required]');
+        inputs.forEach(input => {
+          input.addEventListener('blur', () => validateField(input));
+          input.addEventListener('input', () => {
+            if (input.classList.contains('ltc-input--error')) {
+              validateField(input);
+            }
+          });
+        });
+      }
+
+      // Field validation
+      function validateField(field) {
+        const container = field.closest('.ltc-input-container');
+        const errorDiv = container.querySelector('.ltc-input-helper--error');
+
+        // Reset state
+        field.classList.remove('ltc-input--error');
+        errorDiv.style.display = 'none';
+        errorDiv.textContent = '';
+
+        // Validate
+        if (!field.value.trim()) {
+          showFieldError(field, 'このフィールドは必須です');
+          return false;
+        }
+
+        if (field.type === 'email' && !isValidEmail(field.value)) {
+          showFieldError(field, '有効なメールアドレスを入力してください');
+          return false;
+        }
+
+        if (field.name === 'password' && field.value.length < 8) {
+          showFieldError(field, 'パスワードは8文字以上で入力してください');
+          return false;
+        }
+
+        return true;
+      }
+
+      // Show field error
+      function showFieldError(field, message) {
+        const container = field.closest('.ltc-input-container');
+        const errorDiv = container.querySelector('.ltc-input-helper--error');
+
+        field.classList.add('ltc-input--error');
+        errorDiv.textContent = message;
+        errorDiv.style.display = 'block';
+      }
+
+      // Email validation
+      function isValidEmail(email) {
+        return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+      }
+
+      // Toast notification
+      function showToast(message, type = 'info') {
+        const toast = window.LightningTalk.createToast({
+          message: message,
+          type: type,
+          duration: 3000
+        });
+
+        const container = document.getElementById('toast-container');
+        window.LightningTalk.showToast(toast, container);
+      }
+    </script>
+  </body>
+</html>
