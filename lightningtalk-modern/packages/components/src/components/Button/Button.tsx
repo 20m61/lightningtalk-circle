@@ -6,7 +6,7 @@
 
 import React, { forwardRef } from 'react';
 import { clsx } from 'clsx';
-import { colors, spacing, typography, radii, shadows, transitions } from '../../tokens';
+import styles from './Button.module.css';
 
 export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   /**
@@ -53,6 +53,16 @@ export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElemen
    * Custom CSS class
    */
   className?: string;
+
+  /**
+   * URL to link to (makes button render as an anchor tag)
+   */
+  href?: string;
+
+  /**
+   * Link target (when href is used)
+   */
+  target?: string;
 }
 
 const Button = forwardRef<HTMLButtonElement, ButtonProps>(
@@ -68,103 +78,21 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
       children,
       className,
       type = 'button',
+      href,
+      target,
       ...props
     },
     ref
   ) => {
-    const baseStyles: React.CSSProperties = {
-      display: 'inline-flex',
-      alignItems: 'center',
-      justifyContent: 'center',
-      gap: spacing[2],
-      fontFamily: typography.fonts.primary,
-      fontWeight: typography.weights.medium,
-      textDecoration: 'none',
-      border: '1px solid transparent',
-      borderRadius: radii.button,
-      cursor: disabled || loading ? 'not-allowed' : 'pointer',
-      transition: transitions.buttonHover,
-      outline: 'none',
-      position: 'relative',
-      whiteSpace: 'nowrap',
-      userSelect: 'none'
-
-      // Focus styles handled via CSS modules
-    };
-
-    const sizeStyles: Record<string, React.CSSProperties> = {
-      sm: {
-        fontSize: typography.sizes.sm.mobile,
-        lineHeight: typography.lineHeights.normal,
-        padding: `${spacing.component.buttonPaddingY.sm} ${spacing.component.buttonPaddingX.sm}`,
-        minHeight: '32px'
-      },
-      md: {
-        fontSize: typography.sizes.base.mobile,
-        lineHeight: typography.lineHeights.normal,
-        padding: `${spacing.component.buttonPaddingY.md} ${spacing.component.buttonPaddingX.md}`,
-        minHeight: '40px'
-      },
-      lg: {
-        fontSize: typography.sizes.lg.mobile,
-        lineHeight: typography.lineHeights.normal,
-        padding: `${spacing.component.buttonPaddingY.lg} ${spacing.component.buttonPaddingX.lg}`,
-        minHeight: '48px'
-      }
-    };
-
-    const variantStyles: Record<string, React.CSSProperties> = {
-      primary: {
-        backgroundColor: colors.primary[500],
-        borderColor: colors.primary[500],
-        color: colors.text.inverse,
-        boxShadow: shadows.button
-      },
-
-      secondary: {
-        backgroundColor: colors.secondary[500],
-        borderColor: colors.secondary[500],
-        color: colors.text.inverse,
-        boxShadow: shadows.button
-      },
-
-      outline: {
-        backgroundColor: 'transparent',
-        borderColor: colors.primary[500],
-        color: colors.primary[500]
-      },
-
-      ghost: {
-        backgroundColor: 'transparent',
-        borderColor: 'transparent',
-        color: colors.primary[500]
-      },
-
-      danger: {
-        backgroundColor: colors.error[500],
-        borderColor: colors.error[500],
-        color: colors.text.inverse,
-        boxShadow: shadows.button
-      }
-    };
-
-    const disabledStyles: React.CSSProperties = {
-      opacity: 0.6,
-      cursor: 'not-allowed',
-      pointerEvents: 'none'
-    };
-
-    const fullWidthStyles: React.CSSProperties = {
-      width: '100%'
-    };
-
-    const combinedStyles: React.CSSProperties = {
-      ...baseStyles,
-      ...sizeStyles[size],
-      ...variantStyles[variant],
-      ...(disabled || loading ? disabledStyles : {}),
-      ...(fullWidth ? fullWidthStyles : {})
-    };
+    // すべてのスタイルはCSS Modulesで管理
+    const buttonClassName = clsx(
+      styles.button,
+      styles[`button--${variant}`],
+      styles[`button--${size}`],
+      disabled && styles['button--disabled'],
+      loading && styles['button--loading'],
+      fullWidth && styles['button--full-width']
+    );
 
     const LoadingSpinner = () => (
       <svg
@@ -205,29 +133,30 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
       </svg>
     );
 
-    return (
-      <button
-        ref={ref}
-        type={type}
-        disabled={disabled || loading}
-        className={clsx(
-          'lt-button',
-          `lt-button--${variant}`,
-          `lt-button--${size}`,
-          {
-            'lt-button--loading': loading,
-            'lt-button--full-width': fullWidth,
-            'lt-button--disabled': disabled
-          },
-          className
-        )}
-        style={combinedStyles}
-        {...props}
-      >
+    const commonProps = {
+      className: clsx(buttonClassName, className)
+    };
+
+    const content = (
+      <>
         {loading && <LoadingSpinner />}
-        {!loading && startIcon && <span className="lt-button__start-icon">{startIcon}</span>}
-        <span className="lt-button__content">{children}</span>
-        {!loading && endIcon && <span className="lt-button__end-icon">{endIcon}</span>}
+        {!loading && startIcon && <span className={styles.button__startIcon}>{startIcon}</span>}
+        <span className={styles.button__content}>{children}</span>
+        {!loading && endIcon && <span className={styles.button__endIcon}>{endIcon}</span>}
+      </>
+    );
+
+    if (href) {
+      return (
+        <a ref={ref as any} href={href} target={target} {...commonProps} {...(props as any)}>
+          {content}
+        </a>
+      );
+    }
+
+    return (
+      <button ref={ref} type={type} disabled={disabled || loading} {...commonProps} {...props}>
+        {content}
       </button>
     );
   }

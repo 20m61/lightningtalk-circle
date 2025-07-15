@@ -1,0 +1,311 @@
+/**
+ * EventCard Component Styles
+ * Lightning Talk event display card with interactive features
+ */
+
+.eventCard {
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s ease;
+  border-radius: 12px;
+  background: white;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.eventCard:hover {
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+  transform: translateY(-2px);
+}
+
+/* Variants */
+.eventCard--default {
+  max-width: 400px;
+}
+
+.eventCard--featured {
+  border: 2px solid #ff6b35;
+  box-shadow: 0 4px 16px rgba(255, 107, 53, 0.15);
+}
+
+.eventCard--featured:hover {
+  box-shadow: 0 8px 24px rgba(255, 107, 53, 0.25);
+}
+
+.eventCard--compact {
+  max-width: 300px;
+}
+
+/* Status states */
+.eventCard--upcoming {
+  /* Default styling */
+}
+
+.eventCard--ongoing {
+  border-left: 4px solid #22c55e;
+  background: linear-gradient(135deg, #ffffff 0%, #f0fdf4 100%);
+}
+
+.eventCard--completed {
+  opacity: 0.8;
+  background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+}
+
+/* Image Container */
+.imageContainer {
+  position: relative;
+  width: 100%;
+  height: 180px;
+  overflow: hidden;
+}
+
+.eventImage {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.eventCard:hover .eventImage {
+  transform: scale(1.05);
+}
+
+.statusBadge {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  padding: 4px 8px;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: white;
+  backdrop-filter: blur(4px);
+}
+
+.statusBadge--upcoming {
+  background: rgba(59, 130, 246, 0.9);
+}
+
+.statusBadge--ongoing {
+  background: rgba(34, 197, 94, 0.9);
+  animation: pulse 2s infinite;
+}
+
+.statusBadge--completed {
+  background: rgba(107, 114, 128, 0.9);
+}
+
+/* Content */
+.content {
+  padding: 20px;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 16px;
+}
+
+.title {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #111827;
+  margin: 0;
+  line-height: 1.4;
+  flex: 1;
+}
+
+.eventCard--compact .title {
+  font-size: 1rem;
+}
+
+/* Details */
+.details {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.detailItem {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.detailIcon {
+  font-size: 1rem;
+  min-width: 20px;
+}
+
+.detailText {
+  font-size: 0.875rem;
+  color: #6b7280;
+  font-weight: 500;
+}
+
+.eventCard--compact .detailText {
+  font-size: 0.75rem;
+}
+
+/* Description */
+.description {
+  font-size: 0.875rem;
+  color: #6b7280;
+  line-height: 1.6;
+  margin: 0 0 16px 0;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* Tags */
+.tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 16px;
+}
+
+.tag {
+  display: inline-block;
+  padding: 4px 8px;
+  background: #f3f4f6;
+  color: #6b7280;
+  border-radius: 8px;
+  font-size: 0.75rem;
+  font-weight: 500;
+}
+
+/* Participants */
+.participants {
+  margin-bottom: 16px;
+}
+
+.participantCount {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.participantIcon {
+  font-size: 1rem;
+}
+
+.participantText {
+  font-size: 0.875rem;
+  color: #374151;
+  font-weight: 600;
+}
+
+.participantProgress {
+  width: 100%;
+  height: 4px;
+  background: #e5e7eb;
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.progressBar {
+  height: 100%;
+  background: linear-gradient(90deg, #ff6b35 0%, #4ecdc4 100%);
+  border-radius: 2px;
+  transition: width 0.3s ease;
+}
+
+/* Actions */
+.actions {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+.participateButton {
+  flex: 1;
+}
+
+.detailsButton {
+  flex-shrink: 0;
+}
+
+.eventCard--compact .actions {
+  gap: 8px;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .eventCard {
+    max-width: 100%;
+  }
+
+  .content {
+    padding: 16px;
+  }
+
+  .title {
+    font-size: 1.125rem;
+  }
+
+  .details {
+    gap: 6px;
+  }
+
+  .detailText {
+    font-size: 0.8125rem;
+  }
+
+  .actions {
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .participateButton,
+  .detailsButton {
+    width: 100%;
+  }
+}
+
+/* Accessibility */
+.eventCard:focus-visible {
+  outline: 2px solid #ff6b35;
+  outline-offset: 2px;
+}
+
+.eventCard[aria-pressed="true"] {
+  transform: translateY(1px);
+}
+
+/* Animations */
+@keyframes pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.8;
+  }
+}
+
+/* Loading state */
+.eventCard--loading {
+  pointer-events: none;
+}
+
+.eventCard--loading .eventImage,
+.eventCard--loading .title,
+.eventCard--loading .description {
+  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+  background-size: 200% 100%;
+  animation: skeleton 1.5s ease-in-out infinite;
+}
+
+@keyframes skeleton {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}

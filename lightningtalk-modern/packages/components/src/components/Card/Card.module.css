@@ -1,0 +1,140 @@
+/**
+ * Card Component Styles
+ * CSS Modules for proper hover and focus-visible support
+ */
+
+.card {
+  position: relative;
+  border-radius: 0.5rem;
+  transition:
+    transform 200ms ease,
+    box-shadow 200ms ease;
+  outline: none;
+}
+
+.card--interactive {
+  cursor: pointer;
+}
+
+.card--interactive:focus-visible {
+  outline: 2px solid #2563eb;
+  outline-offset: 2px;
+}
+
+/* Variants */
+.card--default {
+  background-color: #ffffff;
+  border: 1px solid #e5e7eb;
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+}
+
+.card--default.card--interactive:hover {
+  border-color: #d1d5db;
+  box-shadow:
+    0 10px 15px -3px rgba(0, 0, 0, 0.1),
+    0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  transform: translateY(-1px);
+}
+
+.card--outlined {
+  background-color: #ffffff;
+  border: 1px solid #d1d5db;
+}
+
+.card--outlined.card--interactive:hover {
+  border-color: #fdba74;
+  box-shadow:
+    0 1px 3px 0 rgba(0, 0, 0, 0.1),
+    0 1px 2px 0 rgba(0, 0, 0, 0.06);
+}
+
+.card--elevated {
+  background-color: #ffffff;
+  border: none;
+  box-shadow:
+    0 4px 6px -1px rgba(0, 0, 0, 0.1),
+    0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+
+.card--elevated.card--interactive:hover {
+  box-shadow:
+    0 10px 15px -3px rgba(0, 0, 0, 0.1),
+    0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  transform: translateY(-2px);
+}
+
+.card--ghost {
+  background-color: transparent;
+  border: none;
+}
+
+.card--ghost.card--interactive:hover {
+  background-color: #f9fafb;
+}
+
+.card--highlighted {
+  background-color: #ffffff;
+  border: 1px solid #fdba74;
+  box-shadow:
+    0 1px 3px 0 rgba(0, 0, 0, 0.1),
+    0 1px 2px 0 rgba(0, 0, 0, 0.06);
+}
+
+.card--highlighted.card--interactive:hover {
+  border-color: #fb923c;
+  box-shadow:
+    0 10px 15px -3px rgba(0, 0, 0, 0.1),
+    0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  transform: translateY(-1px);
+}
+
+/* Selected state */
+.card--selected {
+  border-color: #ff6b35;
+  box-shadow:
+    0 0 0 1px #ff6b35,
+    0 4px 6px -1px rgba(0, 0, 0, 0.1),
+    0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+
+/* Padding variants */
+.card--padding-none {
+  padding: 0;
+}
+
+.card--padding-sm {
+  padding: 1rem;
+}
+
+.card--padding-md {
+  padding: 1.5rem;
+}
+
+.card--padding-lg {
+  padding: 2rem;
+}
+
+/* Elevation classes */
+.card--elevation-1 {
+  box-shadow:
+    0 1px 3px 0 rgba(0, 0, 0, 0.1),
+    0 1px 2px 0 rgba(0, 0, 0, 0.06);
+}
+
+.card--elevation-2 {
+  box-shadow:
+    0 4px 6px -1px rgba(0, 0, 0, 0.1),
+    0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+
+.card--elevation-3 {
+  box-shadow:
+    0 10px 15px -3px rgba(0, 0, 0, 0.1),
+    0 4px 6px -2px rgba(0, 0, 0, 0.05);
+}
+
+.card--elevation-4 {
+  box-shadow:
+    0 20px 25px -5px rgba(0, 0, 0, 0.1),
+    0 10px 10px -5px rgba(0, 0, 0, 0.04);
+}

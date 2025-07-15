@@ -52,19 +52,21 @@
 .toast {
   display: flex;
   align-items: flex-start;
-  gap: var(--space-3);
+  gap: 0.75rem;
   min-width: 300px;
   max-width: 500px;
-  padding: var(--space-3) var(--space-4);
+  padding: 0.75rem 1rem;
   background: white;
-  border-radius: var(--border-radius-lg);
-  box-shadow: var(--shadow-lg);
+  border-radius: 0.75rem;
+  box-shadow:
+    0 10px 15px -3px rgba(0, 0, 0, 0.1),
+    0 4px 6px -2px rgba(0, 0, 0, 0.05);
   position: relative;
   overflow: hidden;
   pointer-events: all;
   transform: translateX(100%);
   opacity: 0;
-  transition: all var(--transition-base);
+  transition: all 200ms ease;
 }
 
 .toast.animated {
@@ -151,35 +153,35 @@
 
 /* Type variants */
 .success {
-  border-left: 4px solid var(--color-success);
+  border-left: 4px solid #10b981;
 }
 
 .success .iconWrapper {
-  color: var(--color-success);
+  color: #10b981;
 }
 
 .error {
-  border-left: 4px solid var(--color-error);
+  border-left: 4px solid #ef4444;
 }
 
 .error .iconWrapper {
-  color: var(--color-error);
+  color: #ef4444;
 }
 
 .warning {
-  border-left: 4px solid var(--color-warning);
+  border-left: 4px solid #f59e0b;
 }
 
 .warning .iconWrapper {
-  color: var(--color-warning);
+  color: #f59e0b;
 }
 
 .info {
-  border-left: 4px solid var(--color-info);
+  border-left: 4px solid #2563eb;
 }
 
 .info .iconWrapper {
-  color: var(--color-info);
+  color: #2563eb;
 }
 
 /* Content */
@@ -190,9 +192,9 @@
 
 .message {
   margin: 0;
-  font-size: var(--text-base);
+  font-size: 1rem;
   line-height: 1.5;
-  color: var(--color-gray-900);
+  color: #1f2937;
   word-wrap: break-word;
 }
 
@@ -265,7 +267,7 @@
   .container {
     padding: var(--space-3);
   }
-  
+
   .toast {
     min-width: auto;
     max-width: calc(100vw - var(--space-6));
@@ -307,11 +309,11 @@
     animation: none !important;
     transition: opacity 0.2s;
   }
-  
+
   .toast.visible {
     transform: translateX(0) !important;
   }
-  
+
   .progressBar {
     animation: none !important;
     display: none;
@@ -323,19 +325,19 @@
   .toast {
     border: 2px solid currentColor;
   }
-  
+
   .success {
     border-color: green;
   }
-  
+
   .error {
     border-color: red;
   }
-  
+
   .warning {
     border-color: orange;
   }
-  
+
   .info {
     border-color: blue;
   }

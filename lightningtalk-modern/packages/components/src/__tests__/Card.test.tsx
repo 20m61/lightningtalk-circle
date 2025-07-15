@@ -32,8 +32,9 @@ describe('Card Component', () => {
       </Card>
     );
 
-    const card = container.firstChild;
-    expect(card).toHaveClass('card-highlighted');
+    const card = container.firstChild as HTMLElement;
+    // CSS Modules generates hashed class names, check if any class contains the variant
+    expect(card.className).toMatch(/card--highlighted/);
   });
 
   it('renders with custom className', () => {
@@ -77,7 +78,7 @@ describe('Card Component', () => {
       </Card>
     );
 
-    const card = screen.getByRole('article');
+    const card = screen.getByRole('button');
     card.click();
     expect(handleClick).toHaveBeenCalledTimes(1);
   });
@@ -89,7 +90,8 @@ describe('Card Component', () => {
       </Card>
     );
 
-    const card = container.firstChild;
-    expect(card).toHaveClass('card-elevation-2');
+    const card = container.firstChild as HTMLElement;
+    // CSS Modules generates hashed class names, check if any class contains the elevation
+    expect(card.className).toMatch(/card--elevation-2/);
   });
 });

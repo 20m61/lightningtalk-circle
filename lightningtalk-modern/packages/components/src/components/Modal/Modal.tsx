@@ -7,7 +7,7 @@
 import React, { forwardRef, useEffect, useRef } from 'react';
 import { createPortal } from 'react-dom';
 import { clsx } from 'clsx';
-import { colors, spacing, radii, shadows } from '../../tokens';
+import styles from './Modal.module.css';
 import { Button } from '../Button';
 
 export interface ModalProps {
@@ -80,16 +80,6 @@ export interface ModalProps {
    * Custom portal container
    */
   container?: HTMLElement;
-
-  /**
-   * Callback when modal is fully opened
-   */
-  onAfterOpen?: () => void;
-
-  /**
-   * Callback when modal is fully closed
-   */
-  onAfterClose?: () => void;
 }
 
 const Modal = forwardRef<HTMLDivElement, ModalProps>(
@@ -108,9 +98,7 @@ const Modal = forwardRef<HTMLDivElement, ModalProps>(
       children,
       footer,
       preventBodyScroll = true,
-      container,
-      onAfterOpen,
-      onAfterClose
+      container
     },
     _ref
   ) => {
@@ -145,7 +133,6 @@ const Modal = forwardRef<HTMLDivElement, ModalProps>(
             );
             focusableElement?.focus();
           }
-          onAfterOpen?.();
         }, 10);
 
         return () => clearTimeout(timer);
@@ -154,10 +141,9 @@ const Modal = forwardRef<HTMLDivElement, ModalProps>(
         if (previousFocusRef.current) {
           previousFocusRef.current.focus();
         }
-        onAfterClose?.();
         return;
       }
-    }, [open, onAfterOpen, onAfterClose]);
+    }, [open]);
 
     // Handle escape key
     useEffect(() => {
@@ -180,129 +166,11 @@ const Modal = forwardRef<HTMLDivElement, ModalProps>(
       }
     };
 
-    // Handle focus trap
-    const handleKeyDown = (event: React.KeyboardEvent) => {
-      if (event.key !== 'Tab') return;
-
-      const modal = modalRef.current;
-      if (!modal) return;
-
-      const focusableElements = modal.querySelectorAll<HTMLElement>(
-        'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
-      );
-
-      const firstElement = focusableElements[0];
-      const lastElement = focusableElements[focusableElements.length - 1];
-
-      if (event.shiftKey) {
-        if (document.activeElement === firstElement) {
-          event.preventDefault();
-          lastElement?.focus();
-        }
-      } else {
-        if (document.activeElement === lastElement) {
-          event.preventDefault();
-          firstElement?.focus();
-        }
-      }
-    };
-
     if (!open) return null;
-
-    // Size configurations
-    const sizeStyles = {
-      sm: { maxWidth: '400px', margin: '5vh auto' },
-      md: { maxWidth: '500px', margin: '5vh auto' },
-      lg: { maxWidth: '700px', margin: '5vh auto' },
-      xl: { maxWidth: '900px', margin: '5vh auto' },
-      full: {
-        maxWidth: '95vw',
-        maxHeight: '95vh',
-        margin: '2.5vh auto',
-        width: '95vw',
-        height: '95vh'
-      }
-    };
-
-    // Backdrop styles
-    const backdropStyles: React.CSSProperties = {
-      position: 'fixed',
-      top: 0,
-      left: 0,
-      right: 0,
-      bottom: 0,
-      backgroundColor: 'rgba(0, 0, 0, 0.5)',
-      display: 'flex',
-      alignItems: 'flex-start',
-      justifyContent: 'center',
-      zIndex: 1000,
-      padding: spacing[4],
-      overflow: 'auto',
-      backdropFilter: 'blur(4px)'
-    };
-
-    // Modal content styles
-    const modalStyles: React.CSSProperties = {
-      backgroundColor: colors.background.primary,
-      borderRadius: radii.modal,
-      boxShadow: shadows.modal,
-      position: 'relative',
-      width: '100%',
-      maxHeight: '90vh',
-      overflow: 'hidden',
-      display: 'flex',
-      flexDirection: 'column',
-      ...sizeStyles[size]
-    };
-
-    // Header styles
-    const headerStyles: React.CSSProperties = {
-      padding: `${spacing[6]} ${spacing[6]} ${spacing[4]} ${spacing[6]}`,
-      borderBottom: `1px solid ${colors.border.light}`,
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'space-between',
-      flexShrink: 0
-    };
-
-    // Title styles
-    const titleStyles: React.CSSProperties = {
-      margin: 0,
-      fontSize: '1.25rem',
-      fontWeight: 600,
-      color: colors.text.primary,
-      lineHeight: 1.4
-    };
-
-    // Body styles
-    const bodyStyles: React.CSSProperties = {
-      padding: spacing[6],
-      flex: 1,
-      overflow: 'auto'
-    };
-
-    // Footer styles
-    const footerStyles: React.CSSProperties = {
-      padding: `${spacing[4]} ${spacing[6]} ${spacing[6]} ${spacing[6]}`,
-      borderTop: `1px solid ${colors.border.light}`,
-      display: 'flex',
-      gap: spacing[3],
-      justifyContent: 'flex-end',
-      flexShrink: 0
-    };
-
-    // Close button styles
-    const closeButtonStyles: React.CSSProperties = {
-      position: 'absolute',
-      top: spacing[4],
-      right: spacing[4],
-      zIndex: 1
-    };
 
     const modalContent = (
       <div
-        className={clsx('lt-modal-backdrop', backdropClassName)}
-        style={backdropStyles}
+        className={clsx(styles.backdrop, backdropClassName)}
         onClick={handleBackdropClick}
         role="dialog"
         aria-modal="true"
@@ -310,9 +178,7 @@ const Modal = forwardRef<HTMLDivElement, ModalProps>(
       >
         <div
           ref={modalRef}
-          className={clsx('lt-modal', `lt-modal--${size}`, className)}
-          style={modalStyles}
-          onKeyDown={handleKeyDown}
+          className={clsx(styles.modal, styles[`modal--${size}`], className)}
           role="document"
         >
           {/* Close button */}
@@ -321,7 +187,7 @@ const Modal = forwardRef<HTMLDivElement, ModalProps>(
               variant="ghost"
               size="sm"
               onClick={onClose}
-              style={closeButtonStyles}
+              className={styles['close-button'] || ''}
               aria-label="Close modal"
             >
               <svg
@@ -340,24 +206,18 @@ const Modal = forwardRef<HTMLDivElement, ModalProps>(
 
           {/* Header */}
           {title && (
-            <div className="lt-modal__header" style={headerStyles}>
-              <h2 id="modal-title" style={titleStyles}>
+            <div className={styles.header}>
+              <h2 id="modal-title" className={styles.title}>
                 {title}
               </h2>
             </div>
           )}
 
           {/* Body */}
-          <div className={clsx('lt-modal__body', contentClassName)} style={bodyStyles}>
-            {children}
-          </div>
+          <div className={clsx(styles.body, contentClassName)}>{children}</div>
 
           {/* Footer */}
-          {footer && (
-            <div className="lt-modal__footer" style={footerStyles}>
-              {footer}
-            </div>
-          )}
+          {footer && <div className={styles.footer}>{footer}</div>}
         </div>
       </div>
     );
@@ -419,7 +279,7 @@ export const ConfirmModal = ({
         </>
       }
     >
-      <p style={{ margin: 0, color: colors.text.secondary, lineHeight: 1.5 }}>{message}</p>
+      <p style={{ margin: 0, color: '#6B7280', lineHeight: 1.5 }}>{message}</p>
     </Modal>
   );
 };

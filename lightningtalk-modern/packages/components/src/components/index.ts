@@ -16,9 +16,8 @@ export { Toast, ToastContainer, useToast } from './Toast';
 export type { ToastProps, ToastContainerProps, UseToastReturn } from './Toast';
 
 // Navigation Components
-// TODO: Fix Header component syntax errors
-// export { Header } from './Header';
-// export type { HeaderProps } from './Header';
+export { Header } from './Header';
+export type { HeaderProps } from './Header';
 
 // Layout Components
 // TODO: Fix Hero component CSS module issues
@@ -26,9 +25,8 @@ export type { ToastProps, ToastContainerProps, UseToastReturn } from './Toast';
 // export type { HeroProps } from './Hero';
 
 // Lightning Talk Specific Components
-// TODO: Implement EventCard component
-// export { EventCard } from './EventCard';
-// export type { EventCardProps, Event } from './EventCard';
+export { EventCard } from './EventCard';
+export type { EventCardProps } from './EventCard';
 
 // TODO: Implement ParticipantList component
 // export { ParticipantList } from './ParticipantList';

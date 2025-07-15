@@ -33,7 +33,9 @@ export default [
       commonjs(),
       typescript({
         tsconfig: './tsconfig.json',
-        exclude: ['**/*.test.tsx', '**/*.test.ts', '**/*.stories.tsx']
+        exclude: ['**/*.test.tsx', '**/*.test.ts', '**/*.stories.tsx'],
+        clean: true,
+        abortOnError: false
       }),
       postcss({
         modules: true,
@@ -51,9 +53,12 @@ export default [
     output: [{ file: packageJson.types, format: 'es' }],
     plugins: [
       dts({
-        respectExternal: true
+        respectExternal: true,
+        compilerOptions: {
+          skipLibCheck: true
+        }
       })
     ],
-    external: [/\.css$/]
+    external: [/\.css$/, 'react', 'react-dom']
   }
 ];

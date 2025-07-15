@@ -9,26 +9,31 @@ describe('Button Component', () => {
   });
 
   it('applies primary variant styles', () => {
-    render(<Button variant="primary">Primary Button</Button>);
-    const button = screen.getByRole('button');
-    expect(button).toHaveClass('btn-primary');
+    const { container } = render(<Button variant="primary">Primary Button</Button>);
+    const button = container.firstChild as HTMLElement;
+    // CSS Modules generates hashed class names, check if any class contains the variant
+    expect(button.className).toMatch(/button--primary/);
   });
 
   it('applies secondary variant styles', () => {
-    render(<Button variant="secondary">Secondary Button</Button>);
-    const button = screen.getByRole('button');
-    expect(button).toHaveClass('btn-secondary');
+    const { container } = render(<Button variant="secondary">Secondary Button</Button>);
+    const button = container.firstChild as HTMLElement;
+    // CSS Modules generates hashed class names, check if any class contains the variant
+    expect(button.className).toMatch(/button--secondary/);
   });
 
   it('applies size classes correctly', () => {
-    const { rerender } = render(<Button size="small">Small</Button>);
-    expect(screen.getByRole('button')).toHaveClass('btn-small');
+    const { container, rerender } = render(<Button size="sm">Small</Button>);
+    let button = container.firstChild as HTMLElement;
+    expect(button.className).toMatch(/button--sm/);
 
-    rerender(<Button size="medium">Medium</Button>);
-    expect(screen.getByRole('button')).toHaveClass('btn-medium');
+    rerender(<Button size="md">Medium</Button>);
+    button = container.firstChild as HTMLElement;
+    expect(button.className).toMatch(/button--md/);
 
-    rerender(<Button size="large">Large</Button>);
-    expect(screen.getByRole('button')).toHaveClass('btn-large');
+    rerender(<Button size="lg">Large</Button>);
+    button = container.firstChild as HTMLElement;
+    expect(button.className).toMatch(/button--lg/);
   });
 
   it('handles click events', () => {
@@ -55,9 +60,9 @@ describe('Button Component', () => {
   });
 
   it('shows loading state', () => {
-    render(<Button loading>Loading...</Button>);
-    const button = screen.getByRole('button');
-    expect(button).toHaveClass('btn-loading');
+    const { container } = render(<Button loading>Loading...</Button>);
+    const button = container.firstChild as HTMLElement;
+    expect(button.className).toMatch(/button--loading/);
     expect(button).toBeDisabled();
   });
 
