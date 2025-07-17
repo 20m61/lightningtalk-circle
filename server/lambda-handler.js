@@ -1,15 +1,19 @@
 /**
- * Lambda handler using CommonJS for compatibility
+ * Lambda handler using ES Modules
  * This is a wrapper around the main Express app
  * Updated: Complete rewrite for ES Module compatibility - v2.0
  */
 
-const serverless = require('serverless-http');
-const express = require('express');
-const cors = require('cors');
-const helmet = require('helmet');
-const rateLimit = require('express-rate-limit');
-const path = require('path');
+import serverless from 'serverless-http';
+import express from 'express';
+import cors from 'cors';
+import helmet from 'helmet';
+import rateLimit from 'express-rate-limit';
+import path from 'path';
+import { fileURLToPath } from 'url';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 // Create Express app
 const app = express();
@@ -208,9 +212,9 @@ app.use((req, res) => {
 });
 
 // Export handler for Lambda
-const handler = serverless(app);
+const serverlessHandler = serverless(app);
 
-exports.handler = async (event, context) => {
+export const handler = async (event, context) => {
   // Add debugging
   console.log('Lambda event:', JSON.stringify(event, null, 2));
 
@@ -241,7 +245,7 @@ exports.handler = async (event, context) => {
     }
 
     // Handle API Gateway requests
-    const result = await handler(event, context);
+    const result = await serverlessHandler(event, context);
     console.log('Lambda result:', JSON.stringify(result, null, 2));
     return result;
   } catch (error) {
