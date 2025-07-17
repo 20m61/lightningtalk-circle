@@ -1,5 +1,5 @@
-import serverless from 'serverless-http';
-import app from './app.js';
+const serverless = require('serverless-http');
+const app = require('./app.js');
 
 // Configure serverless-http options
 const serverlessHandler = serverless(app, {
@@ -11,7 +11,7 @@ const serverlessHandler = serverless(app, {
 });
 
 // Export handler for Lambda
-export const handler = async (event, context) => {
+exports.handler = async (event, context) => {
   // Warm up Lambda container
   if (event.source === 'serverless-plugin-warmup') {
     console.log('WarmUp - Lambda is warm!');

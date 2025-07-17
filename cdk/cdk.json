@@ -1,5 +1,5 @@
 {
-  "app": "node bin/cdk.js",
+  "app": "node bin/app.js",
   "watch": {
     "include": [
       "**"

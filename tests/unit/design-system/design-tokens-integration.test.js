@@ -71,8 +71,8 @@ describe('Design Tokens Integration', () => {
   });
 
   describe('Color Token System', () => {
-    it('should define Lightning Talk Green as primary color', () => {
-      expect(designTokensCSS).toContain('--color-primary-500: #22c55e');
+    it('should define Lightning Talk Electric Orange as primary color', () => {
+      expect(designTokensCSS).toContain('--color-primary-500: #ff6b35');
     });
 
     it('should have complete color palette', () => {

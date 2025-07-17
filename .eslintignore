@@ -67,3 +67,4 @@ package-lock.json
 
 # Static theme directory
 theme/
+public/build/

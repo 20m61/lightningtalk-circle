@@ -9,7 +9,10 @@ const { getEnvironmentConfig, validateEnvironment } = require('../lib/config/env
 const app = new cdk.App();
 
 // Get stage from context or default to 'dev'
-const stage = app.node.tryGetContext('env') || process.env.CDK_STAGE || 'dev';
+const contextEnv = app.node.tryGetContext('env');
+const envStage = process.env.CDK_STAGE;
+console.log(`Debug - contextEnv: ${contextEnv}, envStage: ${envStage}`);
+const stage = contextEnv || envStage || 'dev';
 
 // Get environment configuration
 const config = validateEnvironment(getEnvironmentConfig(stage));

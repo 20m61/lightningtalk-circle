@@ -1,15 +1,13 @@
 /**
- * Lambda handler using CommonJS for compatibility
+ * Lambda handler using ES Modules
  * This is a wrapper around the main Express app
- * Updated: Complete rewrite for ES Module compatibility - v2.0
  */
 
-const serverless = require('serverless-http');
-const express = require('express');
-const cors = require('cors');
-const helmet = require('helmet');
-const rateLimit = require('express-rate-limit');
-const path = require('path');
+import serverless from 'serverless-http';
+import express from 'express';
+import cors from 'cors';
+import helmet from 'helmet';
+import rateLimit from 'express-rate-limit';
 
 // Create Express app
 const app = express();
@@ -55,8 +53,8 @@ app.use(
       );
     },
     skip: req => {
-      // Skip rate limiting for health checks and if we can't determine IP
-      return req.path === '/api/health' || process.env.AWS_LAMBDA_FUNCTION_NAME;
+      // Skip rate limiting for health checks
+      return req.path === '/api/health';
     }
   })
 );
@@ -67,7 +65,7 @@ app.get('/api/health', (req, res) => {
     status: 'healthy',
     timestamp: new Date().toISOString(),
     environment: process.env.NODE_ENV || 'development',
-    version: '1.0.1'
+    version: '1.0.2'
   });
 });
 
@@ -95,54 +93,6 @@ app.get('/api/voting/participation/:eventId', (req, res) => {
     eventId,
     online: 0,
     onsite: 0,
-    timestamp: new Date().toISOString()
-  });
-});
-
-// Voting base endpoint
-app.get('/api/voting', (req, res) => {
-  console.log('Voting base endpoint accessed');
-  res.json({
-    message: 'Voting base endpoint',
-    path: req.path,
-    timestamp: new Date().toISOString()
-  });
-});
-
-app.post('/api/voting', (req, res) => {
-  console.log('Voting POST endpoint accessed:', req.body);
-  res.json({
-    message: 'Vote submitted successfully',
-    data: req.body,
-    timestamp: new Date().toISOString()
-  });
-});
-
-// General voting endpoints
-app.get('/api/voting/*', (req, res) => {
-  const path = req.path;
-  console.log('Voting wildcard endpoint accessed:', path);
-
-  if (path.includes('/participation/')) {
-    const eventId = path.split('/participation/')[1];
-    res.json({
-      eventId,
-      online: 0,
-      onsite: 0,
-      timestamp: new Date().toISOString()
-    });
-  } else {
-    res.json({
-      message: 'Voting endpoint',
-      path: path,
-      timestamp: new Date().toISOString()
-    });
-  }
-});
-
-app.post('/api/voting/*', (req, res) => {
-  res.json({
-    message: 'Vote submitted',
     timestamp: new Date().toISOString()
   });
 });
@@ -180,23 +130,11 @@ app.use((error, req, res, next) => {
 
 // Catch-all handler for API paths
 app.use('/api/*', (req, res) => {
-  console.log('Catch-all API handler:', req.method, req.path);
-
-  if (req.path.startsWith('/api/voting/participation/')) {
-    const eventId = req.path.split('/api/voting/participation/')[1];
-    res.json({
-      eventId,
-      online: 0,
-      onsite: 0,
-      timestamp: new Date().toISOString()
-    });
-  } else {
-    res.status(404).json({
-      error: 'API endpoint not found',
-      path: req.path,
-      method: req.method
-    });
-  }
+  res.status(404).json({
+    error: 'API endpoint not found',
+    path: req.path,
+    method: req.method
+  });
 });
 
 // 404 handler
@@ -210,7 +148,7 @@ app.use((req, res) => {
 // Export handler for Lambda
 const handler = serverless(app);
 
-exports.handler = async (event, context) => {
+export const lambdaHandler = async (event, context) => {
   // Add debugging
   console.log('Lambda event:', JSON.stringify(event, null, 2));
 

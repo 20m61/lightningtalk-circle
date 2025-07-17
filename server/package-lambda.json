@@ -1,9 +1,8 @@
 {
-  "name": "lightningtalk-circle-server",
+  "name": "lightningtalk-circle-lambda",
   "version": "1.0.0",
-  "type": "module",
   "description": "Lightning Talk Circle Lambda Functions",
-  "main": "lambda.js",
+  "main": "lambda-handler.cjs",
   "dependencies": {
     "express": "^4.18.0",
     "serverless-http": "^3.2.0",

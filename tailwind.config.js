@@ -8,6 +8,9 @@ export default {
   ],
   theme: {
     extend: {
+      backdropBlur: {
+        'md': '12px',
+      },
       colors: {
         primary: {
           50: '#f0f9ff',

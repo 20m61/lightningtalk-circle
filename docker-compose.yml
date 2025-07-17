@@ -1,6 +1,7 @@
-# Lightning Talk Circle - Development Environment (Docker)
+# Lightning Talk Circle - Local Development Environment (Docker)
 # This file is for local development only - NOT for production deployment
-# Production uses AWS Lambda/serverless architecture via CDK
+# Production (発表.com) uses AWS Lambda/serverless architecture via CDK
+# Development (dev.発表.com) uses AWS development stack
 
 version: "3.8"
 

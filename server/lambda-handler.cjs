@@ -255,3 +255,6 @@ exports.handler = async (event, context) => {
     };
   }
 };
+
+// Export the handler properly for Lambda
+module.exports = { handler };

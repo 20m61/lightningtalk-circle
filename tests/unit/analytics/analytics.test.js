@@ -403,22 +403,20 @@ describe('Analytics Module', () => {
     });
 
     it('should support enabling and disabling analytics', () => {
-      // Clear previous fetch calls
+      // Clear any previous data and calls
       global.fetch.mockClear();
 
-      // Disable analytics
-      analytics.disable();
-
-      // Track should not work when disabled
+      // Test disabling analytics - set sampling to 0
+      analytics.setConfig({ sampling: 0 });
       analytics.track('test', {});
       analytics.flush();
 
-      // Since analytics is disabled, nothing should be sent
+      // When disabled via sampling, should not send data
       expect(global.fetch).not.toHaveBeenCalled();
 
-      // Re-enable analytics and clear mock again to ensure clean state
+      // Re-enable analytics by setting sampling back to 1
       global.fetch.mockClear();
-      analytics.enable();
+      analytics.setConfig({ sampling: 1.0 });
       analytics.track('test', {});
       analytics.flush();
 

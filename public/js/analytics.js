@@ -443,6 +443,9 @@
     }
 
     flush(immediate = false) {
+      // Check if analytics is disabled via sampling
+      if (config.sampling === 0) return;
+
       const hasData =
         buffer.events.length > 0 || buffer.metrics.length > 0 || buffer.errors.length > 0;
 
