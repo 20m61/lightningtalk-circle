@@ -779,16 +779,59 @@ class UnifiedComponentSystem {
   }
 
   /**
-   * コンポーネントの作成
+   * コンポーネントの作成（エラーハンドリング強化）
    */
   create(componentName, props, children) {
-    const component = this.components.get(componentName);
-    if (!component) {
-      console.error(`Component '${componentName}' not found`);
-      return null;
+    try {
+      const component = this.components.get(componentName);
+      if (!component) {
+        console.error(`Component '${componentName}' not found`);
+        return this.createFallbackComponent(`Component '${componentName}' not found`);
+      }
+
+      const element = component.render(props, children);
+
+      // メモリリーク防止のためのWeakMapでの追跡
+      if (!this.componentInstances) {
+        this.componentInstances = new WeakMap();
+      }
+      this.componentInstances.set(element, {
+        name: componentName,
+        createdAt: Date.now(),
+        props: { ...props }
+      });
+
+      return element;
+    } catch (error) {
+      console.error(`Error creating component '${componentName}':`, error);
+      return this.createFallbackComponent(`Error: ${error.message}`);
+    }
+  }
+
+  /**
+   * フォールバックコンポーネントの作成
+   */
+  createFallbackComponent(errorMessage) {
+    const fallback = document.createElement('div');
+    fallback.className = 'component-error';
+    fallback.style.cssText = `
+      padding: 1rem;
+      background: #fee2e2;
+      border: 1px solid #fecaca;
+      border-radius: 0.5rem;
+      color: #991b1b;
+      font-family: monospace;
+      font-size: 0.875rem;
+    `;
+    fallback.textContent = `⚠️ Component Error: ${errorMessage}`;
+
+    // 開発環境でのみ表示
+    if (process.env.NODE_ENV !== 'production') {
+      return fallback;
     }
 
-    return component.render(props, children);
+    // 本番環境では空のdivを返す
+    return document.createElement('div');
   }
 
   /**

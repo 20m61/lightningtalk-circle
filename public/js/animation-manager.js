@@ -24,11 +24,20 @@ class AnimationManager {
     // will-changeプロパティのサポートをチェック
     this.supportsWillChange = CSS.supports('will-change', 'transform');
 
+    // Reduced Motionの検出
+    this.prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
     // GPU情報の取得
     this.detectGPUCapabilities();
 
     // RAF（RequestAnimationFrame）の最適化
     this.setupRAF();
+
+    // リソース管理の初期化
+    this.setupResourceManagement();
+
+    // アクセシビリティ対応
+    this.setupAccessibility();
   }
 
   /**
@@ -69,7 +78,101 @@ class AnimationManager {
   }
 
   /**
-   * アニメーションの作成
+   * リソース管理の初期化
+   */
+  setupResourceManagement() {
+    // ページアンロード時のクリーンアップ
+    const beforeUnloadHandler = () => {
+      this.cleanupAll();
+    };
+
+    window.addEventListener('beforeunload', beforeUnloadHandler);
+
+    // グローバルリスナーの追跡
+    if (!this.globalListeners) {
+      this.globalListeners = [];
+    }
+    this.globalListeners.push({
+      target: window,
+      event: 'beforeunload',
+      handler: beforeUnloadHandler
+    });
+
+    // メモリ使用量の監視
+    if ('memory' in performance) {
+      this.monitorMemoryUsage();
+    }
+  }
+
+  /**
+   * アクセシビリティ対応
+   */
+  setupAccessibility() {
+    // Reduced Motionの変更を監視
+    const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
+    const updateReducedMotion = e => {
+      this.prefersReducedMotion = e.matches;
+      if (this.prefersReducedMotion) {
+        // 進行中のアニメーションを停止または軽減
+        this.respectReducedMotion();
+      }
+    };
+
+    mediaQuery.addListener(updateReducedMotion);
+    this.globalListeners.push({
+      target: mediaQuery,
+      event: 'change',
+      handler: updateReducedMotion
+    });
+  }
+
+  /**
+   * Reduced Motionの尊重
+   */
+  respectReducedMotion() {
+    this.animations.forEach((animationData, animationId) => {
+      if (animationData.animation && animationData.animation.playState === 'running') {
+        // アニメーションを即座に完了状態にする
+        animationData.animation.finish();
+      }
+    });
+  }
+
+  /**
+   * メモリ使用量の監視
+   */
+  monitorMemoryUsage() {
+    const checkMemory = () => {
+      if (performance.memory) {
+        const memoryInfo = performance.memory;
+        const memoryUsageRatio = memoryInfo.usedJSHeapSize / memoryInfo.jsHeapSizeLimit;
+
+        // メモリ使用率が80%を超えた場合、アニメーションを制限
+        if (memoryUsageRatio > 0.8) {
+          console.warn('[AnimationManager] High memory usage detected, limiting animations');
+          this.limitAnimations();
+        }
+      }
+    };
+
+    setInterval(checkMemory, 10000); // 10秒ごとにチェック
+  }
+
+  /**
+   * アニメーションの制限
+   */
+  limitAnimations() {
+    // 低優先度のアニメーションをキャンセル
+    this.animations.forEach((animationData, animationId) => {
+      if (animationData.config.priority === 'low') {
+        animationData.animation.cancel();
+        this.cleanup(animationId);
+      }
+    });
+  }
+
+  /**
+   * アニメーションの作成（アクセシビリティ対応強化）
    */
   createAnimation(element, keyframes, options = {}) {
     const defaultOptions = {
@@ -81,6 +184,19 @@ class AnimationManager {
     };
 
     const config = { ...defaultOptions, ...options };
+
+    // Reduced Motionの場合はアニメーションを軽減または無効化
+    if (this.prefersReducedMotion) {
+      if (config.respectReducedMotion !== false) {
+        // アニメーションを即座に完了状態にする
+        this.applyFinalState(element, keyframes);
+        if (config.onComplete) config.onComplete();
+        return null;
+      }
+      // または短縮バージョンを使用
+      config.duration = Math.min(config.duration, 100);
+    }
+
     const animationId = this.generateId();
 
     // GPUの最適化
@@ -381,14 +497,69 @@ class AnimationManager {
   }
 
   /**
-   * クリーンアップ
+   * クリーンアップ（メモリリーク防止強化）
    */
   cleanup(animationId) {
     const animationData = this.animations.get(animationId);
     if (animationData) {
+      // GPU最適化のクリーンアップ
       this.gpuOptimizer.cleanup(animationData.element);
+
+      // パフォーマンス監視の削除
       this.performanceMonitor.removeAnimation(animationId);
+
+      // イベントリスナーのクリーンアップ
+      this.cleanupEventListeners(animationData.element);
+
+      // アニメーションデータの削除
       this.animations.delete(animationId);
+    }
+  }
+
+  /**
+   * イベントリスナーのクリーンアップ
+   */
+  cleanupEventListeners(element) {
+    // WeakMapを使用してイベントリスナーを追跡
+    if (this.elementListeners && this.elementListeners.has(element)) {
+      const listeners = this.elementListeners.get(element);
+      listeners.forEach(({ event, handler }) => {
+        element.removeEventListener(event, handler);
+      });
+      this.elementListeners.delete(element);
+    }
+  }
+
+  /**
+   * イベントリスナーの追加（追跡付き）
+   */
+  addTrackedEventListener(element, event, handler) {
+    if (!this.elementListeners) {
+      this.elementListeners = new WeakMap();
+    }
+
+    if (!this.elementListeners.has(element)) {
+      this.elementListeners.set(element, []);
+    }
+
+    this.elementListeners.get(element).push({ event, handler });
+    element.addEventListener(event, handler);
+  }
+
+  /**
+   * 全てのアニメーションのクリーンアップ
+   */
+  cleanupAll() {
+    this.animations.forEach((_, animationId) => {
+      this.cleanup(animationId);
+    });
+
+    // グローバルリスナーのクリーンアップ
+    if (this.globalListeners) {
+      this.globalListeners.forEach(({ target, event, handler }) => {
+        target.removeEventListener(event, handler);
+      });
+      this.globalListeners = [];
     }
   }
 
@@ -446,6 +617,16 @@ class AnimationManager {
 
     // 色の補間などは別途実装
     return to;
+  }
+
+  /**
+   * 最終状態の即座適用（Reduced Motion用）
+   */
+  applyFinalState(element, keyframes) {
+    if (keyframes.length > 0) {
+      const finalFrame = keyframes[keyframes.length - 1];
+      Object.assign(element.style, finalFrame);
+    }
   }
 }
 
@@ -550,6 +731,41 @@ class PerformanceMonitor {
     // パフォーマンスが悪い場合は警告
     if (metrics.averageFPS < 30) {
       console.warn(`Animation ${animationId} performed poorly:`, metrics);
+    }
+
+    // パフォーマンス分析をサーバーに送信（オプション）
+    if (window.analyticsEnabled && metrics.averageFPS < 50) {
+      this.sendPerformanceAnalytics(animationId, metrics);
+    }
+  }
+
+  /**
+   * パフォーマンス分析データの送信
+   */
+  sendPerformanceAnalytics(animationId, metrics) {
+    try {
+      fetch('/api/analytics/animation-performance', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          animationId,
+          metrics,
+          userAgent: navigator.userAgent,
+          timestamp: Date.now(),
+          viewport: {
+            width: window.innerWidth,
+            height: window.innerHeight
+          },
+          devicePixelRatio: window.devicePixelRatio || 1
+        })
+      }).catch(error => {
+        // 分析データ送信の失敗は無視
+        console.debug('Analytics sending failed:', error);
+      });
+    } catch (error) {
+      // エラーを無視（分析は必須機能ではない）
     }
   }
 
