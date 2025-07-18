@@ -124,6 +124,11 @@ class MobileTouchManager {
   handleTouchStart(event) {
     const startTime = performance.now();
 
+    // セキュリティ: 不正なタッチイベントの検証
+    if (!this.validateTouchEvent(event)) {
+      return;
+    }
+
     // タッチ情報を記録
     Array.from(event.touches).forEach(touch => {
       this.touches.set(touch.identifier, {
@@ -434,6 +439,37 @@ class MobileTouchManager {
 
     const vibrationPattern = this.hapticPatterns[pattern] || this.hapticPatterns.light;
     navigator.vibrate(vibrationPattern);
+  }
+
+  /**
+   * セキュリティ: タッチイベントの検証
+   */
+  validateTouchEvent(event) {
+    // 基本的な検証
+    if (!event || !event.touches) {
+      return false;
+    }
+
+    // 過度な同時タッチの制限（DoS攻撃対策）
+    if (event.touches.length > 10) {
+      console.warn('[MobileTouchManager] Excessive touch points detected');
+      return false;
+    }
+
+    // タッチポイントの座標検証
+    for (const touch of event.touches) {
+      if (
+        touch.clientX < 0 ||
+        touch.clientY < 0 ||
+        touch.clientX > window.innerWidth ||
+        touch.clientY > window.innerHeight
+      ) {
+        console.warn('[MobileTouchManager] Invalid touch coordinates detected');
+        return false;
+      }
+    }
+
+    return true;
   }
 
   /**
