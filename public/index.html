@@ -81,6 +81,18 @@
     <meta name="mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
     <meta name="apple-touch-fullscreen" content="yes" />
+
+    <!-- Frontend Logger Configuration -->
+    <meta name="environment" content="development" />
+    <meta name="api-endpoint" content="/api" />
+    <script>
+      // Logger configuration
+      window.APP_CONFIG = {
+        environment: 'development',
+        apiEndpoint: '/api',
+        enableLogging: true
+      };
+    </script>
   </head>
   <body>
     <header class="header">
@@ -543,6 +555,9 @@
         </div>
       </div>
     </div>
+
+    <!-- Frontend Logger - Load first for error capture -->
+    <script src="js/logger.js"></script>
 
     <script src="js/auth.js"></script>
     <script src="js/unified-components.js"></script>

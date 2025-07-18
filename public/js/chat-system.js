@@ -6,6 +6,7 @@
 class ChatSystem {
   constructor() {
     this.socket = null;
+    this.logger = window.Logger;
     this.currentRoom = null;
     this.currentUser = null;
     this.messages = new Map();
@@ -49,9 +50,12 @@ class ChatSystem {
       // Setup event handlers
       this.setupEventHandlers();
 
-      console.log('Chat system initialized successfully');
+      this.logger.info('Chat system initialized successfully', { category: 'chat' });
     } catch (error) {
-      console.error('Failed to initialize chat system:', error);
+      this.logger.error('Failed to initialize chat system', {
+        error: error.message,
+        category: 'chat'
+      });
     }
   }
 
@@ -72,20 +76,20 @@ class ChatSystem {
 
     // Connection events
     this.socket.on('connect', () => {
-      console.log('Connected to chat server');
+      this.logger.info('Connected to chat server', { category: 'chat' });
       this.isConnected = true;
       this.processMessageQueue();
       this.updateConnectionStatus(true);
     });
 
     this.socket.on('disconnect', reason => {
-      console.log('Disconnected from chat server:', reason);
+      this.logger.warn('Disconnected from chat server', { reason, category: 'chat' });
       this.isConnected = false;
       this.updateConnectionStatus(false);
     });
 
     this.socket.on('connect_error', error => {
-      console.error('Connection error:', error);
+      this.logger.error('Chat connection error', { error: error.message, category: 'chat' });
       this.handleConnectionError(error);
     });
 
