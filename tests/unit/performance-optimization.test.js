@@ -166,8 +166,12 @@ class MockLightningTalkApp {
       this.elements.modalBody = document.getElementById('modalBody');
     }
 
-    this.elements.modalBody.innerHTML = '<form></form>';
-    this.elements.modal.style.display = 'block';
+    if (this.elements.modalBody) {
+      this.elements.modalBody.innerHTML = '<form></form>';
+    }
+    if (this.elements.modal) {
+      this.elements.modal.style.display = 'block';
+    }
   }
 
   updateSurveyCounters() {
@@ -288,6 +292,11 @@ describe('Performance Optimization', () => {
 
     test('should use cached elements instead of querying DOM repeatedly', () => {
       app.init();
+
+      // Verify elements are cached
+      expect(app.elements.modal).toBe(mockElements.modal);
+      expect(app.elements.modalBody).toBe(mockElements.modalBody);
+
       jest.clearAllMocks();
 
       // Test modal opening uses cached elements
