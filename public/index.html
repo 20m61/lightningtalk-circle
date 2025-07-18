@@ -42,10 +42,10 @@
       property="og:description"
       content="5分で伝える、みんなのアイデア。ライトニングトークイベントの参加・管理プラットフォーム"
     />
-    <meta property="og:image" content="/icons/logo.jpeg" />
+    <meta property="og:image" content="/icons/logo-optimized.jpg" />
     <meta property="og:type" content="website" />
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:image" content="/icons/logo.jpeg" />
+    <meta name="twitter:image" content="/icons/logo-optimized.jpg" />
 
     <!-- Performance optimizations: Preload critical resources -->
     <link rel="preload" href="css/design-tokens.css" as="style" />
@@ -102,7 +102,10 @@
     <header class="header">
       <nav class="container flex flex--items-center flex--justify-between">
         <div class="logo-container">
-          <img src="/icons/logo.jpeg" alt="なんでもライトニングトーク" class="logo-image" />
+          <picture>
+            <source srcset="/icons/logo-header.webp" type="image/webp" />
+            <img src="/icons/logo-header.jpg" alt="なんでもライトニングトーク" class="logo-image" loading="eager" />
+          </picture>
           <div class="logo-text text-primary font-bold">なんでもLT</div>
         </div>
         <ul class="nav-links flex flex--items-center">
@@ -135,7 +138,10 @@
             <div class="floating-flower">🌸</div>
           </div>
           <div class="hero-logo-section">
-            <img src="/icons/logo.jpeg" alt="なんでもライトニングトーク" class="hero-logo" />
+            <picture>
+              <source srcset="/icons/logo-hero.webp" type="image/webp" />
+              <img src="/icons/logo-hero.jpg" alt="なんでもライトニングトーク" class="hero-logo" loading="lazy" />
+            </picture>
             <h1>なんでもライトニングトーク ⚡</h1>
           </div>
           <p>5分間で世界を変える！あなたの「なんでも」を聞かせて！</p>
@@ -478,7 +484,10 @@
     <footer id="contact">
       <div class="container">
         <div class="footer-logo-section">
-          <img src="/icons/logo.jpeg" alt="なんでもライトニングトーク" class="footer-logo" />
+          <picture>
+            <source srcset="/icons/logo-footer.webp" type="image/webp" />
+            <img src="/icons/logo-footer.jpg" alt="なんでもライトニングトーク" class="footer-logo" loading="lazy" />
+          </picture>
           <h3>✨ なんでもライトニングトーク</h3>
         </div>
         <p>5分間で世界が広がる。あなたの参加をお待ちしています！</p>
@@ -536,7 +545,10 @@
       <div class="admin-login-content">
         <button class="close-btn" onclick="closeAdminLogin()">&times;</button>
         <div class="admin-login-header">
-          <img src="/icons/logo.jpeg" alt="なんでもライトニングトーク" class="admin-logo" />
+          <picture>
+            <source srcset="/icons/logo-footer.webp" type="image/webp" />
+            <img src="/icons/logo-footer.jpg" alt="なんでもライトニングトーク" class="admin-logo" loading="lazy" />
+          </picture>
           <h2>🔐 管理画面ログイン</h2>
           <p>イベントを追加・管理するには管理者権限が必要です</p>
         </div>

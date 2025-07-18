@@ -212,6 +212,26 @@
   padding: var(--space-2);
 }
 
+/* ダークモード対応 */
+@media (prefers-color-scheme: dark) {
+  .logo-image,
+  .hero-logo,
+  .footer-logo,
+  .admin-logo {
+    background: rgba(255, 255, 255, 0.95);
+    border-color: var(--color-neutral-600);
+    box-shadow: 0 0 20px rgba(255, 255, 255, 0.1);
+  }
+
+  .logo-image:hover,
+  .hero-logo:hover,
+  .footer-logo:hover,
+  .admin-logo:hover {
+    border-color: var(--color-primary-400);
+    box-shadow: 0 0 30px rgba(255, 255, 255, 0.2);
+  }
+}
+
 /* 動作軽減モード対応 */
 @media (prefers-reduced-motion: reduce) {
   .hero-logo {
@@ -224,4 +244,20 @@
   .admin-logo:hover {
     transform: none;
   }
+}
+
+/* パフォーマンス最適化 */
+.logo-image,
+.hero-logo,
+.footer-logo,
+.admin-logo {
+  will-change: transform;
+}
+
+/* プレースホルダー背景 */
+.logo-image:not([src]),
+.hero-logo:not([src]),
+.footer-logo:not([src]),
+.admin-logo:not([src]) {
+  background: linear-gradient(135deg, #f5f5f5 0%, #e0e0e0 100%);
 }
