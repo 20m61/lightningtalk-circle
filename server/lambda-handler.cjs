@@ -1,7 +1,7 @@
 /**
  * Lambda handler using CommonJS for compatibility
  * This is a wrapper around the main Express app
- * Updated: Complete rewrite for ES Module compatibility - v2.0
+ * Updated: Production-ready logging system integration - v2.1
  */
 
 const serverless = require('serverless-http');
@@ -10,6 +10,7 @@ const cors = require('cors');
 const helmet = require('helmet');
 const rateLimit = require('express-rate-limit');
 const path = require('path');
+const logger = require('./utils/production-logger');
 
 // Create Express app
 const app = express();
@@ -89,7 +90,11 @@ app.get('/api/events', (req, res) => {
 // Specific voting participation endpoint
 app.get('/api/voting/participation/:eventId', (req, res) => {
   const eventId = req.params.eventId;
-  console.log('Voting participation endpoint accessed:', eventId);
+  logger.info('Voting participation endpoint accessed', {
+    eventId,
+    userAgent: req.get('User-Agent'),
+    ip: req.ip
+  });
 
   res.json({
     eventId,
@@ -101,7 +106,10 @@ app.get('/api/voting/participation/:eventId', (req, res) => {
 
 // Voting base endpoint
 app.get('/api/voting', (req, res) => {
-  console.log('Voting base endpoint accessed');
+  logger.info('Voting base endpoint accessed', {
+    path: req.path,
+    ip: req.ip
+  });
   res.json({
     message: 'Voting base endpoint',
     path: req.path,
@@ -110,7 +118,10 @@ app.get('/api/voting', (req, res) => {
 });
 
 app.post('/api/voting', (req, res) => {
-  console.log('Voting POST endpoint accessed:', req.body);
+  logger.business('Vote submission', {
+    bodyKeys: Object.keys(req.body),
+    ip: req.ip
+  });
   res.json({
     message: 'Vote submitted successfully',
     data: req.body,
@@ -121,7 +132,10 @@ app.post('/api/voting', (req, res) => {
 // General voting endpoints
 app.get('/api/voting/*', (req, res) => {
   const path = req.path;
-  console.log('Voting wildcard endpoint accessed:', path);
+  logger.info('Voting wildcard endpoint accessed', {
+    path,
+    ip: req.ip
+  });
 
   if (path.includes('/participation/')) {
     const eventId = path.split('/participation/')[1];
@@ -150,10 +164,18 @@ app.post('/api/voting/*', (req, res) => {
 // Auth endpoints
 app.post('/api/auth/login', (req, res) => {
   const { email, password } = req.body;
-  console.log('Login attempt:', { email });
+  logger.security('Login attempt', {
+    email: email?.substring(0, 3) + '***',
+    ip: req.ip,
+    userAgent: req.get('User-Agent')
+  });
 
   // Simple demo authentication - replace with Cognito
   if (email === 'admin@example.com' && password === 'admin123') {
+    logger.business('Successful authentication', {
+      email: email?.substring(0, 3) + '***',
+      role: 'admin'
+    });
     res.json({
       success: true,
       token: 'demo-admin-token',
@@ -161,6 +183,10 @@ app.post('/api/auth/login', (req, res) => {
       timestamp: new Date().toISOString()
     });
   } else {
+    logger.security('Failed authentication attempt', {
+      email: email?.substring(0, 3) + '***',
+      ip: req.ip
+    });
     res.status(401).json({
       success: false,
       message: 'Invalid credentials',
@@ -171,7 +197,14 @@ app.post('/api/auth/login', (req, res) => {
 
 // Error handling middleware
 app.use((error, req, res, next) => {
-  console.error('Error:', error);
+  logger.error('Unhandled application error', {
+    error: error.message,
+    stack: error.stack,
+    url: req.url,
+    method: req.method,
+    ip: req.ip
+  });
+
   res.status(500).json({
     error: 'Internal server error',
     message: process.env.NODE_ENV === 'production' ? 'Something went wrong' : error.message
@@ -180,7 +213,12 @@ app.use((error, req, res, next) => {
 
 // Catch-all handler for API paths
 app.use('/api/*', (req, res) => {
-  console.log('Catch-all API handler:', req.method, req.path);
+  logger.warn('API endpoint not found', {
+    method: req.method,
+    path: req.path,
+    ip: req.ip,
+    userAgent: req.get('User-Agent')
+  });
 
   if (req.path.startsWith('/api/voting/participation/')) {
     const eventId = req.path.split('/api/voting/participation/')[1];
@@ -211,12 +249,14 @@ app.use((req, res) => {
 const handler = serverless(app);
 
 exports.handler = async (event, context) => {
-  // Add debugging
-  console.log('Lambda event:', JSON.stringify(event, null, 2));
+  const startTime = Date.now();
+
+  // Log Lambda invocation details
+  logger.lambda(event, context);
 
   // Warm up Lambda container
   if (event.source === 'serverless-plugin-warmup') {
-    console.log('WarmUp - Lambda is warm!');
+    logger.info('Lambda warmup request received');
     return 'Lambda is warm!';
   }
 
@@ -233,7 +273,7 @@ exports.handler = async (event, context) => {
         event.path = fullPath;
       }
 
-      console.log('Proxy path reconstruction:', {
+      logger.debug('Proxy path reconstruction completed', {
         resource: event.resource,
         proxy: event.pathParameters.proxy,
         reconstructedPath: event.path
@@ -242,10 +282,22 @@ exports.handler = async (event, context) => {
 
     // Handle API Gateway requests
     const result = await handler(event, context);
-    console.log('Lambda result:', JSON.stringify(result, null, 2));
+    const duration = Date.now() - startTime;
+
+    logger.performance('Lambda execution', duration, {
+      statusCode: result.statusCode,
+      requestId: context.awsRequestId
+    });
+
     return result;
   } catch (error) {
-    console.error('Lambda handler error:', error);
+    const duration = Date.now() - startTime;
+    logger.lambda(event, context, null, {
+      error: error.message,
+      stack: error.stack,
+      duration
+    });
+
     return {
       statusCode: 500,
       body: JSON.stringify({
