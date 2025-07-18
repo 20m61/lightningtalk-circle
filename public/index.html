@@ -59,25 +59,21 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;600;700&display=swap" rel="stylesheet" />
 
-    <!-- Design System CSS - Load first -->
+    <!-- Legacy CSS - Load first to be overridden -->
+    <link rel="stylesheet" href="css/tailwind.css" />
+    <link rel="stylesheet" href="css/style.css" />
+    
+    <!-- Design System CSS - Override legacy styles -->
     <link rel="stylesheet" href="css/design-tokens.css" />
     <link rel="stylesheet" href="css/architecture-integration.css" />
     <link rel="stylesheet" href="css/components/button.css" />
     <link rel="stylesheet" href="css/components/card.css" />
-
-    <!-- Logo Integration -->
-    <link rel="stylesheet" href="css/logo-integration.css" />
-
-    <!-- Mobile Optimizations -->
-    <link rel="stylesheet" href="css/mobile-optimizations.css" />
-
-    <!-- Hero Events Section -->
-    <link rel="stylesheet" href="css/hero-events.css" />
-
-    <!-- Legacy CSS - To be migrated -->
-    <link rel="stylesheet" href="css/tailwind.css" />
-    <link rel="stylesheet" href="css/style.css" />
+    
+    <!-- Feature-specific CSS -->
     <link rel="stylesheet" href="css/auth.css" />
+    <link rel="stylesheet" href="css/logo-integration.css" />
+    <link rel="stylesheet" href="css/hero-events.css" />
+    <link rel="stylesheet" href="css/mobile-optimizations.css" />
 
     <!-- Mobile-specific viewport meta tags -->
     <meta name="format-detection" content="telephone=no" />
