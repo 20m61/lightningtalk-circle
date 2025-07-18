@@ -22,11 +22,24 @@ const mockSocket = {
 };
 
 const mockIo = {
-  use: jest.fn(),
-  on: jest.fn(),
+  use: jest.fn(middleware => {
+    // Simulate middleware registration
+    if (middleware) {
+      // Store middleware for later use
+      mockIo._middleware = middleware;
+    }
+  }),
+  on: jest.fn((event, handler) => {
+    // Simulate event handler registration
+    if (event === 'connection' && handler) {
+      mockIo._connectionHandler = handler;
+    }
+  }),
   to: jest.fn(() => mockSocket),
   emit: jest.fn(),
-  close: jest.fn(callback => callback && callback())
+  close: jest.fn(callback => callback && callback()),
+  _middleware: null,
+  _connectionHandler: null
 };
 
 jest.unstable_mockModule('socket.io', () => ({

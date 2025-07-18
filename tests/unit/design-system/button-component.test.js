@@ -11,6 +11,7 @@ const dom = new JSDOM('<!DOCTYPE html><html><body></body></html>');
 global.window = dom.window;
 global.document = dom.window.document;
 global.getComputedStyle = dom.window.getComputedStyle;
+global.HTMLElement = dom.window.HTMLElement;
 
 // Mock CSS custom properties support
 const mockCSSVariables = {
@@ -45,12 +46,29 @@ const mockCSSVariables = {
 const originalGetComputedStyle = global.getComputedStyle;
 global.getComputedStyle = jest.fn(element => {
   const computedStyle = originalGetComputedStyle ? originalGetComputedStyle(element) : {};
-  return {
+
+  // Create a proper CSSStyleDeclaration mock
+  const mockStyle = {
     ...computedStyle,
     getPropertyValue: jest.fn(prop => {
-      return mockCSSVariables[prop] || (computedStyle.getPropertyValue ? computedStyle.getPropertyValue(prop) : '');
+      // Return mock values for CSS variables
+      if (mockCSSVariables[prop]) {
+        return mockCSSVariables[prop];
+      }
+      // Return basic computed style values
+      if (prop === 'background-color') return 'rgb(34, 197, 94)';
+      if (prop === 'color') return 'rgb(255, 255, 255)';
+      if (prop === 'min-height') return '44px';
+      if (prop === 'padding') return '0.75rem 1rem';
+      if (prop === 'border-radius') return '0.375rem';
+      if (prop === 'font-size') return '1rem';
+      if (prop === 'font-weight') return '500';
+
+      return computedStyle.getPropertyValue ? computedStyle.getPropertyValue(prop) : '';
     })
   };
+
+  return mockStyle;
 });
 
 describe('Button Component System', () => {

@@ -128,26 +128,26 @@ class AutoWorkflowOrchestrator {
     try {
       // タスクタイプに基づいて適切な処理を実行
       switch (task.type) {
-      case 'feature':
-        await this.implementFeature(task);
-        break;
-      case 'bugfix':
-        await this.fixBug(task);
-        break;
-      case 'hotfix':
-        await this.implementHotfix(task);
-        break;
-      case 'refactor':
-        await this.performRefactoring(task);
-        break;
-      case 'docs':
-        await this.updateDocumentation(task);
-        break;
-      case 'test':
-        await this.addTests(task);
-        break;
-      default:
-        await this.implementFeature(task);
+        case 'feature':
+          await this.implementFeature(task);
+          break;
+        case 'bugfix':
+          await this.fixBug(task);
+          break;
+        case 'hotfix':
+          await this.implementHotfix(task);
+          break;
+        case 'refactor':
+          await this.performRefactoring(task);
+          break;
+        case 'docs':
+          await this.updateDocumentation(task);
+          break;
+        case 'test':
+          await this.addTests(task);
+          break;
+        default:
+          await this.implementFeature(task);
       }
 
       this.log.success('Development task completed');
@@ -1192,15 +1192,15 @@ Merged automatically by Auto Workflow System
                 </div>
 
                 ${
-  summary.issues.length > 0
-    ? `
+                  summary.issues.length > 0
+                    ? `
                 <h3>⚠️ Issues Detected</h3>
                 <ul class="issues">
                     ${summary.issues.map(issue => `<li>❗ ${issue}</li>`).join('')}
                 </ul>
                 `
-    : ''
-}
+                    : ''
+                }
             </div>
 
             <div class="section">
@@ -1260,25 +1260,25 @@ Merged automatically by Auto Workflow System
                 <span class="metric-value ${this.getStatusClass(integrationStatus)}">${this.getStatusIcon(integrationStatus)} ${integrationStatus.toUpperCase()}</span>
             </div>
             ${
-  testResults.integration?.passed
-    ? `
+              testResults.integration?.passed
+                ? `
             <div class="metric">
                 <span>Passed:</span>
                 <span class="metric-value success">${testResults.integration.passed}</span>
             </div>
             `
-    : ''
-}
+                : ''
+            }
             ${
-  testResults.integration?.failed
-    ? `
+              testResults.integration?.failed
+                ? `
             <div class="metric">
                 <span>Failed:</span>
                 <span class="metric-value error">${testResults.integration.failed}</span>
             </div>
             `
-    : ''
-}
+                : ''
+            }
         </div>
 
         <div class="card">
@@ -1298,15 +1298,15 @@ Merged automatically by Auto Workflow System
                 </span>
             </div>
             ${
-  testResults.environment?.fallback
-    ? `
+              testResults.environment?.fallback
+                ? `
             <div class="metric">
                 <span>Fallback Used:</span>
                 <span class="metric-value warning">⚠️ Yes</span>
             </div>
             `
-    : ''
-}
+                : ''
+            }
         </div>
     `;
   }
@@ -1328,28 +1328,28 @@ Merged automatically by Auto Workflow System
                 </span>
             </div>
             ${
-  !mergeResult.success
-    ? `
+              !mergeResult.success
+                ? `
             <div class="metric">
                 <span>Reason:</span>
                 <span class="code">${mergeResult.reason}</span>
             </div>
             `
-    : ''
-}
+                : ''
+            }
             ${
-  mergeResult.sha
-    ? `
+              mergeResult.sha
+                ? `
             <div class="metric">
                 <span>Merge SHA:</span>
                 <span class="code">${mergeResult.sha}</span>
             </div>
             `
-    : ''
-}
+                : ''
+            }
             ${
-  mergeResult.mergeChecks
-    ? `
+              mergeResult.mergeChecks
+                ? `
             <h4>Merge Condition Checks</h4>
             <ul>
                 <li>Mergeable: ${mergeResult.mergeChecks.mergeable ? '✅' : '❌'}</li>
@@ -1358,8 +1358,8 @@ Merged automatically by Auto Workflow System
                 <li>Draft: ${mergeResult.mergeChecks.draft ? '❌' : '✅'}</li>
             </ul>
             `
-    : ''
-}
+                : ''
+            }
         </div>
     `;
   }
@@ -1369,14 +1369,14 @@ Merged automatically by Auto Workflow System
    */
   getStatusClass(status) {
     switch (status) {
-    case 'passed':
-      return 'success';
-    case 'failed':
-      return 'error';
-    case 'ambiguous':
-      return 'warning';
-    default:
-      return 'info';
+      case 'passed':
+        return 'success';
+      case 'failed':
+        return 'error';
+      case 'ambiguous':
+        return 'warning';
+      default:
+        return 'info';
     }
   }
 
@@ -1385,14 +1385,14 @@ Merged automatically by Auto Workflow System
    */
   getStatusIcon(status) {
     switch (status) {
-    case 'passed':
-      return '✅';
-    case 'failed':
-      return '❌';
-    case 'ambiguous':
-      return '⚠️';
-    default:
-      return 'ℹ️';
+      case 'passed':
+        return '✅';
+      case 'failed':
+        return '❌';
+      case 'ambiguous':
+        return '⚠️';
+      default:
+        return 'ℹ️';
     }
   }
   async cleanupWorktree(worktreePath, branchName, merged = false) {

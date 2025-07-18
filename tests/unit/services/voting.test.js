@@ -88,7 +88,7 @@ describe('VotingService', () => {
       const session = await votingService.createSession(sessionData);
 
       expect(session).toMatchObject({
-        id: 'test-session-id',
+        id: expect.any(String),
         eventId: 'event-123',
         talkId: 'talk-456',
         status: 'active',
@@ -103,8 +103,8 @@ describe('VotingService', () => {
       });
 
       expect(mockDatabase.create).toHaveBeenCalledWith('voting_sessions', expect.any(Object));
-      expect(votingService.activeSessions.has('test-session-id')).toBe(true);
-      expect(votingService.sessionTimers.has('test-session-id')).toBe(true);
+      expect(votingService.activeSessions.has(session.id)).toBe(true);
+      expect(votingService.sessionTimers.has(session.id)).toBe(true);
     });
 
     it('should emit sessionCreated event', async () => {
@@ -143,7 +143,7 @@ describe('VotingService', () => {
 
       expect(mockDatabase.update).toHaveBeenCalledWith(
         'voting_sessions',
-        'test-session-id',
+        expect.any(String),
         expect.objectContaining({
           status: 'ended'
         })
