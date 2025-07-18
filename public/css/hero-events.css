@@ -94,6 +94,49 @@
   flex-wrap: wrap;
 }
 
+/* イベントカード内のボタンスタイルを強化 */
+.hero-event-card .event-actions .btn,
+.event-card .event-actions .btn {
+  display: inline-block !important;
+  padding: 0.5rem 1.2rem !important;
+  border-radius: 9999px !important;
+  font-weight: 600 !important;
+  text-decoration: none !important;
+  transition: all 0.3s ease !important;
+  text-align: center !important;
+  cursor: pointer !important;
+}
+
+.hero-event-card .event-actions .btn-primary,
+.event-card .event-actions .btn-primary {
+  background-color: #22c55e !important;
+  color: white !important;
+  border: 2px solid #22c55e !important;
+}
+
+.hero-event-card .event-actions .btn-primary:hover,
+.event-card .event-actions .btn-primary:hover {
+  background-color: #16a34a !important;
+  border-color: #16a34a !important;
+  transform: translateY(-1px) !important;
+  box-shadow: 0 4px 12px rgba(34, 197, 94, 0.3) !important;
+}
+
+.hero-event-card .event-actions .btn-outline,
+.event-card .event-actions .btn-outline {
+  background-color: transparent !important;
+  color: #22c55e !important;
+  border: 2px solid #22c55e !important;
+}
+
+.hero-event-card .event-actions .btn-outline:hover,
+.event-card .event-actions .btn-outline:hover {
+  background-color: #22c55e !important;
+  color: white !important;
+  transform: translateY(-1px) !important;
+  box-shadow: 0 4px 12px rgba(34, 197, 94, 0.3) !important;
+}
+
 .hero-cta {
   text-align: center;
   margin-top: 2rem;

@@ -59,17 +59,17 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;600;700&display=swap" rel="stylesheet" />
 
-    <!-- Legacy CSS - Load first to be overridden -->
+    <!-- Base CSS - Foundation -->
+    <link rel="stylesheet" href="css/design-tokens.css" />
     <link rel="stylesheet" href="css/tailwind.css" />
     <link rel="stylesheet" href="css/style.css" />
     
-    <!-- Design System CSS - Override legacy styles -->
-    <link rel="stylesheet" href="css/design-tokens.css" />
-    <link rel="stylesheet" href="css/architecture-integration.css" />
+    <!-- Component CSS - Building blocks -->
     <link rel="stylesheet" href="css/components/button.css" />
     <link rel="stylesheet" href="css/components/card.css" />
     
-    <!-- Feature-specific CSS -->
+    <!-- Integration CSS - Overrides -->
+    <link rel="stylesheet" href="css/architecture-integration.css" />
     <link rel="stylesheet" href="css/auth.css" />
     <link rel="stylesheet" href="css/logo-integration.css" />
     <link rel="stylesheet" href="css/hero-events.css" />
