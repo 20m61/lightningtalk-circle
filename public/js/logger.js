@@ -6,28 +6,40 @@
 
 class FrontendLogger {
   constructor() {
-    this.logLevel = this.getLogLevel();
-    this.environment = this.getEnvironment();
-    this.sessionId = this.generateSessionId();
-    this.userId = null;
-    this.apiEndpoint = this.getApiEndpoint();
-    this.bufferEnabled = this.isBufferEnabled();
-    this.buffer = [];
-    this.bufferSize = parseInt(localStorage.getItem('LOG_BUFFER_SIZE') || '50');
-    this.bufferInterval = parseInt(localStorage.getItem('LOG_BUFFER_INTERVAL') || '10000');
-    this.isOnline = navigator.onLine;
-    this.sendToServer = this.isSendToServerEnabled();
+    try {
+      this.logLevel = this.getLogLevel();
+      this.environment = this.getEnvironment();
+      this.sessionId = this.generateSessionId();
+      this.userId = null;
+      this.apiEndpoint = this.getApiEndpoint();
+      this.bufferEnabled = this.isBufferEnabled();
+      this.buffer = [];
+      this.bufferSize = parseInt(localStorage.getItem('LOG_BUFFER_SIZE') || '50');
+      this.bufferInterval = parseInt(localStorage.getItem('LOG_BUFFER_INTERVAL') || '10000');
+      this.isOnline = navigator.onLine;
+      this.sendToServer = this.isSendToServerEnabled();
+      this.bufferTimer = null;
+      this.isDestroyed = false;
 
-    this.setupEventListeners();
-    this.startBufferFlush();
+      // ログレベルの数値マッピング
+      this.logLevels = {
+        debug: 0,
+        info: 1,
+        warn: 2,
+        error: 3
+      };
 
-    // ログレベルの数値マッピング
-    this.logLevels = {
-      debug: 0,
-      info: 1,
-      warn: 2,
-      error: 3
-    };
+      // ログスロットリング用
+      this.logThrottle = new Map();
+      this.throttleWindow = 1000; // 1秒
+
+      this.setupEventListeners();
+      this.startBufferFlush();
+    } catch (error) {
+      console.error('Failed to initialize FrontendLogger:', error);
+      // フォールバック: 基本的なconsoleログに戻す
+      this.fallbackMode = true;
+    }
   }
 
   /**
@@ -159,9 +171,19 @@ class FrontendLogger {
    */
   startBufferFlush() {
     if (this.bufferEnabled && this.sendToServer) {
-      setInterval(() => {
+      this.bufferTimer = setInterval(() => {
         this.flushBuffer();
       }, this.bufferInterval);
+    }
+  }
+
+  /**
+   * バッファフラッシュタイマーの停止
+   */
+  stopBufferFlush() {
+    if (this.bufferTimer) {
+      clearInterval(this.bufferTimer);
+      this.bufferTimer = null;
     }
   }
 
@@ -186,7 +208,29 @@ class FrontendLogger {
    * ベースログメソッド
    */
   log(level, message, metadata = {}) {
+    // フォールバックモード時は通常のconsole.logを使用
+    if (this.fallbackMode) {
+      console[level === 'error' ? 'error' : level === 'warn' ? 'warn' : 'log'](
+        `[${level.toUpperCase()}] ${message}`,
+        metadata
+      );
+      return;
+    }
+
+    // 破棄済みの場合は何もしない
+    if (this.isDestroyed) return;
+
     if (!this.shouldLog(level)) return;
+
+    // スロットリングチェック
+    const throttleKey = `${level}:${message}`;
+    const now = Date.now();
+    const lastLog = this.logThrottle.get(throttleKey);
+
+    if (lastLog && now - lastLog < this.throttleWindow) {
+      return; // スロットリング中
+    }
+    this.logThrottle.set(throttleKey, now);
 
     const logEntry = {
       timestamp: new Date().toISOString(),
@@ -243,11 +287,16 @@ class FrontendLogger {
   sanitizeMessage(message) {
     if (typeof message !== 'string') return String(message);
 
-    // 機密情報のマスキング
+    // 機密情報のマスキング（拡張パターン）
     return message
       .replace(/password[=:]\s*[^\s&]+/gi, 'password=***')
       .replace(/token[=:]\s*[^\s&]+/gi, 'token=***')
-      .replace(/key[=:]\s*[^\s&]+/gi, 'key=***');
+      .replace(/key[=:]\s*[^\s&]+/gi, 'key=***')
+      .replace(/secret[=:]\s*[^\s&]+/gi, 'secret=***')
+      .replace(/auth[=:]\s*[^\s&]+/gi, 'auth=***')
+      .replace(/session[=:]\s*[^\s&]+/gi, 'session=***')
+      .replace(/apikey[=:]\s*[^\s&]+/gi, 'apikey=***')
+      .replace(/accesskey[=:]\s*[^\s&]+/gi, 'accesskey=***');
   }
 
   /**
@@ -257,7 +306,19 @@ class FrontendLogger {
     if (!metadata || typeof metadata !== 'object') return {};
 
     const sanitized = {};
-    const sensitiveKeys = ['password', 'token', 'secret', 'key', 'auth'];
+    const sensitiveKeys = [
+      'password',
+      'token',
+      'secret',
+      'key',
+      'auth',
+      'session',
+      'apikey',
+      'accesskey',
+      'credit',
+      'ssn',
+      'email'
+    ];
 
     for (const [key, value] of Object.entries(metadata)) {
       const isSensitive = sensitiveKeys.some(sensitive => key.toLowerCase().includes(sensitive));
@@ -266,7 +327,8 @@ class FrontendLogger {
         sanitized[key] = '***masked***';
       } else if (value && typeof value === 'object') {
         try {
-          sanitized[key] = JSON.parse(JSON.stringify(value));
+          // 再帰的にサニタイズ
+          sanitized[key] = this.sanitizeMetadata(value);
         } catch (e) {
           sanitized[key] = '[Circular Reference]';
         }
@@ -480,6 +542,22 @@ class FrontendLogger {
 
     keysToRemove.forEach(key => localStorage.removeItem(key));
     this.info('Local logs cleared');
+  }
+
+  /**
+   * ロガーの破棄
+   */
+  destroy() {
+    this.isDestroyed = true;
+    this.stopBufferFlush();
+
+    // 残りのバッファを送信
+    this.flushBuffer(true);
+
+    // スロットリングMapをクリア
+    this.logThrottle.clear();
+
+    this.info('Logger destroyed');
   }
 }
 

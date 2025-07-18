@@ -212,7 +212,13 @@ function sanitizeFrontendMetadata(metadata) {
 
       sanitized.url = url.toString();
     } catch (error) {
-      // URL解析失敗時はそのまま
+      // URL解析失敗時はドメインのみ保持
+      try {
+        const hostname = new URL(sanitized.url).hostname;
+        sanitized.url = `${hostname}/[malformed-url]`;
+      } catch (e) {
+        sanitized.url = '[invalid-url]';
+      }
     }
   }
 
