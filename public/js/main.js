@@ -15,6 +15,9 @@ class LightningTalkApp {
       domain: 'lightningtalk-auth.auth.ap-northeast-1.amazoncognito.com'
     };
 
+    // Animation Manager Reference
+    this.animationManager = window.AnimationManager;
+
     // Configuration - Survey counter feature toggle
     this.config = {
       showSurveyCounters: false // Set to true to enable counter display
@@ -145,18 +148,97 @@ class LightningTalkApp {
   }
 
   setupEventListeners() {
-    // Register buttons
+    // Register buttons with enhanced animations
     document.querySelectorAll('[data-action]').forEach(button => {
+      // Add hover animation
+      button.addEventListener('mouseenter', () => {
+        if (this.animationManager) {
+          this.animationManager.createAnimation(
+            button,
+            [
+              { transform: 'scale(1)', boxShadow: '0 4px 12px rgba(0,0,0,0.15)' },
+              { transform: 'scale(1.05)', boxShadow: '0 8px 24px rgba(0,0,0,0.2)' }
+            ],
+            {
+              duration: 200,
+              easing: 'ease-out',
+              fill: 'forwards'
+            }
+          );
+        }
+      });
+
+      button.addEventListener('mouseleave', () => {
+        if (this.animationManager) {
+          this.animationManager.createAnimation(
+            button,
+            [
+              { transform: 'scale(1.05)', boxShadow: '0 8px 24px rgba(0,0,0,0.2)' },
+              { transform: 'scale(1)', boxShadow: '0 4px 12px rgba(0,0,0,0.15)' }
+            ],
+            {
+              duration: 200,
+              easing: 'ease-out',
+              fill: 'forwards'
+            }
+          );
+        }
+      });
+
       button.addEventListener('click', e => {
         e.preventDefault();
+
+        // Click ripple effect
+        if (this.animationManager) {
+          this.animationManager.createParticleEffect(
+            {
+              x: e.clientX,
+              y: e.clientY
+            },
+            {
+              count: 15,
+              spread: 30,
+              duration: 800,
+              colors: ['#ff6b35', '#4ecdc4']
+            }
+          );
+        }
+
         this.handleAction(e.target.dataset.action, e.target);
       });
     });
 
-    // Topic items
-    document.querySelectorAll('.topic-item').forEach(item => {
+    // Topic items with enhanced animations
+    document.querySelectorAll('.topic-item').forEach((item, index) => {
+      // Staggered entrance animation
+      if (this.animationManager) {
+        this.animationManager.createAnimation(
+          item,
+          [
+            { transform: 'translateY(20px)', opacity: 0 },
+            { transform: 'translateY(0)', opacity: 1 }
+          ],
+          {
+            duration: 500,
+            delay: index * 50,
+            easing: 'cubic-bezier(0.4, 0.0, 0.2, 1)'
+          }
+        );
+      }
+
       item.addEventListener('click', () => {
         this.highlightTopic(item);
+
+        // Spring animation on selection
+        if (this.animationManager) {
+          this.animationManager.createSpringAnimation(item, 0, {
+            stiffness: 300,
+            damping: 20,
+            onComplete: () => {
+              item.style.transform = 'translateX(0)';
+            }
+          });
+        }
       });
     });
 
@@ -670,22 +752,78 @@ class LightningTalkApp {
   }
 
   setupScrollAnimations() {
-    const observerOptions = {
-      threshold: 0.1,
-      rootMargin: '0px 0px -50px 0px'
-    };
-
-    const observer = new IntersectionObserver(entries => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add('visible');
-        }
+    // Use Animation Manager for scroll-triggered animations
+    if (this.animationManager) {
+      // Fade-in elements
+      document.querySelectorAll('.fade-in').forEach((el, index) => {
+        this.animationManager.createScrollAnimation(
+          el,
+          [
+            { transform: 'translateY(30px)', opacity: 0 },
+            { transform: 'translateY(0)', opacity: 1 }
+          ],
+          {
+            threshold: 0.2,
+            once: true
+          }
+        );
       });
-    }, observerOptions);
 
-    document.querySelectorAll('.fade-in, .event-card, .timeline-item').forEach(el => {
-      observer.observe(el);
-    });
+      // Event cards with stagger
+      document.querySelectorAll('.event-card').forEach((card, index) => {
+        this.animationManager.createScrollAnimation(
+          card,
+          [
+            { transform: 'translateX(-50px) scale(0.95)', opacity: 0 },
+            { transform: 'translateX(0) scale(1)', opacity: 1 }
+          ],
+          {
+            threshold: 0.3,
+            once: true
+          }
+        );
+      });
+
+      // Timeline items with alternating animations
+      document.querySelectorAll('.timeline-item').forEach((item, index) => {
+        const isEven = index % 2 === 0;
+        this.animationManager.createScrollAnimation(
+          item,
+          [
+            {
+              transform: `translateX(${isEven ? '-50px' : '50px'}) rotate(${isEven ? '-2deg' : '2deg'})`,
+              opacity: 0
+            },
+            {
+              transform: 'translateX(0) rotate(0)',
+              opacity: 1
+            }
+          ],
+          {
+            threshold: 0.4,
+            once: true
+          }
+        );
+      });
+    } else {
+      // Fallback to CSS-based animations
+      const observerOptions = {
+        threshold: 0.1,
+        rootMargin: '0px 0px -50px 0px'
+      };
+
+      const observer = new IntersectionObserver(entries => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('visible');
+          }
+        });
+      }, observerOptions);
+
+      document.querySelectorAll('.fade-in, .event-card, .timeline-item').forEach(el => {
+        observer.observe(el);
+      });
+    }
   }
 
   updateFeedbackButton() {
@@ -921,31 +1059,72 @@ class LightningTalkApp {
   }
 
   showNotification(message, type = 'info') {
-    const notification = document.createElement('div');
-    notification.className = `notification notification-${type}`;
-    notification.style.cssText = `
-            position: fixed;
-            top: 100px;
-            right: 20px;
-            background: ${type === 'success' ? '#4CAF50' : type === 'error' ? '#f44336' : '#2196F3'};
-            color: white;
-            padding: 15px 20px;
-            border-radius: 10px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-            z-index: 2001;
-            max-width: 300px;
-            animation: slideInRight 0.3s ease;
+    // 統一コンポーネントシステムを使用
+    if (window.UnifiedComponentSystem) {
+      const notificationContainer =
+        document.getElementById('notification-container') ||
+        (() => {
+          const container = document.createElement('div');
+          container.id = 'notification-container';
+          container.style.cssText = `
+          position: fixed;
+          top: 100px;
+          right: 20px;
+          z-index: 2001;
+          display: flex;
+          flex-direction: column;
+          gap: 10px;
         `;
-    notification.textContent = message;
+          document.body.appendChild(container);
+          return container;
+        })();
 
-    document.body.appendChild(notification);
+      const alert = window.UnifiedComponentSystem.create(
+        'Alert',
+        {
+          type: type === 'error' ? 'error' : type === 'success' ? 'success' : 'info',
+          dismissible: true,
+          icon: true,
+          onDismiss: () => console.log('Notification dismissed')
+        },
+        message
+      );
 
-    setTimeout(() => {
-      notification.style.animation = 'slideOutRight 0.3s ease forwards';
+      alert.style.animation = 'slideInRight 0.3s ease';
+      notificationContainer.appendChild(alert);
+
       setTimeout(() => {
-        notification.remove();
-      }, 300);
-    }, 4000);
+        alert.style.animation = 'slideOutRight 0.3s ease forwards';
+        setTimeout(() => alert.remove(), 300);
+      }, 5000);
+    } else {
+      // フォールバック: 従来の実装
+      const notification = document.createElement('div');
+      notification.className = `notification notification-${type}`;
+      notification.style.cssText = `
+              position: fixed;
+              top: 100px;
+              right: 20px;
+              background: ${type === 'success' ? '#4CAF50' : type === 'error' ? '#f44336' : '#2196F3'};
+              color: white;
+              padding: 15px 20px;
+              border-radius: 10px;
+              box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+              z-index: 2001;
+              max-width: 300px;
+              animation: slideInRight 0.3s ease;
+          `;
+      notification.textContent = message;
+
+      document.body.appendChild(notification);
+
+      setTimeout(() => {
+        notification.style.animation = 'slideOutRight 0.3s ease forwards';
+        setTimeout(() => {
+          notification.remove();
+        }, 300);
+      }, 4000);
+    }
   }
 
   // Survey counter methods
@@ -2083,6 +2262,36 @@ document.head.appendChild(styleSheet);
 document.addEventListener('DOMContentLoaded', () => {
   const app = new LightningTalkApp();
   window.lightningTalkApp = app;
+
+  // Register Service Worker for offline support
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker
+        .register('/service-worker.js')
+        .then(registration => {
+          console.log('[Main] Service Worker registered:', registration.scope);
+
+          // Check for updates
+          registration.addEventListener('updatefound', () => {
+            const newWorker = registration.installing;
+            console.log('[Main] Service Worker update found');
+
+            newWorker.addEventListener('statechange', () => {
+              if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+                // New service worker installed, show update notification
+                app.showNotification(
+                  '新しいバージョンが利用可能です。ページを更新してください。',
+                  'info'
+                );
+              }
+            });
+          });
+        })
+        .catch(error => {
+          console.error('[Main] Service Worker registration failed:', error);
+        });
+    });
+  }
 
   // Setup vote form submission
   const voteForm = document.getElementById('voteForm');

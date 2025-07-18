@@ -448,14 +448,14 @@
           <p>イベントを追加・管理するには管理者権限が必要です</p>
         </div>
 
-        <!-- Google認証ボタン -->
+        <!-- Google認証ボタン（管理者向け） -->
         <div class="google-login-section">
           <button type="button" onclick="loginWithGoogle()" class="btn-google-login-modal">
             <img
               src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg"
               alt="Google"
             />
-            Googleでログイン
+            管理者Googleアカウントでログイン
           </button>
           <div class="divider">
             <span>または</span>
@@ -535,6 +535,8 @@
     </div>
 
     <script src="js/auth.js"></script>
+    <script src="js/unified-components.js"></script>
+    <script src="js/animation-manager.js"></script>
     <script src="js/main.js"></script>
 
     <!-- React Components Integration -->
