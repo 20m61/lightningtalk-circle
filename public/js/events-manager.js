@@ -39,7 +39,8 @@ class EventsManager {
   async loadEvents() {
     try {
       // APIからイベントを取得
-      const response = await fetch('/api/events');
+      const apiEndpoint = window.APP_CONFIG?.apiEndpoint || '/api';
+      const response = await fetch(`${apiEndpoint}/events`);
       const data = await response.json();
 
       // モックデータを使用（開発時）
