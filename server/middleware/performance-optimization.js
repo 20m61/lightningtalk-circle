@@ -3,8 +3,10 @@
  * パフォーマンス最適化のためのミドルウェア
  */
 
-const compression = require('compression');
-const { logger } = require('../utils/logger');
+import compression from 'compression';
+import { createLogger } from '../utils/logger.js';
+
+const logger = createLogger('performance');
 
 /**
  * Compression middleware configuration
@@ -357,7 +359,7 @@ const criticalCssInlining = async (req, res, next) => {
   next();
 };
 
-module.exports = {
+export {
   compressionMiddleware,
   cacheControl,
   resourceHints,

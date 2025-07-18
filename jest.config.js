@@ -1,7 +1,12 @@
-// jest.config.mjs
+/**
+ * Jest Configuration
+ * For ES modules support with manual mocks
+ */
+
 export default {
   testEnvironment: 'node',
-  moduleFileExtensions: ['js', 'json', 'node'],
+  transform: {},
+  setupFilesAfterEnv: ['<rootDir>/jest.setup.cjs'],
   testMatch: [
     '**/tests/unit/*.test.js',
     '**/tests/unit/**/*.test.js',
@@ -38,9 +43,13 @@ export default {
       statements: 75
     }
   },
-  // Timeouts
   testTimeout: 10000,
-  // Prevent hanging tests
   detectOpenHandles: true,
-  forceExit: true
+  forceExit: true,
+  // Manual mocks directory
+  moduleDirectories: ['node_modules', '<rootDir>/tests/__mocks__'],
+  // Clear and reset mocks
+  clearMocks: true,
+  resetMocks: true,
+  restoreMocks: true
 };
