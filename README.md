@@ -1,5 +1,12 @@
 # Lightning Talk Circle - Modern Web Application
 
+<div align="center">
+  <img src="public/icons/logo.jpeg" alt="Lightning Talk Circle Logo" width="200" height="200" />
+  <br/>
+  <h3>⚡ なんでもライトニングトーク ⚡</h3>
+  <p>5分間で世界を変える！あなたの「なんでも」を聞かせて！</p>
+</div>
+
 ## Project Overview
 
 To revitalize the activities of the Lightning Talk Circle, this project aims to
@@ -53,7 +60,8 @@ and maintainability.
 
 ### Dev Container Support
 
-This project includes Dev Container configuration for consistent development environments. Dev Containers provide:
+This project includes Dev Container configuration for consistent development
+environments. Dev Containers provide:
 
 - Pre-configured development environment with all necessary tools
 - Consistent settings across team members
@@ -62,18 +70,22 @@ This project includes Dev Container configuration for consistent development env
 
 #### Prerequisites
 
-- Visual Studio Code with [Remote - Containers](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers) extension
+- Visual Studio Code with
+  [Remote - Containers](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers)
+  extension
 - Docker Desktop installed and running
 
 #### Getting Started with Dev Container
 
 1. **Clone the repository**:
+
    ```bash
    git clone https://github.com/20m61/lightningtalk-circle.git
    cd lightningtalk-circle
    ```
 
 2. **Open in VS Code**:
+
    ```bash
    code .
    ```
@@ -104,16 +116,17 @@ This project includes Dev Container configuration for consistent development env
 
 #### Available Services
 
-| Service | Port | Description |
-|---------|------|-------------|
-| Application | 3000 | Main application |
-| PostgreSQL | 5432 | Database |
-| Redis | 6379 | Cache/Session store |
-| pgAdmin | 5050 | Database management UI |
+| Service     | Port | Description            |
+| ----------- | ---- | ---------------------- |
+| Application | 3000 | Main application       |
+| PostgreSQL  | 5432 | Database               |
+| Redis       | 6379 | Cache/Session store    |
+| pgAdmin     | 5050 | Database management UI |
 
 #### Security Features
 
-The Dev Container includes security measures based on Claude Code recommendations:
+The Dev Container includes security measures based on Claude Code
+recommendations:
 
 - Network isolation with whitelist-only access
 - Firewall rules for external connections
@@ -121,6 +134,7 @@ The Dev Container includes security measures based on Claude Code recommendation
 - Security validation on container startup
 
 To check firewall status: `check-firewall`
+
 - **Authentication:** Amazon Cognito
 - **CI/CD:** GitHub Actions, AWS Amplify Hosting
 - **Testing:** Jest, Playwright

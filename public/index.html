@@ -42,9 +42,10 @@
       property="og:description"
       content="5分で伝える、みんなのアイデア。ライトニングトークイベントの参加・管理プラットフォーム"
     />
-    <meta property="og:image" content="/icons/android-chrome-512x512.png" />
+    <meta property="og:image" content="/icons/logo.jpeg" />
     <meta property="og:type" content="website" />
     <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:image" content="/icons/logo.jpeg" />
 
     <!-- Performance optimizations: Preload critical resources -->
     <link rel="preload" href="css/design-tokens.css" as="style" />
@@ -63,6 +64,9 @@
     <link rel="stylesheet" href="css/architecture-integration.css" />
     <link rel="stylesheet" href="css/components/button.css" />
     <link rel="stylesheet" href="css/components/card.css" />
+
+    <!-- Logo Integration -->
+    <link rel="stylesheet" href="css/logo-integration.css" />
 
     <!-- Mobile Optimizations -->
     <link rel="stylesheet" href="css/mobile-optimizations.css" />
@@ -97,7 +101,10 @@
   <body>
     <header class="header">
       <nav class="container flex flex--items-center flex--justify-between">
-        <div class="logo text-primary font-bold">⚡ なんでもLT</div>
+        <div class="logo-container">
+          <img src="/icons/logo.jpeg" alt="なんでもライトニングトーク" class="logo-image" />
+          <div class="logo-text text-primary font-bold">なんでもLT</div>
+        </div>
         <ul class="nav-links flex flex--items-center">
           <li><a href="#hero" class="nav-link">イベント一覧</a></li>
           <li><a href="#event-detail" class="nav-link">現在のイベント</a></li>
@@ -127,7 +134,10 @@
             <div class="floating-cat character">😸</div>
             <div class="floating-flower">🌸</div>
           </div>
-          <h1>なんでもライトニングトーク ⚡</h1>
+          <div class="hero-logo-section">
+            <img src="/icons/logo.jpeg" alt="なんでもライトニングトーク" class="hero-logo" />
+            <h1>なんでもライトニングトーク ⚡</h1>
+          </div>
           <p>5分間で世界を変える！あなたの「なんでも」を聞かせて！</p>
 
           <!-- イベント一覧を目立つ場所に配置 -->
@@ -467,7 +477,10 @@
 
     <footer id="contact">
       <div class="container">
-        <h3>✨ なんでもライトニングトーク</h3>
+        <div class="footer-logo-section">
+          <img src="/icons/logo.jpeg" alt="なんでもライトニングトーク" class="footer-logo" />
+          <h3>✨ なんでもライトニングトーク</h3>
+        </div>
         <p>5分間で世界が広がる。あなたの参加をお待ちしています！</p>
         <div class="footer-links">
           <a href="/privacy">プライバシーポリシー</a>
@@ -523,6 +536,7 @@
       <div class="admin-login-content">
         <button class="close-btn" onclick="closeAdminLogin()">&times;</button>
         <div class="admin-login-header">
+          <img src="/icons/logo.jpeg" alt="なんでもライトニングトーク" class="admin-logo" />
           <h2>🔐 管理画面ログイン</h2>
           <p>イベントを追加・管理するには管理者権限が必要です</p>
         </div>

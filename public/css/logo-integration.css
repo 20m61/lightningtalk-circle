@@ -1,0 +1,227 @@
+/**
+ * Lightning Talk Circle - Logo Integration Styles
+ * ロゴ統合スタイルシート
+ */
+
+/* ヘッダーロゴ */
+.logo-container {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.logo-image {
+  width: 45px;
+  height: 45px;
+  border-radius: var(--radius-lg);
+  border: 2px solid var(--color-primary-300);
+  box-shadow: var(--shadow-sm);
+  transition: var(--transition-all);
+  object-fit: contain;
+  background: white;
+}
+
+.logo-image:hover {
+  transform: scale(1.05);
+  border-color: var(--color-primary-500);
+  box-shadow: var(--shadow-md);
+}
+
+.logo-text {
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-primary-600);
+  margin: 0;
+}
+
+/* ヒーローセクションロゴ */
+.hero-logo-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-6);
+  margin-bottom: var(--space-8);
+}
+
+.hero-logo {
+  width: 120px;
+  height: 120px;
+  border-radius: var(--radius-2xl);
+  border: 3px solid var(--color-primary-400);
+  box-shadow: var(--shadow-lg);
+  transition: var(--transition-all);
+  animation: hero-logo-float 3s ease-in-out infinite;
+  object-fit: contain;
+  background: white;
+  padding: var(--space-2);
+}
+
+.hero-logo:hover {
+  transform: scale(1.1);
+  border-color: var(--color-primary-500);
+  box-shadow: var(--shadow-xl);
+}
+
+@keyframes hero-logo-float {
+  0%,
+  100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+/* ヒーローセクションのタイトル調整 */
+.hero-logo-section h1 {
+  margin: 0;
+  font-size: clamp(2rem, 5vw, 3.5rem);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-primary-700);
+  text-align: center;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* フッターロゴ */
+.footer-logo-section {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+  margin-bottom: var(--space-6);
+  justify-content: center;
+}
+
+.footer-logo {
+  width: 60px;
+  height: 60px;
+  border-radius: var(--radius-lg);
+  border: 2px solid var(--color-primary-300);
+  box-shadow: var(--shadow-sm);
+  transition: var(--transition-all);
+  object-fit: contain;
+  background: white;
+  padding: var(--space-1);
+}
+
+.footer-logo:hover {
+  transform: scale(1.05);
+  border-color: var(--color-primary-500);
+  box-shadow: var(--shadow-md);
+}
+
+.footer-logo-section h3 {
+  margin: 0;
+  color: var(--color-primary-600);
+  font-size: var(--font-size-xl);
+}
+
+/* モバイル対応 */
+@media (max-width: 768px) {
+  .logo-container {
+    gap: var(--space-2);
+  }
+
+  .logo-image {
+    width: 35px;
+    height: 35px;
+  }
+
+  .logo-text {
+    font-size: var(--font-size-base);
+  }
+
+  .hero-logo {
+    width: 80px;
+    height: 80px;
+  }
+
+  .hero-logo-section {
+    gap: var(--space-4);
+    margin-bottom: var(--space-6);
+  }
+
+  .footer-logo {
+    width: 50px;
+    height: 50px;
+  }
+
+  .footer-logo-section {
+    flex-direction: column;
+    gap: var(--space-2);
+  }
+
+  .footer-logo-section h3 {
+    font-size: var(--font-size-lg);
+  }
+}
+
+/* 超小型デバイス */
+@media (max-width: 480px) {
+  .hero-logo {
+    width: 60px;
+    height: 60px;
+  }
+
+  .hero-logo-section h1 {
+    font-size: clamp(1.5rem, 4vw, 2.5rem);
+  }
+
+  .footer-logo {
+    width: 40px;
+    height: 40px;
+  }
+}
+
+/* ロゴのアクセシビリティ向上 */
+.logo-image,
+.hero-logo,
+.footer-logo {
+  alt: "なんでもライトニングトーク";
+}
+
+/* ロゴの品質向上 */
+.logo-image,
+.hero-logo,
+.footer-logo {
+  image-rendering: -webkit-optimize-contrast;
+  image-rendering: optimizeQuality;
+  image-rendering: optimize-contrast;
+}
+
+/* ハイコントラストモード対応 */
+@media (prefers-contrast: high) {
+  .logo-image,
+  .hero-logo,
+  .footer-logo {
+    border-width: 3px;
+    border-color: var(--color-neutral-900);
+  }
+}
+
+/* 管理画面モーダル用ロゴ */
+.admin-logo {
+  width: 80px;
+  height: 80px;
+  border-radius: var(--radius-xl);
+  border: 2px solid var(--color-primary-300);
+  box-shadow: var(--shadow-md);
+  margin: 0 auto var(--space-4);
+  display: block;
+  object-fit: contain;
+  background: white;
+  padding: var(--space-2);
+}
+
+/* 動作軽減モード対応 */
+@media (prefers-reduced-motion: reduce) {
+  .hero-logo {
+    animation: none;
+  }
+
+  .logo-image:hover,
+  .hero-logo:hover,
+  .footer-logo:hover,
+  .admin-logo:hover {
+    transform: none;
+  }
+}
