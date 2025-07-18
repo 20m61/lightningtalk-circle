@@ -1,6 +1,7 @@
 /**
  * Lambda handler using ES Modules
  * This is a wrapper around the main Express app
+ * Updated: Production-ready logging system integration
  */
 
 import serverless from 'serverless-http';
@@ -8,6 +9,11 @@ import express from 'express';
 import cors from 'cors';
 import helmet from 'helmet';
 import rateLimit from 'express-rate-limit';
+import { createRequire } from 'module';
+
+// Import CommonJS logger for ES module compatibility
+const require = createRequire(import.meta.url);
+const logger = require('./utils/production-logger.js');
 
 // Create Express app
 const app = express();
@@ -87,7 +93,11 @@ app.get('/api/events', (req, res) => {
 // Specific voting participation endpoint
 app.get('/api/voting/participation/:eventId', (req, res) => {
   const eventId = req.params.eventId;
-  console.log('Voting participation endpoint accessed:', eventId);
+  logger.info('Voting participation endpoint accessed', {
+    eventId,
+    userAgent: req.get('User-Agent'),
+    ip: req.ip
+  });
 
   res.json({
     eventId,
@@ -100,10 +110,18 @@ app.get('/api/voting/participation/:eventId', (req, res) => {
 // Auth endpoints
 app.post('/api/auth/login', (req, res) => {
   const { email, password } = req.body;
-  console.log('Login attempt:', { email });
+  logger.security('Login attempt', {
+    email: email?.substring(0, 3) + '***', // セキュリティのため部分的にマスク
+    ip: req.ip,
+    userAgent: req.get('User-Agent')
+  });
 
   // Simple demo authentication - replace with Cognito
   if (email === 'admin@example.com' && password === 'admin123') {
+    logger.business('Successful authentication', {
+      email: email?.substring(0, 3) + '***',
+      role: 'admin'
+    });
     res.json({
       success: true,
       token: 'demo-admin-token',
@@ -111,6 +129,10 @@ app.post('/api/auth/login', (req, res) => {
       timestamp: new Date().toISOString()
     });
   } else {
+    logger.security('Failed authentication attempt', {
+      email: email?.substring(0, 3) + '***',
+      ip: req.ip
+    });
     res.status(401).json({
       success: false,
       message: 'Invalid credentials',
@@ -121,7 +143,14 @@ app.post('/api/auth/login', (req, res) => {
 
 // Error handling middleware
 app.use((error, req, res, next) => {
-  console.error('Error:', error);
+  logger.error('Unhandled application error', {
+    error: error.message,
+    stack: error.stack,
+    url: req.url,
+    method: req.method,
+    ip: req.ip
+  });
+
   res.status(500).json({
     error: 'Internal server error',
     message: process.env.NODE_ENV === 'production' ? 'Something went wrong' : error.message
@@ -149,12 +178,14 @@ app.use((req, res) => {
 const handler = serverless(app);
 
 export const lambdaHandler = async (event, context) => {
-  // Add debugging
-  console.log('Lambda event:', JSON.stringify(event, null, 2));
+  const startTime = Date.now();
+
+  // Log Lambda invocation details
+  logger.lambda(event, context);
 
   // Warm up Lambda container
   if (event.source === 'serverless-plugin-warmup') {
-    console.log('WarmUp - Lambda is warm!');
+    logger.info('Lambda warmup request received');
     return 'Lambda is warm!';
   }
 
@@ -171,7 +202,7 @@ export const lambdaHandler = async (event, context) => {
         event.path = fullPath;
       }
 
-      console.log('Proxy path reconstruction:', {
+      logger.debug('Proxy path reconstruction completed', {
         resource: event.resource,
         proxy: event.pathParameters.proxy,
         reconstructedPath: event.path
@@ -180,10 +211,22 @@ export const lambdaHandler = async (event, context) => {
 
     // Handle API Gateway requests
     const result = await handler(event, context);
-    console.log('Lambda result:', JSON.stringify(result, null, 2));
+    const duration = Date.now() - startTime;
+
+    logger.performance('Lambda execution', duration, {
+      statusCode: result.statusCode,
+      requestId: context.awsRequestId
+    });
+
     return result;
   } catch (error) {
-    console.error('Lambda handler error:', error);
+    const duration = Date.now() - startTime;
+    logger.lambda(event, context, null, {
+      error: error.message,
+      stack: error.stack,
+      duration
+    });
+
     return {
       statusCode: 500,
       body: JSON.stringify({
