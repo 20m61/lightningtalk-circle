@@ -30,7 +30,7 @@ class MobileMapsOptimizer {
     this.setupOrientationHandling();
     this.setupVibrationFeedback();
     this.optimizeForMobile();
-    
+
     console.log('Mobile Maps Optimizer initialized');
   }
 
@@ -38,9 +38,11 @@ class MobileMapsOptimizer {
    * Detect if device is mobile
    */
   detectMobile() {
-    return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ||
-           ('ontouchstart' in window) ||
-           (navigator.maxTouchPoints > 0);
+    return (
+      /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ||
+      'ontouchstart' in window ||
+      navigator.maxTouchPoints > 0
+    );
   }
 
   /**
@@ -48,14 +50,16 @@ class MobileMapsOptimizer {
    */
   setupTouchGestures() {
     const mapContainer = document.getElementById('map-container');
-    if (!mapContainer) return;
+    if (!mapContainer) {
+      return;
+    }
 
     let touchStart = null;
     let touchCurrent = null;
     let longPressTimer = null;
 
     // Touch start
-    mapContainer.addEventListener('touchstart', (e) => {
+    mapContainer.addEventListener('touchstart', e => {
       this.touchStarted = true;
       touchStart = {
         x: e.touches[0].clientX,
@@ -72,7 +76,7 @@ class MobileMapsOptimizer {
     });
 
     // Touch move
-    mapContainer.addEventListener('touchmove', (e) => {
+    mapContainer.addEventListener('touchmove', e => {
       touchCurrent = {
         x: e.touches[0].clientX,
         y: e.touches[0].clientY
@@ -86,9 +90,9 @@ class MobileMapsOptimizer {
     });
 
     // Touch end
-    mapContainer.addEventListener('touchend', (e) => {
+    mapContainer.addEventListener('touchend', e => {
       this.touchStarted = false;
-      
+
       if (longPressTimer) {
         clearTimeout(longPressTimer);
         longPressTimer = null;
@@ -115,11 +119,15 @@ class MobileMapsOptimizer {
     });
 
     // Prevent default touch behaviors for map area
-    mapContainer.addEventListener('touchstart', (e) => {
-      if (e.touches.length > 1) {
-        e.preventDefault(); // Prevent zoom on multi-touch
-      }
-    }, { passive: false });
+    mapContainer.addEventListener(
+      'touchstart',
+      e => {
+        if (e.touches.length > 1) {
+          e.preventDefault(); // Prevent zoom on multi-touch
+        }
+      },
+      { passive: false }
+    );
   }
 
   /**
@@ -161,7 +169,7 @@ class MobileMapsOptimizer {
    * Handle swipe gestures
    */
   handleSwipe(deltaX, deltaY, distance) {
-    const angle = Math.atan2(deltaY, deltaX) * 180 / Math.PI;
+    const angle = (Math.atan2(deltaY, deltaX) * 180) / Math.PI;
 
     // Vertical swipes
     if (Math.abs(angle) > 45 && Math.abs(angle) < 135) {
@@ -484,19 +492,19 @@ class MobileMapsOptimizer {
           this.mapsSystem.centerOnVenue();
         }
         break;
-      
+
       case 'directions':
         if (this.mapsSystem) {
           this.mapsSystem.getDirections();
         }
         break;
-      
+
       case 'emergency':
         if (this.emergencySystem) {
           this.emergencySystem.showAllContacts();
         }
         break;
-      
+
       case 'share':
         if (this.mapsSystem) {
           this.mapsSystem.shareLocation();
@@ -539,7 +547,7 @@ class MobileMapsOptimizer {
       const serviceTypes = ['restaurant', 'hospital', 'convenience_store', 'subway_station'];
       const currentType = this.currentServiceType || 0;
       const nextType = (currentType + 1) % serviceTypes.length;
-      
+
       this.mapsSystem.toggleNearbyServices(serviceTypes[nextType]);
       this.currentServiceType = nextType;
     }
@@ -586,12 +594,12 @@ class MobileMapsOptimizer {
   setupSwipeGestures(element) {
     let startX, startY, endX, endY;
 
-    element.addEventListener('touchstart', (e) => {
+    element.addEventListener('touchstart', e => {
       startX = e.touches[0].clientX;
       startY = e.touches[0].clientY;
     });
 
-    element.addEventListener('touchend', (e) => {
+    element.addEventListener('touchend', e => {
       endX = e.changedTouches[0].clientX;
       endY = e.changedTouches[0].clientY;
 

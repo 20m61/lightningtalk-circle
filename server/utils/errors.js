@@ -10,13 +10,13 @@ export class AppError extends Error {
     this.statusCode = statusCode;
     this.originalError = originalError;
     this.timestamp = new Date().toISOString();
-    
+
     // Capture stack trace
     if (Error.captureStackTrace) {
       Error.captureStackTrace(this, this.constructor);
     }
   }
-  
+
   toJSON() {
     return {
       name: this.name,
@@ -91,13 +91,13 @@ export class CacheError extends AppError {
 /**
  * Error handler utility functions
  */
-export const handleAsyncError = (fn) => {
+export const handleAsyncError = fn => {
   return (req, res, next) => {
     Promise.resolve(fn(req, res, next)).catch(next);
   };
 };
 
-export const isOperationalError = (error) => {
+export const isOperationalError = error => {
   if (error instanceof AppError) {
     return true;
   }
@@ -111,12 +111,12 @@ export const logError = (error, context = {}) => {
     timestamp: new Date().toISOString(),
     ...context
   };
-  
+
   if (error instanceof AppError) {
     errorInfo.statusCode = error.statusCode;
     errorInfo.originalError = error.originalError;
   }
-  
+
   console.error('Application Error:', errorInfo);
   return errorInfo;
 };

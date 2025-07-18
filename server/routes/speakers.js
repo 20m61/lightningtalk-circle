@@ -29,13 +29,13 @@ const storage = multer.diskStorage({
     cb(null, 'uploads/presentations/');
   },
   filename: (req, file, cb) => {
-    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1e9);
+    const uniqueSuffix = `${Date.now()}-${Math.round(Math.random() * 1e9)}`;
     cb(null, `presentation-${req.user.id}-${uniqueSuffix}${path.extname(file.originalname)}`);
   }
 });
 
 const upload = multer({
-  storage: storage,
+  storage,
   limits: {
     fileSize: 50 * 1024 * 1024 // 50MB max file size
   },

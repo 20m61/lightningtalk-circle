@@ -60,7 +60,7 @@ class CallbackHandler {
     try {
       // Get Cognito ID token
       const cognitoUser = JSON.parse(localStorage.getItem('cognitoUser') || '{}');
-      const idToken = cognitoUser.idToken;
+      const { idToken } = cognitoUser;
 
       if (!idToken) {
         throw new Error('ID token not found');

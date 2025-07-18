@@ -24,7 +24,7 @@ class CSRFService {
       used: false
     });
 
-    logger.debug('CSRF token generated', { sessionId, token: token.substring(0, 8) + '...' });
+    logger.debug('CSRF token generated', { sessionId, token: `${token.substring(0, 8)}...` });
     return token;
   }
 
@@ -33,12 +33,12 @@ class CSRFService {
     const tokenData = this.tokens.get(token);
 
     if (!tokenData) {
-      logger.warn('CSRF token not found', { token: token?.substring(0, 8) + '...' });
+      logger.warn('CSRF token not found', { token: `${token?.substring(0, 8)}...` });
       return false;
     }
 
     if (tokenData.used) {
-      logger.warn('CSRF token already used', { token: token.substring(0, 8) + '...' });
+      logger.warn('CSRF token already used', { token: `${token.substring(0, 8)}...` });
       return false;
     }
 
@@ -53,7 +53,7 @@ class CSRFService {
     // Check if token is expired (1 hour)
     const maxAge = 60 * 60 * 1000; // 1 hour
     if (Date.now() - tokenData.timestamp > maxAge) {
-      logger.warn('CSRF token expired', { token: token.substring(0, 8) + '...' });
+      logger.warn('CSRF token expired', { token: `${token.substring(0, 8)}...` });
       this.tokens.delete(token);
       return false;
     }
@@ -68,7 +68,7 @@ class CSRFService {
   addToken() {
     return (req, res, next) => {
       // Get or create session ID
-      const sessionId = req.sessionID || req.session?.id || req.ip + ':' + req.get('User-Agent');
+      const sessionId = req.sessionID || req.session?.id || `${req.ip}:${req.get('User-Agent')}`;
 
       // Generate token
       const csrfToken = this.generateToken(sessionId);
@@ -103,7 +103,7 @@ class CSRFService {
         req.csrfSessionId ||
         req.sessionID ||
         req.session?.id ||
-        req.ip + ':' + req.get('User-Agent');
+        `${req.ip}:${req.get('User-Agent')}`;
 
       // Get token from multiple sources
       const token =
@@ -129,7 +129,7 @@ class CSRFService {
           method: req.method,
           path: req.path,
           ip: req.ip,
-          token: token.substring(0, 8) + '...'
+          token: `${token.substring(0, 8)}...`
         });
         return res.status(403).json({
           error: 'CSRF token invalid',

@@ -4,7 +4,9 @@
  */
 
 import crypto from 'crypto';
-import { logger } from '../utils/logger.js';
+import { createLogger } from '../utils/logger.js';
+
+const logger = createLogger('SecurityEnhanced');
 
 /**
  * HTTPS Redirect Middleware

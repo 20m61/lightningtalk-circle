@@ -48,14 +48,16 @@ class FrontendLogger {
   getEnvironment() {
     // メタタグまたはglobalオブジェクトから環境を取得
     const metaEnv = document.querySelector('meta[name="environment"]');
-    if (metaEnv) return metaEnv.content;
+    if (metaEnv) {
+      return metaEnv.content;
+    }
 
     if (typeof window !== 'undefined' && window.APP_CONFIG) {
       return window.APP_CONFIG.environment;
     }
 
     // ドメインベースの環境判定
-    const hostname = window.location.hostname;
+    const { hostname } = window.location;
     if (hostname.includes('localhost') || hostname.includes('127.0.0.1')) {
       return 'development';
     } else if (hostname.includes('dev') || hostname.includes('staging')) {
@@ -72,11 +74,15 @@ class FrontendLogger {
     // URLパラメータで一時的なオーバーライド
     const urlParams = new URLSearchParams(window.location.search);
     const urlLogLevel = urlParams.get('logLevel');
-    if (urlLogLevel) return urlLogLevel;
+    if (urlLogLevel) {
+      return urlLogLevel;
+    }
 
     // ローカルストレージから取得
     const stored = localStorage.getItem('LOG_LEVEL');
-    if (stored) return stored;
+    if (stored) {
+      return stored;
+    }
 
     // 環境ベースのデフォルト
     const env = this.getEnvironment();
@@ -88,7 +94,9 @@ class FrontendLogger {
    */
   getApiEndpoint() {
     const metaApi = document.querySelector('meta[name="api-endpoint"]');
-    if (metaApi) return metaApi.content;
+    if (metaApi) {
+      return metaApi.content;
+    }
 
     if (typeof window !== 'undefined' && window.APP_CONFIG) {
       return window.APP_CONFIG.apiEndpoint;
@@ -103,7 +111,7 @@ class FrontendLogger {
   generateSessionId() {
     let sessionId = sessionStorage.getItem('frontend_session_id');
     if (!sessionId) {
-      sessionId = 'fe_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+      sessionId = `fe_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
       sessionStorage.setItem('frontend_session_id', sessionId);
     }
     return sessionId;
@@ -218,9 +226,13 @@ class FrontendLogger {
     }
 
     // 破棄済みの場合は何もしない
-    if (this.isDestroyed) return;
+    if (this.isDestroyed) {
+      return;
+    }
 
-    if (!this.shouldLog(level)) return;
+    if (!this.shouldLog(level)) {
+      return;
+    }
 
     // スロットリングチェック
     const throttleKey = `${level}:${message}`;
@@ -285,7 +297,9 @@ class FrontendLogger {
    * メッセージのサニタイズ
    */
   sanitizeMessage(message) {
-    if (typeof message !== 'string') return String(message);
+    if (typeof message !== 'string') {
+      return String(message);
+    }
 
     // 機密情報のマスキング（拡張パターン）
     return message
@@ -303,7 +317,9 @@ class FrontendLogger {
    * メタデータのサニタイズ
    */
   sanitizeMetadata(metadata) {
-    if (!metadata || typeof metadata !== 'object') return {};
+    if (!metadata || typeof metadata !== 'object') {
+      return {};
+    }
 
     const sanitized = {};
     const sensitiveKeys = [
@@ -355,7 +371,9 @@ class FrontendLogger {
    * バッファのフラッシュ
    */
   async flushBuffer(isSync = false) {
-    if (this.buffer.length === 0 || !this.isOnline) return;
+    if (this.buffer.length === 0 || !this.isOnline) {
+      return;
+    }
 
     const logsToSend = [...this.buffer];
     this.buffer = [];

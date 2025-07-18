@@ -221,8 +221,8 @@ Additional context:
           cfg_scale: generation.quality === 'hd' ? 8 : 7,
           seed: Math.floor(Math.random() * 1000000),
           steps: generation.quality === 'hd' ? 50 : 30,
-          width: width,
-          height: height,
+          width,
+          height,
           style_preset: this.mapStylePreset(generation.style)
         })
       };

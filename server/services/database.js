@@ -850,8 +850,12 @@ export class DatabaseService extends EventEmitter {
         const aVal = a[field];
         const bVal = b[field];
 
-        if (aVal < bVal) return direction === 1 ? -1 : 1;
-        if (aVal > bVal) return direction === 1 ? 1 : -1;
+        if (aVal < bVal) {
+          return direction === 1 ? -1 : 1;
+        }
+        if (aVal > bVal) {
+          return direction === 1 ? 1 : -1;
+        }
       }
       return 0;
     });

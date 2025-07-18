@@ -1,7 +1,9 @@
 import express from 'express';
 import { body, query, validationResult } from 'express-validator';
 import { v4 as uuidv4 } from 'uuid';
-import { logger } from '../middleware/logger.js';
+import { createLogger } from '../utils/logger.js';
+
+const logger = createLogger('Notifications');
 import notificationService from '../services/notificationService.js';
 
 const router = express.Router();

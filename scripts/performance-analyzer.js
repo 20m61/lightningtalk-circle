@@ -496,8 +496,12 @@ class PerformanceAnalyzer {
   }
 
   formatSize(bytes) {
-    if (bytes < 1024) return `${bytes} B`;
-    if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(2)} KB`;
+    if (bytes < 1024) {
+      return `${bytes} B`;
+    }
+    if (bytes < 1024 * 1024) {
+      return `${(bytes / 1024).toFixed(2)} KB`;
+    }
     return `${(bytes / (1024 * 1024)).toFixed(2)} MB`;
   }
 
@@ -584,7 +588,7 @@ class PerformanceAnalyzer {
     score -= largeImages * 3;
 
     // Penalize for missing optimizations
-    const recommendations = this.results.overall.recommendations;
+    const { recommendations } = this.results.overall;
     const highPriority = recommendations.filter(r => r.severity === 'high').length;
     const mediumPriority = recommendations.filter(r => r.severity === 'medium').length;
 

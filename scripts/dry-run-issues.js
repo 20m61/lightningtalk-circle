@@ -75,7 +75,9 @@ function analyzeRoadmap(roadmapData) {
   const labelsByCategory = {};
   roadmapData.labels.forEach(label => {
     const category = label.name.split(' ')[0];
-    if (!labelsByCategory[category]) labelsByCategory[category] = [];
+    if (!labelsByCategory[category]) {
+      labelsByCategory[category] = [];
+    }
     labelsByCategory[category].push(label.name);
   });
 
@@ -84,11 +86,13 @@ function analyzeRoadmap(roadmapData) {
   });
 
   // Issues by milestone
-  console.log(chalk.blue(`\n📝 Issues by Milestone:`));
+  console.log(chalk.blue('\n📝 Issues by Milestone:'));
   const issuesByMilestone = {};
   roadmapData.issues.forEach(issue => {
     const milestone = issue.milestone || 'No milestone';
-    if (!issuesByMilestone[milestone]) issuesByMilestone[milestone] = [];
+    if (!issuesByMilestone[milestone]) {
+      issuesByMilestone[milestone] = [];
+    }
     issuesByMilestone[milestone].push(issue);
   });
 
@@ -97,7 +101,7 @@ function analyzeRoadmap(roadmapData) {
   });
 
   // Issues by priority
-  console.log(chalk.yellow(`\n⚡ Issues by Priority:`));
+  console.log(chalk.yellow('\n⚡ Issues by Priority:'));
   const issuesByPriority = { high: 0, medium: 0, low: 0, unknown: 0 };
   roadmapData.issues.forEach(issue => {
     const priorityLabel = issue.labels.find(label => label.includes('priority'));
@@ -211,7 +215,9 @@ function showImplementationRoadmap(roadmapData) {
           l.includes('🧪')
       );
       const type = typeLabel ? typeLabel.split(' ')[1] : 'other';
-      if (!issuesByType[type]) issuesByType[type] = [];
+      if (!issuesByType[type]) {
+        issuesByType[type] = [];
+      }
       issuesByType[type].push(issue);
     });
 
@@ -286,7 +292,7 @@ async function main() {
     console.log('1. Review the issue validation results above');
     console.log('2. Set GITHUB_TOKEN environment variable');
     console.log('3. Run: node scripts/create-roadmap-issues.js [phase]');
-    console.log('4. Available phases: ' + validPhases.join(', '));
+    console.log(`4. Available phases: ${validPhases.join(', ')}`);
 
     if (previewResult.invalid > 0) {
       console.log(chalk.red('\n⚠️  Please fix validation errors before creating issues'));

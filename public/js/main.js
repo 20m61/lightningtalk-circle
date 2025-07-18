@@ -1156,7 +1156,7 @@ class LightningTalkApp {
       );
     } else {
       // Still show a thank you message without revealing the count
-      this.showNotification(`ご回答ありがとうございます！`, 'success');
+      this.showNotification('ご回答ありがとうございます！', 'success');
     }
   }
 
@@ -1609,9 +1609,9 @@ class LightningTalkApp {
     const offsetX = x - rect.left - size / 2;
     const offsetY = y - rect.top - size / 2;
 
-    ripple.style.width = ripple.style.height = size + 'px';
-    ripple.style.left = offsetX + 'px';
-    ripple.style.top = offsetY + 'px';
+    ripple.style.width = ripple.style.height = `${size}px`;
+    ripple.style.left = `${offsetX}px`;
+    ripple.style.top = `${offsetY}px`;
 
     target.style.position = 'relative';
     target.style.overflow = 'hidden';
@@ -1782,7 +1782,7 @@ class LightningTalkApp {
     const voteContainers = document.querySelectorAll('.vote-container');
 
     voteContainers.forEach(container => {
-      const eventId = container.dataset.eventId;
+      const { eventId } = container.dataset;
 
       // Initialize vote counts for this event
       if (!this.participationVotes[eventId]) {
@@ -1826,15 +1826,21 @@ class LightningTalkApp {
 
   updateVoteCounts(eventId) {
     const container = document.querySelector(`[data-event-id="${eventId}"]`);
-    if (!container) return;
+    if (!container) {
+      return;
+    }
 
     const votes = this.participationVotes[eventId] || { online: [], onsite: [] };
 
     const onlineCount = container.querySelector('#online-count');
     const onsiteCount = container.querySelector('#onsite-count');
 
-    if (onlineCount) onlineCount.textContent = votes.online.length;
-    if (onsiteCount) onsiteCount.textContent = votes.onsite.length;
+    if (onlineCount) {
+      onlineCount.textContent = votes.online.length;
+    }
+    if (onsiteCount) {
+      onsiteCount.textContent = votes.onsite.length;
+    }
   }
 
   connectWebSocket() {
@@ -2020,13 +2026,13 @@ class LightningTalkApp {
     document.addEventListener(
       'click',
       event => {
-        const target = event.target;
+        const { target } = event;
 
         // Handle vote buttons
         if (target.classList.contains('vote-btn')) {
           event.preventDefault();
-          const voteType = target.dataset.voteType;
-          const eventId = target.dataset.eventId;
+          const { voteType } = target.dataset;
+          const { eventId } = target.dataset;
           if (voteType && eventId) {
             this.openVoteModal(voteType, eventId);
           }
@@ -2072,8 +2078,10 @@ class LightningTalkApp {
       const voteContainers = document.querySelectorAll('.vote-container');
 
       for (const container of voteContainers) {
-        const eventId = container.dataset.eventId;
-        if (!eventId) continue;
+        const { eventId } = container.dataset;
+        if (!eventId) {
+          continue;
+        }
 
         // APIから最新の投票データを取得
         const response = await fetch(
@@ -2133,9 +2141,9 @@ class LightningTalkApp {
       this.ws.send(
         JSON.stringify({
           type: 'vote',
-          eventId: eventId,
-          voteType: voteType,
-          voter: voter
+          eventId,
+          voteType,
+          voter
         })
       );
     }
@@ -2147,7 +2155,7 @@ class LightningTalkApp {
         'Content-Type': 'application/json'
       },
       body: JSON.stringify({
-        eventId: eventId,
+        eventId,
         participationType: voteType,
         participantName: voter.name,
         participantEmail: voter.email

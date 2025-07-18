@@ -141,24 +141,41 @@ class MobilePerformanceOptimizer {
     let score = 0;
 
     // CPU
-    if (navigator.hardwareConcurrency >= 8) score += 3;
-    else if (navigator.hardwareConcurrency >= 4) score += 2;
-    else score += 1;
+    if (navigator.hardwareConcurrency >= 8) {
+      score += 3;
+    } else if (navigator.hardwareConcurrency >= 4) {
+      score += 2;
+    } else {
+      score += 1;
+    }
 
     // メモリ
-    if (navigator.deviceMemory >= 8) score += 3;
-    else if (navigator.deviceMemory >= 4) score += 2;
-    else score += 1;
+    if (navigator.deviceMemory >= 8) {
+      score += 3;
+    } else if (navigator.deviceMemory >= 4) {
+      score += 2;
+    } else {
+      score += 1;
+    }
 
     // GPU
-    if (this.detectWebGLSupport()) score += 2;
+    if (this.detectWebGLSupport()) {
+      score += 2;
+    }
 
     // 画面
-    if (window.devicePixelRatio >= 3) score += 2;
-    else if (window.devicePixelRatio >= 2) score += 1;
+    if (window.devicePixelRatio >= 3) {
+      score += 2;
+    } else if (window.devicePixelRatio >= 2) {
+      score += 1;
+    }
 
-    if (score >= 8) return 'high';
-    if (score >= 5) return 'medium';
+    if (score >= 8) {
+      return 'high';
+    }
+    if (score >= 5) {
+      return 'medium';
+    }
     return 'low';
   }
 
@@ -214,7 +231,9 @@ class MobilePerformanceOptimizer {
   }
 
   startMemoryMonitoring() {
-    if (!performance.memory) return;
+    if (!performance.memory) {
+      return;
+    }
 
     setInterval(() => {
       const memoryInfo = performance.memory;
@@ -363,7 +382,7 @@ class MobilePerformanceOptimizer {
   }
 
   convertToModernFormats(img) {
-    const src = img.src;
+    const { src } = img;
     if (src && !src.includes('.webp') && !src.includes('.avif')) {
       // 画像形式の変換ロジック
       const picture = document.createElement('picture');
@@ -389,7 +408,7 @@ class MobilePerformanceOptimizer {
 
   addResponsiveAttributes(img) {
     if (!img.srcset && !img.sizes) {
-      const src = img.src;
+      const { src } = img;
       if (src) {
         // デバイスピクセル比に基づくsrcsetの生成
         const srcset = [`${src} 1x`, `${src.replace(/\.(jpg|jpeg|png)$/i, '@2x.$1')} 2x`].join(
@@ -403,7 +422,9 @@ class MobilePerformanceOptimizer {
   }
 
   setupLazyLoading() {
-    if (!this.device.supportsIntersectionObserver) return;
+    if (!this.device.supportsIntersectionObserver) {
+      return;
+    }
 
     const imageObserver = new IntersectionObserver(
       (entries, observer) => {
@@ -438,7 +459,7 @@ class MobilePerformanceOptimizer {
   }
 
   addResourceHints() {
-    const head = document.head;
+    const { head } = document;
 
     // DNSプリフェッチ
     const domains = ['fonts.googleapis.com', 'fonts.gstatic.com'];
@@ -488,7 +509,9 @@ class MobilePerformanceOptimizer {
     let scrollTimeout;
     const optimizedScroll = callback => {
       return () => {
-        if (scrollTimeout) return;
+        if (scrollTimeout) {
+          return;
+        }
         scrollTimeout = setTimeout(() => {
           callback();
           scrollTimeout = null;
@@ -500,7 +523,9 @@ class MobilePerformanceOptimizer {
     let resizeTimeout;
     const optimizedResize = callback => {
       return () => {
-        if (resizeTimeout) return;
+        if (resizeTimeout) {
+          return;
+        }
         resizeTimeout = setTimeout(() => {
           callback();
           resizeTimeout = null;
@@ -533,7 +558,7 @@ class MobilePerformanceOptimizer {
    */
   monitorNetworkQuality() {
     if ('connection' in navigator) {
-      const connection = navigator.connection;
+      const { connection } = navigator;
 
       const updateNetworkInfo = () => {
         this.metrics.networkQuality = {

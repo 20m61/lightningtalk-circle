@@ -99,14 +99,11 @@ describe('Voting API Integration Tests', () => {
 
       mockVotingService.createSession.mockResolvedValue(mockSession);
 
-      const response = await request(app)
-        .post('/api/voting/sessions')
-        .set('Authorization', 'Bearer test-token')
-        .send({
-          eventId: '123e4567-e89b-12d3-a456-426614174000',
-          talkId: '123e4567-e89b-12d3-a456-426614174001',
-          duration: 60
-        });
+      const response = await request(app).post('/api/voting/sessions').set('Authorization', 'Bearer test-token').send({
+        eventId: '123e4567-e89b-12d3-a456-426614174000',
+        talkId: '123e4567-e89b-12d3-a456-426614174001',
+        duration: 60
+      });
 
       expect(response.status).toBe(201);
       expect(response.body).toEqual({
@@ -130,13 +127,10 @@ describe('Voting API Integration Tests', () => {
     });
 
     it('should validate required fields', async () => {
-      const response = await request(app)
-        .post('/api/voting/sessions')
-        .set('Authorization', 'Bearer test-token')
-        .send({
-          talkId: '123e4567-e89b-12d3-a456-426614174001'
-          // Missing eventId
-        });
+      const response = await request(app).post('/api/voting/sessions').set('Authorization', 'Bearer test-token').send({
+        talkId: '123e4567-e89b-12d3-a456-426614174001'
+        // Missing eventId
+      });
 
       expect(response.status).toBe(400);
       expect(response.body.errors).toBeDefined();
@@ -144,14 +138,11 @@ describe('Voting API Integration Tests', () => {
     });
 
     it('should validate duration range', async () => {
-      const response = await request(app)
-        .post('/api/voting/sessions')
-        .set('Authorization', 'Bearer test-token')
-        .send({
-          eventId: '123e4567-e89b-12d3-a456-426614174000',
-          talkId: '123e4567-e89b-12d3-a456-426614174001',
-          duration: 400 // Too long
-        });
+      const response = await request(app).post('/api/voting/sessions').set('Authorization', 'Bearer test-token').send({
+        eventId: '123e4567-e89b-12d3-a456-426614174000',
+        talkId: '123e4567-e89b-12d3-a456-426614174001',
+        duration: 400 // Too long
+      });
 
       expect(response.status).toBe(400);
       expect(response.body.errors).toBeDefined();
@@ -180,12 +171,10 @@ describe('Voting API Integration Tests', () => {
       mockVotingService.submitVote.mockResolvedValue(mockVote);
       mockVotingService.getResults.mockResolvedValue(mockResults);
 
-      const response = await request(app)
-        .post('/api/voting/sessions/550e8400-e29b-41d4-a716-446655440000/vote')
-        .send({
-          rating: 5,
-          participantId: 'participant-123'
-        });
+      const response = await request(app).post('/api/voting/sessions/550e8400-e29b-41d4-a716-446655440000/vote').send({
+        rating: 5,
+        participantId: 'participant-123'
+      });
 
       expect(response.status).toBe(200);
       expect(response.body).toEqual({
@@ -200,11 +189,9 @@ describe('Voting API Integration Tests', () => {
     });
 
     it('should validate rating range', async () => {
-      const response = await request(app)
-        .post('/api/voting/sessions/550e8400-e29b-41d4-a716-446655440000/vote')
-        .send({
-          rating: 6 // Invalid rating
-        });
+      const response = await request(app).post('/api/voting/sessions/550e8400-e29b-41d4-a716-446655440000/vote').send({
+        rating: 6 // Invalid rating
+      });
 
       expect(response.status).toBe(400);
       expect(response.body.errors).toBeDefined();
@@ -214,11 +201,9 @@ describe('Voting API Integration Tests', () => {
     it('should handle voting errors appropriately', async () => {
       mockVotingService.submitVote.mockRejectedValue(new Error('Already voted'));
 
-      const response = await request(app)
-        .post('/api/voting/sessions/550e8400-e29b-41d4-a716-446655440000/vote')
-        .send({
-          rating: 5
-        });
+      const response = await request(app).post('/api/voting/sessions/550e8400-e29b-41d4-a716-446655440000/vote').send({
+        rating: 5
+      });
 
       expect(response.status).toBe(409);
       expect(response.body.error).toBe('Already voted');
@@ -227,11 +212,9 @@ describe('Voting API Integration Tests', () => {
     it('should handle session not found', async () => {
       mockVotingService.submitVote.mockRejectedValue(new Error('Voting session not found'));
 
-      const response = await request(app)
-        .post('/api/voting/sessions/550e8400-e29b-41d4-a716-446655440001/vote')
-        .send({
-          rating: 5
-        });
+      const response = await request(app).post('/api/voting/sessions/550e8400-e29b-41d4-a716-446655440001/vote').send({
+        rating: 5
+      });
 
       expect(response.status).toBe(404);
       expect(response.body.error).toBe('Voting session not found');
@@ -240,11 +223,9 @@ describe('Voting API Integration Tests', () => {
     it('should handle ended session', async () => {
       mockVotingService.submitVote.mockRejectedValue(new Error('Voting session has ended'));
 
-      const response = await request(app)
-        .post('/api/voting/sessions/550e8400-e29b-41d4-a716-446655440000/vote')
-        .send({
-          rating: 5
-        });
+      const response = await request(app).post('/api/voting/sessions/550e8400-e29b-41d4-a716-446655440000/vote').send({
+        rating: 5
+      });
 
       expect(response.status).toBe(400);
       expect(response.body.error).toBe('Voting session has ended');
@@ -265,9 +246,7 @@ describe('Voting API Integration Tests', () => {
 
       mockVotingService.getResults.mockResolvedValue(mockResults);
 
-      const response = await request(app).get(
-        '/api/voting/sessions/550e8400-e29b-41d4-a716-446655440000/results'
-      );
+      const response = await request(app).get('/api/voting/sessions/550e8400-e29b-41d4-a716-446655440000/results');
 
       expect(response.status).toBe(200);
       expect(response.body).toEqual({
@@ -495,14 +474,11 @@ describe('Voting API Integration Tests', () => {
 
       mockVotingService.createSession.mockResolvedValue(mockSession);
 
-      const response = await request(app)
-        .post('/api/voting/sessions')
-        .set('Authorization', 'Bearer test-token')
-        .send({
-          eventId: '123e4567-e89b-12d3-a456-426614174000',
-          talkId: '456e4567-e89b-12d3-a456-426614174001',
-          duration: 60
-        });
+      const response = await request(app).post('/api/voting/sessions').set('Authorization', 'Bearer test-token').send({
+        eventId: '123e4567-e89b-12d3-a456-426614174000',
+        talkId: '456e4567-e89b-12d3-a456-426614174001',
+        duration: 60
+      });
 
       expect(response.status).toBe(201);
       expect(response.body).toEqual({

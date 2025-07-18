@@ -11,7 +11,7 @@ export class CloudWatchService {
   constructor() {
     this.isEnabled = process.env.ENABLE_CLOUDWATCH_LOGS === 'true';
     this.environment = process.env.NODE_ENV || 'development';
-    this.logGroup = process.env.CLOUDWATCH_LOG_GROUP || `/aws/lambda/lightningtalk-circle`;
+    this.logGroup = process.env.CLOUDWATCH_LOG_GROUP || '/aws/lambda/lightningtalk-circle';
     this.region = process.env.AWS_REGION || 'ap-northeast-1';
 
     // Initialize CloudWatch client only if AWS SDK is available
@@ -187,8 +187,11 @@ export class CloudWatchService {
 
     // Determine log level based on status code
     let level = 'INFO';
-    if (res.statusCode >= 500) level = 'ERROR';
-    else if (res.statusCode >= 400) level = 'WARN';
+    if (res.statusCode >= 500) {
+      level = 'ERROR';
+    } else if (res.statusCode >= 400) {
+      level = 'WARN';
+    }
 
     await this.logEvent(level, 'API Request', metadata);
 

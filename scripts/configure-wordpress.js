@@ -8,7 +8,9 @@ require('dotenv').config();
 
 async function configureWordPress() {
   const fetch = (await import('node-fetch')).default;
-  const authString = Buffer.from(`${process.env.WP_USERNAME}:${process.env.WP_APP_PASSWORD}`).toString('base64');
+  const authString = Buffer.from(
+    `${process.env.WP_USERNAME}:${process.env.WP_APP_PASSWORD}`
+  ).toString('base64');
 
   console.log('⚙️ WordPress設定自動化');
   console.log('=====================');
@@ -20,7 +22,7 @@ async function configureWordPress() {
     const permalinkResponse = await fetch(`${process.env.WP_API_URL}/settings`, {
       method: 'POST',
       headers: {
-        'Authorization': `Basic ${authString}`,
+        Authorization: `Basic ${authString}`,
         'Content-Type': 'application/json'
       },
       body: JSON.stringify({
@@ -38,7 +40,7 @@ async function configureWordPress() {
     console.log('\\n2. サイト設定確認...');
     const siteResponse = await fetch(`${process.env.WP_API_URL}/settings`, {
       headers: {
-        'Authorization': `Basic ${authString}`
+        Authorization: `Basic ${authString}`
       }
     });
 
@@ -50,7 +52,6 @@ async function configureWordPress() {
 
     console.log('\\n✅ WordPress基本設定完了');
     console.log('\\n次のステップ: node scripts/create-sample-event.js');
-
   } catch (error) {
     console.error('❌ 設定エラー:', error.message);
     console.log('\\n手動設定が必要です:');

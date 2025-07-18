@@ -89,7 +89,7 @@ app.get('/api/events', (req, res) => {
 
 // Specific voting participation endpoint
 app.get('/api/voting/participation/:eventId', (req, res) => {
-  const eventId = req.params.eventId;
+  const { eventId } = req.params;
   logger.info('Voting participation endpoint accessed', {
     eventId,
     userAgent: req.get('User-Agent'),
@@ -131,7 +131,7 @@ app.post('/api/voting', (req, res) => {
 
 // General voting endpoints
 app.get('/api/voting/*', (req, res) => {
-  const path = req.path;
+  const { path } = req;
   logger.info('Voting wildcard endpoint accessed', {
     path,
     ip: req.ip
@@ -148,7 +148,7 @@ app.get('/api/voting/*', (req, res) => {
   } else {
     res.json({
       message: 'Voting endpoint',
-      path: path,
+      path,
       timestamp: new Date().toISOString()
     });
   }
@@ -165,7 +165,7 @@ app.post('/api/voting/*', (req, res) => {
 app.post('/api/auth/login', (req, res) => {
   const { email, password } = req.body;
   logger.security('Login attempt', {
-    email: email?.substring(0, 3) + '***',
+    email: `${email?.substring(0, 3)}***`,
     ip: req.ip,
     userAgent: req.get('User-Agent')
   });
@@ -173,7 +173,7 @@ app.post('/api/auth/login', (req, res) => {
   // Simple demo authentication - replace with Cognito
   if (email === 'admin@example.com' && password === 'admin123') {
     logger.business('Successful authentication', {
-      email: email?.substring(0, 3) + '***',
+      email: `${email?.substring(0, 3)}***`,
       role: 'admin'
     });
     res.json({
@@ -184,7 +184,7 @@ app.post('/api/auth/login', (req, res) => {
     });
   } else {
     logger.security('Failed authentication attempt', {
-      email: email?.substring(0, 3) + '***',
+      email: `${email?.substring(0, 3)}***`,
       ip: req.ip
     });
     res.status(401).json({
@@ -265,11 +265,11 @@ exports.handler = async (event, context) => {
     if (event.pathParameters && event.pathParameters.proxy) {
       // For root proxy, the full path is in the proxy parameter
       if (event.resource === '/{proxy+}') {
-        event.path = '/' + event.pathParameters.proxy;
+        event.path = `/${event.pathParameters.proxy}`;
       } else {
         // For nested proxy, reconstruct the path
         const basePath = event.resource.replace('/{proxy+}', '');
-        const fullPath = basePath + '/' + event.pathParameters.proxy;
+        const fullPath = `${basePath}/${event.pathParameters.proxy}`;
         event.path = fullPath;
       }
 

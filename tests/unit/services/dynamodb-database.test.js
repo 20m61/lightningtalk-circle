@@ -49,12 +49,12 @@ jest.unstable_mockModule('uuid', () => ({
 
 // Mock logger
 jest.unstable_mockModule('../../../server/utils/logger.js', () => ({
-  logger: {
+  createLogger: jest.fn(() => ({
     info: jest.fn(),
     error: jest.fn(),
     warn: jest.fn(),
     debug: jest.fn()
-  }
+  }))
 }));
 
 // Mock retry utility
@@ -286,12 +286,7 @@ if (hasAwsSdk) {
       });
 
       it('should handle participant updates with eventId', async () => {
-        await service.update(
-          'participants',
-          'participant-123',
-          { name: 'Updated Name' },
-          { eventId: 'event-123' }
-        );
+        await service.update('participants', 'participant-123', { name: 'Updated Name' }, { eventId: 'event-123' });
 
         expect(mockUpdate).toHaveBeenCalledWith(
           expect.objectContaining({

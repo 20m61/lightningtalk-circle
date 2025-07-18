@@ -3,7 +3,9 @@
  * Supports both database and file-based storage errors
  */
 
-import { logger } from './logger.js';
+import { createLogger } from '../utils/logger.js';
+
+const logger = createLogger('ErrorHandler');
 
 export const errorHandler = (err, req, res, _next) => {
   let error = { ...err };

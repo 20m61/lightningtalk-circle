@@ -12,11 +12,9 @@ const mockLogger = {
   error: jest.fn()
 };
 
-jest.unstable_mockModule('../../../server/utils/logger', () => ({
-  logger: mockLogger
+jest.unstable_mockModule('../../../server/utils/logger.js', () => ({
+  createLogger: jest.fn(() => mockLogger)
 }));
-
-const { logger } = await import('../../../server/utils/logger');
 const securityModule = await import('../../../server/middleware/security-enhanced');
 const {
   enforceHTTPS,
@@ -120,10 +118,7 @@ describe('Enhanced Security Middleware', () => {
     it('should set security headers', () => {
       enhancedSecurityHeaders(req, res, next);
 
-      expect(res.setHeader).toHaveBeenCalledWith(
-        'Permissions-Policy',
-        'geolocation=(), microphone=(), camera=()'
-      );
+      expect(res.setHeader).toHaveBeenCalledWith('Permissions-Policy', 'geolocation=(), microphone=(), camera=()');
       expect(res.setHeader).toHaveBeenCalledWith('X-Permitted-Cross-Domain-Policies', 'none');
       expect(res.setHeader).toHaveBeenCalledWith('X-Download-Options', 'noopen');
       expect(res.setHeader).toHaveBeenCalledWith('X-DNS-Prefetch-Control', 'off');
@@ -135,10 +130,7 @@ describe('Enhanced Security Middleware', () => {
 
       enhancedSecurityHeaders(req, res, next);
 
-      expect(res.setHeader).toHaveBeenCalledWith(
-        'Cache-Control',
-        'no-store, no-cache, must-revalidate, private'
-      );
+      expect(res.setHeader).toHaveBeenCalledWith('Cache-Control', 'no-store, no-cache, must-revalidate, private');
       expect(res.setHeader).toHaveBeenCalledWith('Pragma', 'no-cache');
       expect(res.setHeader).toHaveBeenCalledWith('Expires', '0');
     });
@@ -148,10 +140,7 @@ describe('Enhanced Security Middleware', () => {
 
       enhancedSecurityHeaders(req, res, next);
 
-      expect(res.setHeader).toHaveBeenCalledWith(
-        'Cache-Control',
-        'no-store, no-cache, must-revalidate, private'
-      );
+      expect(res.setHeader).toHaveBeenCalledWith('Cache-Control', 'no-store, no-cache, must-revalidate, private');
     });
   });
 
@@ -212,7 +201,7 @@ describe('Enhanced Security Middleware', () => {
 
       expect(res.status).toHaveBeenCalledWith(401);
       expect(res.json).toHaveBeenCalledWith({ error: 'Invalid request signature' });
-      expect(logger.warn).toHaveBeenCalled();
+      expect(mockLogger.warn).toHaveBeenCalled();
     });
   });
 
@@ -318,7 +307,7 @@ describe('Enhanced Security Middleware', () => {
 
       await middleware(req, res, next);
 
-      expect(logger.error).toHaveBeenCalled();
+      expect(mockLogger.error).toHaveBeenCalled();
       expect(next).toHaveBeenCalled();
     });
   });
@@ -344,7 +333,7 @@ describe('Enhanced Security Middleware', () => {
         monitor.recordEvent('failedLogins', '192.168.1.1', { attempt: i });
       }
 
-      expect(logger.warn).toHaveBeenCalledWith(
+      expect(mockLogger.warn).toHaveBeenCalledWith(
         'Security threshold exceeded',
         expect.objectContaining({
           eventType: 'failedLogins',
@@ -457,7 +446,7 @@ describe('Enhanced Security Middleware', () => {
 
       expect(res.status).toHaveBeenCalledWith(403);
       expect(res.json).toHaveBeenCalledWith({ error: 'Access denied' });
-      expect(logger.warn).toHaveBeenCalled();
+      expect(mockLogger.warn).toHaveBeenCalled();
     });
 
     it('should block IP in blacklist', () => {
@@ -470,7 +459,7 @@ describe('Enhanced Security Middleware', () => {
       middleware(req, res, next);
 
       expect(res.status).toHaveBeenCalledWith(403);
-      expect(logger.warn).toHaveBeenCalled();
+      expect(mockLogger.warn).toHaveBeenCalled();
     });
 
     it('should allow IP not in blacklist', () => {
@@ -520,6 +509,7 @@ describe('Enhanced Security Middleware', () => {
     it('should reject missing API key', () => {
       const middleware = apiKeyAuth(['valid-key-1']);
       req.get.mockReturnValue(null);
+      req.query = {};
 
       middleware(req, res, next);
 
@@ -535,7 +525,7 @@ describe('Enhanced Security Middleware', () => {
 
       expect(res.status).toHaveBeenCalledWith(401);
       expect(res.json).toHaveBeenCalledWith({ error: 'Invalid API key' });
-      expect(logger.warn).toHaveBeenCalled();
+      expect(mockLogger.warn).toHaveBeenCalled();
     });
   });
 
@@ -551,7 +541,7 @@ describe('Enhanced Security Middleware', () => {
       res.end();
 
       setTimeout(() => {
-        expect(logger.info).toHaveBeenCalledWith(
+        expect(mockLogger.info).toHaveBeenCalledWith(
           'Security audit',
           expect.objectContaining({
             action: 'user-login',
@@ -576,7 +566,7 @@ describe('Enhanced Security Middleware', () => {
       res.end();
 
       setTimeout(() => {
-        expect(logger.info).toHaveBeenCalledWith(
+        expect(mockLogger.info).toHaveBeenCalledWith(
           'Security audit',
           expect.objectContaining({
             action: 'public-access',

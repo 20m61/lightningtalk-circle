@@ -64,7 +64,7 @@ export class WebSocketService extends EventEmitter {
   setupMiddleware() {
     // Authentication middleware
     this.io.use((socket, next) => {
-      const token = socket.handshake.auth.token;
+      const { token } = socket.handshake.auth;
 
       if (token) {
         const user = this.verifyToken(token);
@@ -367,7 +367,9 @@ export class WebSocketService extends EventEmitter {
    */
   getRoomInfo(room) {
     const roomInfo = this.rooms.get(room);
-    if (!roomInfo) return null;
+    if (!roomInfo) {
+      return null;
+    }
 
     return {
       name: room,
@@ -500,7 +502,9 @@ export class WebSocketService extends EventEmitter {
   handleChatMessage(socket, data) {
     const { room, message, metadata } = data;
 
-    if (!room || !message) return;
+    if (!room || !message) {
+      return;
+    }
 
     // Broadcast to room
     socket.to(room).emit('chat:message', {
@@ -518,7 +522,9 @@ export class WebSocketService extends EventEmitter {
   handleChatTyping(socket, data) {
     const { room, isTyping } = data;
 
-    if (!room) return;
+    if (!room) {
+      return;
+    }
 
     socket.to(room).emit('chat:typing', {
       userId: socket.userId,

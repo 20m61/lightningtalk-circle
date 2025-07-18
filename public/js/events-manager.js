@@ -135,7 +135,7 @@ class EventsManager {
     const heroFilterBtns = document.querySelectorAll('.hero-events-filter .filter-btn');
     heroFilterBtns.forEach(btn => {
       btn.addEventListener('click', e => {
-        const filter = e.target.dataset.filter;
+        const { filter } = e.target.dataset;
         this.updateHeroFilter(filter);
       });
     });
@@ -185,7 +185,7 @@ class EventsManager {
     const viewToggleBtns = document.querySelectorAll('.view-toggle-btn');
     viewToggleBtns.forEach(btn => {
       btn.addEventListener('click', e => {
-        const view = e.target.dataset.view;
+        const { view } = e.target.dataset;
         this.switchView(view);
       });
     });
@@ -218,7 +218,9 @@ class EventsManager {
 
   renderHeroEvents(filter = 'all') {
     const container = document.getElementById('hero-events-grid');
-    if (!container) return;
+    if (!container) {
+      return;
+    }
 
     let filteredEvents = this.events;
 
@@ -272,7 +274,9 @@ class EventsManager {
 
   renderAllEvents() {
     const container = document.getElementById('all-events-container');
-    if (!container) return;
+    if (!container) {
+      return;
+    }
 
     const filteredEvents = this.getFilteredEvents();
     const paginatedEvents = this.getPaginatedEvents(filteredEvents);
@@ -306,8 +310,7 @@ class EventsManager {
       // Date filter
       if (this.filters.date !== 'all') {
         const eventDate = new Date(event.date);
-        const eventMonth =
-          eventDate.getFullYear() + '-' + String(eventDate.getMonth() + 1).padStart(2, '0');
+        const eventMonth = `${eventDate.getFullYear()}-${String(eventDate.getMonth() + 1).padStart(2, '0')}`;
         if (eventMonth !== this.filters.date) {
           return false;
         }
@@ -429,8 +432,12 @@ class EventsManager {
     const prevBtn = document.getElementById('prev-page');
     const nextBtn = document.getElementById('next-page');
 
-    if (currentPageSpan) currentPageSpan.textContent = this.currentPage;
-    if (totalPagesSpan) totalPagesSpan.textContent = totalPages;
+    if (currentPageSpan) {
+      currentPageSpan.textContent = this.currentPage;
+    }
+    if (totalPagesSpan) {
+      totalPagesSpan.textContent = totalPages;
+    }
 
     if (prevBtn) {
       prevBtn.disabled = this.currentPage <= 1;

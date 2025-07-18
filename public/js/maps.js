@@ -40,7 +40,7 @@ class MapsSystem {
 
       await this.loadGoogleMapsAPI();
       this.setupEventListeners();
-      
+
       console.log('Maps system initialized successfully');
     } catch (error) {
       console.error('Failed to initialize Maps system:', error);
@@ -131,7 +131,9 @@ class MapsSystem {
    * Parse location from various formats
    */
   parseLocation(venue) {
-    if (!venue) return null;
+    if (!venue) {
+      return null;
+    }
 
     // If venue is already coordinates
     if (venue.lat && venue.lng) {
@@ -157,16 +159,16 @@ class MapsSystem {
   async geocodeAddress(address) {
     return new Promise((resolve, reject) => {
       const geocoder = new google.maps.Geocoder();
-      
+
       geocoder.geocode(
-        { 
-          address: address,
+        {
+          address,
           region: this.options.region,
           language: this.options.language
         },
         (results, status) => {
           if (status === 'OK' && results[0]) {
-            const location = results[0].geometry.location;
+            const { location } = results[0].geometry;
             resolve({
               lat: location.lat(),
               lng: location.lng()
@@ -200,7 +202,7 @@ class MapsSystem {
 
     // Create detailed info window content
     const infoContent = this.createVenueInfoContent(eventData);
-    
+
     this.eventMarker.addListener('click', () => {
       this.infoWindow.setContent(infoContent);
       this.infoWindow.open(this.map, this.eventMarker);
@@ -224,26 +226,38 @@ class MapsSystem {
         </div>
         
         <div class="venue-details">
-          ${venue.address ? `
+          ${
+            venue.address
+              ? `
             <div class="venue-address">
               <span class="icon">📍</span>
               <span>${venue.address}</span>
             </div>
-          ` : ''}
+          `
+              : ''
+          }
           
-          ${eventData.datetime ? `
+          ${
+            eventData.datetime
+              ? `
             <div class="event-time">
               <span class="icon">🕐</span>
               <span>${new Date(eventData.datetime).toLocaleString('ja-JP')}</span>
             </div>
-          ` : ''}
+          `
+              : ''
+          }
           
-          ${venue.phone ? `
+          ${
+            venue.phone
+              ? `
             <div class="venue-phone">
               <span class="icon">📞</span>
               <a href="tel:${venue.phone}">${venue.phone}</a>
             </div>
-          ` : ''}
+          `
+              : ''
+          }
         </div>
 
         <div class="venue-actions">
@@ -255,17 +269,25 @@ class MapsSystem {
           </button>
         </div>
 
-        ${emergencyContacts.length > 0 ? `
+        ${
+          emergencyContacts.length > 0
+            ? `
           <div class="emergency-contacts">
             <h4>🚨 緊急連絡先</h4>
-            ${emergencyContacts.map(contact => `
+            ${emergencyContacts
+              .map(
+                contact => `
               <div class="emergency-contact">
                 <span class="contact-name">${contact.name}</span>
                 <a href="tel:${contact.phone}" class="contact-phone">${contact.phone}</a>
               </div>
-            `).join('')}
+            `
+              )
+              .join('')}
           </div>
-        ` : ''}
+        `
+            : ''
+        }
       </div>
     `;
   }
@@ -281,7 +303,7 @@ class MapsSystem {
       }
 
       navigator.geolocation.getCurrentPosition(
-        (position) => {
+        position => {
           this.currentPosition = {
             lat: position.coords.latitude,
             lng: position.coords.longitude
@@ -291,7 +313,7 @@ class MapsSystem {
           this.addUserLocationMarker();
           resolve(this.currentPosition);
         },
-        (error) => {
+        error => {
           console.warn('Could not get user location:', error);
           resolve(null);
         },
@@ -308,7 +330,9 @@ class MapsSystem {
    * Add user location marker
    */
   addUserLocationMarker() {
-    if (!this.currentPosition) return;
+    if (!this.currentPosition) {
+      return;
+    }
 
     const userIcon = {
       url: '/images/user-location.png',
@@ -332,7 +356,7 @@ class MapsSystem {
    */
   async addNearbyServices(venueLocation) {
     const placesService = new google.maps.places.PlacesService(this.map);
-    
+
     const serviceTypes = [
       { type: 'restaurant', icon: '🍽️', name: 'レストラン' },
       { type: 'cafe', icon: '☕', name: 'カフェ' },
@@ -357,7 +381,7 @@ class MapsSystem {
   searchNearbyPlaces(placesService, location, serviceType) {
     return new Promise((resolve, reject) => {
       const request = {
-        location: location,
+        location,
         radius: this.options.searchRadius,
         type: [serviceType.type]
       };
@@ -366,11 +390,11 @@ class MapsSystem {
         if (status === google.maps.places.PlacesServiceStatus.OK) {
           // Limit to top 3 results per type
           const limitedResults = results.slice(0, 3);
-          
+
           limitedResults.forEach(place => {
             this.addServiceMarker(place, serviceType);
           });
-          
+
           resolve(limitedResults);
         } else {
           reject(new Error(`Places search failed: ${status}`));
@@ -446,7 +470,11 @@ class MapsSystem {
       destination: this.eventMarker.getPosition(),
       travelMode: google.maps.TravelMode.TRANSIT,
       transitOptions: {
-        modes: [google.maps.TransitMode.SUBWAY, google.maps.TransitMode.TRAIN, google.maps.TransitMode.BUS],
+        modes: [
+          google.maps.TransitMode.SUBWAY,
+          google.maps.TransitMode.TRAIN,
+          google.maps.TransitMode.BUS
+        ],
         routingPreference: google.maps.TransitRoutePreference.FEWER_TRANSFERS
       }
     };
@@ -476,7 +504,7 @@ class MapsSystem {
 
     const request = {
       origin: this.currentPosition,
-      destination: { placeId: placeId },
+      destination: { placeId },
       travelMode: google.maps.TravelMode.WALKING
     };
 
@@ -494,7 +522,9 @@ class MapsSystem {
    * Share current location
    */
   async shareLocation() {
-    if (!this.eventMarker) return;
+    if (!this.eventMarker) {
+      return;
+    }
 
     const position = this.eventMarker.getPosition();
     const url = `https://maps.google.com/?q=${position.lat()},${position.lng()}`;
@@ -504,7 +534,7 @@ class MapsSystem {
         await navigator.share({
           title: 'イベント会場の場所',
           text: 'Lightning Talk Circle イベント会場の位置です',
-          url: url
+          url
         });
       } catch (error) {
         console.log('Share cancelled or failed:', error);
@@ -582,7 +612,7 @@ class MapsSystem {
    */
   showError(message) {
     console.error('Maps Error:', message);
-    
+
     // Create error notification
     const notification = document.createElement('div');
     notification.className = 'maps-error-notification';
@@ -598,9 +628,9 @@ class MapsSystem {
       z-index: 10000;
       font-weight: 500;
     `;
-    
+
     document.body.appendChild(notification);
-    
+
     setTimeout(() => {
       if (notification.parentNode) {
         notification.remove();
@@ -613,7 +643,7 @@ class MapsSystem {
    */
   showSuccess(message) {
     console.log('Maps Success:', message);
-    
+
     // Create success notification
     const notification = document.createElement('div');
     notification.className = 'maps-success-notification';
@@ -629,9 +659,9 @@ class MapsSystem {
       z-index: 10000;
       font-weight: 500;
     `;
-    
+
     document.body.appendChild(notification);
-    
+
     setTimeout(() => {
       if (notification.parentNode) {
         notification.remove();
@@ -677,16 +707,16 @@ class MapsSystem {
    */
   destroy() {
     this.clearMarkers();
-    
+
     if (this.map) {
       this.map = null;
     }
-    
+
     if (this.directionsRenderer) {
       this.directionsRenderer.setMap(null);
       this.directionsRenderer = null;
     }
-    
+
     this.directionsService = null;
     this.infoWindow = null;
     this.currentPosition = null;
@@ -695,7 +725,7 @@ class MapsSystem {
 }
 
 // Global instance for easy access
-let mapsSystem = null;
+const mapsSystem = null;
 
 // Auto-initialize when DOM is ready
 document.addEventListener('DOMContentLoaded', () => {

@@ -120,8 +120,12 @@ const resourceHints = (req, res, next) => {
 
     criticalResources.forEach(resource => {
       let header = `<${resource.url}>; rel=preload; as=${resource.as}`;
-      if (resource.type) header += `; type="${resource.type}"`;
-      if (resource.crossorigin) header += '; crossorigin';
+      if (resource.type) {
+        header += `; type="${resource.type}"`;
+      }
+      if (resource.crossorigin) {
+        header += '; crossorigin';
+      }
 
       const existingLink = res.getHeader('Link');
       res.setHeader('Link', existingLink ? `${existingLink}, ${header}` : header);

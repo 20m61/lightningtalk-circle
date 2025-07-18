@@ -56,11 +56,14 @@
 }
 
 @keyframes emergencyPulse {
-  0%, 100% {
+  0%,
+  100% {
     box-shadow: var(--shadow-xl);
   }
   50% {
-    box-shadow: var(--shadow-xl), 0 0 0 8px rgba(239, 68, 68, 0.2);
+    box-shadow:
+      var(--shadow-xl),
+      0 0 0 8px rgba(239, 68, 68, 0.2);
   }
 }
 
@@ -904,7 +907,8 @@
 
   @keyframes emergencyPulse,
   @keyframes slideDown {
-    from, to {
+    from,
+    to {
       transform: none;
     }
   }

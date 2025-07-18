@@ -234,10 +234,7 @@ describe('EmailService', () => {
       const result = await emailService.sendAdminNotification('new_registration', participant);
 
       expect(result.success).toBe(true);
-      expect(emailService.sendAdminNotification).toHaveBeenCalledWith(
-        'new_registration',
-        participant
-      );
+      expect(emailService.sendAdminNotification).toHaveBeenCalledWith('new_registration', participant);
     });
   });
 

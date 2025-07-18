@@ -71,9 +71,7 @@ describe('DatabaseService', () => {
     });
 
     it('should handle parameterized queries', async () => {
-      database.query = jest
-        .fn()
-        .mockResolvedValue([{ id: 1, name: 'Test Event', status: 'upcoming' }]);
+      database.query = jest.fn().mockResolvedValue([{ id: 1, name: 'Test Event', status: 'upcoming' }]);
 
       const result = await database.query('SELECT * FROM events WHERE id = ?', [1]);
 
@@ -84,9 +82,7 @@ describe('DatabaseService', () => {
     it('should handle query errors', async () => {
       database.query = jest.fn().mockRejectedValue(new Error('Database connection failed'));
 
-      await expect(database.query('SELECT * FROM events')).rejects.toThrow(
-        'Database connection failed'
-      );
+      await expect(database.query('SELECT * FROM events')).rejects.toThrow('Database connection failed');
     });
   });
 
@@ -156,10 +152,7 @@ describe('DatabaseService', () => {
     it('should update data', async () => {
       database.query.mockResolvedValue([{ affectedRows: 1 }]);
 
-      const result = await database.query('UPDATE events SET title = ? WHERE id = ?', [
-        'Updated Title',
-        1
-      ]);
+      const result = await database.query('UPDATE events SET title = ? WHERE id = ?', ['Updated Title', 1]);
 
       expect(result[0].affectedRows).toBe(1);
     });

@@ -318,10 +318,7 @@ describe('Analytics Module', () => {
       const unloadEvent = new window.Event('beforeunload');
       window.dispatchEvent(unloadEvent);
 
-      expect(global.navigator.sendBeacon).toHaveBeenCalledWith(
-        '/api/analytics',
-        expect.any(String)
-      );
+      expect(global.navigator.sendBeacon).toHaveBeenCalledWith('/api/analytics', expect.any(String));
     });
 
     it('should handle transmission failures gracefully', async () => {
@@ -333,10 +330,7 @@ describe('Analytics Module', () => {
 
       await new Promise(resolve => setTimeout(resolve, 10));
 
-      expect(consoleSpy).toHaveBeenCalledWith(
-        '[Analytics] Failed to send data:',
-        expect.any(Error)
-      );
+      expect(consoleSpy).toHaveBeenCalledWith('[Analytics] Failed to send data:', expect.any(Error));
 
       consoleSpy.mockRestore();
     });
@@ -352,10 +346,7 @@ describe('Analytics Module', () => {
       sessionStorage.getItem.mockReturnValue(null);
 
       const sessionId1 = analytics.getSessionId();
-      expect(sessionStorage.setItem).toHaveBeenCalledWith(
-        'analytics_session_id',
-        expect.any(String)
-      );
+      expect(sessionStorage.setItem).toHaveBeenCalledWith('analytics_session_id', expect.any(String));
 
       // Should return same ID on subsequent calls
       sessionStorage.getItem.mockReturnValue(sessionId1);

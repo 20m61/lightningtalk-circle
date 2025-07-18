@@ -25,13 +25,7 @@ export default {
     '/cdk/cdk.out/'
   ],
   coverageDirectory: 'coverage',
-  collectCoverageFrom: [
-    'server/**/*.js',
-    '!server/app.js',
-    '!**/node_modules/**',
-    '!**/tests/**',
-    '!**/coverage/**'
-  ],
+  collectCoverageFrom: ['server/**/*.js', '!server/app.js', '!**/node_modules/**', '!**/tests/**', '!**/coverage/**'],
   testEnvironmentOptions: {
     url: 'http://localhost/'
   },

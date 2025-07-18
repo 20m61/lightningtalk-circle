@@ -98,11 +98,11 @@ export class ImageService {
       // Create image record
       const imageRecord = {
         id: imageId,
-        originalName: originalName,
-        baseName: baseName,
+        originalName,
+        baseName,
         mimeType: `image/${fileExtension}`,
         fileSize: fileBuffer.length,
-        metadata: metadata,
+        metadata,
         variants: uploadResults,
         createdAt: new Date(),
         updatedAt: new Date(),
@@ -216,8 +216,8 @@ export class ImageService {
           filename: `${imageId}-${sizeName}.${originalExtension}`,
           mimeType: `image/${originalExtension}`,
           size: processedBuffer.length,
-          width: width,
-          height: height
+          width,
+          height
         });
 
         processedImages.set(`${sizeName}-webp`, {
@@ -225,8 +225,8 @@ export class ImageService {
           filename: `${imageId}-${sizeName}.webp`,
           mimeType: 'image/webp',
           size: webpBuffer.length,
-          width: width,
-          height: height
+          width,
+          height
         });
       } catch (error) {
         logger.error(`Error processing ${sizeName} variant:`, error);

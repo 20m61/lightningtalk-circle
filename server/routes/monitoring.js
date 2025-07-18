@@ -154,7 +154,7 @@ router.get('/errors', async (req, res) => {
     const metrics = monitoring.getMetrics();
     const { limit = 50, since } = req.query;
 
-    let errors = metrics.errors;
+    let { errors } = metrics;
 
     if (since) {
       const sinceDate = new Date(since);

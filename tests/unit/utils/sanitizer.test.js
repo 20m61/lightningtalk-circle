@@ -3,12 +3,7 @@
  */
 
 import { jest } from '@jest/globals';
-import {
-  sanitizeHtml,
-  sanitizeText,
-  sanitizeObject,
-  sanitizeMiddleware
-} from '../../../server/utils/sanitizer.js';
+import { sanitizeHtml, sanitizeText, sanitizeObject, sanitizeMiddleware } from '../../../server/utils/sanitizer.js';
 
 describe('Sanitizer Utils', () => {
   describe('sanitizeHtml', () => {

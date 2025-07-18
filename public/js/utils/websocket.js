@@ -49,7 +49,9 @@ class WebSocketClient {
   }
 
   setupEventHandlers() {
-    if (!this.socket) return;
+    if (!this.socket) {
+      return;
+    }
 
     // Connection events
     this.socket.on('connect', () => {

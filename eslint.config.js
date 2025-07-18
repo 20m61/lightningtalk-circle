@@ -194,7 +194,11 @@ export default [
       'lightningtalk-modern/packages/*/dist/',
       'lightningtalk-modern/packages/*/build/',
       'cdk/lib/stacks/*.js',
-      'cdk/lambda/*.js'
+      'cdk/lambda/*.js',
+      'public/build/**/*.js',
+      'public/build/**/*.css',
+      'public/dist/**/*.js',
+      'public/dist/**/*.css'
     ]
   }
 ];

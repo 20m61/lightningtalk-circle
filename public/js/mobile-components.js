@@ -32,7 +32,7 @@ class MobileComponentSystem {
    * デバイス情報の詳細検出
    */
   detectDevice() {
-    const userAgent = navigator.userAgent;
+    const { userAgent } = navigator;
 
     this.device = {
       isMobile: /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(userAgent),
@@ -409,7 +409,9 @@ class MobileComponentSystem {
       actionBtn.className = `action-sheet__action ${action.destructive ? 'action-sheet__action--destructive' : ''}`;
       actionBtn.textContent = action.text;
       actionBtn.onclick = () => {
-        if (action.handler) action.handler();
+        if (action.handler) {
+          action.handler();
+        }
         this.closeActionSheet(actionSheet);
       };
       actionsContainer.appendChild(actionBtn);
@@ -506,7 +508,9 @@ class MobileComponentSystem {
     card.addEventListener(
       'touchmove',
       e => {
-        if (!cardData.isDragging) return;
+        if (!cardData.isDragging) {
+          return;
+        }
 
         cardData.currentX = e.touches[0].clientX - cardData.startX;
         const translateX = Math.max(-100, Math.min(0, cardData.currentX));
@@ -611,9 +615,9 @@ class MobileComponentSystem {
     const x = event.touches[0].clientX - rect.left - size / 2;
     const y = event.touches[0].clientY - rect.top - size / 2;
 
-    ripple.style.width = ripple.style.height = size + 'px';
-    ripple.style.left = x + 'px';
-    ripple.style.top = y + 'px';
+    ripple.style.width = ripple.style.height = `${size}px`;
+    ripple.style.left = `${x}px`;
+    ripple.style.top = `${y}px`;
 
     element.appendChild(ripple);
 

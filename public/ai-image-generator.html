@@ -15,13 +15,7 @@
 
     <!-- Preload critical resources -->
     <link rel="preload" href="/js/ai-image-generator.js" as="script" />
-    <link
-      rel="preload"
-      href="/fonts/NotoSansJP-Regular.woff2"
-      as="font"
-      type="font/woff2"
-      crossorigin
-    />
+    <link rel="preload" href="/fonts/NotoSansJP-Regular.woff2" as="font" type="font/woff2" crossorigin />
 
     <!-- Meta tags for SEO and social sharing -->
     <meta property="og:title" content="AI画像生成 - Lightning Talk Circle" />
@@ -38,8 +32,7 @@
     <script>
       window.API_CONFIG = {
         apiEndpoint: '/api',
-        wsEndpoint:
-          window.location.protocol === 'https:' ? 'wss:' : 'ws:' + '//' + window.location.host
+        wsEndpoint: window.location.protocol === 'https:' ? 'wss:' : 'ws:' + '//' + window.location.host
       };
     </script>
   </head>
@@ -138,13 +131,7 @@
             <span class="tab-icon">🖼️</span>
             <span class="tab-text">生成履歴</span>
           </button>
-          <button
-            class="tab-button"
-            role="tab"
-            aria-selected="false"
-            aria-controls="help-panel"
-            id="help-tab"
-          >
+          <button class="tab-button" role="tab" aria-selected="false" aria-controls="help-panel" id="help-tab">
             <span class="tab-icon">❓</span>
             <span class="tab-text">ヘルプ</span>
           </button>
@@ -153,17 +140,10 @@
         <!-- Tab Panels -->
         <div class="tab-panels">
           <!-- Templates Panel -->
-          <section
-            id="templates-panel"
-            class="tab-panel active"
-            role="tabpanel"
-            aria-labelledby="templates-tab"
-          >
+          <section id="templates-panel" class="tab-panel active" role="tabpanel" aria-labelledby="templates-tab">
             <div class="panel-header">
               <h2 class="panel-title">AI画像テンプレート</h2>
-              <p class="panel-description">
-                用途に応じてテンプレートを選択し、AI画像生成を開始してください。
-              </p>
+              <p class="panel-description">用途に応じてテンプレートを選択し、AI画像生成を開始してください。</p>
             </div>
 
             <!-- Template Filters -->
@@ -190,23 +170,14 @@
           </section>
 
           <!-- Generations Panel -->
-          <section
-            id="generations-panel"
-            class="tab-panel"
-            role="tabpanel"
-            aria-labelledby="generations-tab"
-          >
+          <section id="generations-panel" class="tab-panel" role="tabpanel" aria-labelledby="generations-tab">
             <div class="panel-header">
               <h2 class="panel-title">生成履歴</h2>
               <p class="panel-description">これまでに生成したAI画像の履歴です。</p>
 
               <div class="generations-filters" role="group" aria-label="生成履歴フィルター">
                 <label for="status-filter" class="filter-label">ステータス:</label>
-                <select
-                  id="status-filter"
-                  class="filter-select"
-                  aria-label="ステータスでフィルター"
-                >
+                <select id="status-filter" class="filter-select" aria-label="ステータスでフィルター">
                   <option value="">すべて</option>
                   <option value="completed">完了</option>
                   <option value="pending">待機中</option>
@@ -256,15 +227,11 @@
                 <div class="tips-grid">
                   <div class="tip-card">
                     <h4>具体的に描写</h4>
-                    <p>
-                      「青いポスター」ではなく「深い青のグラデーション背景にモダンな白文字」のように詳しく記述
-                    </p>
+                    <p>「青いポスター」ではなく「深い青のグラデーション背景にモダンな白文字」のように詳しく記述</p>
                   </div>
                   <div class="tip-card">
                     <h4>スタイルを指定</h4>
-                    <p>
-                      「ミニマリスト」「コーポレート」「クリエイティブ」など、求めるデザインスタイルを明記
-                    </p>
+                    <p>「ミニマリスト」「コーポレート」「クリエイティブ」など、求めるデザインスタイルを明記</p>
                   </div>
                   <div class="tip-card">
                     <h4>色合いを指定</h4>
@@ -272,9 +239,7 @@
                   </div>
                   <div class="tip-card">
                     <h4>雰囲気を伝える</h4>
-                    <p>
-                      「プロフェッショナル」「エネルギッシュ」「親しみやすい」など、伝えたい雰囲気を記述
-                    </p>
+                    <p>「プロフェッショナル」「エネルギッシュ」「親しみやすい」など、伝えたい雰囲気を記述</p>
                   </div>
                 </div>
               </div>

@@ -460,8 +460,12 @@ router.get(
 
       // Build filter
       const filter = {};
-      if (category) filter.category = category;
-      if (uploadedBy) filter.uploadedBy = uploadedBy;
+      if (category) {
+        filter.category = category;
+      }
+      if (uploadedBy) {
+        filter.uploadedBy = uploadedBy;
+      }
 
       // Get images from database
       const images = await req.app.locals.database.find('images', filter);
@@ -573,7 +577,7 @@ router.post(
       // Update event with image
       const updatedEvent = await req.app.locals.database.update('events', eventId, {
         mainImage: {
-          imageId: imageId,
+          imageId,
           url: imageService.getOptimizedImageUrl(image, 'large'),
           thumbnailUrl: imageService.getOptimizedImageUrl(image, 'thumbnail'),
           alt: image.alt || event.title,
@@ -585,7 +589,7 @@ router.post(
         success: true,
         data: {
           event: updatedEvent,
-          image: image
+          image
         },
         message: 'Image associated with event successfully'
       });

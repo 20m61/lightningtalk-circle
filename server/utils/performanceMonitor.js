@@ -35,7 +35,9 @@ export class PerformanceMonitor extends EventEmitter {
    * Start performance monitoring
    */
   start() {
-    if (this.isMonitoring) return;
+    if (this.isMonitoring) {
+      return;
+    }
 
     this.isMonitoring = true;
     this.monitoringInterval = setInterval(() => {
@@ -50,7 +52,9 @@ export class PerformanceMonitor extends EventEmitter {
    * Stop performance monitoring
    */
   stop() {
-    if (!this.isMonitoring) return;
+    if (!this.isMonitoring) {
+      return;
+    }
 
     this.isMonitoring = false;
     if (this.monitoringInterval) {
@@ -253,7 +257,7 @@ export class PerformanceMonitor extends EventEmitter {
     const memUsage = process.memoryUsage();
 
     return {
-      uptime: uptime,
+      uptime,
       memoryUsage: {
         rss: Math.round(memUsage.rss / 1024 / 1024),
         heapUsed: Math.round(memUsage.heapUsed / 1024 / 1024),
@@ -296,14 +300,20 @@ export class PerformanceMonitor extends EventEmitter {
    */
   getMemoryTrend() {
     const recent = this.systemStats.memoryPeaks.slice(-10);
-    if (recent.length < 2) return 'insufficient_data';
+    if (recent.length < 2) {
+      return 'insufficient_data';
+    }
 
     const first = recent[0].heapUsed;
     const last = recent[recent.length - 1].heapUsed;
     const change = ((last - first) / first) * 100;
 
-    if (change > 10) return 'increasing';
-    if (change < -10) return 'decreasing';
+    if (change > 10) {
+      return 'increasing';
+    }
+    if (change < -10) {
+      return 'decreasing';
+    }
     return 'stable';
   }
 

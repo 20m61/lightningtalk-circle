@@ -88,7 +88,9 @@ class SpeakerDashboard {
   }
 
   updateUserUI() {
-    if (!this.currentUser) return;
+    if (!this.currentUser) {
+      return;
+    }
 
     const userAvatar = document.querySelector('.user-avatar');
     const userName = document.querySelector('.user-name');
@@ -103,7 +105,9 @@ class SpeakerDashboard {
   }
 
   updateSpeakerProfileUI() {
-    if (!this.speakerProfile) return;
+    if (!this.speakerProfile) {
+      return;
+    }
 
     const profileImage = document.querySelector('.profile-image');
     const profileName = document.querySelector('.profile-name');
@@ -233,26 +237,38 @@ class SpeakerDashboard {
   }
 
   updateAnalyticsUI() {
-    if (!this.analytics) return;
+    if (!this.analytics) {
+      return;
+    }
 
     // Update stat cards
     const statNumbers = document.querySelectorAll('.stat-number');
-    if (statNumbers[0]) statNumbers[0].textContent = this.analytics.talksByStatus?.approved || 0;
-    if (statNumbers[1]) statNumbers[1].textContent = this.analytics.totalVotes || 0;
-    if (statNumbers[2])
+    if (statNumbers[0]) {
+      statNumbers[0].textContent = this.analytics.talksByStatus?.approved || 0;
+    }
+    if (statNumbers[1]) {
+      statNumbers[1].textContent = this.analytics.totalVotes || 0;
+    }
+    if (statNumbers[2]) {
       statNumbers[2].textContent = `${this.analytics.averageRating.toFixed(1)}/5.0`;
-    if (statNumbers[3])
+    }
+    if (statNumbers[3]) {
       statNumbers[3].textContent =
         this.analytics.recentActivity?.reduce((sum, activity) => sum + activity.feedbackCount, 0) ||
         0;
+    }
   }
 
   updateUpcomingTalks(talks) {
     const upcomingTalks = document.querySelector('.upcoming-talks');
-    if (!upcomingTalks) return;
+    if (!upcomingTalks) {
+      return;
+    }
 
     const talksList = upcomingTalks.querySelector('.talk-card')?.parentElement;
-    if (!talksList) return;
+    if (!talksList) {
+      return;
+    }
 
     // Clear existing talks except the template
     talksList.innerHTML = '<h3>次回の発表</h3>';
@@ -283,7 +299,9 @@ class SpeakerDashboard {
 
   updateRecentTalks(talks) {
     const feedbackList = document.querySelector('.feedback-list');
-    if (!feedbackList) return;
+    if (!feedbackList) {
+      return;
+    }
 
     feedbackList.innerHTML = '';
 
@@ -334,7 +352,9 @@ class SpeakerDashboard {
 
   renderTalksList() {
     const talksList = document.querySelector('.talks-list');
-    if (!talksList) return;
+    if (!talksList) {
+      return;
+    }
 
     talksList.innerHTML = '';
 
@@ -414,7 +434,9 @@ class SpeakerDashboard {
     const emptyStars = 5 - fullStars - (hasHalfStar ? 1 : 0);
 
     let stars = '⭐'.repeat(fullStars);
-    if (hasHalfStar) stars += '⭐'; // Could use half-star emoji if available
+    if (hasHalfStar) {
+      stars += '⭐';
+    } // Could use half-star emoji if available
     stars += '☆'.repeat(emptyStars);
 
     return stars;
@@ -491,7 +513,7 @@ class SpeakerDashboard {
         abstract: formData.get('abstract'),
         eventId: formData.get('eventId'),
         duration: parseInt(formData.get('duration')),
-        tags: tags
+        tags
       };
 
       const response = await fetch(`${this.apiEndpoint}/speakers/talks`, {
@@ -625,7 +647,9 @@ class SpeakerDashboard {
 
     input.addEventListener('change', async e => {
       const file = e.target.files[0];
-      if (!file) return;
+      if (!file) {
+        return;
+      }
 
       const formData = new FormData();
       formData.append('presentation', file);
@@ -715,13 +739,19 @@ class SpeakerDashboard {
   }
 
   startTimer() {
-    if (this.isTimerRunning) return;
+    if (this.isTimerRunning) {
+      return;
+    }
 
     const startBtn = document.getElementById('startTimer');
     const pauseBtn = document.getElementById('pauseTimer');
 
-    if (startBtn) startBtn.disabled = true;
-    if (pauseBtn) pauseBtn.disabled = false;
+    if (startBtn) {
+      startBtn.disabled = true;
+    }
+    if (pauseBtn) {
+      pauseBtn.disabled = false;
+    }
 
     this.isTimerRunning = true;
     this.practiceStartTime = Date.now();
@@ -738,7 +768,9 @@ class SpeakerDashboard {
   }
 
   pauseTimer() {
-    if (!this.timer) return;
+    if (!this.timer) {
+      return;
+    }
 
     clearInterval(this.timer);
     this.timer = null;
@@ -751,8 +783,12 @@ class SpeakerDashboard {
     const startBtn = document.getElementById('startTimer');
     const pauseBtn = document.getElementById('pauseTimer');
 
-    if (startBtn) startBtn.disabled = false;
-    if (pauseBtn) pauseBtn.disabled = true;
+    if (startBtn) {
+      startBtn.disabled = false;
+    }
+    if (pauseBtn) {
+      pauseBtn.disabled = true;
+    }
   }
 
   resetTimer() {
@@ -770,8 +806,12 @@ class SpeakerDashboard {
     const startBtn = document.getElementById('startTimer');
     const pauseBtn = document.getElementById('pauseTimer');
 
-    if (startBtn) startBtn.disabled = false;
-    if (pauseBtn) pauseBtn.disabled = true;
+    if (startBtn) {
+      startBtn.disabled = false;
+    }
+    if (pauseBtn) {
+      pauseBtn.disabled = true;
+    }
   }
 
   updateTimerDisplay() {
@@ -816,7 +856,9 @@ class SpeakerDashboard {
   }
 
   async savePracticeSession() {
-    if (!this.currentTalkId || !this.practiceElapsed) return;
+    if (!this.currentTalkId || !this.practiceElapsed) {
+      return;
+    }
 
     try {
       const duration = Math.floor(this.practiceElapsed / 1000);
@@ -829,7 +871,7 @@ class SpeakerDashboard {
         },
         body: JSON.stringify({
           talkId: this.currentTalkId,
-          duration: duration,
+          duration,
           notes: ''
         })
       });

@@ -68,22 +68,22 @@ class QASystem {
     // Question actions
     document.addEventListener('click', e => {
       if (e.target.classList.contains('upvote-question-btn')) {
-        const questionId = e.target.dataset.questionId;
+        const { questionId } = e.target.dataset;
         this.upvoteQuestion(questionId);
       }
 
       if (e.target.classList.contains('approve-question-btn')) {
-        const questionId = e.target.dataset.questionId;
+        const { questionId } = e.target.dataset;
         this.approveQuestion(questionId);
       }
 
       if (e.target.classList.contains('answer-question-btn')) {
-        const questionId = e.target.dataset.questionId;
+        const { questionId } = e.target.dataset;
         this.showAnswerModal(questionId);
       }
 
       if (e.target.classList.contains('delete-question-btn')) {
-        const questionId = e.target.dataset.questionId;
+        const { questionId } = e.target.dataset;
         this.deleteQuestion(questionId);
       }
     });
@@ -91,14 +91,16 @@ class QASystem {
     // Filter buttons
     document.addEventListener('click', e => {
       if (e.target.classList.contains('filter-questions-btn')) {
-        const filter = e.target.dataset.filter;
+        const { filter } = e.target.dataset;
         this.filterQuestions(filter);
       }
     });
   }
 
   async loadEventQuestions() {
-    if (!this.currentEventId) return;
+    if (!this.currentEventId) {
+      return;
+    }
 
     try {
       const response = await fetch(`${this.apiEndpoint}/qa/events/${this.currentEventId}`, {
@@ -124,7 +126,9 @@ class QASystem {
 
   renderQuestions() {
     const questionsContainer = document.getElementById('questionsContainer');
-    if (!questionsContainer) return;
+    if (!questionsContainer) {
+      return;
+    }
 
     questionsContainer.innerHTML = '';
 
@@ -140,9 +144,15 @@ class QASystem {
 
     // Sort questions by votes and submission time
     const sortedQuestions = [...this.questions].sort((a, b) => {
-      if (a.status === 'approved' && b.status !== 'approved') return -1;
-      if (b.status === 'approved' && a.status !== 'approved') return 1;
-      if (a.votes !== b.votes) return b.votes - a.votes;
+      if (a.status === 'approved' && b.status !== 'approved') {
+        return -1;
+      }
+      if (b.status === 'approved' && a.status !== 'approved') {
+        return 1;
+      }
+      if (a.votes !== b.votes) {
+        return b.votes - a.votes;
+      }
       return new Date(b.submittedAt) - new Date(a.submittedAt);
     });
 
@@ -413,7 +423,9 @@ class QASystem {
 
   showAnswerModal(questionId) {
     const question = this.questions.find(q => q.id === questionId);
-    if (!question) return;
+    if (!question) {
+      return;
+    }
 
     const modal = document.createElement('div');
     modal.className = 'modal active';

@@ -297,8 +297,7 @@
               '5分間で何でも話せる楽しいライトニングトークイベント！技術、趣味、日常の発見など、どんなテーマでもOK。',
             participantsCount: 15,
             maxParticipants: 30,
-            imageUrl:
-              'https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=400&h=200&fit=crop',
+            imageUrl: 'https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=400&h=200&fit=crop',
             status: 'upcoming',
             tags: ['技術', 'LT', 'オンライン']
           },
@@ -308,12 +307,10 @@
             date: '2024-03-08',
             time: '20:00〜22:00',
             location: '東京都渋谷区',
-            description:
-              '技術書籍に関するライトニングトークイベント。執筆体験や読書感想を共有しましょう！',
+            description: '技術書籍に関するライトニングトークイベント。執筆体験や読書感想を共有しましょう！',
             participantsCount: 8,
             maxParticipants: 20,
-            imageUrl:
-              'https://images.unsplash.com/photo-1481627834876-b7833e8f5570?w=400&h=200&fit=crop',
+            imageUrl: 'https://images.unsplash.com/photo-1481627834876-b7833e8f5570?w=400&h=200&fit=crop',
             status: 'ongoing',
             tags: ['技術書', '執筆', '知識共有']
           },
@@ -326,8 +323,7 @@
             description: '趣味について語り合うカジュアルなイベントでした。',
             participantsCount: 25,
             maxParticipants: 25,
-            imageUrl:
-              'https://images.unsplash.com/photo-1513475382585-d06e58bcb0e0?w=400&h=200&fit=crop',
+            imageUrl: 'https://images.unsplash.com/photo-1513475382585-d06e58bcb0e0?w=400&h=200&fit=crop',
             status: 'completed',
             tags: ['趣味', '発表', '交流']
           }
@@ -340,11 +336,8 @@
       }
 
       function createEventCard(event) {
-        const isFullyBooked =
-          event.maxParticipants && event.participantsCount >= event.maxParticipants;
-        const participationRate = event.maxParticipants
-          ? (event.participantsCount / event.maxParticipants) * 100
-          : 0;
+        const isFullyBooked = event.maxParticipants && event.participantsCount >= event.maxParticipants;
+        const participationRate = event.maxParticipants ? (event.participantsCount / event.maxParticipants) * 100 : 0;
 
         return `
                 <div class="lt-card lt-card--default lt-card--interactive">

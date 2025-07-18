@@ -347,9 +347,7 @@
               <div id="editorPlaceholder" class="text-center" style="padding: var(--space-8)">
                 <div style="font-size: var(--font-size-4xl); margin-bottom: var(--space-4)">🖼️</div>
                 <h4>画像を選択して編集を開始</h4>
-                <p>
-                  左側から画像をアップロードするか、下のギャラリーから既存の画像を選択してください。
-                </p>
+                <p>左側から画像をアップロードするか、下のギャラリーから既存の画像を選択してください。</p>
               </div>
             </div>
           </div>
@@ -443,13 +441,9 @@
 
         attachEventListeners() {
           // Editor action buttons
-          document
-            .getElementById('newEditBtn')
-            .addEventListener('click', () => this.startNewEdit());
+          document.getElementById('newEditBtn').addEventListener('click', () => this.startNewEdit());
           document.getElementById('saveAsNewBtn').addEventListener('click', () => this.saveAsNew());
-          document
-            .getElementById('updateOriginalBtn')
-            .addEventListener('click', () => this.updateOriginal());
+          document.getElementById('updateOriginalBtn').addEventListener('click', () => this.updateOriginal());
           document.getElementById('finalSaveBtn').addEventListener('click', () => this.finalSave());
 
           // Editor events
@@ -633,9 +627,7 @@
         async finalSave() {
           // If modified, ask user what to do
           if (this.editor.isModified()) {
-            const action = confirm(
-              '変更を保存してから完了しますか？\n\nOK: 新規保存\nキャンセル: 変更を破棄して完了'
-            );
+            const action = confirm('変更を保存してから完了しますか？\n\nOK: 新規保存\nキャンセル: 変更を破棄して完了');
 
             if (action) {
               await this.saveAsNew();

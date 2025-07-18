@@ -125,7 +125,9 @@ class AIImageGenerator {
    * Setup WebSocket listeners for real-time updates
    */
   setupWebSocketListeners() {
-    if (!this.websocketService) return;
+    if (!this.websocketService) {
+      return;
+    }
 
     this.websocketService.on('aiImageGenerated', data => {
       this.handleGenerationComplete(data);
@@ -215,7 +217,9 @@ class AIImageGenerator {
    * Update usage display in UI
    */
   updateUsageDisplay() {
-    if (!this.usageStats) return;
+    if (!this.usageStats) {
+      return;
+    }
 
     const usageDisplay = document.querySelector('.usage-stats');
     if (usageDisplay) {
@@ -250,7 +254,9 @@ class AIImageGenerator {
    */
   renderTemplates() {
     const container = document.querySelector('.templates-grid');
-    if (!container) return;
+    if (!container) {
+      return;
+    }
 
     container.innerHTML = '';
 
@@ -300,7 +306,9 @@ class AIImageGenerator {
    */
   renderGenerations() {
     const container = document.querySelector('.generations-grid');
-    if (!container) return;
+    if (!container) {
+      return;
+    }
 
     container.innerHTML = '';
 
@@ -395,7 +403,7 @@ class AIImageGenerator {
     // Template selection
     document.addEventListener('click', e => {
       if (e.target.classList.contains('select-template-btn')) {
-        const templateId = e.target.dataset.templateId;
+        const { templateId } = e.target.dataset;
         this.selectTemplate(templateId);
       }
     });
@@ -403,16 +411,16 @@ class AIImageGenerator {
     // Generation actions
     document.addEventListener('click', e => {
       if (e.target.classList.contains('download-btn')) {
-        const generationId = e.target.dataset.generationId;
+        const { generationId } = e.target.dataset;
         this.downloadGeneration(generationId);
       } else if (e.target.classList.contains('variations-btn')) {
-        const generationId = e.target.dataset.generationId;
+        const { generationId } = e.target.dataset;
         this.generateVariations(generationId);
       } else if (e.target.classList.contains('share-btn')) {
-        const generationId = e.target.dataset.generationId;
+        const { generationId } = e.target.dataset;
         this.shareGeneration(generationId);
       } else if (e.target.classList.contains('view-details-btn')) {
-        const generationId = e.target.dataset.generationId;
+        const { generationId } = e.target.dataset;
         this.viewGenerationDetails(generationId);
       }
     });
@@ -448,7 +456,9 @@ class AIImageGenerator {
    */
   selectTemplate(templateId) {
     const template = this.templates.find(t => t.id === templateId);
-    if (!template) return;
+    if (!template) {
+      return;
+    }
 
     this.selectedTemplate = template;
     this.showGenerationModal(template);
@@ -840,7 +850,9 @@ class AIImageGenerator {
    */
   shareGeneration(generationId) {
     const generation = this.generations.find(g => g.id === generationId);
-    if (!generation) return;
+    if (!generation) {
+      return;
+    }
 
     if (navigator.share) {
       navigator
@@ -868,7 +880,9 @@ class AIImageGenerator {
    */
   viewGenerationDetails(generationId) {
     const generation = this.generations.find(g => g.id === generationId);
-    if (!generation) return;
+    if (!generation) {
+      return;
+    }
 
     const modal = document.createElement('div');
     modal.className = 'modal generation-details-modal active';
@@ -1056,8 +1070,10 @@ class AIImageGenerator {
    * Truncate text with ellipsis
    */
   truncateText(text, maxLength) {
-    if (text.length <= maxLength) return text;
-    return text.substring(0, maxLength) + '...';
+    if (text.length <= maxLength) {
+      return text;
+    }
+    return `${text.substring(0, maxLength)}...`;
   }
 
   /**

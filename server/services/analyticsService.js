@@ -1019,8 +1019,8 @@ class AnalyticsService {
   }
 
   calculateContentQuality(stats) {
-    const confirmedTalks = stats.statistics.basic.summary.confirmedTalks;
-    const totalTalks = stats.statistics.basic.summary.totalTalks;
+    const { confirmedTalks } = stats.statistics.basic.summary;
+    const { totalTalks } = stats.statistics.basic.summary;
     return totalTalks > 0 ? (confirmedTalks / totalTalks) * 100 : 0;
   }
 
@@ -1029,7 +1029,7 @@ class AnalyticsService {
 
     const onlineParticipants =
       stats.statistics.participants.distribution.byType.find(t => t.type === 'online')?.count || 0;
-    const totalParticipants = stats.statistics.basic.summary.totalParticipants;
+    const { totalParticipants } = stats.statistics.basic.summary;
 
     if (totalParticipants > 0) {
       const onlineRatio = (onlineParticipants / totalParticipants) * 100;

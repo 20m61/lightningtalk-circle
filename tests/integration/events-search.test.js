@@ -46,10 +46,7 @@ describe('Event Search Integration', () => {
 
   describe('GET /api/events/search', () => {
     test('should return 200 with empty results when no events match', async () => {
-      const response = await request(app)
-        .get('/api/events/search')
-        .query({ q: 'nonexistent' })
-        .expect(200);
+      const response = await request(app).get('/api/events/search').query({ q: 'nonexistent' }).expect(200);
 
       expect(response.body).toHaveProperty('events');
       expect(response.body.events).toHaveLength(0);
@@ -80,10 +77,7 @@ describe('Event Search Integration', () => {
       mockDatabase.findAll.mockResolvedValue(mockEvents);
       mockDatabase.count.mockResolvedValue(0); // For participant/talk counts
 
-      const response = await request(app)
-        .get('/api/events/search')
-        .query({ q: 'lightning' })
-        .expect(200);
+      const response = await request(app).get('/api/events/search').query({ q: 'lightning' }).expect(200);
 
       expect(response.body.events).toHaveLength(2);
       expect(response.body.pagination.total).toBe(2);
@@ -117,10 +111,7 @@ describe('Event Search Integration', () => {
 
       mockDatabase.findAll.mockResolvedValue(mockEvents);
 
-      const response = await request(app)
-        .get('/api/events/search')
-        .query({ status: 'upcoming' })
-        .expect(200);
+      const response = await request(app).get('/api/events/search').query({ status: 'upcoming' }).expect(200);
 
       expect(response.body.events).toHaveLength(1);
       expect(response.body.events[0].status).toBe('upcoming');
@@ -160,19 +151,13 @@ describe('Event Search Integration', () => {
       mockDatabase.findAll.mockResolvedValue(mockEvents);
 
       // Test online filter
-      let response = await request(app)
-        .get('/api/events/search')
-        .query({ venue: 'online' })
-        .expect(200);
+      let response = await request(app).get('/api/events/search').query({ venue: 'online' }).expect(200);
 
       expect(response.body.events).toHaveLength(1);
       expect(response.body.events[0].id).toBe('1');
 
       // Test hybrid filter
-      response = await request(app)
-        .get('/api/events/search')
-        .query({ venue: 'hybrid' })
-        .expect(200);
+      response = await request(app).get('/api/events/search').query({ venue: 'hybrid' }).expect(200);
 
       expect(response.body.events).toHaveLength(1);
       expect(response.body.events[0].id).toBe('3');
@@ -413,10 +398,7 @@ describe('Event Search Integration', () => {
 
       mockDatabase.findAll.mockResolvedValue(mockEvents);
 
-      const response = await request(app)
-        .get('/api/events/search')
-        .query({ q: 'LiGhTnInG' })
-        .expect(200);
+      const response = await request(app).get('/api/events/search').query({ q: 'LiGhTnInG' }).expect(200);
 
       expect(response.body.events).toHaveLength(2);
     });

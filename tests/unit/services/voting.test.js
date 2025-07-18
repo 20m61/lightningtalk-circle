@@ -348,9 +348,7 @@ describe('VotingService', () => {
     it('should throw error for non-existent session', async () => {
       mockDatabase.findOne.mockResolvedValue(null);
 
-      await expect(votingService.getResults('non-existent')).rejects.toThrow(
-        'Voting session not found'
-      );
+      await expect(votingService.getResults('non-existent')).rejects.toThrow('Voting session not found');
     });
   });
 
@@ -613,9 +611,7 @@ describe('VotingService', () => {
     });
 
     it('should handle no expired sessions', async () => {
-      const sessions = [
-        { ...mockSession, id: 'session-1', endsAt: new Date(Date.now() + 60000).toISOString() }
-      ];
+      const sessions = [{ ...mockSession, id: 'session-1', endsAt: new Date(Date.now() + 60000).toISOString() }];
       mockDatabase.find.mockResolvedValue(sessions);
 
       await votingService.cleanupExpiredSessions();

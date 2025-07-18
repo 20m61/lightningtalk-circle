@@ -25,7 +25,7 @@ class ProductionSimulator {
   async start() {
     console.log('🚀 Starting production environment simulation');
     console.log(`📍 Target: ${this.baseUrl}`);
-    console.log(`⏱️  Duration: 60 seconds\n`);
+    console.log('⏱️  Duration: 60 seconds\n');
 
     // Start the server in production mode
     await this.startProductionServer();
@@ -44,7 +44,7 @@ class ProductionSimulator {
     console.log('🔧 Starting server in production mode...');
 
     process.env.NODE_ENV = 'production';
-    process.env.JWT_SECRET = 'production-test-secret-' + Math.random();
+    process.env.JWT_SECRET = `production-test-secret-${Math.random()}`;
     process.env.DATABASE_TYPE = 'file'; // Use file DB for simulation
 
     // Import and start server

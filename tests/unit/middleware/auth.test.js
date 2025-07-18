@@ -23,20 +23,14 @@ jest.unstable_mockModule('jsonwebtoken', () => ({
 // Mock bcryptjs
 jest.unstable_mockModule('bcryptjs', () => ({
   default: {
-    genSalt: jest.fn(async (rounds) => 'mock-salt'),
+    genSalt: jest.fn(async rounds => 'mock-salt'),
     hash: jest.fn(async (password, salt) => `hashed-${password}`),
     compare: jest.fn(async (password, hash) => password === 'correct-password')
   }
 }));
 
-const {
-  authenticateToken,
-  requireAdmin,
-  generateToken,
-  hashPassword,
-  comparePassword,
-  validatePassword
-} = await import('../../../server/middleware/auth.js');
+const { authenticateToken, requireAdmin, generateToken, hashPassword, comparePassword, validatePassword } =
+  await import('../../../server/middleware/auth.js');
 
 describe('Authentication Middleware', () => {
   describe('authenticateToken', () => {

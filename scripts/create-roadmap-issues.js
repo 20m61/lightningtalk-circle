@@ -143,7 +143,9 @@ async function createLabels(labels) {
  * Get milestone number by title
  */
 async function getMilestoneNumber(title) {
-  if (!title) return undefined;
+  if (!title) {
+    return undefined;
+  }
 
   try {
     const milestones = await octokit.issues.listMilestones({

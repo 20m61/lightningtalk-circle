@@ -24,7 +24,7 @@ export const logger = (req, res, next) => {
   };
 
   if (isProduction) {
-    process.stdout.write(formatLog(requestLog) + '\n');
+    process.stdout.write(`${formatLog(requestLog)}\n`);
   } else {
     console.log(formatLog(requestLog));
   }
@@ -47,7 +47,7 @@ export const logger = (req, res, next) => {
     };
 
     if (isProduction) {
-      process.stdout.write(formatLog(responseLog) + '\n');
+      process.stdout.write(`${formatLog(responseLog)}\n`);
     } else {
       console.log(formatLog(responseLog));
     }

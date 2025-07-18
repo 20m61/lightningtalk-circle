@@ -86,6 +86,9 @@ theme/*.sql
 wordpress/lightningtalk-child/*.php
 wordpress/lightningtalk-child/**/*.php
 
+# TypeScript definition files
+*.d.ts
+
 # Image and media files
 *.jpg
 *.jpeg

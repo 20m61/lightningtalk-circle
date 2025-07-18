@@ -15,7 +15,7 @@ import websocketService from './websocketService.js';
 const logger = createLogger('ChatService');
 
 // Create DOMPurify instance for server-side sanitization
-const window = new JSDOM('').window;
+const { window } = new JSDOM('');
 const purify = DOMPurify(window);
 
 export class ChatService extends EventEmitter {
@@ -228,7 +228,7 @@ export class ChatService extends EventEmitter {
    */
   async handleSendMessage(socket, payload) {
     const { roomId, content, mentions, replyTo } = payload;
-    const userId = socket.userId;
+    const { userId } = socket;
 
     try {
       // Rate limiting check
@@ -311,7 +311,7 @@ export class ChatService extends EventEmitter {
 
       logger.info(`Message sent in room ${roomId} by user ${userId}`);
     } catch (error) {
-      logger.error(`Error sending message:`, error);
+      logger.error('Error sending message:', error);
       socket.emit('chat:error', { error: error.message, code: 'SEND_FAILED' });
     }
   }
@@ -321,7 +321,7 @@ export class ChatService extends EventEmitter {
    */
   async handleEditMessage(socket, payload) {
     const { messageId, newContent } = payload;
-    const userId = socket.userId;
+    const { userId } = socket;
 
     try {
       // Get original message
@@ -376,7 +376,7 @@ export class ChatService extends EventEmitter {
 
       logger.info(`Message ${messageId} edited by user ${userId}`);
     } catch (error) {
-      logger.error(`Error editing message:`, error);
+      logger.error('Error editing message:', error);
       socket.emit('chat:error', { error: error.message, code: 'EDIT_FAILED' });
     }
   }
@@ -417,12 +417,14 @@ export class ChatService extends EventEmitter {
    */
   async handleUserPresence(socket, payload) {
     const { roomId, status } = payload;
-    const userId = socket.userId;
+    const { userId } = socket;
 
     try {
       // Update user presence in room
       const room = await this.getChatRoom(roomId);
-      if (!room) return;
+      if (!room) {
+        return;
+      }
 
       const participant = room.participants.find(p => p.userId === userId);
       if (participant) {
@@ -439,7 +441,7 @@ export class ChatService extends EventEmitter {
         timestamp: new Date()
       });
     } catch (error) {
-      logger.error(`Error handling user presence:`, error);
+      logger.error('Error handling user presence:', error);
     }
   }
 
@@ -448,7 +450,7 @@ export class ChatService extends EventEmitter {
    */
   async handleAddReaction(socket, payload) {
     const { messageId, emoji } = payload;
-    const userId = socket.userId;
+    const { userId } = socket;
 
     try {
       const message = await this.getMessage(messageId);
@@ -479,7 +481,7 @@ export class ChatService extends EventEmitter {
         });
       }
     } catch (error) {
-      logger.error(`Error adding reaction:`, error);
+      logger.error('Error adding reaction:', error);
       socket.emit('chat:error', { error: error.message, code: 'REACTION_FAILED' });
     }
   }
@@ -489,7 +491,7 @@ export class ChatService extends EventEmitter {
    */
   async handleRemoveReaction(socket, payload) {
     const { messageId, emoji } = payload;
-    const userId = socket.userId;
+    const { userId } = socket;
 
     try {
       const message = await this.getMessage(messageId);
@@ -517,7 +519,7 @@ export class ChatService extends EventEmitter {
         });
       }
     } catch (error) {
-      logger.error(`Error removing reaction:`, error);
+      logger.error('Error removing reaction:', error);
       socket.emit('chat:error', { error: error.message, code: 'REACTION_FAILED' });
     }
   }
@@ -556,7 +558,9 @@ export class ChatService extends EventEmitter {
     };
 
     const limit = limits[action];
-    if (!limit) return true;
+    if (!limit) {
+      return true;
+    }
 
     const key = `${userId}:${action}`;
     const now = Date.now();
@@ -605,8 +609,12 @@ export class ChatService extends EventEmitter {
    * Determine user role based on socket info
    */
   determineUserRole(socket) {
-    if (socket.userRole === 'admin') return 'admin';
-    if (socket.userRole === 'moderator') return 'moderator';
+    if (socket.userRole === 'admin') {
+      return 'admin';
+    }
+    if (socket.userRole === 'moderator') {
+      return 'moderator';
+    }
     // Additional logic to determine if user is a speaker for the event
     return 'participant';
   }

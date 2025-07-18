@@ -66,9 +66,7 @@ describe('Google OAuth Authentication', () => {
 
   describe('POST /api/auth/google', () => {
     const findRoute = path => {
-      return router.stack.find(
-        layer => layer.route && layer.route.path === path && layer.route.methods.post
-      );
+      return router.stack.find(layer => layer.route && layer.route.path === path && layer.route.methods.post);
     };
 
     it('should authenticate valid Google token and create new user', async () => {
@@ -160,9 +158,7 @@ describe('Google OAuth Authentication', () => {
 
   describe('POST /api/auth/refresh', () => {
     const findRoute = path => {
-      return router.stack.find(
-        layer => layer.route && layer.route.path === path && layer.route.methods.post
-      );
+      return router.stack.find(layer => layer.route && layer.route.path === path && layer.route.methods.post);
     };
 
     it('should refresh valid token', async () => {
@@ -220,9 +216,7 @@ describe('Google OAuth Authentication', () => {
 
   describe('PUT /api/auth/users/:id', () => {
     const findRoute = path => {
-      return router.stack.find(
-        layer => layer.route && layer.route.path === path && layer.route.methods.put
-      );
+      return router.stack.find(layer => layer.route && layer.route.path === path && layer.route.methods.put);
     };
 
     beforeEach(() => {

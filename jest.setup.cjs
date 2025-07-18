@@ -49,3 +49,33 @@ if (process.env.SHOW_TEST_LOGS !== 'true') {
     debug: jest.fn()
   };
 }
+
+// Custom matchers for GitHub API tests
+expect.extend({
+  toHaveGitHubIssueStructure(received) {
+    const pass =
+      received &&
+      typeof received === 'object' &&
+      typeof received.number === 'number' &&
+      typeof received.title === 'string' &&
+      typeof received.state === 'string' &&
+      ['open', 'closed'].includes(received.state) &&
+      (received.body === null || typeof received.body === 'string') &&
+      received.user &&
+      typeof received.user.login === 'string' &&
+      Array.isArray(received.labels) &&
+      Array.isArray(received.assignees);
+
+    if (pass) {
+      return {
+        message: () => `expected ${JSON.stringify(received)} not to have GitHub issue structure`,
+        pass: true
+      };
+    } else {
+      return {
+        message: () => `expected ${JSON.stringify(received)} to have GitHub issue structure`,
+        pass: false
+      };
+    }
+  }
+});

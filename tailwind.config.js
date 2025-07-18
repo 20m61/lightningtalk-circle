@@ -1,15 +1,10 @@
 /** @type {import('tailwindcss').Config} */
 export default {
-  content: [
-    './public/**/*.html',
-    './public/**/*.js',
-    './src/**/*.{js,jsx,ts,tsx}',
-    './stories/**/*.{js,jsx,ts,tsx}'
-  ],
+  content: ['./public/**/*.html', './public/**/*.js', './src/**/*.{js,jsx,ts,tsx}', './stories/**/*.{js,jsx,ts,tsx}'],
   theme: {
     extend: {
       backdropBlur: {
-        'md': '12px',
+        md: '12px'
       },
       colors: {
         primary: {
@@ -68,9 +63,5 @@ export default {
       }
     }
   },
-  plugins: [
-    require('@tailwindcss/forms'),
-    require('@tailwindcss/typography'),
-    require('@tailwindcss/aspect-ratio')
-  ]
+  plugins: [require('@tailwindcss/forms'), require('@tailwindcss/typography'), require('@tailwindcss/aspect-ratio')]
 };

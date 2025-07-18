@@ -79,14 +79,10 @@ describe('WordPress Integration', () => {
     it('should validate WordPress nonce', () => {
       mockWordPressIntegration.validateWordPressNonce.mockReturnValue(true);
 
-      const isValidNonce = mockWordPressIntegration.validateWordPressNonce(
-        window.wpLightningTalk.nonce
-      );
+      const isValidNonce = mockWordPressIntegration.validateWordPressNonce(window.wpLightningTalk.nonce);
 
       expect(isValidNonce).toBe(true);
-      expect(mockWordPressIntegration.validateWordPressNonce).toHaveBeenCalledWith(
-        'test-nonce-123'
-      );
+      expect(mockWordPressIntegration.validateWordPressNonce).toHaveBeenCalledWith('test-nonce-123');
     });
   });
 
@@ -110,13 +106,9 @@ describe('WordPress Integration', () => {
     });
 
     it('should handle fetch errors gracefully', async () => {
-      mockWordPressIntegration.fetchEventData.mockRejectedValue(
-        new Error('WordPress API unavailable')
-      );
+      mockWordPressIntegration.fetchEventData.mockRejectedValue(new Error('WordPress API unavailable'));
 
-      await expect(mockWordPressIntegration.fetchEventData(1)).rejects.toThrow(
-        'WordPress API unavailable'
-      );
+      await expect(mockWordPressIntegration.fetchEventData(1)).rejects.toThrow('WordPress API unavailable');
     });
 
     it('should cache event data locally', async () => {
@@ -137,10 +129,7 @@ describe('WordPress Integration', () => {
 
       await mockWordPressIntegration.fetchEventData(1);
 
-      expect(window.localStorage.setItem).toHaveBeenCalledWith(
-        'wp_event_1',
-        JSON.stringify(mockEventData)
-      );
+      expect(window.localStorage.setItem).toHaveBeenCalledWith('wp_event_1', JSON.stringify(mockEventData));
     });
   });
 
@@ -180,9 +169,7 @@ describe('WordPress Integration', () => {
         new Error('Validation failed: Title is required, Invalid email format')
       );
 
-      await expect(mockWordPressIntegration.submitTalk(invalidTalkData)).rejects.toThrow(
-        'Validation failed'
-      );
+      await expect(mockWordPressIntegration.submitTalk(invalidTalkData)).rejects.toThrow('Validation failed');
     });
   });
 
@@ -295,9 +282,7 @@ describe('WordPress Integration', () => {
         new Error('Sync conflict: Data modified in both systems')
       );
 
-      await expect(mockWordPressIntegration.syncWithLightningTalkAPI()).rejects.toThrow(
-        'Sync conflict'
-      );
+      await expect(mockWordPressIntegration.syncWithLightningTalkAPI()).rejects.toThrow('Sync conflict');
     });
   });
 
@@ -376,9 +361,7 @@ describe('WordPress Integration', () => {
     it('should handle WordPress API errors gracefully', async () => {
       const consoleSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
 
-      mockWordPressIntegration.fetchEventData.mockRejectedValue(
-        new Error('WordPress database connection failed')
-      );
+      mockWordPressIntegration.fetchEventData.mockRejectedValue(new Error('WordPress database connection failed'));
 
       try {
         await mockWordPressIntegration.fetchEventData(1);
