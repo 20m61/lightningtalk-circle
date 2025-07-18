@@ -353,7 +353,9 @@ class LightningTalkMainStack extends cdk.Stack {
     // ===== WAF (Production only) =====
 
     let webAcl;
-    if (isProduction) {
+    // TODO: WAF needs to be created in us-east-1 for CloudFront
+    // Temporarily disabled WAF due to region requirements
+    if (false) { // eslint-disable-line no-constant-condition
       webAcl = new wafv2.CfnWebACL(this, 'WebACL', {
         name: `lightningtalk-${environment}-waf`,
         scope: 'CLOUDFRONT',
@@ -461,16 +463,10 @@ class LightningTalkMainStack extends cdk.Stack {
     // Only create DNS records for production or when certificate is available
     if (certificate) {
       let hostedZone;
-      if (isProduction) {
-        hostedZone = new route53.PublicHostedZone(this, 'HostedZone', {
-          zoneName: baseDomain,
-        });
-      } else {
-        // For development, assume production hosted zone exists
-        hostedZone = route53.HostedZone.fromLookup(this, 'HostedZone', {
-          domainName: baseDomain,
-        });
-      }
+      // Use existing hosted zone for both production and development
+      hostedZone = route53.HostedZone.fromLookup(this, 'HostedZone', {
+        domainName: baseDomain,
+      });
 
       // A record for the domain
       new route53.ARecord(this, 'AliasRecord', {

@@ -15,6 +15,14 @@ class LightningTalkApp {
       domain: 'lightningtalk-auth.auth.ap-northeast-1.amazoncognito.com'
     };
 
+    // Animation Manager Reference
+    this.animationManager = window.AnimationManager;
+
+    // Mobile Systems References
+    this.mobileTouch = window.MobileTouchManager;
+    this.mobileComponents = window.MobileComponentSystem;
+    this.performanceOptimizer = window.MobilePerformanceOptimizer;
+
     // Configuration - Survey counter feature toggle
     this.config = {
       showSurveyCounters: false // Set to true to enable counter display
@@ -145,18 +153,97 @@ class LightningTalkApp {
   }
 
   setupEventListeners() {
-    // Register buttons
+    // Register buttons with enhanced animations
     document.querySelectorAll('[data-action]').forEach(button => {
+      // Add hover animation
+      button.addEventListener('mouseenter', () => {
+        if (this.animationManager) {
+          this.animationManager.createAnimation(
+            button,
+            [
+              { transform: 'scale(1)', boxShadow: '0 4px 12px rgba(0,0,0,0.15)' },
+              { transform: 'scale(1.05)', boxShadow: '0 8px 24px rgba(0,0,0,0.2)' }
+            ],
+            {
+              duration: 200,
+              easing: 'ease-out',
+              fill: 'forwards'
+            }
+          );
+        }
+      });
+
+      button.addEventListener('mouseleave', () => {
+        if (this.animationManager) {
+          this.animationManager.createAnimation(
+            button,
+            [
+              { transform: 'scale(1.05)', boxShadow: '0 8px 24px rgba(0,0,0,0.2)' },
+              { transform: 'scale(1)', boxShadow: '0 4px 12px rgba(0,0,0,0.15)' }
+            ],
+            {
+              duration: 200,
+              easing: 'ease-out',
+              fill: 'forwards'
+            }
+          );
+        }
+      });
+
       button.addEventListener('click', e => {
         e.preventDefault();
+
+        // Click ripple effect
+        if (this.animationManager) {
+          this.animationManager.createParticleEffect(
+            {
+              x: e.clientX,
+              y: e.clientY
+            },
+            {
+              count: 15,
+              spread: 30,
+              duration: 800,
+              colors: ['#ff6b35', '#4ecdc4']
+            }
+          );
+        }
+
         this.handleAction(e.target.dataset.action, e.target);
       });
     });
 
-    // Topic items
-    document.querySelectorAll('.topic-item').forEach(item => {
+    // Topic items with enhanced animations
+    document.querySelectorAll('.topic-item').forEach((item, index) => {
+      // Staggered entrance animation
+      if (this.animationManager) {
+        this.animationManager.createAnimation(
+          item,
+          [
+            { transform: 'translateY(20px)', opacity: 0 },
+            { transform: 'translateY(0)', opacity: 1 }
+          ],
+          {
+            duration: 500,
+            delay: index * 50,
+            easing: 'cubic-bezier(0.4, 0.0, 0.2, 1)'
+          }
+        );
+      }
+
       item.addEventListener('click', () => {
         this.highlightTopic(item);
+
+        // Spring animation on selection
+        if (this.animationManager) {
+          this.animationManager.createSpringAnimation(item, 0, {
+            stiffness: 300,
+            damping: 20,
+            onComplete: () => {
+              item.style.transform = 'translateX(0)';
+            }
+          });
+        }
       });
     });
 
@@ -670,22 +757,78 @@ class LightningTalkApp {
   }
 
   setupScrollAnimations() {
-    const observerOptions = {
-      threshold: 0.1,
-      rootMargin: '0px 0px -50px 0px'
-    };
-
-    const observer = new IntersectionObserver(entries => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add('visible');
-        }
+    // Use Animation Manager for scroll-triggered animations
+    if (this.animationManager) {
+      // Fade-in elements
+      document.querySelectorAll('.fade-in').forEach((el, index) => {
+        this.animationManager.createScrollAnimation(
+          el,
+          [
+            { transform: 'translateY(30px)', opacity: 0 },
+            { transform: 'translateY(0)', opacity: 1 }
+          ],
+          {
+            threshold: 0.2,
+            once: true
+          }
+        );
       });
-    }, observerOptions);
 
-    document.querySelectorAll('.fade-in, .event-card, .timeline-item').forEach(el => {
-      observer.observe(el);
-    });
+      // Event cards with stagger
+      document.querySelectorAll('.event-card').forEach((card, index) => {
+        this.animationManager.createScrollAnimation(
+          card,
+          [
+            { transform: 'translateX(-50px) scale(0.95)', opacity: 0 },
+            { transform: 'translateX(0) scale(1)', opacity: 1 }
+          ],
+          {
+            threshold: 0.3,
+            once: true
+          }
+        );
+      });
+
+      // Timeline items with alternating animations
+      document.querySelectorAll('.timeline-item').forEach((item, index) => {
+        const isEven = index % 2 === 0;
+        this.animationManager.createScrollAnimation(
+          item,
+          [
+            {
+              transform: `translateX(${isEven ? '-50px' : '50px'}) rotate(${isEven ? '-2deg' : '2deg'})`,
+              opacity: 0
+            },
+            {
+              transform: 'translateX(0) rotate(0)',
+              opacity: 1
+            }
+          ],
+          {
+            threshold: 0.4,
+            once: true
+          }
+        );
+      });
+    } else {
+      // Fallback to CSS-based animations
+      const observerOptions = {
+        threshold: 0.1,
+        rootMargin: '0px 0px -50px 0px'
+      };
+
+      const observer = new IntersectionObserver(entries => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('visible');
+          }
+        });
+      }, observerOptions);
+
+      document.querySelectorAll('.fade-in, .event-card, .timeline-item').forEach(el => {
+        observer.observe(el);
+      });
+    }
   }
 
   updateFeedbackButton() {
@@ -921,31 +1064,72 @@ class LightningTalkApp {
   }
 
   showNotification(message, type = 'info') {
-    const notification = document.createElement('div');
-    notification.className = `notification notification-${type}`;
-    notification.style.cssText = `
-            position: fixed;
-            top: 100px;
-            right: 20px;
-            background: ${type === 'success' ? '#4CAF50' : type === 'error' ? '#f44336' : '#2196F3'};
-            color: white;
-            padding: 15px 20px;
-            border-radius: 10px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-            z-index: 2001;
-            max-width: 300px;
-            animation: slideInRight 0.3s ease;
+    // 統一コンポーネントシステムを使用
+    if (window.UnifiedComponentSystem) {
+      const notificationContainer =
+        document.getElementById('notification-container') ||
+        (() => {
+          const container = document.createElement('div');
+          container.id = 'notification-container';
+          container.style.cssText = `
+          position: fixed;
+          top: 100px;
+          right: 20px;
+          z-index: 2001;
+          display: flex;
+          flex-direction: column;
+          gap: 10px;
         `;
-    notification.textContent = message;
+          document.body.appendChild(container);
+          return container;
+        })();
 
-    document.body.appendChild(notification);
+      const alert = window.UnifiedComponentSystem.create(
+        'Alert',
+        {
+          type: type === 'error' ? 'error' : type === 'success' ? 'success' : 'info',
+          dismissible: true,
+          icon: true,
+          onDismiss: () => console.log('Notification dismissed')
+        },
+        message
+      );
 
-    setTimeout(() => {
-      notification.style.animation = 'slideOutRight 0.3s ease forwards';
+      alert.style.animation = 'slideInRight 0.3s ease';
+      notificationContainer.appendChild(alert);
+
       setTimeout(() => {
-        notification.remove();
-      }, 300);
-    }, 4000);
+        alert.style.animation = 'slideOutRight 0.3s ease forwards';
+        setTimeout(() => alert.remove(), 300);
+      }, 5000);
+    } else {
+      // フォールバック: 従来の実装
+      const notification = document.createElement('div');
+      notification.className = `notification notification-${type}`;
+      notification.style.cssText = `
+              position: fixed;
+              top: 100px;
+              right: 20px;
+              background: ${type === 'success' ? '#4CAF50' : type === 'error' ? '#f44336' : '#2196F3'};
+              color: white;
+              padding: 15px 20px;
+              border-radius: 10px;
+              box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+              z-index: 2001;
+              max-width: 300px;
+              animation: slideInRight 0.3s ease;
+          `;
+      notification.textContent = message;
+
+      document.body.appendChild(notification);
+
+      setTimeout(() => {
+        notification.style.animation = 'slideOutRight 0.3s ease forwards';
+        setTimeout(() => {
+          notification.remove();
+        }, 300);
+      }, 4000);
+    }
   }
 
   // Survey counter methods
@@ -1159,6 +1343,318 @@ class LightningTalkApp {
       "'": '&#039;'
     };
     return text.replace(/[&<>"']/g, m => map[m]);
+  }
+
+  // Mobile Optimization Methods
+  setupMobileEventListeners() {
+    // モバイルカスタムジェスチャーイベントリスナー
+    document.addEventListener('mobiletap', e => {
+      this.handleMobileTap(e);
+    });
+
+    document.addEventListener('mobileswipe', e => {
+      this.handleMobileSwipe(e);
+    });
+
+    document.addEventListener('mobilelongpress', e => {
+      this.handleMobileLongPress(e);
+    });
+
+    document.addEventListener('mobilegesture:pullToRefresh', e => {
+      this.handlePullToRefresh(e);
+    });
+
+    // モバイル専用UI調整
+    this.setupMobileNavigation();
+    this.setupMobileModals();
+    this.setupMobileForms();
+  }
+
+  applyMobileEnhancements() {
+    // モバイルデバイス判定
+    const isMobile = window.innerWidth < 768;
+
+    if (isMobile) {
+      document.body.classList.add('mobile-device');
+
+      // タッチターゲットサイズの調整
+      this.adjustTouchTargets();
+
+      // モバイル専用ナビゲーションの追加
+      this.addMobileNavigation();
+
+      // スワイプジェスチャーの有効化
+      this.enableSwipeGestures();
+
+      // モバイル最適化されたアニメーションの適用
+      this.applyMobileAnimations();
+    }
+  }
+
+  handleMobileTap(event) {
+    const { target, x, y, duration } = event.detail;
+
+    // 短いタップでリップルエフェクト
+    if (duration < 150 && target.closest('.touch-btn, .nav-link, .card')) {
+      this.createRippleEffect(target, x, y);
+    }
+  }
+
+  handleMobileSwipe(event) {
+    const { direction, target } = event.detail;
+
+    // モーダルを下スワイプで閉じる
+    if (direction === 'down' && target.closest('.modal')) {
+      const modal = target.closest('.modal');
+      if (modal && modal.style.display !== 'none') {
+        modal.style.display = 'none';
+      }
+    }
+
+    // チャットを右スワイプで閉じる
+    if (direction === 'right' && target.closest('#chatContainer')) {
+      this.toggleChat();
+    }
+  }
+
+  handleMobileLongPress(event) {
+    const { target } = event.detail;
+
+    // カードの長押しでアクションシート表示
+    if (target.closest('.event-card, .participant-item')) {
+      this.showMobileActionSheet(target);
+    }
+  }
+
+  handlePullToRefresh(event) {
+    console.log('Pull to refresh triggered');
+
+    // ページの再読み込みまたはデータの更新
+    this.refreshData().then(() => {
+      this.showNotification('データを更新しました', 'success');
+    });
+  }
+
+  adjustTouchTargets() {
+    // すべてのインタラクティブ要素のタッチターゲットサイズを調整
+    const interactiveElements = document.querySelectorAll('button, a, input, .clickable');
+
+    interactiveElements.forEach(element => {
+      const computedStyle = getComputedStyle(element);
+      const minSize = 44; // iOS HIG推奨
+
+      if (parseInt(computedStyle.height) < minSize) {
+        element.style.minHeight = `${minSize}px`;
+      }
+
+      if (parseInt(computedStyle.width) < minSize) {
+        element.style.minWidth = `${minSize}px`;
+      }
+    });
+  }
+
+  addMobileNavigation() {
+    // モバイル専用ナビゲーションを追加
+    const mobileNav = this.mobileComponents.create('MobileNavigation', {
+      items: [
+        { label: 'ホーム', icon: '🏠', href: '#hero', active: true },
+        { label: 'イベント', icon: '📅', href: '#event' },
+        { label: '参加', icon: '✋', href: '#join' },
+        { label: 'チャット', icon: '💬', href: '#', onClick: () => this.toggleChat() }
+      ]
+    });
+
+    if (mobileNav) {
+      document.body.appendChild(mobileNav);
+    }
+  }
+
+  enableSwipeGestures() {
+    // スワイプ可能な要素にクラスを追加
+    const modals = document.querySelectorAll('.modal');
+    modals.forEach(modal => {
+      modal.classList.add('swipe-to-close');
+    });
+
+    const chatContainer = document.getElementById('chatContainer');
+    if (chatContainer) {
+      chatContainer.classList.add('swipe-to-close');
+    }
+  }
+
+  applyMobileAnimations() {
+    // モバイル用の軽量アニメーション設定
+    if (this.performanceOptimizer.device.isLowEndDevice) {
+      document.documentElement.style.setProperty('--animation-duration', '0.2s');
+    } else {
+      document.documentElement.style.setProperty('--animation-duration', '0.3s');
+    }
+  }
+
+  setupMobileNavigation() {
+    // モバイルメニューのハンバーガーボタン機能強化
+    const mobileToggle = document.querySelector('.mobile-menu-toggle');
+    if (mobileToggle) {
+      // タッチ最適化
+      mobileToggle.style.minHeight = '44px';
+      mobileToggle.style.minWidth = '44px';
+
+      // ハプティックフィードバック付きイベント
+      mobileToggle.addEventListener(
+        'touchstart',
+        () => {
+          if (navigator.vibrate) {
+            navigator.vibrate(10);
+          }
+        },
+        { passive: true }
+      );
+    }
+  }
+
+  setupMobileModals() {
+    // モバイル向けモーダルの最適化
+    const modals = document.querySelectorAll('.modal');
+
+    modals.forEach(modal => {
+      // フルスクリーンモードの追加
+      if (window.innerWidth < 480) {
+        modal.classList.add('mobile-fullscreen');
+      }
+
+      // スワイプで閉じる機能
+      let startY = 0;
+      modal.addEventListener(
+        'touchstart',
+        e => {
+          startY = e.touches[0].clientY;
+        },
+        { passive: true }
+      );
+
+      modal.addEventListener(
+        'touchmove',
+        e => {
+          const currentY = e.touches[0].clientY;
+          const deltaY = currentY - startY;
+
+          if (deltaY > 50) {
+            modal.style.transform = `translateY(${deltaY}px)`;
+          }
+        },
+        { passive: true }
+      );
+
+      modal.addEventListener(
+        'touchend',
+        e => {
+          const currentY = e.changedTouches[0].clientY;
+          const deltaY = currentY - startY;
+
+          if (deltaY > 100) {
+            modal.style.display = 'none';
+          } else {
+            modal.style.transform = 'translateY(0)';
+          }
+        },
+        { passive: true }
+      );
+    });
+  }
+
+  setupMobileForms() {
+    // モバイル向けフォームの最適化
+    const forms = document.querySelectorAll('form');
+
+    forms.forEach(form => {
+      const inputs = form.querySelectorAll('input, textarea, select');
+
+      inputs.forEach(input => {
+        // タッチ最適化
+        input.style.minHeight = '44px';
+
+        // フォーカス時のズーム防止（iOS）
+        if (input.type !== 'file') {
+          input.style.fontSize = '16px';
+        }
+
+        // タッチ開始時のフィードバック
+        input.addEventListener(
+          'touchstart',
+          () => {
+            input.style.borderColor = 'var(--mobile-primary)';
+          },
+          { passive: true }
+        );
+      });
+    });
+  }
+
+  createRippleEffect(target, x, y) {
+    const ripple = document.createElement('span');
+    ripple.className = 'mobile-ripple';
+
+    const rect = target.getBoundingClientRect();
+    const size = Math.max(rect.width, rect.height);
+    const offsetX = x - rect.left - size / 2;
+    const offsetY = y - rect.top - size / 2;
+
+    ripple.style.width = ripple.style.height = size + 'px';
+    ripple.style.left = offsetX + 'px';
+    ripple.style.top = offsetY + 'px';
+
+    target.style.position = 'relative';
+    target.style.overflow = 'hidden';
+    target.appendChild(ripple);
+
+    setTimeout(() => {
+      ripple.remove();
+    }, 600);
+  }
+
+  showMobileActionSheet(target) {
+    // モバイル専用アクションシートの表示
+    const actions = [];
+
+    if (target.closest('.event-card')) {
+      actions.push(
+        { text: '詳細を見る', handler: () => this.showEventDetails(target) },
+        { text: '参加登録', handler: () => this.openRegistrationModal() },
+        { text: '共有', handler: () => this.shareEvent(target) }
+      );
+    }
+
+    if (target.closest('.participant-item')) {
+      actions.push(
+        { text: 'プロフィール', handler: () => this.showParticipantProfile(target) },
+        { text: 'メッセージ', handler: () => this.sendMessage(target) }
+      );
+    }
+
+    const actionSheet = this.mobileComponents.create('ActionSheet', {
+      title: 'アクション選択',
+      actions
+    });
+
+    if (actionSheet) {
+      document.body.appendChild(actionSheet);
+    }
+  }
+
+  async refreshData() {
+    // データの再読み込み
+    try {
+      // 必要に応じてAPI呼び出しやデータ更新
+      await new Promise(resolve => setTimeout(resolve, 1000)); // シミュレーション
+
+      // UI更新
+      this.updateCountdown();
+
+      return true;
+    } catch (error) {
+      console.error('Data refresh failed:', error);
+      return false;
+    }
   }
 
   // Countdown Timer functionality
@@ -2083,6 +2579,51 @@ document.head.appendChild(styleSheet);
 document.addEventListener('DOMContentLoaded', () => {
   const app = new LightningTalkApp();
   window.lightningTalkApp = app;
+
+  // Initialize Mobile Optimizations
+  if (
+    window.MobileTouchManager &&
+    window.MobileComponentSystem &&
+    window.MobilePerformanceOptimizer
+  ) {
+    console.log('[Main] Mobile optimization systems initialized');
+
+    // Set up mobile-specific event listeners
+    app.setupMobileEventListeners();
+
+    // Apply mobile-specific UI enhancements
+    app.applyMobileEnhancements();
+  }
+
+  // Register Service Worker for offline support
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker
+        .register('/service-worker.js')
+        .then(registration => {
+          console.log('[Main] Service Worker registered:', registration.scope);
+
+          // Check for updates
+          registration.addEventListener('updatefound', () => {
+            const newWorker = registration.installing;
+            console.log('[Main] Service Worker update found');
+
+            newWorker.addEventListener('statechange', () => {
+              if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+                // New service worker installed, show update notification
+                app.showNotification(
+                  '新しいバージョンが利用可能です。ページを更新してください。',
+                  'info'
+                );
+              }
+            });
+          });
+        })
+        .catch(error => {
+          console.error('[Main] Service Worker registration failed:', error);
+        });
+    });
+  }
 
   // Setup vote form submission
   const voteForm = document.getElementById('voteForm');

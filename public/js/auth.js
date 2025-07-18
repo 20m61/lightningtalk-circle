@@ -4,12 +4,12 @@
 
 // Configuration
 const COGNITO_CONFIG = {
-  userPoolId: 'ap-northeast-1_Wwsw04u84',
-  clientId: '5s4ogan946f0dc19tklh0s1tim',
+  userPoolId: 'ap-northeast-1_PHRdkumdl',
+  clientId: '5t48tpbh5qe26otojkfq1rf0ls',
   region: 'ap-northeast-1',
   domain: 'lightningtalk-auth-v2.auth.ap-northeast-1.amazoncognito.com',
   redirectUri: window.location.origin + '/callback',
-  apiEndpoint: 'https://9qyaz7n47j.execute-api.ap-northeast-1.amazonaws.com/prod/api'
+  apiEndpoint: 'https://wf6gf7eisk.execute-api.ap-northeast-1.amazonaws.com/dev/api'
 };
 
 // Authentication state
