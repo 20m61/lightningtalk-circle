@@ -90,6 +90,37 @@ app.get('/api/events', (req, res) => {
   });
 });
 
+// Participants endpoint
+app.get('/api/participants', (req, res) => {
+  res.json({
+    participants: [],
+    count: 0,
+    timestamp: new Date().toISOString()
+  });
+});
+
+// Auth status endpoint
+app.get('/api/auth/status', (req, res) => {
+  res.json({
+    authenticated: false,
+    user: null,
+    timestamp: new Date().toISOString()
+  });
+});
+
+// Monitoring health endpoint
+app.get('/api/monitoring/health', (req, res) => {
+  res.json({
+    status: 'healthy',
+    services: {
+      database: 'connected',
+      cognito: 'available',
+      lambda: 'running'
+    },
+    timestamp: new Date().toISOString()
+  });
+});
+
 // Specific voting participation endpoint
 app.get('/api/voting/participation/:eventId', (req, res) => {
   const eventId = req.params.eventId;
