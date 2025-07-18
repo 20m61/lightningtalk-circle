@@ -23,8 +23,17 @@ class EventsManager {
   async init() {
     await this.loadEvents();
     this.setupEventListeners();
-    this.renderHeroEvents();
-    this.renderAllEvents();
+    
+    // CSSが完全に読み込まれてからレンダリング
+    if (document.readyState === 'complete') {
+      this.renderHeroEvents();
+      this.renderAllEvents();
+    } else {
+      window.addEventListener('load', () => {
+        this.renderHeroEvents();
+        this.renderAllEvents();
+      });
+    }
   }
 
   async loadEvents() {
