@@ -839,6 +839,49 @@ class MobileComponentSystem {
     `;
   }
 
+  getPullToRefreshStyles() {
+    return `
+      .pull-to-refresh {
+        position: relative;
+        overflow: hidden;
+      }
+      
+      .pull-to-refresh__indicator {
+        position: absolute;
+        top: -60px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background: var(--color-primary-500);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: top 0.3s ease;
+        z-index: 10;
+      }
+      
+      .pull-to-refresh__indicator--visible {
+        top: 20px;
+      }
+      
+      .pull-to-refresh__spinner {
+        width: 20px;
+        height: 20px;
+        border: 2px solid white;
+        border-top: 2px solid transparent;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+      }
+      
+      @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+      }
+    `;
+  }
+
   getSwipeCardStyles() {
     return `
       .swipe-card {

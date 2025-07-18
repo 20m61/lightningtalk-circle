@@ -369,7 +369,7 @@ class EventsManager {
             <div class="event-capacity">👥 ${event.registeredCount}/${event.capacity}名</div>
           </div>
           <div class="event-tags">
-            ${event.tags.map(tag => `<span class="tag">${tag}</span>`).join('')}
+            ${event.tags ? event.tags.map(tag => `<span class="tag">${tag}</span>`).join('') : ''}
           </div>
           <div class="event-actions">
             <button class="btn btn-primary" data-action="view-detail" data-event-id="${event.id}">
