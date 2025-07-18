@@ -67,10 +67,20 @@
     <link rel="stylesheet" href="css/components/button.css" />
     <link rel="stylesheet" href="css/components/card.css" />
 
+    <!-- Mobile Optimizations -->
+    <link rel="stylesheet" href="css/mobile-optimizations.css" />
+
     <!-- Legacy CSS - To be migrated -->
     <link rel="stylesheet" href="css/tailwind.css" />
     <link rel="stylesheet" href="css/style.css" />
     <link rel="stylesheet" href="css/auth.css" />
+
+    <!-- Mobile-specific viewport meta tags -->
+    <meta name="format-detection" content="telephone=no" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="apple-touch-fullscreen" content="yes" />
   </head>
   <body>
     <header class="header">
@@ -537,6 +547,9 @@
     <script src="js/auth.js"></script>
     <script src="js/unified-components.js"></script>
     <script src="js/animation-manager.js"></script>
+    <script src="js/mobile-touch-manager.js"></script>
+    <script src="js/mobile-components.js"></script>
+    <script src="js/mobile-performance-optimizer.js"></script>
     <script src="js/main.js"></script>
 
     <!-- React Components Integration -->

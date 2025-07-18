@@ -18,6 +18,11 @@ class LightningTalkApp {
     // Animation Manager Reference
     this.animationManager = window.AnimationManager;
 
+    // Mobile Systems References
+    this.mobileTouch = window.MobileTouchManager;
+    this.mobileComponents = window.MobileComponentSystem;
+    this.performanceOptimizer = window.MobilePerformanceOptimizer;
+
     // Configuration - Survey counter feature toggle
     this.config = {
       showSurveyCounters: false // Set to true to enable counter display
@@ -1340,6 +1345,318 @@ class LightningTalkApp {
     return text.replace(/[&<>"']/g, m => map[m]);
   }
 
+  // Mobile Optimization Methods
+  setupMobileEventListeners() {
+    // モバイルカスタムジェスチャーイベントリスナー
+    document.addEventListener('mobiletap', e => {
+      this.handleMobileTap(e);
+    });
+
+    document.addEventListener('mobileswipe', e => {
+      this.handleMobileSwipe(e);
+    });
+
+    document.addEventListener('mobilelongpress', e => {
+      this.handleMobileLongPress(e);
+    });
+
+    document.addEventListener('mobilegesture:pullToRefresh', e => {
+      this.handlePullToRefresh(e);
+    });
+
+    // モバイル専用UI調整
+    this.setupMobileNavigation();
+    this.setupMobileModals();
+    this.setupMobileForms();
+  }
+
+  applyMobileEnhancements() {
+    // モバイルデバイス判定
+    const isMobile = window.innerWidth < 768;
+
+    if (isMobile) {
+      document.body.classList.add('mobile-device');
+
+      // タッチターゲットサイズの調整
+      this.adjustTouchTargets();
+
+      // モバイル専用ナビゲーションの追加
+      this.addMobileNavigation();
+
+      // スワイプジェスチャーの有効化
+      this.enableSwipeGestures();
+
+      // モバイル最適化されたアニメーションの適用
+      this.applyMobileAnimations();
+    }
+  }
+
+  handleMobileTap(event) {
+    const { target, x, y, duration } = event.detail;
+
+    // 短いタップでリップルエフェクト
+    if (duration < 150 && target.closest('.touch-btn, .nav-link, .card')) {
+      this.createRippleEffect(target, x, y);
+    }
+  }
+
+  handleMobileSwipe(event) {
+    const { direction, target } = event.detail;
+
+    // モーダルを下スワイプで閉じる
+    if (direction === 'down' && target.closest('.modal')) {
+      const modal = target.closest('.modal');
+      if (modal && modal.style.display !== 'none') {
+        modal.style.display = 'none';
+      }
+    }
+
+    // チャットを右スワイプで閉じる
+    if (direction === 'right' && target.closest('#chatContainer')) {
+      this.toggleChat();
+    }
+  }
+
+  handleMobileLongPress(event) {
+    const { target } = event.detail;
+
+    // カードの長押しでアクションシート表示
+    if (target.closest('.event-card, .participant-item')) {
+      this.showMobileActionSheet(target);
+    }
+  }
+
+  handlePullToRefresh(event) {
+    console.log('Pull to refresh triggered');
+
+    // ページの再読み込みまたはデータの更新
+    this.refreshData().then(() => {
+      this.showNotification('データを更新しました', 'success');
+    });
+  }
+
+  adjustTouchTargets() {
+    // すべてのインタラクティブ要素のタッチターゲットサイズを調整
+    const interactiveElements = document.querySelectorAll('button, a, input, .clickable');
+
+    interactiveElements.forEach(element => {
+      const computedStyle = getComputedStyle(element);
+      const minSize = 44; // iOS HIG推奨
+
+      if (parseInt(computedStyle.height) < minSize) {
+        element.style.minHeight = `${minSize}px`;
+      }
+
+      if (parseInt(computedStyle.width) < minSize) {
+        element.style.minWidth = `${minSize}px`;
+      }
+    });
+  }
+
+  addMobileNavigation() {
+    // モバイル専用ナビゲーションを追加
+    const mobileNav = this.mobileComponents.create('MobileNavigation', {
+      items: [
+        { label: 'ホーム', icon: '🏠', href: '#hero', active: true },
+        { label: 'イベント', icon: '📅', href: '#event' },
+        { label: '参加', icon: '✋', href: '#join' },
+        { label: 'チャット', icon: '💬', href: '#', onClick: () => this.toggleChat() }
+      ]
+    });
+
+    if (mobileNav) {
+      document.body.appendChild(mobileNav);
+    }
+  }
+
+  enableSwipeGestures() {
+    // スワイプ可能な要素にクラスを追加
+    const modals = document.querySelectorAll('.modal');
+    modals.forEach(modal => {
+      modal.classList.add('swipe-to-close');
+    });
+
+    const chatContainer = document.getElementById('chatContainer');
+    if (chatContainer) {
+      chatContainer.classList.add('swipe-to-close');
+    }
+  }
+
+  applyMobileAnimations() {
+    // モバイル用の軽量アニメーション設定
+    if (this.performanceOptimizer.device.isLowEndDevice) {
+      document.documentElement.style.setProperty('--animation-duration', '0.2s');
+    } else {
+      document.documentElement.style.setProperty('--animation-duration', '0.3s');
+    }
+  }
+
+  setupMobileNavigation() {
+    // モバイルメニューのハンバーガーボタン機能強化
+    const mobileToggle = document.querySelector('.mobile-menu-toggle');
+    if (mobileToggle) {
+      // タッチ最適化
+      mobileToggle.style.minHeight = '44px';
+      mobileToggle.style.minWidth = '44px';
+
+      // ハプティックフィードバック付きイベント
+      mobileToggle.addEventListener(
+        'touchstart',
+        () => {
+          if (navigator.vibrate) {
+            navigator.vibrate(10);
+          }
+        },
+        { passive: true }
+      );
+    }
+  }
+
+  setupMobileModals() {
+    // モバイル向けモーダルの最適化
+    const modals = document.querySelectorAll('.modal');
+
+    modals.forEach(modal => {
+      // フルスクリーンモードの追加
+      if (window.innerWidth < 480) {
+        modal.classList.add('mobile-fullscreen');
+      }
+
+      // スワイプで閉じる機能
+      let startY = 0;
+      modal.addEventListener(
+        'touchstart',
+        e => {
+          startY = e.touches[0].clientY;
+        },
+        { passive: true }
+      );
+
+      modal.addEventListener(
+        'touchmove',
+        e => {
+          const currentY = e.touches[0].clientY;
+          const deltaY = currentY - startY;
+
+          if (deltaY > 50) {
+            modal.style.transform = `translateY(${deltaY}px)`;
+          }
+        },
+        { passive: true }
+      );
+
+      modal.addEventListener(
+        'touchend',
+        e => {
+          const currentY = e.changedTouches[0].clientY;
+          const deltaY = currentY - startY;
+
+          if (deltaY > 100) {
+            modal.style.display = 'none';
+          } else {
+            modal.style.transform = 'translateY(0)';
+          }
+        },
+        { passive: true }
+      );
+    });
+  }
+
+  setupMobileForms() {
+    // モバイル向けフォームの最適化
+    const forms = document.querySelectorAll('form');
+
+    forms.forEach(form => {
+      const inputs = form.querySelectorAll('input, textarea, select');
+
+      inputs.forEach(input => {
+        // タッチ最適化
+        input.style.minHeight = '44px';
+
+        // フォーカス時のズーム防止（iOS）
+        if (input.type !== 'file') {
+          input.style.fontSize = '16px';
+        }
+
+        // タッチ開始時のフィードバック
+        input.addEventListener(
+          'touchstart',
+          () => {
+            input.style.borderColor = 'var(--mobile-primary)';
+          },
+          { passive: true }
+        );
+      });
+    });
+  }
+
+  createRippleEffect(target, x, y) {
+    const ripple = document.createElement('span');
+    ripple.className = 'mobile-ripple';
+
+    const rect = target.getBoundingClientRect();
+    const size = Math.max(rect.width, rect.height);
+    const offsetX = x - rect.left - size / 2;
+    const offsetY = y - rect.top - size / 2;
+
+    ripple.style.width = ripple.style.height = size + 'px';
+    ripple.style.left = offsetX + 'px';
+    ripple.style.top = offsetY + 'px';
+
+    target.style.position = 'relative';
+    target.style.overflow = 'hidden';
+    target.appendChild(ripple);
+
+    setTimeout(() => {
+      ripple.remove();
+    }, 600);
+  }
+
+  showMobileActionSheet(target) {
+    // モバイル専用アクションシートの表示
+    const actions = [];
+
+    if (target.closest('.event-card')) {
+      actions.push(
+        { text: '詳細を見る', handler: () => this.showEventDetails(target) },
+        { text: '参加登録', handler: () => this.openRegistrationModal() },
+        { text: '共有', handler: () => this.shareEvent(target) }
+      );
+    }
+
+    if (target.closest('.participant-item')) {
+      actions.push(
+        { text: 'プロフィール', handler: () => this.showParticipantProfile(target) },
+        { text: 'メッセージ', handler: () => this.sendMessage(target) }
+      );
+    }
+
+    const actionSheet = this.mobileComponents.create('ActionSheet', {
+      title: 'アクション選択',
+      actions
+    });
+
+    if (actionSheet) {
+      document.body.appendChild(actionSheet);
+    }
+  }
+
+  async refreshData() {
+    // データの再読み込み
+    try {
+      // 必要に応じてAPI呼び出しやデータ更新
+      await new Promise(resolve => setTimeout(resolve, 1000)); // シミュレーション
+
+      // UI更新
+      this.updateCountdown();
+
+      return true;
+    } catch (error) {
+      console.error('Data refresh failed:', error);
+      return false;
+    }
+  }
+
   // Countdown Timer functionality
   setupCountdownTimer() {
     // Initialize countdown timer
@@ -2262,6 +2579,21 @@ document.head.appendChild(styleSheet);
 document.addEventListener('DOMContentLoaded', () => {
   const app = new LightningTalkApp();
   window.lightningTalkApp = app;
+
+  // Initialize Mobile Optimizations
+  if (
+    window.MobileTouchManager &&
+    window.MobileComponentSystem &&
+    window.MobilePerformanceOptimizer
+  ) {
+    console.log('[Main] Mobile optimization systems initialized');
+
+    // Set up mobile-specific event listeners
+    app.setupMobileEventListeners();
+
+    // Apply mobile-specific UI enhancements
+    app.applyMobileEnhancements();
+  }
 
   // Register Service Worker for offline support
   if ('serviceWorker' in navigator) {

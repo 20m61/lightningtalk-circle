@@ -1,0 +1,1058 @@
+/**
+ * Mobile Optimizations CSS
+ * モバイルデバイス専用の最適化スタイル
+ */
+
+/* =============================================================================
+   CSS Custom Properties for Mobile
+   ============================================================================= */
+
+:root {
+  /* モバイル専用カラーパレット */
+  --mobile-primary: #ff6b35;
+  --mobile-primary-dark: #e55a2b;
+  --mobile-secondary: #4ecdc4;
+  --mobile-accent: #45b7d1;
+  --mobile-success: #22c55e;
+  --mobile-warning: #f59e0b;
+  --mobile-error: #ef4444;
+  --mobile-info: #3b82f6;
+
+  /* モバイル専用サイズ */
+  --mobile-touch-target: 44px;
+  --mobile-touch-target-comfortable: 48px;
+  --mobile-touch-target-large: 56px;
+  --mobile-spacing-xs: 4px;
+  --mobile-spacing-sm: 8px;
+  --mobile-spacing-md: 16px;
+  --mobile-spacing-lg: 24px;
+  --mobile-spacing-xl: 32px;
+
+  /* モバイル専用フォント */
+  --mobile-font-xs: 12px;
+  --mobile-font-sm: 14px;
+  --mobile-font-base: 16px;
+  --mobile-font-lg: 18px;
+  --mobile-font-xl: 20px;
+  --mobile-font-2xl: 24px;
+
+  /* モバイル専用レイアウト */
+  --mobile-header-height: 56px;
+  --mobile-nav-height: 60px;
+  --mobile-safe-area-top: env(safe-area-inset-top, 0px);
+  --mobile-safe-area-bottom: env(safe-area-inset-bottom, 0px);
+  --mobile-safe-area-left: env(safe-area-inset-left, 0px);
+  --mobile-safe-area-right: env(safe-area-inset-right, 0px);
+
+  /* モバイル専用アニメーション */
+  --mobile-transition-fast: 150ms;
+  --mobile-transition-normal: 300ms;
+  --mobile-transition-slow: 500ms;
+  --mobile-easing-standard: cubic-bezier(0.4, 0, 0.2, 1);
+  --mobile-easing-decelerate: cubic-bezier(0, 0, 0.2, 1);
+  --mobile-easing-accelerate: cubic-bezier(0.4, 0, 1, 1);
+
+  /* モバイル専用シャドウ */
+  --mobile-shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
+  --mobile-shadow-md: 0 4px 6px rgba(0, 0, 0, 0.1);
+  --mobile-shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.1);
+  --mobile-shadow-xl: 0 20px 25px rgba(0, 0, 0, 0.1);
+}
+
+/* =============================================================================
+   Mobile Base Styles
+   ============================================================================= */
+
+/* タッチデバイス専用の基本設定 */
+@media (hover: none) and (pointer: coarse) {
+  * {
+    /* タッチ時のハイライト無効化 */
+    -webkit-tap-highlight-color: transparent;
+    /* テキスト選択の最適化 */
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+  }
+
+  /* テキスト入力要素は選択可能 */
+  input,
+  textarea,
+  [contenteditable] {
+    -webkit-user-select: text;
+    -moz-user-select: text;
+    -ms-user-select: text;
+    user-select: text;
+  }
+
+  /* スクロール最適化 */
+  body {
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior: none;
+  }
+}
+
+/* =============================================================================
+   Mobile Touch Targets
+   ============================================================================= */
+
+/* 最小タッチターゲットサイズの保証 */
+.touch-target,
+button,
+a,
+input[type="button"],
+input[type="submit"],
+input[type="reset"],
+[role="button"],
+[tabindex] {
+  min-height: var(--mobile-touch-target);
+  min-width: var(--mobile-touch-target);
+}
+
+/* 快適なタッチターゲット */
+.touch-target-comfortable {
+  min-height: var(--mobile-touch-target-comfortable);
+  min-width: var(--mobile-touch-target-comfortable);
+}
+
+/* 大きなタッチターゲット */
+.touch-target-large {
+  min-height: var(--mobile-touch-target-large);
+  min-width: var(--mobile-touch-target-large);
+}
+
+/* =============================================================================
+   Mobile Navigation
+   ============================================================================= */
+
+.mobile-nav {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(20px);
+  border-top: 1px solid rgba(0, 0, 0, 0.1);
+  z-index: 1000;
+  padding-bottom: var(--mobile-safe-area-bottom);
+  transform: translateY(100%);
+  transition: transform var(--mobile-transition-normal) var(--mobile-easing-standard);
+}
+
+.mobile-nav.active {
+  transform: translateY(0);
+}
+
+.mobile-nav__list {
+  display: flex;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  height: var(--mobile-nav-height);
+}
+
+.mobile-nav__item {
+  flex: 1;
+  display: flex;
+}
+
+.mobile-nav__link {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  padding: var(--mobile-spacing-sm) var(--mobile-spacing-xs);
+  text-decoration: none;
+  color: var(--color-text-secondary);
+  transition: all var(--mobile-transition-fast) var(--mobile-easing-standard);
+  position: relative;
+  min-height: var(--mobile-touch-target);
+}
+
+.mobile-nav__link:active {
+  background: rgba(0, 0, 0, 0.05);
+  transform: scale(0.95);
+}
+
+.mobile-nav__link[aria-selected="true"] {
+  color: var(--mobile-primary);
+}
+
+.mobile-nav__icon {
+  font-size: 20px;
+  margin-bottom: 2px;
+  transition: transform var(--mobile-transition-fast);
+}
+
+.mobile-nav__link:active .mobile-nav__icon {
+  transform: scale(1.1);
+}
+
+.mobile-nav__label {
+  font-size: var(--mobile-font-xs);
+  line-height: 1;
+  font-weight: 500;
+}
+
+.mobile-nav__badge {
+  position: absolute;
+  top: 8px;
+  right: 50%;
+  transform: translateX(50%);
+  background: var(--mobile-error);
+  color: white;
+  border-radius: 10px;
+  padding: 2px 6px;
+  font-size: 10px;
+  font-weight: 600;
+  min-width: 16px;
+  text-align: center;
+  line-height: 1;
+  animation: badge-pulse 2s infinite;
+}
+
+@keyframes badge-pulse {
+  0%,
+  100% {
+    transform: translateX(50%) scale(1);
+  }
+  50% {
+    transform: translateX(50%) scale(1.1);
+  }
+}
+
+/* =============================================================================
+   Mobile Buttons and Touch Elements
+   ============================================================================= */
+
+.touch-btn {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  border-radius: 8px;
+  padding: var(--mobile-spacing-md) var(--mobile-spacing-lg);
+  font-size: var(--mobile-font-base);
+  font-weight: 600;
+  text-decoration: none;
+  cursor: pointer;
+  transition: all var(--mobile-transition-fast) var(--mobile-easing-standard);
+  overflow: hidden;
+  user-select: none;
+  min-height: var(--mobile-touch-target);
+  min-width: var(--mobile-touch-target);
+  gap: var(--mobile-spacing-sm);
+}
+
+/* ボタンバリエーション */
+.touch-btn--primary {
+  background: var(--mobile-primary);
+  color: white;
+  box-shadow: var(--mobile-shadow-md);
+}
+
+.touch-btn--primary:active {
+  background: var(--mobile-primary-dark);
+  transform: scale(0.98);
+  box-shadow: var(--mobile-shadow-sm);
+}
+
+.touch-btn--secondary {
+  background: var(--mobile-secondary);
+  color: white;
+  box-shadow: var(--mobile-shadow-md);
+}
+
+.touch-btn--outline {
+  background: transparent;
+  color: var(--mobile-primary);
+  border: 2px solid var(--mobile-primary);
+}
+
+.touch-btn--outline:active {
+  background: var(--mobile-primary);
+  color: white;
+}
+
+.touch-btn--ghost {
+  background: transparent;
+  color: var(--mobile-primary);
+}
+
+.touch-btn--ghost:active {
+  background: rgba(255, 107, 53, 0.1);
+}
+
+/* ボタンサイズ */
+.touch-btn--small {
+  padding: var(--mobile-spacing-sm) var(--mobile-spacing-md);
+  font-size: var(--mobile-font-sm);
+  min-height: 36px;
+}
+
+.touch-btn--large {
+  padding: var(--mobile-spacing-lg) var(--mobile-spacing-xl);
+  font-size: var(--mobile-font-lg);
+  min-height: var(--mobile-touch-target-large);
+}
+
+.touch-btn--full-width {
+  width: 100%;
+}
+
+/* ボタン状態 */
+.touch-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none !important;
+}
+
+.touch-btn--loading {
+  color: transparent;
+}
+
+.touch-btn--loading::after {
+  content: "";
+  position: absolute;
+  width: 16px;
+  height: 16px;
+  border: 2px solid currentColor;
+  border-radius: 50%;
+  border-top-color: transparent;
+  animation: button-spin 0.8s linear infinite;
+}
+
+@keyframes button-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* リップルエフェクト */
+.touch-ripple {
+  position: absolute;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.6);
+  transform: scale(0);
+  animation: ripple 0.6s ease-out;
+  pointer-events: none;
+}
+
+@keyframes ripple {
+  to {
+    transform: scale(4);
+    opacity: 0;
+  }
+}
+
+/* =============================================================================
+   Mobile Cards and Swipe Components
+   ============================================================================= */
+
+.swipe-card {
+  position: relative;
+  background: white;
+  border-radius: 12px;
+  box-shadow: var(--mobile-shadow-md);
+  overflow: hidden;
+  transition: transform var(--mobile-transition-normal) var(--mobile-easing-standard);
+}
+
+.swipe-card--dragging {
+  transition: none;
+  cursor: grabbing;
+}
+
+.swipe-card__content {
+  padding: var(--mobile-spacing-lg);
+}
+
+.swipe-card__actions {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  transform: translateX(100%);
+  transition: transform var(--mobile-transition-normal) var(--mobile-easing-standard);
+}
+
+.swipe-card--action-visible .swipe-card__actions {
+  transform: translateX(0);
+}
+
+.swipe-card__action {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 var(--mobile-spacing-lg);
+  border: none;
+  color: white;
+  font-weight: 600;
+  cursor: pointer;
+  min-width: 80px;
+  transition: all var(--mobile-transition-fast);
+}
+
+.swipe-card__action:active {
+  filter: brightness(0.9);
+}
+
+.swipe-card__action--delete {
+  background: var(--mobile-error);
+}
+
+.swipe-card__action--archive {
+  background: var(--mobile-warning);
+}
+
+.swipe-card__action--edit {
+  background: var(--mobile-info);
+}
+
+/* =============================================================================
+   Mobile Modals and Overlays
+   ============================================================================= */
+
+.mobile-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  z-index: 2000;
+  animation: modal-fade-in var(--mobile-transition-normal) var(--mobile-easing-standard);
+  padding: var(--mobile-safe-area-top) var(--mobile-safe-area-right) var(--mobile-safe-area-bottom)
+    var(--mobile-safe-area-left);
+}
+
+.mobile-modal--fullscreen {
+  align-items: stretch;
+}
+
+.mobile-modal--closing {
+  animation: modal-fade-out var(--mobile-transition-normal) var(--mobile-easing-standard);
+}
+
+.mobile-modal__content {
+  background: white;
+  border-radius: 16px 16px 0 0;
+  max-height: 90vh;
+  width: 100%;
+  max-width: 500px;
+  animation: modal-slide-up var(--mobile-transition-normal) var(--mobile-easing-decelerate);
+  overflow: hidden;
+}
+
+.mobile-modal--fullscreen .mobile-modal__content {
+  border-radius: 0;
+  max-height: 100vh;
+  height: 100%;
+}
+
+.mobile-modal--closing .mobile-modal__content {
+  animation: modal-slide-down var(--mobile-transition-normal) var(--mobile-easing-accelerate);
+}
+
+.mobile-modal__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--mobile-spacing-lg);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.mobile-modal__title {
+  margin: 0;
+  font-size: var(--mobile-font-lg);
+  font-weight: 600;
+  color: var(--color-text);
+}
+
+.mobile-modal__close {
+  background: none;
+  border: none;
+  font-size: 24px;
+  color: var(--color-text-secondary);
+  cursor: pointer;
+  padding: var(--mobile-spacing-sm);
+  border-radius: 50%;
+  min-height: var(--mobile-touch-target);
+  min-width: var(--mobile-touch-target);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all var(--mobile-transition-fast);
+}
+
+.mobile-modal__close:active {
+  background: rgba(0, 0, 0, 0.1);
+  transform: scale(0.9);
+}
+
+.mobile-modal__body {
+  padding: var(--mobile-spacing-lg);
+  max-height: 70vh;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+@keyframes modal-fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes modal-fade-out {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes modal-slide-up {
+  from {
+    transform: translateY(100%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+
+@keyframes modal-slide-down {
+  from {
+    transform: translateY(0);
+  }
+  to {
+    transform: translateY(100%);
+  }
+}
+
+/* =============================================================================
+   Action Sheet
+   ============================================================================= */
+
+.action-sheet {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 2000;
+  animation: action-sheet-fade-in var(--mobile-transition-normal);
+  padding: var(--mobile-spacing-md);
+  padding-bottom: calc(var(--mobile-spacing-md) + var(--mobile-safe-area-bottom));
+}
+
+.action-sheet--closing {
+  animation: action-sheet-fade-out var(--mobile-transition-normal);
+}
+
+.action-sheet__content {
+  background: white;
+  border-radius: 16px;
+  overflow: hidden;
+  animation: action-sheet-slide-up var(--mobile-transition-normal) var(--mobile-easing-decelerate);
+}
+
+.action-sheet--closing .action-sheet__content {
+  animation: action-sheet-slide-down var(--mobile-transition-normal) var(--mobile-easing-accelerate);
+}
+
+.action-sheet__title {
+  padding: var(--mobile-spacing-lg);
+  text-align: center;
+  font-weight: 600;
+  color: var(--color-text-secondary);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+  font-size: var(--mobile-font-sm);
+}
+
+.action-sheet__actions {
+  /* アクションボタンのコンテナ */
+}
+
+.action-sheet__action {
+  display: block;
+  width: 100%;
+  padding: var(--mobile-spacing-lg);
+  border: none;
+  background: white;
+  color: var(--mobile-primary);
+  font-size: var(--mobile-font-lg);
+  font-weight: 500;
+  text-align: center;
+  cursor: pointer;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+  min-height: var(--mobile-touch-target-large);
+  transition: background-color var(--mobile-transition-fast);
+}
+
+.action-sheet__action:active {
+  background: rgba(0, 0, 0, 0.05);
+}
+
+.action-sheet__action--destructive {
+  color: var(--mobile-error);
+}
+
+.action-sheet__action:last-child {
+  border-bottom: none;
+}
+
+.action-sheet__cancel {
+  display: block;
+  width: 100%;
+  padding: var(--mobile-spacing-lg);
+  border: none;
+  background: white;
+  color: var(--color-text-secondary);
+  font-size: var(--mobile-font-lg);
+  font-weight: 600;
+  text-align: center;
+  cursor: pointer;
+  border-radius: 16px;
+  margin-top: var(--mobile-spacing-md);
+  min-height: var(--mobile-touch-target-large);
+  transition: all var(--mobile-transition-fast);
+  box-shadow: var(--mobile-shadow-sm);
+}
+
+.action-sheet__cancel:active {
+  background: rgba(0, 0, 0, 0.05);
+  transform: scale(0.98);
+}
+
+@keyframes action-sheet-fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes action-sheet-fade-out {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes action-sheet-slide-up {
+  from {
+    transform: translateY(100%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+
+@keyframes action-sheet-slide-down {
+  from {
+    transform: translateY(0);
+  }
+  to {
+    transform: translateY(100%);
+  }
+}
+
+/* =============================================================================
+   Pull to Refresh
+   ============================================================================= */
+
+.pull-to-refresh {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 60px;
+  background: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transform: translateY(-100%);
+  transition: transform var(--mobile-transition-normal);
+  z-index: 100;
+  padding-top: var(--mobile-safe-area-top);
+}
+
+.pull-to-refresh--ready {
+  background: var(--mobile-success);
+  color: white;
+}
+
+.pull-to-refresh--refreshing {
+  transform: translateY(0);
+}
+
+.pull-to-refresh__indicator {
+  display: flex;
+  align-items: center;
+  gap: var(--mobile-spacing-sm);
+}
+
+.pull-to-refresh__icon {
+  font-size: 20px;
+  transition: transform var(--mobile-transition-fast);
+}
+
+.pull-to-refresh--ready .pull-to-refresh__icon {
+  transform: rotate(180deg);
+}
+
+.pull-to-refresh--refreshing .pull-to-refresh__icon {
+  animation: spin 1s linear infinite;
+}
+
+.pull-to-refresh__text {
+  font-size: var(--mobile-font-sm);
+  font-weight: 500;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* =============================================================================
+   Mobile Form Elements
+   ============================================================================= */
+
+.mobile-form-group {
+  margin-bottom: var(--mobile-spacing-lg);
+}
+
+.mobile-label {
+  display: block;
+  margin-bottom: var(--mobile-spacing-sm);
+  font-size: var(--mobile-font-sm);
+  font-weight: 600;
+  color: var(--color-text);
+}
+
+.mobile-input {
+  width: 100%;
+  padding: var(--mobile-spacing-md);
+  border: 2px solid rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  font-size: var(--mobile-font-base);
+  background: white;
+  transition: all var(--mobile-transition-fast);
+  min-height: var(--mobile-touch-target);
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+.mobile-input:focus {
+  outline: none;
+  border-color: var(--mobile-primary);
+  box-shadow: 0 0 0 3px rgba(255, 107, 53, 0.1);
+}
+
+.mobile-input--error {
+  border-color: var(--mobile-error);
+}
+
+.mobile-input--error:focus {
+  box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1);
+}
+
+.mobile-textarea {
+  resize: vertical;
+  min-height: 100px;
+  font-family: inherit;
+}
+
+.mobile-select {
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m6 8 4 4 4-4'/%3e%3c/svg%3e");
+  background-position: right 12px center;
+  background-repeat: no-repeat;
+  background-size: 16px;
+  padding-right: 40px;
+}
+
+/* =============================================================================
+   Mobile Typography
+   ============================================================================= */
+
+.mobile-heading-1 {
+  font-size: var(--mobile-font-2xl);
+  font-weight: 700;
+  line-height: 1.2;
+  margin-bottom: var(--mobile-spacing-lg);
+}
+
+.mobile-heading-2 {
+  font-size: var(--mobile-font-xl);
+  font-weight: 600;
+  line-height: 1.3;
+  margin-bottom: var(--mobile-spacing-md);
+}
+
+.mobile-heading-3 {
+  font-size: var(--mobile-font-lg);
+  font-weight: 600;
+  line-height: 1.4;
+  margin-bottom: var(--mobile-spacing-sm);
+}
+
+.mobile-body {
+  font-size: var(--mobile-font-base);
+  line-height: 1.5;
+  margin-bottom: var(--mobile-spacing-md);
+}
+
+.mobile-small {
+  font-size: var(--mobile-font-sm);
+  line-height: 1.4;
+  color: var(--color-text-secondary);
+}
+
+.mobile-caption {
+  font-size: var(--mobile-font-xs);
+  line-height: 1.3;
+  color: var(--color-text-secondary);
+}
+
+/* =============================================================================
+   Mobile Layout Utilities
+   ============================================================================= */
+
+.mobile-container {
+  max-width: 100%;
+  margin: 0 auto;
+  padding: 0 var(--mobile-spacing-md);
+}
+
+.mobile-section {
+  padding: var(--mobile-spacing-xl) 0;
+}
+
+.mobile-card {
+  background: white;
+  border-radius: 12px;
+  padding: var(--mobile-spacing-lg);
+  box-shadow: var(--mobile-shadow-md);
+  margin-bottom: var(--mobile-spacing-lg);
+}
+
+.mobile-divider {
+  height: 1px;
+  background: rgba(0, 0, 0, 0.1);
+  margin: var(--mobile-spacing-lg) 0;
+}
+
+.mobile-spacer-sm {
+  height: var(--mobile-spacing-sm);
+}
+.mobile-spacer-md {
+  height: var(--mobile-spacing-md);
+}
+.mobile-spacer-lg {
+  height: var(--mobile-spacing-lg);
+}
+.mobile-spacer-xl {
+  height: var(--mobile-spacing-xl);
+}
+
+/* =============================================================================
+   Mobile Specific Animations
+   ============================================================================= */
+
+.mobile-fade-in {
+  animation: mobile-fade-in var(--mobile-transition-normal) var(--mobile-easing-standard);
+}
+
+.mobile-slide-up {
+  animation: mobile-slide-up var(--mobile-transition-normal) var(--mobile-easing-decelerate);
+}
+
+.mobile-slide-down {
+  animation: mobile-slide-down var(--mobile-transition-normal) var(--mobile-easing-decelerate);
+}
+
+.mobile-scale-in {
+  animation: mobile-scale-in var(--mobile-transition-normal) var(--mobile-easing-decelerate);
+}
+
+@keyframes mobile-fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes mobile-slide-up {
+  from {
+    transform: translateY(20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes mobile-slide-down {
+  from {
+    transform: translateY(-20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes mobile-scale-in {
+  from {
+    transform: scale(0.9);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+/* =============================================================================
+   Mobile Performance Optimizations
+   ============================================================================= */
+
+/* GPU加速の活用 */
+.mobile-gpu-accelerated {
+  transform: translateZ(0);
+  will-change: transform;
+}
+
+/* スクロール最適化 */
+.mobile-smooth-scroll {
+  -webkit-overflow-scrolling: touch;
+  scroll-behavior: smooth;
+}
+
+/* レイアウトシフト防止 */
+.mobile-layout-stable {
+  contain: layout style paint;
+}
+
+/* =============================================================================
+   Responsive Behavior for Mobile
+   ============================================================================= */
+
+/* スマートフォン（縦向き） */
+@media screen and (max-width: 480px) {
+  .mobile-hide-xs {
+    display: none !important;
+  }
+  .mobile-show-xs {
+    display: block !important;
+  }
+
+  .mobile-container {
+    padding: 0 var(--mobile-spacing-sm);
+  }
+
+  .touch-btn {
+    font-size: var(--mobile-font-sm);
+    padding: var(--mobile-spacing-sm) var(--mobile-spacing-md);
+  }
+}
+
+/* スマートフォン（横向き） */
+@media screen and (max-width: 896px) and (orientation: landscape) {
+  .mobile-nav {
+    height: var(--mobile-touch-target);
+  }
+
+  .mobile-modal__content {
+    max-height: 80vh;
+  }
+}
+
+/* タブレット */
+@media screen and (min-width: 768px) and (max-width: 1024px) {
+  .mobile-hide-tablet {
+    display: none !important;
+  }
+  .mobile-show-tablet {
+    display: block !important;
+  }
+
+  .mobile-container {
+    max-width: 600px;
+    padding: 0 var(--mobile-spacing-lg);
+  }
+}
+
+/* デスクトップ */
+@media screen and (min-width: 1025px) {
+  .mobile-only {
+    display: none !important;
+  }
+}
+
+/* 高密度ディスプレイ対応 */
+@media screen and (-webkit-min-device-pixel-ratio: 2), screen and (min-resolution: 192dpi) {
+  .mobile-high-dpi {
+    /* 高解像度専用スタイル */
+  }
+}
+
+/* ダークモード対応 */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --mobile-primary: #ff8a65;
+    --mobile-secondary: #4dd0e1;
+  }
+
+  .mobile-nav,
+  .mobile-modal__content,
+  .action-sheet__content,
+  .mobile-card {
+    background: #1a1a1a;
+    color: white;
+  }
+}
+
+/* アクセシビリティ対応 */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* 高コントラスト対応 */
+@media (prefers-contrast: high) {
+  .touch-btn,
+  .mobile-input {
+    border-width: 3px;
+  }
+
+  .mobile-nav__link[aria-selected="true"] {
+    background: var(--mobile-primary);
+    color: white;
+  }
+}
