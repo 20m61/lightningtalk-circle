@@ -94,7 +94,9 @@
   flex-wrap: wrap;
 }
 
-/* イベントカード内のボタンスタイルを強化 */
+/* イベントカード内のボタンスタイルを強化 - 最高優先度 */
+.hero-events-grid .hero-event-card .event-actions .btn,
+.events-container .event-card .event-actions .btn,
 .hero-event-card .event-actions .btn,
 .event-card .event-actions .btn {
   display: inline-block !important;
@@ -105,15 +107,26 @@
   transition: all 0.3s ease !important;
   text-align: center !important;
   cursor: pointer !important;
+  font-family: "Noto Sans JP", sans-serif !important;
+  font-size: 0.9rem !important;
+  line-height: 1.5 !important;
+  position: relative !important;
+  overflow: hidden !important;
+  border-width: 2px !important;
+  border-style: solid !important;
 }
 
+.hero-events-grid .hero-event-card .event-actions .btn-primary,
+.events-container .event-card .event-actions .btn-primary,
 .hero-event-card .event-actions .btn-primary,
 .event-card .event-actions .btn-primary {
   background-color: #22c55e !important;
   color: white !important;
-  border: 2px solid #22c55e !important;
+  border-color: #22c55e !important;
 }
 
+.hero-events-grid .hero-event-card .event-actions .btn-primary:hover,
+.events-container .event-card .event-actions .btn-primary:hover,
 .hero-event-card .event-actions .btn-primary:hover,
 .event-card .event-actions .btn-primary:hover {
   background-color: #16a34a !important;
@@ -122,19 +135,32 @@
   box-shadow: 0 4px 12px rgba(34, 197, 94, 0.3) !important;
 }
 
+.hero-events-grid .hero-event-card .event-actions .btn-outline,
+.events-container .event-card .event-actions .btn-outline,
 .hero-event-card .event-actions .btn-outline,
 .event-card .event-actions .btn-outline {
   background-color: transparent !important;
   color: #22c55e !important;
-  border: 2px solid #22c55e !important;
+  border-color: #22c55e !important;
 }
 
+.hero-events-grid .hero-event-card .event-actions .btn-outline:hover,
+.events-container .event-card .event-actions .btn-outline:hover,
 .hero-event-card .event-actions .btn-outline:hover,
 .event-card .event-actions .btn-outline:hover {
   background-color: #22c55e !important;
   color: white !important;
   transform: translateY(-1px) !important;
   box-shadow: 0 4px 12px rgba(34, 197, 94, 0.3) !important;
+}
+
+/* ::before 疑似要素をリセット */
+.hero-events-grid .hero-event-card .event-actions .btn::before,
+.events-container .event-card .event-actions .btn::before,
+.hero-event-card .event-actions .btn::before,
+.event-card .event-actions .btn::before {
+  content: none !important;
+  display: none !important;
 }
 
 .hero-cta {

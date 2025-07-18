@@ -531,13 +531,17 @@ class EventsManager {
 
 // Initialize Events Manager when DOM is loaded
 document.addEventListener('DOMContentLoaded', () => {
+  // Logger フォールバック処理
   if (typeof Logger === 'undefined') {
     window.Logger = {
-      info: console.log,
-      error: console.error,
-      warn: console.warn
+      info: (...args) => console.log('[EventsManager]', ...args),
+      error: (...args) => console.error('[EventsManager]', ...args),
+      warn: (...args) => console.warn('[EventsManager]', ...args)
     };
   }
 
-  window.eventsManager = new EventsManager();
+  // EventsManager の初期化を少し遅らせる
+  setTimeout(() => {
+    window.eventsManager = new EventsManager();
+  }, 100);
 });
