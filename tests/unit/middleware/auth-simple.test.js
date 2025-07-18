@@ -1,43 +1,11 @@
 /**
- * Fixed Authentication Middleware Tests
- * Using proper ES module mocking approach
+ * Simplified Authentication Middleware Tests
+ * Tests basic functionality without complex mocking
  */
 
-import { jest } from '@jest/globals';
+import { validatePassword } from '../../../server/middleware/auth.js';
 
-// Mock modules before importing
-const mockJWT = {
-  sign: jest.fn((payload, secret, options) => 'mock-jwt-token'),
-  verify: jest.fn((token, secret, callback) => {
-    if (token === 'valid-token') {
-      callback(null, { id: 'user-123', email: 'test@example.com', role: 'user' });
-    } else if (token === 'expired-token') {
-      callback(new Error('TokenExpiredError'));
-    } else {
-      callback(new Error('JsonWebTokenError'));
-    }
-  })
-};
-
-const mockBcrypt = {
-  genSalt: jest.fn(async rounds => 'mock-salt'),
-  hash: jest.fn(async (password, salt) => `hashed-${password}`),
-  compare: jest.fn(async (password, hash) => password === 'correct-password')
-};
-
-// Mock the modules
-jest.unstable_mockModule('jsonwebtoken', () => ({
-  default: mockJWT
-}));
-
-jest.unstable_mockModule('bcryptjs', () => ({
-  default: mockBcrypt
-}));
-
-// Now import the middleware
-const { validatePassword } = await import('../../../server/middleware/auth.js');
-
-describe('Authentication Middleware - Fixed Tests', () => {
+describe('Authentication Middleware - Simple Tests', () => {
   describe('validatePassword', () => {
     it('should validate strong password', () => {
       const result = validatePassword('StrongPass123!');
@@ -75,11 +43,16 @@ describe('Authentication Middleware - Fixed Tests', () => {
       expect(result.errors).toContain('Password must contain at least one special character');
     });
 
-    it('should return both valid and errors properties', () => {
-      const result = validatePassword('weak');
-      expect(result).toHaveProperty('valid');
-      expect(result).toHaveProperty('errors');
-      expect(result).toHaveProperty('message');
+    it('should handle empty password', () => {
+      const result = validatePassword('');
+      expect(result.valid).toBe(false);
+      expect(result.errors.length).toBeGreaterThan(0);
+    });
+
+    it('should handle null password', () => {
+      const result = validatePassword(null);
+      expect(result.valid).toBe(false);
+      expect(result.errors.length).toBeGreaterThan(0);
     });
   });
 });

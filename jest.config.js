@@ -1,6 +1,6 @@
 /**
  * Jest Configuration
- * For ES modules support
+ * For ES modules support with manual mocks
  */
 
 export default {
@@ -45,5 +45,11 @@ export default {
   },
   testTimeout: 10000,
   detectOpenHandles: true,
-  forceExit: true
+  forceExit: true,
+  // Manual mocks directory
+  moduleDirectories: ['node_modules', '<rootDir>/tests/__mocks__'],
+  // Clear and reset mocks
+  clearMocks: true,
+  resetMocks: true,
+  restoreMocks: true
 };

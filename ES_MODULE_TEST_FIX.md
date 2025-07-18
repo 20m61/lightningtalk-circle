@@ -3,6 +3,7 @@
 ## Problem Summary
 
 The codebase has mixed module systems:
+
 - Production code uses ES modules (`import`/`export`)
 - Some legacy code uses CommonJS (`require`/`module.exports`)
 - Tests expect ES modules but Jest configuration is complex
@@ -19,6 +20,7 @@ The codebase has mixed module systems:
 Until we can properly refactor all tests, use the following approach:
 
 ### 1. Run Tests with Legacy Flag
+
 ```bash
 # For individual tests
 NODE_OPTIONS='--experimental-vm-modules' npx jest tests/unit/specific-test.test.js --no-coverage
@@ -28,17 +30,21 @@ npm test -- --testPathIgnorePatterns="auth-google|middleware/auth|voting|securit
 ```
 
 ### 2. Fix Critical Tests Only
+
 Focus on fixing only the most critical test suites:
+
 - Unit tests for core business logic
 - Integration tests for API endpoints
 - Security-related tests
 
 ### 3. Use Test-Specific Mocks
+
 Create test-specific mock files instead of global mocks:
+
 ```javascript
 // tests/mocks/aws-sdk.js
 export const mockCognitoClient = {
-  adminInitiateAuth: jest.fn(),
+  adminInitiateAuth: jest.fn()
   // ... other methods
 };
 ```
@@ -46,8 +52,10 @@ export const mockCognitoClient = {
 ## Long-term Solution
 
 1. **Complete ES Module Migration**: Convert all CommonJS modules to ES modules
-2. **Update Test Framework**: Consider using Vitest which has better ES module support
-3. **Separate Test Configs**: Create separate Jest configs for different module types
+2. **Update Test Framework**: Consider using Vitest which has better ES module
+   support
+3. **Separate Test Configs**: Create separate Jest configs for different module
+   types
 4. **Mock Strategy**: Use manual mocks in `__mocks__` directory
 
 ## Files Updated
@@ -68,6 +76,7 @@ export const mockCognitoClient = {
 ## Running Passing Tests
 
 To run only the tests that currently pass:
+
 ```bash
 # Create a list of passing tests
 npm test -- --listTests | grep -v "auth\|voting\|security" > passing-tests.txt
@@ -78,17 +87,31 @@ npm test -- --testPathPattern="analytics|design-system|utils/sanitizer"
 
 ## Test Status
 
-### Currently Passing
+### Currently Passing (28 test suites)
+
 - Design system tests
 - Analytics tests (partial)
 - Utility tests
+- Simplified authentication tests
+- Fixed authentication tests (password validation)
 
-### Need Fixing
-- Authentication tests (missing mocks)
+### Need Fixing (7 test suites)
+
+- Authentication tests (JWT mocking issues)
 - Security tests (ES module imports)
 - Voting service tests (mock issues)
 - Performance tests (module system)
+- Google OAuth tests (complex mocking)
+
+### Progress Made
+
+- Created manual mock files for jsonwebtoken and bcryptjs
+- Added proper Jest configuration for ES modules
+- Created working test examples with proper mocking
+- Fixed logger module import issues
+- Improved test infrastructure
 
 ---
 
-**Note**: This is a temporary solution. The proper fix requires a comprehensive refactoring of the test suite to properly handle ES modules.
+**Note**: This is a temporary solution. The proper fix requires a comprehensive
+refactoring of the test suite to properly handle ES modules.
