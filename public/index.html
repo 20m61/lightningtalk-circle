@@ -70,6 +70,9 @@
     <!-- Mobile Optimizations -->
     <link rel="stylesheet" href="css/mobile-optimizations.css" />
 
+    <!-- Hero Events Section -->
+    <link rel="stylesheet" href="css/hero-events.css" />
+
     <!-- Legacy CSS - To be migrated -->
     <link rel="stylesheet" href="css/tailwind.css" />
     <link rel="stylesheet" href="css/style.css" />
@@ -99,7 +102,8 @@
       <nav class="container flex flex--items-center flex--justify-between">
         <div class="logo text-primary font-bold">⚡ なんでもLT</div>
         <ul class="nav-links flex flex--items-center">
-          <li><a href="#event" class="nav-link">イベント情報</a></li>
+          <li><a href="#hero" class="nav-link">イベント一覧</a></li>
+          <li><a href="#event-detail" class="nav-link">現在のイベント</a></li>
           <li><a href="/presentations.html" class="nav-link">アーカイブ</a></li>
           <li><a href="#about" class="nav-link">ライトニングトークとは</a></li>
           <li><a href="#join" class="nav-link">参加方法</a></li>
@@ -119,7 +123,7 @@
     </header>
 
     <main>
-      <section class="hero">
+      <section id="hero" class="hero">
         <div class="container">
           <div class="floating-elements">
             <div class="floating-sun">☀️</div>
@@ -128,11 +132,118 @@
           </div>
           <h1>なんでもライトニングトーク ⚡</h1>
           <p>5分間で世界を変える！あなたの「なんでも」を聞かせて！</p>
-          <a href="#event" class="btn btn-primary btn-lg">第1回イベント詳細を見る 🚀</a>
+
+          <!-- イベント一覧を目立つ場所に配置 -->
+          <div class="hero-events-preview">
+            <div class="hero-events-header">
+              <h2 class="hero-events-title">🎉 開催予定のイベント</h2>
+              <div class="hero-events-filter">
+                <button class="filter-btn active" data-filter="all">すべて</button>
+                <button class="filter-btn" data-filter="upcoming">開催予定</button>
+                <button class="filter-btn" data-filter="planning">企画中</button>
+                <button class="filter-btn" data-filter="past">過去のイベント</button>
+              </div>
+            </div>
+
+            <div id="hero-events-grid" class="hero-events-grid">
+              <!-- イベントはJavaScriptで動的に読み込み -->
+              <div class="loading-placeholder">
+                <div class="loading-spinner"></div>
+                <p>イベント情報を読み込み中...</p>
+              </div>
+            </div>
+
+            <div class="hero-events-actions">
+              <button class="btn btn-outline" id="load-more-events" style="display: none">
+                さらに表示する
+              </button>
+              <a href="#all-events" class="btn btn-secondary">すべてのイベントを見る</a>
+            </div>
+          </div>
+
+          <div class="hero-cta">
+            <a href="#event-detail" class="btn btn-primary btn-lg">第1回イベント詳細を見る 🚀</a>
+            <a href="#join" class="btn btn-secondary btn-lg">参加方法を確認する 📋</a>
+          </div>
         </div>
       </section>
 
-      <section id="event" class="event-info">
+      <!-- 全イベント一覧セクション -->
+      <section id="all-events" class="all-events-section">
+        <div class="container">
+          <div class="section-header">
+            <h2 class="section-title">📅 すべてのイベント</h2>
+            <p class="section-description">
+              過去から未来まで、なんでもライトニングトークのイベント一覧です
+            </p>
+          </div>
+
+          <div class="events-filter-bar">
+            <div class="filter-group">
+              <label>ステータス:</label>
+              <select id="status-filter">
+                <option value="all">すべて</option>
+                <option value="upcoming">開催予定</option>
+                <option value="ongoing">開催中</option>
+                <option value="past">終了</option>
+                <option value="planning">企画中</option>
+              </select>
+            </div>
+
+            <div class="filter-group">
+              <label>開催形式:</label>
+              <select id="format-filter">
+                <option value="all">すべて</option>
+                <option value="onsite">現地開催</option>
+                <option value="online">オンライン</option>
+                <option value="hybrid">ハイブリッド</option>
+              </select>
+            </div>
+
+            <div class="filter-group">
+              <label>年月:</label>
+              <select id="date-filter">
+                <option value="all">すべて</option>
+                <option value="2025-07">2025年7月</option>
+                <option value="2025-08">2025年8月</option>
+                <option value="2025-09">2025年9月</option>
+              </select>
+            </div>
+
+            <div class="search-group">
+              <input type="text" id="event-search" placeholder="イベントを検索..." />
+              <button class="search-btn">🔍</button>
+            </div>
+          </div>
+
+          <div class="events-view-toggle">
+            <button class="view-toggle-btn active" data-view="grid">
+              <span class="icon">⊞</span> グリッド
+            </button>
+            <button class="view-toggle-btn" data-view="list">
+              <span class="icon">☰</span> リスト
+            </button>
+          </div>
+
+          <div id="all-events-container" class="events-container grid-view">
+            <!-- イベントはJavaScriptで動的に読み込み -->
+            <div class="loading-placeholder">
+              <div class="loading-spinner"></div>
+              <p>イベント情報を読み込み中...</p>
+            </div>
+          </div>
+
+          <div class="events-pagination">
+            <button class="pagination-btn" id="prev-page" disabled>← 前へ</button>
+            <span class="pagination-info">
+              <span id="current-page">1</span> / <span id="total-pages">1</span>
+            </span>
+            <button class="pagination-btn" id="next-page">次へ →</button>
+          </div>
+        </div>
+      </section>
+
+      <section id="event-detail" class="event-info">
         <div class="container">
           <h2 class="section-title">🎉 第1回 なんでもライトニングトーク 🎉</h2>
 
@@ -565,6 +676,7 @@
     <script src="js/mobile-touch-manager.js"></script>
     <script src="js/mobile-components.js"></script>
     <script src="js/mobile-performance-optimizer.js"></script>
+    <script src="js/events-manager.js"></script>
     <script src="js/main.js"></script>
 
     <!-- React Components Integration -->

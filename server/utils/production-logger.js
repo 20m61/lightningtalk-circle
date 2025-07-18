@@ -333,4 +333,4 @@ class ProductionLogger {
 // シングルトンインスタンス
 const logger = new ProductionLogger();
 
-module.exports = logger;
+export default logger;
