@@ -7,6 +7,9 @@ class LightningTalkApp {
   constructor() {
     this.eventDate = new Date('2025-07-15T19:00:00+09:00');
 
+    // Frontend Logger
+    this.logger = window.Logger;
+
     // Cognito Configuration
     this.cognitoConfig = {
       userPoolId: 'ap-northeast-1_i4IV8ixyg',
@@ -290,7 +293,7 @@ class LightningTalkApp {
         this.incrementSurveyCounter('offline');
         break;
       default:
-        console.warn('Unknown action:', action);
+        this.logger.warn('Unknown action:', { action });
     }
   }
 
@@ -459,7 +462,10 @@ class LightningTalkApp {
 
         // Update UI with participant count if available
         if (result.participant) {
-          console.log('Registration successful:', result.participant.name);
+          this.logger.business('Registration successful', {
+            participantName: result.participant.name,
+            type: 'user_registration'
+          });
         }
       } else {
         // Handle validation errors from server
@@ -470,7 +476,11 @@ class LightningTalkApp {
         }
       }
     } catch (error) {
-      console.error('Registration error:', error);
+      this.logger.error('Registration error', {
+        error: error.message,
+        stack: error.stack,
+        category: 'registration'
+      });
       this.showRegistrationError(error.message);
     } finally {
       // Reset button
@@ -1090,7 +1100,7 @@ class LightningTalkApp {
           type: type === 'error' ? 'error' : type === 'success' ? 'success' : 'info',
           dismissible: true,
           icon: true,
-          onDismiss: () => console.log('Notification dismissed')
+          onDismiss: () => this.logger.debug('Notification dismissed')
         },
         message
       );
@@ -1427,7 +1437,7 @@ class LightningTalkApp {
   }
 
   handlePullToRefresh(event) {
-    console.log('Pull to refresh triggered');
+    this.logger.userAction('Pull to refresh triggered');
 
     // ページの再読み込みまたはデータの更新
     this.refreshData().then(() => {
@@ -1652,7 +1662,10 @@ class LightningTalkApp {
 
       return true;
     } catch (error) {
-      console.error('Data refresh failed:', error);
+      this.logger.error('Data refresh failed', {
+        error: error.message,
+        category: 'data_refresh'
+      });
       return false;
     }
   }
@@ -1700,7 +1713,7 @@ class LightningTalkApp {
         this.ws.removeEventListener('error', this.onWebSocketError);
         this.ws.close(1000, 'Page unloading');
       } catch (error) {
-        console.warn('WebSocket cleanup error:', error);
+        this.logger.warn('WebSocket cleanup error', { error: error.message });
       }
       this.ws = null;
     }
@@ -1725,7 +1738,7 @@ class LightningTalkApp {
       this.messageTimeout = null;
     }
 
-    console.log('LightningTalkApp cleanup completed');
+    this.logger.info('LightningTalkApp cleanup completed');
   }
 
   // Enhanced periodic updates with proper cleanup
@@ -1855,13 +1868,16 @@ class LightningTalkApp {
       this.ws.addEventListener('close', this.onWebSocketClose);
       this.ws.addEventListener('error', this.onWebSocketError);
     } catch (error) {
-      console.error('Failed to create WebSocket:', error);
+      this.logger.error('Failed to create WebSocket', {
+        error: error.message,
+        category: 'websocket'
+      });
       this.fallbackToPolling();
     }
   }
 
   handleWebSocketOpen() {
-    console.log('WebSocket connected to API Gateway');
+    this.logger.info('WebSocket connected to API Gateway');
     this.reconnectAttempts = 0; // Reset reconnection attempts
     this.stopVotePolling();
 
@@ -1882,15 +1898,22 @@ class LightningTalkApp {
           // Keep-alive response, no action needed
           break;
         default:
-          console.log('Unknown WebSocket message type:', data.type);
+          this.logger.warn('Unknown WebSocket message type', { type: data.type, data });
       }
     } catch (error) {
-      console.error('Error parsing WebSocket message:', error);
+      this.logger.error('Error parsing WebSocket message', {
+        error: error.message,
+        rawMessage: event.data?.substring(0, 200)
+      });
     }
   }
 
   handleWebSocketClose(event) {
-    console.log('WebSocket disconnected, code:', event.code, 'reason:', event.reason);
+    this.logger.warn('WebSocket disconnected', {
+      code: event.code,
+      reason: event.reason,
+      category: 'websocket'
+    });
 
     // Clean up keep-alive
     this.stopKeepAlive();
@@ -1904,7 +1927,10 @@ class LightningTalkApp {
   }
 
   handleWebSocketError(error) {
-    console.error('WebSocket error:', error);
+    this.logger.error('WebSocket error', {
+      error: error.message || error,
+      category: 'websocket'
+    });
     this.fallbackToPolling();
   }
 
@@ -1918,9 +1944,11 @@ class LightningTalkApp {
     this.wsReconnectInterval = setTimeout(
       () => {
         this.reconnectAttempts++;
-        console.log(
-          `Attempting WebSocket reconnection (${this.reconnectAttempts}/${this.maxReconnectAttempts})`
-        );
+        this.logger.info('WebSocket reconnection attempt', {
+          attempt: this.reconnectAttempts,
+          maxAttempts: this.maxReconnectAttempts,
+          category: 'websocket'
+        });
         this.connectWebSocket();
       },
       Math.min(delay, 30000)
@@ -1955,7 +1983,7 @@ class LightningTalkApp {
   }
 
   fallbackToPolling() {
-    console.log('Falling back to polling mode');
+    this.logger.info('Falling back to polling mode', { category: 'websocket' });
     this.startVotePolling();
   }
 
@@ -1973,7 +2001,7 @@ class LightningTalkApp {
         localStorage.setItem('onlineCount', this.surveyCounters.online.toString());
         localStorage.setItem('offlineCount', this.surveyCounters.offline.toString());
       } catch (error) {
-        console.warn('localStorage update failed:', error);
+        this.logger.warn('localStorage update failed', { error: error.message });
       }
     }, 100); // Batch updates every 100ms
   }
@@ -2069,7 +2097,10 @@ class LightningTalkApp {
         }
       }
     } catch (error) {
-      console.error('Failed to fetch vote counts:', error);
+      this.logger.error('Failed to fetch vote counts', {
+        error: error.message,
+        category: 'api_call'
+      });
     }
   }
 
@@ -2122,7 +2153,12 @@ class LightningTalkApp {
         participantEmail: voter.email
       })
     }).catch(error => {
-      console.error('Failed to submit vote to API:', error);
+      this.logger.error('Failed to submit vote to API', {
+        error: error.message,
+        eventId,
+        voteType,
+        category: 'api_call'
+      });
     });
 
     this.showNotification('投票ありがとうございました！', 'success');
@@ -2586,7 +2622,7 @@ document.addEventListener('DOMContentLoaded', () => {
     window.MobileComponentSystem &&
     window.MobilePerformanceOptimizer
   ) {
-    console.log('[Main] Mobile optimization systems initialized');
+    this.logger.info('Mobile optimization systems initialized', { category: 'mobile' });
 
     // Set up mobile-specific event listeners
     app.setupMobileEventListeners();
@@ -2601,12 +2637,15 @@ document.addEventListener('DOMContentLoaded', () => {
       navigator.serviceWorker
         .register('/service-worker.js')
         .then(registration => {
-          console.log('[Main] Service Worker registered:', registration.scope);
+          app.logger.info('Service Worker registered', {
+            scope: registration.scope,
+            category: 'service_worker'
+          });
 
           // Check for updates
           registration.addEventListener('updatefound', () => {
             const newWorker = registration.installing;
-            console.log('[Main] Service Worker update found');
+            app.logger.info('Service Worker update found', { category: 'service_worker' });
 
             newWorker.addEventListener('statechange', () => {
               if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
@@ -2620,7 +2659,10 @@ document.addEventListener('DOMContentLoaded', () => {
           });
         })
         .catch(error => {
-          console.error('[Main] Service Worker registration failed:', error);
+          app.logger.error('Service Worker registration failed', {
+            error: error.message,
+            category: 'service_worker'
+          });
         });
     });
   }
@@ -2694,7 +2736,10 @@ document.addEventListener('DOMContentLoaded', () => {
           errorEl.style.display = 'block';
         }
       } catch (error) {
-        console.error('Login error:', error);
+        this.logger.error('Login error', {
+          error: error.message,
+          category: 'authentication'
+        });
         const errorEl = document.getElementById('loginError');
         const errorMessageEl = document.getElementById('loginErrorMessage');
         errorMessageEl.textContent = 'ネットワークエラーが発生しました';
@@ -2769,7 +2814,10 @@ document.addEventListener('DOMContentLoaded', () => {
         errorDiv.style.display = 'block';
       }
     } catch (error) {
-      console.error('Login error:', error);
+      this.logger.error('Login error during form submission', {
+        error: error.message,
+        category: 'authentication'
+      });
       errorDiv.textContent = 'ログイン処理中にエラーが発生しました。';
       errorDiv.style.display = 'block';
     }
