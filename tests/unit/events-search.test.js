@@ -50,9 +50,7 @@ describe('Event Search Logic', () => {
       ];
 
       const query = 'LiGhTnInG';
-      const filtered = events.filter(event =>
-        event.title.toLowerCase().includes(query.toLowerCase())
-      );
+      const filtered = events.filter(event => event.title.toLowerCase().includes(query.toLowerCase()));
 
       expect(filtered).toHaveLength(3);
     });
@@ -364,8 +362,7 @@ describe('Event Search Logic', () => {
       const filtered = events
         .filter(
           event =>
-            event.title.toLowerCase().includes('lightning') ||
-            event.description.toLowerCase().includes('lightning')
+            event.title.toLowerCase().includes('lightning') || event.description.toLowerCase().includes('lightning')
         )
         .filter(event => event.status === 'upcoming')
         .filter(event => event.venue?.online)

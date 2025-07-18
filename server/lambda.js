@@ -11,7 +11,7 @@ const serverlessHandler = serverless(app, {
 });
 
 // Export handler for Lambda
-exports.handler = async (event, context) => {
+exports.handler = async(event, context) => {
   // Warm up Lambda container
   if (event.source === 'serverless-plugin-warmup') {
     console.log('WarmUp - Lambda is warm!');

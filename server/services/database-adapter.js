@@ -205,8 +205,12 @@ export class FileSystemAdapter extends DatabaseAdapter {
         const aVal = a[field];
         const bVal = b[field];
 
-        if (aVal < bVal) return order === 1 ? -1 : 1;
-        if (aVal > bVal) return order === 1 ? 1 : -1;
+        if (aVal < bVal) {
+          return order === 1 ? -1 : 1;
+        }
+        if (aVal > bVal) {
+          return order === 1 ? 1 : -1;
+        }
       }
       return 0;
     });

@@ -174,7 +174,9 @@ class EventLiveManager {
   }
 
   async submitVote(rating) {
-    if (this.hasVoted || !this.currentSessionId) return;
+    if (this.hasVoted || !this.currentSessionId) {
+      return;
+    }
 
     try {
       const response = await fetch(`/api/voting/sessions/${this.currentSessionId}/vote`, {
@@ -232,8 +234,8 @@ class EventLiveManager {
         );
 
         if (bar && percentage) {
-          bar.style.width = results.percentages[rating] + '%';
-          percentage.textContent = results.percentages[rating] + '%';
+          bar.style.width = `${results.percentages[rating]}%`;
+          percentage.textContent = `${results.percentages[rating]}%`;
         }
       }
     }
@@ -243,7 +245,9 @@ class EventLiveManager {
     const input = document.getElementById('questionInput');
     const question = input.value.trim();
 
-    if (!question) return;
+    if (!question) {
+      return;
+    }
 
     try {
       const response = await fetch(`/api/events/${this.eventId}/questions`, {
@@ -300,7 +304,7 @@ class EventLiveManager {
 
   async upvoteQuestion(btn) {
     const qaItem = btn.closest('.qa-item');
-    const questionId = qaItem.dataset.questionId;
+    const { questionId } = qaItem.dataset;
     const voteCount = btn.querySelector('.vote-count');
 
     try {
@@ -331,7 +335,7 @@ class EventLiveManager {
         .share({
           title: `なんでもLT - ${title}`,
           text: '現在ライブ配信中！',
-          url: url
+          url
         })
         .catch(err => console.log('Share cancelled'));
     } else {
@@ -445,12 +449,16 @@ class EventLiveManager {
   }
 
   updateProgramStatus(program) {
-    if (!program) return;
+    if (!program) {
+      return;
+    }
 
     // Update program items status
     program.forEach((item, index) => {
       const programItem = document.querySelector(`.program-item:nth-child(${index + 1})`);
-      if (!programItem) return;
+      if (!programItem) {
+        return;
+      }
 
       programItem.className = `program-item ${item.status}`;
 
@@ -466,10 +474,16 @@ class EventLiveManager {
     const now = new Date();
     const diff = Math.floor((now - date) / 1000); // seconds
 
-    if (diff < 60) return '今';
-    if (diff < 3600) return Math.floor(diff / 60) + '分前';
-    if (diff < 86400) return Math.floor(diff / 3600) + '時間前';
-    return Math.floor(diff / 86400) + '日前';
+    if (diff < 60) {
+      return '今';
+    }
+    if (diff < 3600) {
+      return `${Math.floor(diff / 60)}分前`;
+    }
+    if (diff < 86400) {
+      return `${Math.floor(diff / 3600)}時間前`;
+    }
+    return `${Math.floor(diff / 86400)}日前`;
   }
 
   escapeHtml(text) {

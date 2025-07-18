@@ -33,7 +33,9 @@
     }
 
     init() {
-      if (!config.enablePerformance) return;
+      if (!config.enablePerformance) {
+        return;
+      }
 
       // Navigation Timing API
       if ('performance' in window && 'getEntriesByType' in performance) {
@@ -48,7 +50,9 @@
 
     collectNavigationTiming() {
       const navigation = performance.getEntriesByType('navigation')[0];
-      if (!navigation) return;
+      if (!navigation) {
+        return;
+      }
 
       const metrics = {
         // Page Load Metrics
@@ -108,16 +112,28 @@
     }
 
     getResourceType(url) {
-      if (/\.(js|mjs)(\?|$)/i.test(url)) return 'script';
-      if (/\.(css)(\?|$)/i.test(url)) return 'style';
-      if (/\.(jpg|jpeg|png|gif|webp|svg|ico)(\?|$)/i.test(url)) return 'image';
-      if (/\.(woff|woff2|ttf|otf|eot)(\?|$)/i.test(url)) return 'font';
-      if (/\.(json)(\?|$)/i.test(url)) return 'json';
+      if (/\.(js|mjs)(\?|$)/i.test(url)) {
+        return 'script';
+      }
+      if (/\.(css)(\?|$)/i.test(url)) {
+        return 'style';
+      }
+      if (/\.(jpg|jpeg|png|gif|webp|svg|ico)(\?|$)/i.test(url)) {
+        return 'image';
+      }
+      if (/\.(woff|woff2|ttf|otf|eot)(\?|$)/i.test(url)) {
+        return 'font';
+      }
+      if (/\.(json)(\?|$)/i.test(url)) {
+        return 'json';
+      }
       return 'other';
     }
 
     observePerformance() {
-      if (!('PerformanceObserver' in window)) return;
+      if (!('PerformanceObserver' in window)) {
+        return;
+      }
 
       // Observe long tasks
       try {
@@ -201,7 +217,9 @@
   // Error tracking
   class ErrorTracker {
     init() {
-      if (!config.enableErrorTracking) return;
+      if (!config.enableErrorTracking) {
+        return;
+      }
 
       // Global error handler
       window.addEventListener('error', event => {
@@ -276,14 +294,16 @@
     }
 
     init() {
-      if (!config.enableUserActions) return;
+      if (!config.enableUserActions) {
+        return;
+      }
 
       // Track page views
       this.trackPageView();
 
       // Track clicks
       document.addEventListener('click', event => {
-        const target = event.target;
+        const { target } = event;
         const data = {
           type: 'click',
           tagName: target.tagName,
@@ -389,7 +409,9 @@
     }
 
     init() {
-      if (this.initialized) return;
+      if (this.initialized) {
+        return;
+      }
       this.initialized = true;
 
       // Check sampling
@@ -424,7 +446,9 @@
     }
 
     track(eventType, data) {
-      if (!this.initialized) return;
+      if (!this.initialized) {
+        return;
+      }
 
       const event = {
         type: eventType,
@@ -444,12 +468,16 @@
 
     flush(immediate = false) {
       // Check if analytics is disabled via sampling
-      if (config.sampling === 0) return;
+      if (config.sampling === 0) {
+        return;
+      }
 
       const hasData =
         buffer.events.length > 0 || buffer.metrics.length > 0 || buffer.errors.length > 0;
 
-      if (!hasData) return;
+      if (!hasData) {
+        return;
+      }
 
       const payload = {
         events: [...buffer.events],

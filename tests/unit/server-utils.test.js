@@ -301,9 +301,7 @@ describe('validateEventData', () => {
     const eventWithoutLocation = { ...validEventData };
     delete eventWithoutLocation.location;
 
-    expect(() => validateEventData(eventWithoutLocation)).toThrow(
-      'Missing required fields: location'
-    );
+    expect(() => validateEventData(eventWithoutLocation)).toThrow('Missing required fields: location');
   });
 
   it('should reject event with invalid date', () => {
@@ -327,9 +325,7 @@ describe('validateEventData', () => {
   it('should reject missing multiple fields', () => {
     const incompleteEvent = { description: 'Only description' };
 
-    expect(() => validateEventData(incompleteEvent)).toThrow(
-      'Missing required fields: title, date, location'
-    );
+    expect(() => validateEventData(incompleteEvent)).toThrow('Missing required fields: title, date, location');
   });
 });
 

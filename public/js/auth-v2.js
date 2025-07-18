@@ -33,7 +33,9 @@ class AuthenticationModule {
   async checkSession() {
     try {
       const token = localStorage.getItem('authToken');
-      if (!token) return;
+      if (!token) {
+        return;
+      }
 
       const response = await fetch(`${this.apiEndpoint}/auth/verify`, {
         headers: {
@@ -90,14 +92,18 @@ class AuthenticationModule {
   async handleLogin(event) {
     event.preventDefault();
 
-    if (AuthState.isLoading) return;
+    if (AuthState.isLoading) {
+      return;
+    }
 
     const form = event.target;
     const formData = new FormData(form);
 
     // Validate all fields
     const isValid = this.validateForm(form);
-    if (!isValid) return;
+    if (!isValid) {
+      return;
+    }
 
     // Show loading state
     this.setLoadingState(form, true);
@@ -136,14 +142,18 @@ class AuthenticationModule {
   async handleSignup(event) {
     event.preventDefault();
 
-    if (AuthState.isLoading) return;
+    if (AuthState.isLoading) {
+      return;
+    }
 
     const form = event.target;
     const formData = new FormData(form);
 
     // Validate all fields
     const isValid = this.validateForm(form);
-    if (!isValid) return;
+    if (!isValid) {
+      return;
+    }
 
     // Check password match
     if (formData.get('password') !== formData.get('confirmPassword')) {
@@ -322,11 +332,21 @@ class AuthenticationModule {
   checkPasswordStrength(password) {
     let strength = 0;
 
-    if (password.length >= 8) strength++;
-    if (password.length >= 12) strength++;
-    if (/[a-z]/.test(password) && /[A-Z]/.test(password)) strength++;
-    if (/[0-9]/.test(password)) strength++;
-    if (/[^a-zA-Z0-9]/.test(password)) strength++;
+    if (password.length >= 8) {
+      strength++;
+    }
+    if (password.length >= 12) {
+      strength++;
+    }
+    if (/[a-z]/.test(password) && /[A-Z]/.test(password)) {
+      strength++;
+    }
+    if (/[0-9]/.test(password)) {
+      strength++;
+    }
+    if (/[^a-zA-Z0-9]/.test(password)) {
+      strength++;
+    }
 
     return strength;
   }
@@ -335,7 +355,9 @@ class AuthenticationModule {
   updatePasswordStrength(field, strength) {
     const indicator = field.closest('.ltc-input-container')?.querySelector('.password-strength');
 
-    if (!indicator) return;
+    if (!indicator) {
+      return;
+    }
 
     const strengthText = ['弱い', '普通', '良い', '強い', '非常に強い'];
     const strengthClass = ['weak', 'fair', 'good', 'strong', 'excellent'];
@@ -349,7 +371,9 @@ class AuthenticationModule {
     const container = field.closest('.ltc-input-container');
     const errorDiv = container?.querySelector('.ltc-input-helper--error');
 
-    if (!errorDiv) return;
+    if (!errorDiv) {
+      return;
+    }
 
     field.classList.add('ltc-input--error');
     errorDiv.textContent = message;
@@ -406,16 +430,26 @@ window.togglePassword = function (fieldId) {
   const eyeIcon = wrapper?.querySelector('.eye-icon');
   const eyeOffIcon = wrapper?.querySelector('.eye-off-icon');
 
-  if (!field) return;
+  if (!field) {
+    return;
+  }
 
   if (field.type === 'password') {
     field.type = 'text';
-    if (eyeIcon) eyeIcon.style.display = 'none';
-    if (eyeOffIcon) eyeOffIcon.style.display = 'block';
+    if (eyeIcon) {
+      eyeIcon.style.display = 'none';
+    }
+    if (eyeOffIcon) {
+      eyeOffIcon.style.display = 'block';
+    }
   } else {
     field.type = 'password';
-    if (eyeIcon) eyeIcon.style.display = 'block';
-    if (eyeOffIcon) eyeOffIcon.style.display = 'none';
+    if (eyeIcon) {
+      eyeIcon.style.display = 'block';
+    }
+    if (eyeOffIcon) {
+      eyeOffIcon.style.display = 'none';
+    }
   }
 };
 
@@ -423,8 +457,8 @@ window.togglePassword = function (fieldId) {
 window.showToast = function (message, type = 'info') {
   if (window.LightningTalk?.createToast) {
     const toast = window.LightningTalk.createToast({
-      message: message,
-      type: type,
+      message,
+      type,
       duration: 3000
     });
 

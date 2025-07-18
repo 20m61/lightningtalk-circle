@@ -293,7 +293,7 @@ router.get(
       if (includeResults) {
         polls = await Promise.all(
           polls.map(async poll => {
-            const showResults = poll.settings.showResults;
+            const { showResults } = poll.settings;
             const isOwner = req.user && req.user.id === poll.createdBy;
             const hasVoted = req.user && poll.responses.some(r => r.userId === req.user.id);
 
@@ -376,7 +376,7 @@ router.get('/:pollId', [param('pollId').isString().notEmpty()], async (req, res)
     const isOwner = req.user && req.user.id === poll.createdBy;
 
     // Determine if results should be shown
-    const showResults = poll.settings.showResults;
+    const { showResults } = poll.settings;
     const shouldShowResults =
       isOwner ||
       showResults === 'immediately' ||
@@ -649,7 +649,7 @@ router.post(
         req.app.locals.websocketService.broadcastToRoom(`event:${poll.eventId}`, 'pollStarted', {
           pollId,
           eventId: poll.eventId,
-          poll: poll,
+          poll,
           timestamp: new Date().toISOString()
         });
       }
@@ -741,8 +741,8 @@ router.post(
         req.app.locals.websocketService.broadcastToRoom(`event:${poll.eventId}`, 'pollEnded', {
           pollId,
           eventId: poll.eventId,
-          poll: poll,
-          results: results,
+          poll,
+          results,
           timestamp: new Date().toISOString()
         });
       }

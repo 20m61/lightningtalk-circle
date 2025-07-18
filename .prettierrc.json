@@ -1,0 +1,87 @@
+{
+  "printWidth": 100,
+  "tabWidth": 2,
+  "useTabs": false,
+  "semi": true,
+  "singleQuote": true,
+  "quoteProps": "as-needed",
+  "jsxSingleQuote": true,
+  "trailingComma": "none",
+  "bracketSpacing": true,
+  "bracketSameLine": false,
+  "arrowParens": "avoid",
+  "endOfLine": "lf",
+  "embeddedLanguageFormatting": "auto",
+  "singleAttributePerLine": false,
+  "proseWrap": "preserve",
+  "htmlWhitespaceSensitivity": "css",
+  "vueIndentScriptAndStyle": false,
+  "insertPragma": false,
+  "requirePragma": false,
+  "overrides": [
+    {
+      "files": "*.json",
+      "options": {
+        "parser": "json"
+      }
+    },
+    {
+      "files": "*.md",
+      "options": {
+        "parser": "markdown",
+        "proseWrap": "always",
+        "printWidth": 80
+      }
+    },
+    {
+      "files": "*.{css,scss,sass}",
+      "options": {
+        "parser": "css",
+        "singleQuote": false,
+        "printWidth": 120
+      }
+    },
+    {
+      "files": "*.{html,htm}",
+      "options": {
+        "parser": "html",
+        "printWidth": 120
+      }
+    },
+    {
+      "files": "*.{yaml,yml}",
+      "options": {
+        "parser": "yaml",
+        "printWidth": 80
+      }
+    },
+    {
+      "files": "*.{js,jsx,ts,tsx}",
+      "options": {
+        "parser": "babel",
+        "singleQuote": true,
+        "trailingComma": "none"
+      }
+    },
+    {
+      "files": "*.test.{js,jsx,ts,tsx}",
+      "options": {
+        "printWidth": 120
+      }
+    },
+    {
+      "files": "*.config.{js,mjs,cjs}",
+      "options": {
+        "printWidth": 120,
+        "trailingComma": "none"
+      }
+    },
+    {
+      "files": "package.json",
+      "options": {
+        "printWidth": 120,
+        "trailingComma": "none"
+      }
+    }
+  ]
+}

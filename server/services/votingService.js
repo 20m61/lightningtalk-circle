@@ -248,7 +248,9 @@ export class VotingService extends EventEmitter {
   async updateTalkRating(talkId, results) {
     try {
       const talk = await this.database.findOne('talks', { id: talkId });
-      if (!talk) return;
+      if (!talk) {
+        return;
+      }
 
       // Update talk with voting results
       const updates = {
@@ -260,7 +262,7 @@ export class VotingService extends EventEmitter {
       await this.database.update('talks', talkId, updates);
       logger.info(`Updated talk ${talkId} with voting results`);
     } catch (error) {
-      logger.error(`Failed to update talk rating:`, error);
+      logger.error('Failed to update talk rating:', error);
     }
   }
 

@@ -83,8 +83,11 @@ export class MonitoringService extends EventEmitter {
 
     const endpointMetrics = this.metrics.requests.byEndpoint[key];
     endpointMetrics.total++;
-    if (status < 400) endpointMetrics.success++;
-    else endpointMetrics.error++;
+    if (status < 400) {
+      endpointMetrics.success++;
+    } else {
+      endpointMetrics.error++;
+    }
 
     endpointMetrics.durations.push(duration);
     if (endpointMetrics.durations.length > 100) {
@@ -98,11 +101,11 @@ export class MonitoringService extends EventEmitter {
 
     // Update performance metrics with size limit
     this.metrics.performance.responseTimes.push(duration);
-    
+
     // Prevent memory leak by limiting array size
     const MAX_RESPONSE_TIMES = 1000;
     if (this.metrics.performance.responseTimes.length > MAX_RESPONSE_TIMES) {
-      this.metrics.performance.responseTimes = 
+      this.metrics.performance.responseTimes =
         this.metrics.performance.responseTimes.slice(-MAX_RESPONSE_TIMES);
     }
 
@@ -142,7 +145,9 @@ export class MonitoringService extends EventEmitter {
     const times = [...this.metrics.performance.responseTimes].sort((a, b) => a - b);
     const len = times.length;
 
-    if (len === 0) return;
+    if (len === 0) {
+      return;
+    }
 
     this.metrics.performance.averageResponseTime = times.reduce((a, b) => a + b, 0) / len;
 
@@ -417,9 +422,15 @@ export class MonitoringService extends EventEmitter {
     const hours = Math.floor(minutes / 60);
     const days = Math.floor(hours / 24);
 
-    if (days > 0) return `${days}d ${hours % 24}h`;
-    if (hours > 0) return `${hours}h ${minutes % 60}m`;
-    if (minutes > 0) return `${minutes}m ${seconds % 60}s`;
+    if (days > 0) {
+      return `${days}d ${hours % 24}h`;
+    }
+    if (hours > 0) {
+      return `${hours}h ${minutes % 60}m`;
+    }
+    if (minutes > 0) {
+      return `${minutes}m ${seconds % 60}s`;
+    }
     return `${seconds}s`;
   }
 

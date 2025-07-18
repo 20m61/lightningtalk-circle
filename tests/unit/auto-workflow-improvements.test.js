@@ -36,7 +36,7 @@ describe('Auto-Workflow Improvements', () => {
   let AutoWorkflowOrchestrator;
   let orchestrator;
 
-  beforeAll(async() => {
+  beforeAll(async () => {
     // Mock modules before importing
     jest.unstable_mockModule('child_process', () => ({
       execSync: mockExecSync,
@@ -74,19 +74,17 @@ describe('Auto-Workflow Improvements', () => {
       orchestrator.config.autoMerge = true;
     });
 
-    it('should provide detailed logging for disabled auto-merge', async() => {
+    it('should provide detailed logging for disabled auto-merge', async () => {
       orchestrator.config.autoMerge = false;
 
       const result = await orchestrator.performAutoMerge(mockPR);
 
       expect(result.success).toBe(false);
       expect(result.reason).toBe('auto_merge_disabled');
-      expect(mockLog.info).toHaveBeenCalledWith(
-        '🔒 Auto-merge is disabled. PR ready for manual merge.'
-      );
+      expect(mockLog.info).toHaveBeenCalledWith('🔒 Auto-merge is disabled. PR ready for manual merge.');
     });
 
-    it('should handle draft PR condition', async() => {
+    it('should handle draft PR condition', async () => {
       mockOctokit.pulls.get.mockResolvedValue({
         data: {
           mergeable: true,
@@ -100,12 +98,10 @@ describe('Auto-Workflow Improvements', () => {
 
       expect(result.success).toBe(false);
       expect(result.reason).toBe('draft_pr');
-      expect(mockLog.warning).toHaveBeenCalledWith(
-        '⚠️  PR is in draft state. Cannot auto-merge draft PRs.'
-      );
+      expect(mockLog.warning).toHaveBeenCalledWith('⚠️  PR is in draft state. Cannot auto-merge draft PRs.');
     });
 
-    it('should handle merge conflicts with detailed instructions', async() => {
+    it('should handle merge conflicts with detailed instructions', async () => {
       mockOctokit.pulls.get.mockResolvedValue({
         data: {
           mergeable: true,
@@ -119,13 +115,11 @@ describe('Auto-Workflow Improvements', () => {
 
       expect(result.success).toBe(false);
       expect(result.reason).toBe('merge_conflicts');
-      expect(mockLog.error).toHaveBeenCalledWith(
-        '❌ PR has merge conflicts. Manual resolution required.'
-      );
+      expect(mockLog.error).toHaveBeenCalledWith('❌ PR has merge conflicts. Manual resolution required.');
       expect(mockLog.info).toHaveBeenCalledWith('🔧 Resolution steps:');
     });
 
-    it('should retry when mergeable status is null', async() => {
+    it('should retry when mergeable status is null', async () => {
       // 2回目のget呼び出しのためにmockをリセット
       let callCount = 0;
       mockOctokit.pulls.get.mockImplementation(() => {
@@ -166,7 +160,7 @@ describe('Auto-Workflow Improvements', () => {
       expect(mockOctokit.pulls.merge).toHaveBeenCalledTimes(1);
     });
 
-    it('should provide detailed error analysis for GitHub API errors', async() => {
+    it('should provide detailed error analysis for GitHub API errors', async () => {
       mockOctokit.pulls.get.mockResolvedValue({
         data: {
           mergeable: true,
@@ -190,9 +184,7 @@ describe('Auto-Workflow Improvements', () => {
       expect(result.success).toBe(false);
       expect(result.reason).toBe('merge_error');
       expect(mockLog.error).toHaveBeenCalledWith(expect.stringContaining('❌ Auto-merge failed:'));
-      expect(mockLog.error).toHaveBeenCalledWith(
-        '🔒 Permission denied. Check GitHub token permissions.'
-      );
+      expect(mockLog.error).toHaveBeenCalledWith('🔒 Permission denied. Check GitHub token permissions.');
     });
   });
 
@@ -210,7 +202,7 @@ describe('Auto-Workflow Improvements', () => {
       process.cwd.mockRestore();
     });
 
-    it('should check Docker environment availability', async() => {
+    it('should check Docker environment availability', async () => {
       existsSyncMock.mockImplementation(file => {
         if (typeof file === 'string' && file.endsWith('docker-compose.dev.yml')) {
           return true;
@@ -232,7 +224,7 @@ describe('Auto-Workflow Improvements', () => {
       expect(mockExecSync).toHaveBeenCalledTimes(6);
     });
 
-    it('should fallback to local tests when Docker is unavailable', async() => {
+    it('should fallback to local tests when Docker is unavailable', async () => {
       mockExecSync
         .mockImplementationOnce(() => {
           throw new Error('Docker not found');
@@ -244,12 +236,10 @@ describe('Auto-Workflow Improvements', () => {
       expect(result.success).toBe(true);
       expect(result.environment.docker).toBe('unavailable');
       expect(result.environment.fallback).toBe(true);
-      expect(mockLog.warning).toHaveBeenCalledWith(
-        '⚠️  Docker unavailable, using fallback local testing'
-      );
+      expect(mockLog.warning).toHaveBeenCalledWith('⚠️  Docker unavailable, using fallback local testing');
     });
 
-    it('should analyze integration test output for ambiguous results', async() => {
+    it('should analyze integration test output for ambiguous results', async () => {
       existsSyncMock.mockImplementation(file => {
         if (typeof file === 'string' && file.endsWith('docker-compose.dev.yml')) {
           return true;
@@ -277,12 +267,10 @@ describe('Auto-Workflow Improvements', () => {
       expect(result.integration.status).toBe('failed');
       expect(result.integration.pending).toBeGreaterThan(0);
       expect(result.integration.hasWarnings).toBe(true);
-      expect(mockLog.warning).toHaveBeenCalledWith(
-        '⚠️  Integration tests produced ambiguous results'
-      );
+      expect(mockLog.warning).toHaveBeenCalledWith('⚠️  Integration tests produced ambiguous results');
     });
 
-    it('should handle Docker-specific errors with helpful messages', async() => {
+    it('should handle Docker-specific errors with helpful messages', async () => {
       // Docker composeファイルが必ず存在するように
       existsSyncMock.mockImplementation(file => {
         if (typeof file === 'string' && file.endsWith('docker-compose.dev.yml')) {
@@ -329,7 +317,7 @@ describe('Auto-Workflow Improvements', () => {
       duration: 120000
     };
 
-    it('should generate HTML report with comprehensive workflow data', async() => {
+    it('should generate HTML report with comprehensive workflow data', async () => {
       const result = await orchestrator.generateHTMLReport(mockWorkflowResult);
       console.log('HTML report result:', result);
 
@@ -343,7 +331,7 @@ describe('Auto-Workflow Improvements', () => {
       expect(htmlContent).toContain('✅ Success');
     });
 
-    it('should generate report even when workflow fails', async() => {
+    it('should generate report even when workflow fails', async () => {
       const failedWorkflowResult = {
         ...mockWorkflowResult,
         success: false,
@@ -364,7 +352,7 @@ describe('Auto-Workflow Improvements', () => {
       expect(htmlContent).toContain('Test execution failed');
     });
 
-    it('should handle ambiguous test results in report', async() => {
+    it('should handle ambiguous test results in report', async () => {
       const ambiguousWorkflowResult = {
         ...mockWorkflowResult,
         testResults: {
@@ -392,7 +380,7 @@ describe('Auto-Workflow Improvements', () => {
   });
 
   describe('Integration test result evaluation', () => {
-    it('should mark workflow as successful with passing unit tests and ambiguous integration tests', async() => {
+    it('should mark workflow as successful with passing unit tests and ambiguous integration tests', async () => {
       const testResults = {
         unit: { status: 'passed' },
         integration: { status: 'ambiguous' },
@@ -404,7 +392,7 @@ describe('Auto-Workflow Improvements', () => {
       expect(result).toBe(true);
     });
 
-    it('should fail workflow when unit tests fail', async() => {
+    it('should fail workflow when unit tests fail', async () => {
       const testResults = {
         unit: { status: 'failed' },
         integration: { status: 'passed' },
@@ -416,7 +404,7 @@ describe('Auto-Workflow Improvements', () => {
       expect(result).toBe(false);
     });
 
-    it('should fail workflow when integration tests fail', async() => {
+    it('should fail workflow when integration tests fail', async () => {
       const testResults = {
         unit: { status: 'passed' },
         integration: { status: 'failed' },

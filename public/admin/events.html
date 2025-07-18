@@ -460,9 +460,7 @@
           </div>
 
           <div class="form-actions">
-            <button type="button" class="btn btn-secondary" onclick="closeModal()">
-              キャンセル
-            </button>
+            <button type="button" class="btn btn-secondary" onclick="closeModal()">キャンセル</button>
             <button type="submit" class="btn btn-primary" id="submitBtn">作成</button>
           </div>
         </form>
@@ -479,9 +477,7 @@
         <p>このイベントを削除してもよろしいですか？</p>
         <p><strong id="deleteEventTitle"></strong></p>
         <div class="form-actions">
-          <button type="button" class="btn btn-secondary" onclick="closeDeleteModal()">
-            キャンセル
-          </button>
+          <button type="button" class="btn btn-secondary" onclick="closeDeleteModal()">キャンセル</button>
           <button type="button" class="btn btn-danger" onclick="confirmDelete()">削除</button>
         </div>
       </div>
@@ -642,14 +638,10 @@
 
         // Handle datetime fields
         if (event.registrationStart) {
-          document.getElementById('registrationStart').value = formatDateTimeLocal(
-            event.registrationStart
-          );
+          document.getElementById('registrationStart').value = formatDateTimeLocal(event.registrationStart);
         }
         if (event.registrationEnd) {
-          document.getElementById('registrationEnd').value = formatDateTimeLocal(
-            event.registrationEnd
-          );
+          document.getElementById('registrationEnd').value = formatDateTimeLocal(event.registrationEnd);
         }
 
         document.getElementById('eventModal').style.display = 'block';
@@ -743,10 +735,7 @@
             throw new Error(error.message || 'Failed to save event');
           }
 
-          showAlert(
-            editingEventId ? 'イベントを更新しました' : 'イベントを作成しました',
-            'success'
-          );
+          showAlert(editingEventId ? 'イベントを更新しました' : 'イベントを作成しました', 'success');
           closeModal();
           loadEvents();
         } catch (error) {

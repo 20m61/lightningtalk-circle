@@ -307,8 +307,12 @@ router.put(
       const updates = {};
 
       // Only include fields that were provided
-      if (req.body.name !== undefined) updates.name = req.body.name;
-      if (req.body.role !== undefined) updates.role = req.body.role;
+      if (req.body.name !== undefined) {
+        updates.name = req.body.name;
+      }
+      if (req.body.role !== undefined) {
+        updates.role = req.body.role;
+      }
 
       // Prevent self-demotion
       if (id === req.user.id && updates.role === 'user') {

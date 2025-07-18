@@ -150,7 +150,7 @@ export class CacheService extends EventEmitter {
     // Clear all timers
     this.timers.forEach(timer => clearTimeout(timer));
 
-    const size = this.cache.size;
+    const { size } = this.cache;
 
     this.cache.clear();
     this.metadata.clear();
@@ -195,7 +195,7 @@ export class CacheService extends EventEmitter {
     return {
       ...this.stats,
       size: this.cache.size,
-      hitRate: (hitRate * 100).toFixed(2) + '%',
+      hitRate: `${(hitRate * 100).toFixed(2)}%`,
       memoryUsage: this.calculateMemoryUsage()
     };
   }
@@ -211,7 +211,7 @@ export class CacheService extends EventEmitter {
     }
 
     // Simple pattern matching
-    const regex = new RegExp('^' + pattern.replace(/\*/g, '.*') + '$');
+    const regex = new RegExp(`^${pattern.replace(/\*/g, '.*')}$`);
     return keys.filter(key => regex.test(key));
   }
 
@@ -261,7 +261,9 @@ export class CacheService extends EventEmitter {
     // Convert to array and use built-in sort for better performance than linear scan
     const entries = Array.from(this.metadata.entries());
 
-    if (entries.length === 0) return;
+    if (entries.length === 0) {
+      return;
+    }
 
     // Sort by lastAccess time (ascending) - most recently used last
     entries.sort((a, b) => a[1].lastAccess - b[1].lastAccess);
@@ -284,7 +286,9 @@ export class CacheService extends EventEmitter {
   evictBatch(count = 10) {
     const entries = Array.from(this.metadata.entries());
 
-    if (entries.length === 0) return 0;
+    if (entries.length === 0) {
+      return 0;
+    }
 
     // Sort by lastAccess time and evict multiple items
     entries.sort((a, b) => a[1].lastAccess - b[1].lastAccess);

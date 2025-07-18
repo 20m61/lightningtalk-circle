@@ -36,7 +36,7 @@ class EmergencyContactSystem {
       await this.loadSystemContacts();
       this.setupQuickAccess();
       this.attachEventListeners();
-      
+
       this.isInitialized = true;
       console.log('Emergency Contact System initialized successfully');
     } catch (error) {
@@ -92,12 +92,14 @@ class EmergencyContactSystem {
    * Load event-specific emergency contacts
    */
   async loadEventContacts(eventId) {
-    if (!eventId) return;
+    if (!eventId) {
+      return;
+    }
 
     try {
       const response = await fetch(`${this.options.apiEndpoint}/events/${eventId}`, {
         headers: {
-          'Authorization': `Bearer ${this.authToken}`,
+          Authorization: `Bearer ${this.authToken}`,
           'Content-Type': 'application/json'
         }
       });
@@ -105,7 +107,7 @@ class EmergencyContactSystem {
       if (response.ok) {
         const result = await response.json();
         this.eventContacts = result.data || [];
-        
+
         // Add event contacts to the main contacts map
         this.eventContacts.forEach(contact => {
           this.contacts.set(contact.id, { ...contact, isEvent: true });
@@ -122,7 +124,9 @@ class EmergencyContactSystem {
    * Setup quick access emergency widget
    */
   setupQuickAccess() {
-    if (!this.options.quickAccessEnabled) return;
+    if (!this.options.quickAccessEnabled) {
+      return;
+    }
 
     // Create quick access widget
     this.quickAccessWidget = document.createElement('div');
@@ -143,7 +147,7 @@ class EmergencyContactSystem {
     });
 
     // Close when clicking outside
-    document.addEventListener('click', (e) => {
+    document.addEventListener('click', e => {
       if (!this.quickAccessWidget.contains(e.target)) {
         panel.classList.remove('open');
         toggleBtn.classList.remove('active');
@@ -175,7 +179,9 @@ class EmergencyContactSystem {
         </div>
         
         <div class="emergency-quick-contacts">
-          ${priorityContacts.map(contact => `
+          ${priorityContacts
+            .map(
+              contact => `
             <div class="emergency-contact-item" data-type="${contact.type}">
               <div class="contact-info">
                 <span class="contact-icon">${this.getTypeIcon(contact.type)}</span>
@@ -190,7 +196,9 @@ class EmergencyContactSystem {
                 <span class="phone-number">${contact.phone}</span>
               </button>
             </div>
-          `).join('')}
+          `
+            )
+            .join('')}
         </div>
         
         <div class="emergency-actions">
@@ -209,7 +217,9 @@ class EmergencyContactSystem {
    * Update quick access widget
    */
   updateQuickAccess() {
-    if (!this.quickAccessWidget) return;
+    if (!this.quickAccessWidget) {
+      return;
+    }
 
     const quickContacts = this.quickAccessWidget.querySelector('.emergency-quick-contacts');
     if (quickContacts) {
@@ -218,7 +228,9 @@ class EmergencyContactSystem {
         .sort((a, b) => a.priority - b.priority)
         .slice(0, 4);
 
-      quickContacts.innerHTML = priorityContacts.map(contact => `
+      quickContacts.innerHTML = priorityContacts
+        .map(
+          contact => `
         <div class="emergency-contact-item" data-type="${contact.type}">
           <div class="contact-info">
             <span class="contact-icon">${this.getTypeIcon(contact.type)}</span>
@@ -233,7 +245,9 @@ class EmergencyContactSystem {
             <span class="phone-number">${contact.phone}</span>
           </button>
         </div>
-      `).join('');
+      `
+        )
+        .join('');
     }
   }
 
@@ -253,14 +267,14 @@ class EmergencyContactSystem {
     };
 
     modal.querySelector('.modal-close').addEventListener('click', closeModal);
-    modal.querySelector('.modal-overlay').addEventListener('click', (e) => {
+    modal.querySelector('.modal-overlay').addEventListener('click', e => {
       if (e.target === e.currentTarget) {
         closeModal();
       }
     });
 
     // ESC key support
-    const handleEscape = (e) => {
+    const handleEscape = e => {
       if (e.key === 'Escape') {
         closeModal();
         document.removeEventListener('keydown', handleEscape);
@@ -284,20 +298,28 @@ class EmergencyContactSystem {
           </div>
           
           <div class="modal-content">
-            ${Object.entries(contactsByType).map(([type, contacts]) => `
+            ${Object.entries(contactsByType)
+              .map(
+                ([type, contacts]) => `
               <div class="contact-type-section">
                 <h3>${this.getTypeIcon(type)} ${this.getTypeName(type)}</h3>
                 <div class="contact-list">
-                  ${contacts.map(contact => `
+                  ${contacts
+                    .map(
+                      contact => `
                     <div class="contact-item ${contact.isSystem ? 'system' : contact.isEvent ? 'event' : ''}">
                       <div class="contact-main-info">
                         <div class="contact-name-phone">
                           <span class="contact-name">${contact.name}</span>
                           <span class="contact-phone-display">${contact.phone}</span>
                         </div>
-                        ${contact.description ? `
+                        ${
+                          contact.description
+                            ? `
                           <div class="contact-description">${contact.description}</div>
-                        ` : ''}
+                        `
+                            : ''
+                        }
                       </div>
                       
                       <div class="contact-actions">
@@ -306,13 +328,17 @@ class EmergencyContactSystem {
                                 title="電話をかける">
                           📞 電話
                         </button>
-                        ${contact.isEvent ? `
+                        ${
+                          contact.isEvent
+                            ? `
                           <button class="contact-action-btn edit" 
                                   onclick="emergencySystem.editContact('${contact.id}')"
                                   title="編集">
                             ✏️ 編集
                           </button>
-                        ` : ''}
+                        `
+                            : ''
+                        }
                       </div>
                       
                       <div class="contact-meta">
@@ -321,10 +347,14 @@ class EmergencyContactSystem {
                         ${contact.isEvent ? '<span class="event-badge">イベント</span>' : ''}
                       </div>
                     </div>
-                  `).join('')}
+                  `
+                    )
+                    .join('')}
                 </div>
               </div>
-            `).join('')}
+            `
+              )
+              .join('')}
           </div>
           
           <div class="modal-footer">
@@ -345,7 +375,7 @@ class EmergencyContactSystem {
    */
   groupContactsByType() {
     const grouped = {};
-    
+
     for (const contact of this.contacts.values()) {
       if (!grouped[contact.type]) {
         grouped[contact.type] = [];
@@ -376,7 +406,7 @@ class EmergencyContactSystem {
     if (confirmed) {
       // Open phone dialer
       window.location.href = `tel:${phoneNumber}`;
-      
+
       // Show call confirmation
       this.showCallConfirmation(contactName, phoneNumber);
     }
@@ -440,11 +470,13 @@ class EmergencyContactSystem {
    */
   async sendAlert() {
     const alertType = await this.selectAlertType();
-    if (!alertType) return;
+    if (!alertType) {
+      return;
+    }
 
     try {
       const position = await this.getCurrentPosition();
-      
+
       const alertData = {
         type: alertType,
         timestamp: new Date().toISOString(),
@@ -456,7 +488,7 @@ class EmergencyContactSystem {
       const response = await fetch(`${this.options.apiEndpoint}/alert`, {
         method: 'POST',
         headers: {
-          'Authorization': `Bearer ${this.authToken}`,
+          Authorization: `Bearer ${this.authToken}`,
           'Content-Type': 'application/json'
         },
         body: JSON.stringify(alertData)
@@ -478,19 +510,23 @@ class EmergencyContactSystem {
    * Select alert type dialog
    */
   async selectAlertType() {
-    return new Promise((resolve) => {
+    return new Promise(resolve => {
       const modal = document.createElement('div');
       modal.className = 'alert-type-modal';
       modal.innerHTML = `
         <div class="alert-type-content">
           <h3>緊急事態の種類を選択してください</h3>
           <div class="alert-types">
-            ${this.options.emergencyTypes.map(type => `
+            ${this.options.emergencyTypes
+              .map(
+                type => `
               <button class="alert-type-btn" data-type="${type.id}">
                 <span class="alert-type-icon">${type.icon}</span>
                 <span class="alert-type-name">${type.name}</span>
               </button>
-            `).join('')}
+            `
+              )
+              .join('')}
           </div>
           <button class="alert-cancel-btn">キャンセル</button>
         </div>
@@ -498,9 +534,9 @@ class EmergencyContactSystem {
 
       document.body.appendChild(modal);
 
-      modal.addEventListener('click', (e) => {
+      modal.addEventListener('click', e => {
         if (e.target.matches('.alert-type-btn')) {
-          const type = e.target.dataset.type;
+          const { type } = e.target.dataset;
           document.body.removeChild(modal);
           resolve(type);
         } else if (e.target.matches('.alert-cancel-btn')) {
@@ -522,14 +558,14 @@ class EmergencyContactSystem {
       }
 
       navigator.geolocation.getCurrentPosition(
-        (position) => {
+        position => {
           resolve({
             lat: position.coords.latitude,
             lng: position.coords.longitude,
             accuracy: position.coords.accuracy
           });
         },
-        (error) => {
+        error => {
           reject(error);
         },
         {
@@ -573,7 +609,7 @@ class EmergencyContactSystem {
     fetch('/api/emergency-contacts/log', {
       method: 'POST',
       headers: {
-        'Authorization': `Bearer ${this.authToken}`,
+        Authorization: `Bearer ${this.authToken}`,
         'Content-Type': 'application/json'
       },
       body: JSON.stringify(logEntry)
@@ -593,7 +629,7 @@ class EmergencyContactSystem {
    */
   attachEventListeners() {
     // Keyboard shortcuts for quick access
-    document.addEventListener('keydown', (e) => {
+    document.addEventListener('keydown', e => {
       // Ctrl/Cmd + Shift + E for emergency
       if ((e.ctrlKey || e.metaKey) && e.shiftKey && e.key === 'E') {
         e.preventDefault();
@@ -625,10 +661,12 @@ class EmergencyContactSystem {
   getCurrentEventId() {
     // Try to get from various sources
     const params = new URLSearchParams(window.location.search);
-    return params.get('eventId') || 
-           document.querySelector('meta[name="event-id"]')?.content ||
-           localStorage.getItem('currentEventId') ||
-           null;
+    return (
+      params.get('eventId') ||
+      document.querySelector('meta[name="event-id"]')?.content ||
+      localStorage.getItem('currentEventId') ||
+      null
+    );
   }
 
   /**
@@ -659,14 +697,17 @@ class EmergencyContactSystem {
     const notification = document.createElement('div');
     notification.className = `emergency-notification ${type}`;
     notification.textContent = message;
-    
+
     document.body.appendChild(notification);
-    
-    setTimeout(() => {
-      if (notification.parentNode) {
-        notification.remove();
-      }
-    }, type === 'error' ? 5000 : 3000);
+
+    setTimeout(
+      () => {
+        if (notification.parentNode) {
+          notification.remove();
+        }
+      },
+      type === 'error' ? 5000 : 3000
+    );
   }
 
   /**
@@ -677,7 +718,7 @@ class EmergencyContactSystem {
       this.quickAccessWidget.remove();
       this.quickAccessWidget = null;
     }
-    
+
     this.contacts.clear();
     this.eventContacts = [];
     this.isInitialized = false;
@@ -690,7 +731,7 @@ let emergencySystem = null;
 // Initialize when DOM is ready
 document.addEventListener('DOMContentLoaded', () => {
   emergencySystem = new EmergencyContactSystem();
-  
+
   // Make globally accessible
   window.emergencySystem = emergencySystem;
 });

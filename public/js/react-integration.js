@@ -19,7 +19,9 @@ class LightningTalkApp {
   }
 
   init() {
-    if (this.isInitialized) return;
+    if (this.isInitialized) {
+      return;
+    }
 
     try {
       this.initAuthHeader();
@@ -34,7 +36,9 @@ class LightningTalkApp {
 
   initAuthHeader() {
     const authContainer = document.getElementById('auth-header');
-    if (!authContainer) return;
+    if (!authContainer) {
+      return;
+    }
 
     const root = createRoot(authContainer);
     root.render(
@@ -50,7 +54,9 @@ class LightningTalkApp {
 
   initRegistrationButton() {
     const buttonContainer = document.getElementById('registration-button');
-    if (!buttonContainer) return;
+    if (!buttonContainer) {
+      return;
+    }
 
     const root = createRoot(buttonContainer);
     root.render(
@@ -70,7 +76,9 @@ class LightningTalkApp {
 
   initParticipantCounter() {
     const counterContainer = document.getElementById('participant-counter');
-    if (!counterContainer) return;
+    if (!counterContainer) {
+      return;
+    }
 
     const root = createRoot(counterContainer);
     root.render(

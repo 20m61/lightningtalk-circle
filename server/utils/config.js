@@ -15,12 +15,12 @@ const configSchema = {
   NODE_ENV: {
     required: false,
     default: 'development',
-    validate: (value) => ['development', 'test', 'production'].includes(value)
+    validate: value => ['development', 'test', 'production'].includes(value)
   },
   PORT: {
     required: false,
     default: '3000',
-    validate: (value) => !isNaN(parseInt(value)) && parseInt(value) > 0
+    validate: value => !isNaN(parseInt(value)) && parseInt(value) > 0
   },
 
   // Security
@@ -28,26 +28,26 @@ const configSchema = {
     required: true,
     production: true,
     minLength: 32,
-    validate: (value) => value && value.length >= 32
+    validate: value => value && value.length >= 32
   },
   REFRESH_TOKEN_SECRET: {
     required: false,
     default: null,
-    validate: (value) => !value || value.length >= 32
+    validate: value => !value || value.length >= 32
   },
 
   // Database
   DATABASE_TYPE: {
     required: false,
     default: 'filesystem',
-    validate: (value) => ['filesystem', 'postgresql', 'dynamodb'].includes(value)
+    validate: value => ['filesystem', 'postgresql', 'dynamodb'].includes(value)
   },
 
   // GitHub integration
   GITHUB_TOKEN: {
     required: false,
     production: false,
-    validate: (value) => !value || value.startsWith('ghp_') || value.startsWith('github_pat_')
+    validate: value => !value || value.startsWith('ghp_') || value.startsWith('github_pat_')
   },
   GITHUB_OWNER: {
     required: false,
@@ -62,7 +62,7 @@ const configSchema = {
   EMAIL_SERVICE: {
     required: false,
     default: 'test',
-    validate: (value) => ['gmail', 'smtp', 'test'].includes(value)
+    validate: value => ['gmail', 'smtp', 'test'].includes(value)
   },
   EMAIL_USER: {
     required: false,
@@ -77,24 +77,24 @@ const configSchema = {
   CACHE_MAX_SIZE: {
     required: false,
     default: '1000',
-    validate: (value) => !isNaN(parseInt(value)) && parseInt(value) > 0
+    validate: value => !isNaN(parseInt(value)) && parseInt(value) > 0
   },
   CACHE_DEFAULT_TTL: {
     required: false,
     default: '3600000', // 1 hour
-    validate: (value) => !isNaN(parseInt(value)) && parseInt(value) > 0
+    validate: value => !isNaN(parseInt(value)) && parseInt(value) > 0
   },
 
   // WebSocket configuration
   WS_PING_TIMEOUT: {
     required: false,
     default: '60000',
-    validate: (value) => !isNaN(parseInt(value)) && parseInt(value) > 0
+    validate: value => !isNaN(parseInt(value)) && parseInt(value) > 0
   },
   WS_PING_INTERVAL: {
     required: false,
     default: '25000',
-    validate: (value) => !isNaN(parseInt(value)) && parseInt(value) > 0
+    validate: value => !isNaN(parseInt(value)) && parseInt(value) > 0
   }
 };
 
@@ -109,7 +109,7 @@ export function loadConfig() {
   // Check each configuration item
   for (const [key, schema] of Object.entries(configSchema)) {
     const value = process.env[key];
-    
+
     // Check if required
     if (schema.required && !value) {
       errors.push(`Missing required environment variable: ${key}`);
@@ -124,7 +124,7 @@ export function loadConfig() {
 
     // Use default if not provided
     const finalValue = value || schema.default;
-    
+
     // Validate value
     if (finalValue && schema.validate && !schema.validate(finalValue)) {
       errors.push(`Invalid value for ${key}: ${finalValue}`);
@@ -165,39 +165,39 @@ export function loadConfig() {
  */
 export function getConfig() {
   const config = loadConfig();
-  
+
   return {
     // Server
     nodeEnv: config.NODE_ENV,
     port: parseInt(config.PORT),
-    
+
     // Security
     jwtSecret: config.JWT_SECRET,
     refreshTokenSecret: config.REFRESH_TOKEN_SECRET,
-    
+
     // Database
     databaseType: config.DATABASE_TYPE,
-    
+
     // GitHub
     github: {
       token: config.GITHUB_TOKEN,
       owner: config.GITHUB_OWNER,
       repo: config.GITHUB_REPO
     },
-    
+
     // Email
     email: {
       service: config.EMAIL_SERVICE,
       user: config.EMAIL_USER,
       pass: config.EMAIL_PASS
     },
-    
+
     // Cache
     cache: {
       maxSize: parseInt(config.CACHE_MAX_SIZE),
       defaultTTL: parseInt(config.CACHE_DEFAULT_TTL)
     },
-    
+
     // WebSocket
     websocket: {
       pingTimeout: parseInt(config.WS_PING_TIMEOUT),

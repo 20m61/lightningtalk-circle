@@ -132,7 +132,7 @@ class ProductionLogger {
       const entry = JSON.parse(logString);
       const timestamp = entry.timestamp.split('T')[1].split('.')[0];
       const level = entry.level.padEnd(5);
-      const message = entry.message;
+      const { message } = entry;
       const metadata = { ...entry };
       delete metadata.timestamp;
       delete metadata.level;
@@ -151,7 +151,9 @@ class ProductionLogger {
    * バッファのフラッシュ
    */
   flushBuffer() {
-    if (this.logBuffer.length === 0) return;
+    if (this.logBuffer.length === 0) {
+      return;
+    }
 
     const logs = [...this.logBuffer];
     this.logBuffer = [];
@@ -333,4 +335,4 @@ class ProductionLogger {
 // シングルトンインスタンス
 const logger = new ProductionLogger();
 
-module.exports = logger;
+export default logger;

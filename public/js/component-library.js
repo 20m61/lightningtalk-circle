@@ -11,27 +11,27 @@
     version: '1.1.0',
 
     // Component constructors
-    Header: Header,
-    EventCard: EventCard,
-    Button: Button,
-    Input: Input,
-    Modal: Modal,
-    Toast: Toast,
+    Header,
+    EventCard,
+    Button,
+    Input,
+    Modal,
+    Toast,
 
     // Utility functions
     utils: {
-      formatDate: formatDate,
-      debounce: debounce,
-      throttle: throttle,
-      addClass: addClass,
-      removeClass: removeClass,
-      hasClass: hasClass,
-      toggleClass: toggleClass
+      formatDate,
+      debounce,
+      throttle,
+      addClass,
+      removeClass,
+      hasClass,
+      toggleClass
     },
 
     // Initialize all components
-    init: function () {
-      console.log('Lightning Talk Components v' + this.version + ' initialized');
+    init() {
+      console.log(`Lightning Talk Components v${this.version} initialized`);
 
       // Auto-initialize components with data attributes
       this.autoInit();
@@ -41,50 +41,50 @@
     },
 
     // Auto-initialize components
-    autoInit: function () {
+    autoInit() {
       // Initialize headers
-      document.querySelectorAll('[data-component="header"]').forEach(function (element) {
+      document.querySelectorAll('[data-component="header"]').forEach(element => {
         new Header(element);
       });
 
       // Initialize event cards
-      document.querySelectorAll('[data-component="event-card"]').forEach(function (element) {
+      document.querySelectorAll('[data-component="event-card"]').forEach(element => {
         new EventCard(element);
       });
 
       // Initialize buttons
-      document.querySelectorAll('[data-component="button"]').forEach(function (element) {
+      document.querySelectorAll('[data-component="button"]').forEach(element => {
         new Button(element);
       });
 
       // Initialize inputs
-      document.querySelectorAll('[data-component="input"]').forEach(function (element) {
+      document.querySelectorAll('[data-component="input"]').forEach(element => {
         new Input(element);
       });
 
       // Initialize modals
-      document.querySelectorAll('[data-component="modal"]').forEach(function (element) {
+      document.querySelectorAll('[data-component="modal"]').forEach(element => {
         new Modal(element);
       });
     },
 
     // Setup global event listeners
-    setupGlobalListeners: function () {
+    setupGlobalListeners() {
       // Close modals with Escape key
-      document.addEventListener('keydown', function (event) {
+      document.addEventListener('keydown', event => {
         if (event.key === 'Escape') {
           const openModals = document.querySelectorAll('.lt-modal--open');
-          openModals.forEach(function (modal) {
+          openModals.forEach(modal => {
             modal.dispatchEvent(new CustomEvent('modal:close'));
           });
         }
       });
 
       // Auto-dismiss toasts
-      document.addEventListener('toast:show', function (event) {
+      document.addEventListener('toast:show', event => {
         const toast = event.detail.element;
         if (toast.getAttribute('data-auto-dismiss') !== 'false') {
-          setTimeout(function () {
+          setTimeout(() => {
             if (toast.parentNode) {
               toast.remove();
             }
@@ -109,7 +109,7 @@
   }
 
   Header.prototype = {
-    init: function () {
+    init() {
       this.setupEventListeners();
       this.handleResize();
 
@@ -118,13 +118,13 @@
       }
     },
 
-    setupEventListeners: function () {
-      var self = this;
+    setupEventListeners() {
+      const self = this;
 
       // Mobile menu toggle
-      var mobileToggle = this.element.querySelector('.lt-header__mobile-toggle');
+      const mobileToggle = this.element.querySelector('.lt-header__mobile-toggle');
       if (mobileToggle) {
-        mobileToggle.addEventListener('click', function () {
+        mobileToggle.addEventListener('click', () => {
           self.toggleMobileMenu();
         });
       }
@@ -132,25 +132,25 @@
       // Window resize
       window.addEventListener(
         'resize',
-        debounce(function () {
+        debounce(() => {
           self.handleResize();
         }, 250)
       );
     },
 
-    toggleMobileMenu: function () {
-      var mobileNav = this.element.querySelector('.lt-header__mobile-nav');
+    toggleMobileMenu() {
+      const mobileNav = this.element.querySelector('.lt-header__mobile-nav');
       if (mobileNav) {
         toggleClass(mobileNav, 'lt-header__mobile-nav--open');
         toggleClass(this.element, 'lt-header--mobile-open');
       }
     },
 
-    handleResize: function () {
-      var isMobile = window.innerWidth < this.options.mobileBreakpoint;
+    handleResize() {
+      const isMobile = window.innerWidth < this.options.mobileBreakpoint;
 
       if (!isMobile) {
-        var mobileNav = this.element.querySelector('.lt-header__mobile-nav');
+        const mobileNav = this.element.querySelector('.lt-header__mobile-nav');
         if (mobileNav) {
           removeClass(mobileNav, 'lt-header__mobile-nav--open');
           removeClass(this.element, 'lt-header--mobile-open');
@@ -158,7 +158,7 @@
       }
     },
 
-    makeSticky: function () {
+    makeSticky() {
       addClass(this.element, 'lt-header--sticky');
     }
   };
@@ -179,22 +179,22 @@
   }
 
   EventCard.prototype = {
-    init: function () {
+    init() {
       this.setupEventListeners();
       this.updateStatus();
     },
 
-    setupEventListeners: function () {
-      var self = this;
+    setupEventListeners() {
+      const self = this;
 
       if (this.options.interactive) {
-        this.element.addEventListener('click', function (event) {
+        this.element.addEventListener('click', event => {
           if (!event.target.closest('.lt-button')) {
             self.handleCardClick(event);
           }
         });
 
-        this.element.addEventListener('keydown', function (event) {
+        this.element.addEventListener('keydown', event => {
           if (event.key === 'Enter' || event.key === ' ') {
             event.preventDefault();
             self.handleCardClick(event);
@@ -203,36 +203,36 @@
       }
 
       // Participate button
-      var participateButton = this.element.querySelector('.lt-event-card__participate-button');
+      const participateButton = this.element.querySelector('.lt-event-card__participate-button');
       if (participateButton) {
-        participateButton.addEventListener('click', function (event) {
+        participateButton.addEventListener('click', event => {
           event.stopPropagation();
           self.handleParticipation();
         });
       }
 
       // Details button
-      var detailsButton = this.element.querySelector('.lt-event-card__details-button');
+      const detailsButton = this.element.querySelector('.lt-event-card__details-button');
       if (detailsButton) {
-        detailsButton.addEventListener('click', function (event) {
+        detailsButton.addEventListener('click', event => {
           event.stopPropagation();
           self.handleViewDetails();
         });
       }
     },
 
-    handleCardClick: function (event) {
+    handleCardClick(event) {
       this.element.dispatchEvent(
         new CustomEvent('eventcard:click', {
           detail: {
             element: this.element,
-            event: event
+            event
           }
         })
       );
     },
 
-    handleParticipation: function () {
+    handleParticipation() {
       this.element.dispatchEvent(
         new CustomEvent('eventcard:participate', {
           detail: {
@@ -243,7 +243,7 @@
       );
     },
 
-    handleViewDetails: function () {
+    handleViewDetails() {
       this.element.dispatchEvent(
         new CustomEvent('eventcard:details', {
           detail: {
@@ -254,16 +254,16 @@
       );
     },
 
-    updateStatus: function () {
-      var status = this.element.getAttribute('data-status');
-      var statusBadge = this.element.querySelector('.lt-event-card__status-badge');
+    updateStatus() {
+      const status = this.element.getAttribute('data-status');
+      const statusBadge = this.element.querySelector('.lt-event-card__status-badge');
 
       if (statusBadge && status) {
         removeClass(statusBadge, 'lt-event-card__status-badge--upcoming');
         removeClass(statusBadge, 'lt-event-card__status-badge--ongoing');
         removeClass(statusBadge, 'lt-event-card__status-badge--completed');
 
-        addClass(statusBadge, 'lt-event-card__status-badge--' + status);
+        addClass(statusBadge, `lt-event-card__status-badge--${status}`);
       }
     }
   };
@@ -283,20 +283,20 @@
   }
 
   Button.prototype = {
-    init: function () {
+    init() {
       this.setupEventListeners();
     },
 
-    setupEventListeners: function () {
-      var self = this;
+    setupEventListeners() {
+      const self = this;
 
       if (this.options.ripple) {
-        this.element.addEventListener('click', function (event) {
+        this.element.addEventListener('click', event => {
           self.createRipple(event);
         });
       }
 
-      this.element.addEventListener('keydown', function (event) {
+      this.element.addEventListener('keydown', event => {
         if (event.key === 'Enter' || event.key === ' ') {
           event.preventDefault();
           self.element.click();
@@ -304,29 +304,29 @@
       });
     },
 
-    createRipple: function (event) {
-      var ripple = document.createElement('span');
-      var rect = this.element.getBoundingClientRect();
-      var size = Math.max(rect.width, rect.height);
+    createRipple(event) {
+      const ripple = document.createElement('span');
+      const rect = this.element.getBoundingClientRect();
+      const size = Math.max(rect.width, rect.height);
 
-      ripple.style.width = ripple.style.height = size + 'px';
-      ripple.style.left = event.clientX - rect.left - size / 2 + 'px';
-      ripple.style.top = event.clientY - rect.top - size / 2 + 'px';
+      ripple.style.width = ripple.style.height = `${size}px`;
+      ripple.style.left = `${event.clientX - rect.left - size / 2}px`;
+      ripple.style.top = `${event.clientY - rect.top - size / 2}px`;
       ripple.classList.add('lt-button__ripple');
 
-      var existingRipple = this.element.querySelector('.lt-button__ripple');
+      const existingRipple = this.element.querySelector('.lt-button__ripple');
       if (existingRipple) {
         existingRipple.remove();
       }
 
       this.element.appendChild(ripple);
 
-      setTimeout(function () {
+      setTimeout(() => {
         ripple.remove();
       }, 600);
     },
 
-    setLoading: function (loading) {
+    setLoading(loading) {
       if (loading) {
         this.element.setAttribute('data-loading', 'true');
         this.element.disabled = true;
@@ -358,39 +358,39 @@
   }
 
   Input.prototype = {
-    init: function () {
+    init() {
       this.setupEventListeners();
       this.updateCharCount();
     },
 
-    setupEventListeners: function () {
-      var self = this;
+    setupEventListeners() {
+      const self = this;
 
-      this.element.addEventListener('input', function () {
+      this.element.addEventListener('input', () => {
         self.updateCharCount();
         self.clearError();
       });
 
-      this.element.addEventListener('blur', function () {
+      this.element.addEventListener('blur', () => {
         if (self.options.validateOnBlur) {
           self.validate();
         }
       });
 
-      this.element.addEventListener('focus', function () {
+      this.element.addEventListener('focus', () => {
         self.clearError();
       });
     },
 
-    updateCharCount: function () {
+    updateCharCount() {
       if (this.options.showCharCount) {
-        var charCountElement = this.element.parentNode.querySelector('.lt-input__char-count');
+        const charCountElement = this.element.parentNode.querySelector('.lt-input__char-count');
         if (charCountElement) {
-          var currentLength = this.element.value.length;
-          var maxLength = this.options.maxLength || this.element.getAttribute('maxlength');
+          const currentLength = this.element.value.length;
+          const maxLength = this.options.maxLength || this.element.getAttribute('maxlength');
 
           if (maxLength) {
-            charCountElement.textContent = currentLength + '/' + maxLength;
+            charCountElement.textContent = `${currentLength}/${maxLength}`;
           } else {
             charCountElement.textContent = currentLength;
           }
@@ -398,9 +398,9 @@
       }
     },
 
-    validate: function () {
-      var isValid = true;
-      var errorMessage = '';
+    validate() {
+      let isValid = true;
+      let errorMessage = '';
 
       // Required validation
       if (this.element.hasAttribute('required') && !this.element.value.trim()) {
@@ -410,7 +410,7 @@
 
       // Email validation
       if (this.element.type === 'email' && this.element.value) {
-        var emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         if (!emailRegex.test(this.element.value)) {
           isValid = false;
           errorMessage = 'Please enter a valid email address';
@@ -418,9 +418,9 @@
       }
 
       // Custom validation
-      var customValidator = this.element.getAttribute('data-validator');
+      const customValidator = this.element.getAttribute('data-validator');
       if (customValidator && window[customValidator]) {
-        var customResult = window[customValidator](this.element.value);
+        const customResult = window[customValidator](this.element.value);
         if (!customResult.isValid) {
           isValid = false;
           errorMessage = customResult.message;
@@ -434,10 +434,10 @@
       return isValid;
     },
 
-    showError: function (message) {
+    showError(message) {
       addClass(this.element, 'lt-input--error');
 
-      var errorElement = this.element.parentNode.querySelector('.lt-input__error');
+      let errorElement = this.element.parentNode.querySelector('.lt-input__error');
       if (!errorElement) {
         errorElement = document.createElement('div');
         errorElement.className = 'lt-input__error';
@@ -447,20 +447,20 @@
       errorElement.textContent = message;
     },
 
-    clearError: function () {
+    clearError() {
       removeClass(this.element, 'lt-input--error');
 
-      var errorElement = this.element.parentNode.querySelector('.lt-input__error');
+      const errorElement = this.element.parentNode.querySelector('.lt-input__error');
       if (errorElement) {
         errorElement.remove();
       }
     },
 
-    getValue: function () {
+    getValue() {
       return this.element.value;
     },
 
-    setValue: function (value) {
+    setValue(value) {
       this.element.value = value;
       this.updateCharCount();
     }
@@ -482,24 +482,24 @@
   }
 
   Modal.prototype = {
-    init: function () {
+    init() {
       this.setupEventListeners();
     },
 
-    setupEventListeners: function () {
-      var self = this;
+    setupEventListeners() {
+      const self = this;
 
       // Close button
-      var closeButton = this.element.querySelector('.lt-modal__close');
+      const closeButton = this.element.querySelector('.lt-modal__close');
       if (closeButton) {
-        closeButton.addEventListener('click', function () {
+        closeButton.addEventListener('click', () => {
           self.close();
         });
       }
 
       // Backdrop click
       if (this.options.closeOnBackdrop) {
-        this.element.addEventListener('click', function (event) {
+        this.element.addEventListener('click', event => {
           if (event.target === self.element) {
             self.close();
           }
@@ -507,16 +507,16 @@
       }
 
       // Custom events
-      this.element.addEventListener('modal:open', function () {
+      this.element.addEventListener('modal:open', () => {
         self.open();
       });
 
-      this.element.addEventListener('modal:close', function () {
+      this.element.addEventListener('modal:close', () => {
         self.close();
       });
     },
 
-    open: function () {
+    open() {
       addClass(this.element, 'lt-modal--open');
 
       if (this.options.preventBodyScroll) {
@@ -524,7 +524,7 @@
       }
 
       // Focus management
-      var focusableElements = this.element.querySelectorAll(
+      const focusableElements = this.element.querySelectorAll(
         'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
       );
       if (focusableElements.length > 0) {
@@ -534,7 +534,7 @@
       this.element.dispatchEvent(new CustomEvent('modal:opened'));
     },
 
-    close: function () {
+    close() {
       removeClass(this.element, 'lt-modal--open');
 
       if (this.options.preventBodyScroll) {
@@ -544,7 +544,7 @@
       this.element.dispatchEvent(new CustomEvent('modal:closed'));
     },
 
-    toggle: function () {
+    toggle() {
       if (hasClass(this.element, 'lt-modal--open')) {
         this.close();
       } else {
@@ -570,27 +570,27 @@
   }
 
   Toast.prototype = {
-    init: function () {
+    init() {
       this.createElement();
       this.setupEventListeners();
       this.show();
     },
 
-    createElement: function () {
+    createElement() {
       this.element = document.createElement('div');
-      this.element.className = 'lt-toast lt-toast--' + this.options.type;
+      this.element.className = `lt-toast lt-toast--${this.options.type}`;
 
-      var content = document.createElement('div');
+      const content = document.createElement('div');
       content.className = 'lt-toast__content';
 
-      var message = document.createElement('span');
+      const message = document.createElement('span');
       message.className = 'lt-toast__message';
       message.textContent = this.options.message;
 
       content.appendChild(message);
 
       if (this.options.closable) {
-        var closeButton = document.createElement('button');
+        const closeButton = document.createElement('button');
         closeButton.className = 'lt-toast__close';
         closeButton.innerHTML = '×';
         closeButton.setAttribute('aria-label', 'Close notification');
@@ -600,28 +600,28 @@
       this.element.appendChild(content);
     },
 
-    setupEventListeners: function () {
-      var self = this;
+    setupEventListeners() {
+      const self = this;
 
       if (this.options.closable) {
-        var closeButton = this.element.querySelector('.lt-toast__close');
+        const closeButton = this.element.querySelector('.lt-toast__close');
         if (closeButton) {
-          closeButton.addEventListener('click', function () {
+          closeButton.addEventListener('click', () => {
             self.hide();
           });
         }
       }
 
       if (this.options.duration > 0) {
-        setTimeout(function () {
+        setTimeout(() => {
           self.hide();
         }, this.options.duration);
       }
     },
 
-    show: function () {
-      var container = this.options.container || document.body;
-      var toastContainer = container.querySelector('.lt-toast-container');
+    show() {
+      const container = this.options.container || document.body;
+      let toastContainer = container.querySelector('.lt-toast-container');
 
       if (!toastContainer) {
         toastContainer = document.createElement('div');
@@ -642,12 +642,12 @@
       );
     },
 
-    hide: function () {
-      var self = this;
+    hide() {
+      const self = this;
 
       addClass(this.element, 'lt-toast--hiding');
 
-      setTimeout(function () {
+      setTimeout(() => {
         if (self.element.parentNode) {
           self.element.remove();
         }
@@ -666,7 +666,7 @@
 
   // Utility Functions
   function formatDate(dateString) {
-    var date = new Date(dateString);
+    const date = new Date(dateString);
     return date.toLocaleDateString('ja-JP', {
       year: 'numeric',
       month: 'long',
@@ -676,11 +676,11 @@
   }
 
   function debounce(func, wait) {
-    var timeout;
+    let timeout;
     return function executedFunction() {
-      var context = this;
-      var args = arguments;
-      var later = function () {
+      const context = this;
+      const args = arguments;
+      const later = function () {
         timeout = null;
         func.apply(context, args);
       };
@@ -690,14 +690,14 @@
   }
 
   function throttle(func, limit) {
-    var inThrottle;
+    let inThrottle;
     return function () {
-      var args = arguments;
-      var context = this;
+      const args = arguments;
+      const context = this;
       if (!inThrottle) {
         func.apply(context, args);
         inThrottle = true;
-        setTimeout(function () {
+        setTimeout(() => {
           inThrottle = false;
         }, limit);
       }
@@ -708,7 +708,7 @@
     if (element.classList) {
       element.classList.add(className);
     } else {
-      element.className += ' ' + className;
+      element.className += ` ${className}`;
     }
   }
 
@@ -717,7 +717,7 @@
       element.classList.remove(className);
     } else {
       element.className = element.className.replace(
-        new RegExp('(^|\\b)' + className.split(' ').join('|') + '(\\b|$)', 'gi'),
+        new RegExp(`(^|\\b)${className.split(' ').join('|')}(\\b|$)`, 'gi'),
         ' '
       );
     }
@@ -727,7 +727,7 @@
     if (element.classList) {
       return element.classList.contains(className);
     } else {
-      return new RegExp('(^| )' + className + '( |$)', 'gi').test(element.className);
+      return new RegExp(`(^| )${className}( |$)`, 'gi').test(element.className);
     }
   }
 
@@ -745,7 +745,7 @@
 
   // Auto-initialize when DOM is ready
   if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', function () {
+    document.addEventListener('DOMContentLoaded', () => {
       LightningTalkComponents.init();
     });
   } else {

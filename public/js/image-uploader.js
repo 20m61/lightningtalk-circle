@@ -255,7 +255,9 @@ class ImageUploader {
   async uploadFile(file) {
     const fileId = Array.from(this.files.entries()).find(([id, f]) => f === file)?.[0];
 
-    if (!fileId) return;
+    if (!fileId) {
+      return;
+    }
 
     const queueItem = this.container.querySelector(`[data-file-id="${fileId}"]`);
     const progressFill = queueItem.querySelector('.progress-fill');
@@ -545,12 +547,16 @@ class ImageUploader {
     if (imageData.variants) {
       // Try WebP first, then fall back to original format
       const webpVariant = imageData.variants[`${size}-webp`];
-      if (webpVariant) return webpVariant.url;
+      if (webpVariant) {
+        return webpVariant.url;
+      }
 
       // Try other formats
       for (const format of ['jpeg', 'jpg', 'png']) {
         const variant = imageData.variants[`${size}-${format}`];
-        if (variant) return variant.url;
+        if (variant) {
+          return variant.url;
+        }
       }
     }
 
@@ -617,11 +623,13 @@ class ImageUploader {
   }
 
   formatFileSize(bytes) {
-    if (bytes === 0) return '0 Bytes';
+    if (bytes === 0) {
+      return '0 Bytes';
+    }
     const k = 1024;
     const sizes = ['Bytes', 'KB', 'MB', 'GB'];
     const i = Math.floor(Math.log(bytes) / Math.log(k));
-    return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+    return `${parseFloat((bytes / Math.pow(k, i)).toFixed(2))} ${sizes[i]}`;
   }
 
   getAuthToken() {

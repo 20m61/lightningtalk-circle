@@ -1,288 +1,290 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="ja">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>統合テスト - Lightning Talk Circle</title>
-    <link rel="stylesheet" href="/css/styles.css">
+    <link rel="stylesheet" href="/css/styles.css" />
     <style>
-        .test-section {
-            margin: 20px;
-            padding: 20px;
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            background: #f5f5f5;
-        }
-        .test-result {
-            margin: 10px 0;
-            padding: 10px;
-            border-radius: 4px;
-        }
-        .success {
-            background: #d4edda;
-            color: #155724;
-            border: 1px solid #c3e6cb;
-        }
-        .error {
-            background: #f8d7da;
-            color: #721c24;
-            border: 1px solid #f5c6cb;
-        }
-        .pending {
-            background: #fff3cd;
-            color: #856404;
-            border: 1px solid #ffeeba;
-        }
-        pre {
-            background: #282c34;
-            color: #abb2bf;
-            padding: 10px;
-            border-radius: 4px;
-            overflow-x: auto;
-        }
+      .test-section {
+        margin: 20px;
+        padding: 20px;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        background: #f5f5f5;
+      }
+      .test-result {
+        margin: 10px 0;
+        padding: 10px;
+        border-radius: 4px;
+      }
+      .success {
+        background: #d4edda;
+        color: #155724;
+        border: 1px solid #c3e6cb;
+      }
+      .error {
+        background: #f8d7da;
+        color: #721c24;
+        border: 1px solid #f5c6cb;
+      }
+      .pending {
+        background: #fff3cd;
+        color: #856404;
+        border: 1px solid #ffeeba;
+      }
+      pre {
+        background: #282c34;
+        color: #abb2bf;
+        padding: 10px;
+        border-radius: 4px;
+        overflow-x: auto;
+      }
     </style>
-</head>
-<body>
+  </head>
+  <body>
     <div class="container">
-        <h1>Lightning Talk Circle - 統合テスト</h1>
-        
-        <div class="test-section">
-            <h2>環境情報</h2>
-            <div id="env-info" class="test-result pending">
-                <p>環境情報を取得中...</p>
-            </div>
-        </div>
+      <h1>Lightning Talk Circle - 統合テスト</h1>
 
-        <div class="test-section">
-            <h2>API エンドポイントテスト</h2>
-            <div id="api-tests">
-                <div class="test-result pending">テストを準備中...</div>
-            </div>
+      <div class="test-section">
+        <h2>環境情報</h2>
+        <div id="env-info" class="test-result pending">
+          <p>環境情報を取得中...</p>
         </div>
+      </div>
 
-        <div class="test-section">
-            <h2>フロントエンド機能テスト</h2>
-            <div id="frontend-tests">
-                <div class="test-result pending">テストを準備中...</div>
-            </div>
+      <div class="test-section">
+        <h2>API エンドポイントテスト</h2>
+        <div id="api-tests">
+          <div class="test-result pending">テストを準備中...</div>
         </div>
+      </div>
 
-        <div class="test-section">
-            <h2>総合結果</h2>
-            <div id="summary" class="test-result pending">
-                <p>テストを実行中...</p>
-            </div>
+      <div class="test-section">
+        <h2>フロントエンド機能テスト</h2>
+        <div id="frontend-tests">
+          <div class="test-result pending">テストを準備中...</div>
         </div>
+      </div>
+
+      <div class="test-section">
+        <h2>総合結果</h2>
+        <div id="summary" class="test-result pending">
+          <p>テストを実行中...</p>
+        </div>
+      </div>
     </div>
 
     <script>
-        // Configuration - Auto-detect environment
-        const isProduction = window.location.hostname === 'xn--6wym69a.com' || window.location.hostname === '発表.com';
-        const API_BASE_URL = isProduction 
-            ? 'https://4ujhkvx000.execute-api.ap-northeast-1.amazonaws.com/prod/api'
-            : 'https://4mz5i3x23c.execute-api.ap-northeast-1.amazonaws.com/prod/api';
-        const CLOUDFRONT_URL = isProduction 
-            ? 'https://xn--6wym69a.com'
-            : 'https://d3h21kr2tvfggr.cloudfront.net';
-        
-        // Test results storage
-        const testResults = {
-            env: null,
-            api: {},
-            frontend: {},
-            summary: { passed: 0, failed: 0, total: 0 }
-        };
+      // Configuration - Auto-detect environment
+      const isProduction = window.location.hostname === 'xn--6wym69a.com' || window.location.hostname === '発表.com';
+      const API_BASE_URL = isProduction
+        ? 'https://4ujhkvx000.execute-api.ap-northeast-1.amazonaws.com/prod/api'
+        : 'https://4mz5i3x23c.execute-api.ap-northeast-1.amazonaws.com/prod/api';
+      const CLOUDFRONT_URL = isProduction ? 'https://xn--6wym69a.com' : 'https://d3h21kr2tvfggr.cloudfront.net';
 
-        // Display environment info
-        async function displayEnvInfo() {
-            const envDiv = document.getElementById('env-info');
-            try {
-                const info = {
-                    currentTime: new Date().toISOString(),
-                    apiUrl: API_BASE_URL,
-                    cloudfrontUrl: CLOUDFRONT_URL,
-                    userAgent: navigator.userAgent,
-                    windowSize: `${window.innerWidth}x${window.innerHeight}`
-                };
-                
-                envDiv.className = 'test-result success';
-                envDiv.innerHTML = `
+      // Test results storage
+      const testResults = {
+        env: null,
+        api: {},
+        frontend: {},
+        summary: { passed: 0, failed: 0, total: 0 }
+      };
+
+      // Display environment info
+      async function displayEnvInfo() {
+        const envDiv = document.getElementById('env-info');
+        try {
+          const info = {
+            currentTime: new Date().toISOString(),
+            apiUrl: API_BASE_URL,
+            cloudfrontUrl: CLOUDFRONT_URL,
+            userAgent: navigator.userAgent,
+            windowSize: `${window.innerWidth}x${window.innerHeight}`
+          };
+
+          envDiv.className = 'test-result success';
+          envDiv.innerHTML = `
                     <h3>✅ 環境情報</h3>
                     <pre>${JSON.stringify(info, null, 2)}</pre>
                 `;
-                testResults.env = info;
-            } catch (error) {
-                envDiv.className = 'test-result error';
-                envDiv.innerHTML = `
+          testResults.env = info;
+        } catch (error) {
+          envDiv.className = 'test-result error';
+          envDiv.innerHTML = `
                     <h3>❌ 環境情報の取得に失敗</h3>
                     <p>${error.message}</p>
                 `;
-            }
         }
+      }
 
-        // Test API endpoints
-        async function testAPIEndpoints() {
-            const apiDiv = document.getElementById('api-tests');
-            apiDiv.innerHTML = '';
-            
-            const endpoints = [
-                { name: 'Health Check', method: 'GET', path: '/health' },
-                { name: 'Events List', method: 'GET', path: '/events' },
-                { name: 'Voting Participation', method: 'GET', path: '/voting/participation/2025-06-14' },
-                { name: 'Auth Login', method: 'POST', path: '/auth/login', 
-                  body: { email: 'test@example.com', password: 'test123' } }
-            ];
+      // Test API endpoints
+      async function testAPIEndpoints() {
+        const apiDiv = document.getElementById('api-tests');
+        apiDiv.innerHTML = '';
 
-            for (const endpoint of endpoints) {
-                const testDiv = document.createElement('div');
-                testDiv.className = 'test-result pending';
-                testDiv.innerHTML = `<p>Testing ${endpoint.name}...</p>`;
-                apiDiv.appendChild(testDiv);
+        const endpoints = [
+          { name: 'Health Check', method: 'GET', path: '/health' },
+          { name: 'Events List', method: 'GET', path: '/events' },
+          { name: 'Voting Participation', method: 'GET', path: '/voting/participation/2025-06-14' },
+          {
+            name: 'Auth Login',
+            method: 'POST',
+            path: '/auth/login',
+            body: { email: 'test@example.com', password: 'test123' }
+          }
+        ];
 
-                try {
-                    const options = {
-                        method: endpoint.method,
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'Accept': 'application/json'
-                        }
-                    };
-                    
-                    if (endpoint.body) {
-                        options.body = JSON.stringify(endpoint.body);
-                    }
+        for (const endpoint of endpoints) {
+          const testDiv = document.createElement('div');
+          testDiv.className = 'test-result pending';
+          testDiv.innerHTML = `<p>Testing ${endpoint.name}...</p>`;
+          apiDiv.appendChild(testDiv);
 
-                    const response = await fetch(API_BASE_URL + endpoint.path, options);
-                    const data = await response.json();
-                    
-                    if (response.ok || endpoint.name === 'Auth Login') {
-                        testDiv.className = 'test-result success';
-                        testDiv.innerHTML = `
+          try {
+            const options = {
+              method: endpoint.method,
+              headers: {
+                'Content-Type': 'application/json',
+                Accept: 'application/json'
+              }
+            };
+
+            if (endpoint.body) {
+              options.body = JSON.stringify(endpoint.body);
+            }
+
+            const response = await fetch(API_BASE_URL + endpoint.path, options);
+            const data = await response.json();
+
+            if (response.ok || endpoint.name === 'Auth Login') {
+              testDiv.className = 'test-result success';
+              testDiv.innerHTML = `
                             <h3>✅ ${endpoint.name}</h3>
                             <p>${endpoint.method} ${endpoint.path} - Status: ${response.status}</p>
                             <pre>${JSON.stringify(data, null, 2)}</pre>
                         `;
-                        testResults.api[endpoint.name] = { success: true, data };
-                        testResults.summary.passed++;
-                    } else {
-                        throw new Error(`HTTP ${response.status}: ${response.statusText}`);
-                    }
-                } catch (error) {
-                    testDiv.className = 'test-result error';
-                    testDiv.innerHTML = `
+              testResults.api[endpoint.name] = { success: true, data };
+              testResults.summary.passed++;
+            } else {
+              throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+            }
+          } catch (error) {
+            testDiv.className = 'test-result error';
+            testDiv.innerHTML = `
                         <h3>❌ ${endpoint.name}</h3>
                         <p>${endpoint.method} ${endpoint.path}</p>
                         <p>Error: ${error.message}</p>
                     `;
-                    testResults.api[endpoint.name] = { success: false, error: error.message };
-                    testResults.summary.failed++;
-                }
-                testResults.summary.total++;
-            }
+            testResults.api[endpoint.name] = { success: false, error: error.message };
+            testResults.summary.failed++;
+          }
+          testResults.summary.total++;
         }
+      }
 
-        // Test frontend features
-        async function testFrontendFeatures() {
-            const frontendDiv = document.getElementById('frontend-tests');
-            frontendDiv.innerHTML = '';
-            
-            const tests = [
-                {
-                    name: 'LocalStorage Support',
-                    test: () => {
-                        localStorage.setItem('test', 'value');
-                        const result = localStorage.getItem('test') === 'value';
-                        localStorage.removeItem('test');
-                        return result;
-                    }
-                },
-                {
-                    name: 'CSS Loading',
-                    test: () => {
-                        const sheets = document.styleSheets;
-                        return sheets.length > 0;
-                    }
-                },
-                {
-                    name: 'JavaScript ES6 Support',
-                    test: () => {
-                        try {
-                            const arrow = () => true;
-                            const { test } = { test: true };
-                            return arrow() && test;
-                        } catch {
-                            return false;
-                        }
-                    }
-                },
-                {
-                    name: 'Fetch API Support',
-                    test: () => typeof fetch === 'function'
-                }
-            ];
+      // Test frontend features
+      async function testFrontendFeatures() {
+        const frontendDiv = document.getElementById('frontend-tests');
+        frontendDiv.innerHTML = '';
 
-            for (const test of tests) {
-                const testDiv = document.createElement('div');
-                
-                try {
-                    const result = test.test();
-                    if (result) {
-                        testDiv.className = 'test-result success';
-                        testDiv.innerHTML = `<h3>✅ ${test.name}</h3>`;
-                        testResults.frontend[test.name] = { success: true };
-                        testResults.summary.passed++;
-                    } else {
-                        throw new Error('Test returned false');
-                    }
-                } catch (error) {
-                    testDiv.className = 'test-result error';
-                    testDiv.innerHTML = `
+        const tests = [
+          {
+            name: 'LocalStorage Support',
+            test: () => {
+              localStorage.setItem('test', 'value');
+              const result = localStorage.getItem('test') === 'value';
+              localStorage.removeItem('test');
+              return result;
+            }
+          },
+          {
+            name: 'CSS Loading',
+            test: () => {
+              const sheets = document.styleSheets;
+              return sheets.length > 0;
+            }
+          },
+          {
+            name: 'JavaScript ES6 Support',
+            test: () => {
+              try {
+                const arrow = () => true;
+                const { test } = { test: true };
+                return arrow() && test;
+              } catch {
+                return false;
+              }
+            }
+          },
+          {
+            name: 'Fetch API Support',
+            test: () => typeof fetch === 'function'
+          }
+        ];
+
+        for (const test of tests) {
+          const testDiv = document.createElement('div');
+
+          try {
+            const result = test.test();
+            if (result) {
+              testDiv.className = 'test-result success';
+              testDiv.innerHTML = `<h3>✅ ${test.name}</h3>`;
+              testResults.frontend[test.name] = { success: true };
+              testResults.summary.passed++;
+            } else {
+              throw new Error('Test returned false');
+            }
+          } catch (error) {
+            testDiv.className = 'test-result error';
+            testDiv.innerHTML = `
                         <h3>❌ ${test.name}</h3>
                         <p>Error: ${error.message}</p>
                     `;
-                    testResults.frontend[test.name] = { success: false, error: error.message };
-                    testResults.summary.failed++;
-                }
-                
-                testResults.summary.total++;
-                frontendDiv.appendChild(testDiv);
-            }
-        }
+            testResults.frontend[test.name] = { success: false, error: error.message };
+            testResults.summary.failed++;
+          }
 
-        // Update summary
-        function updateSummary() {
-            const summaryDiv = document.getElementById('summary');
-            const percentage = Math.round((testResults.summary.passed / testResults.summary.total) * 100);
-            
-            if (testResults.summary.failed === 0) {
-                summaryDiv.className = 'test-result success';
-                summaryDiv.innerHTML = `
+          testResults.summary.total++;
+          frontendDiv.appendChild(testDiv);
+        }
+      }
+
+      // Update summary
+      function updateSummary() {
+        const summaryDiv = document.getElementById('summary');
+        const percentage = Math.round((testResults.summary.passed / testResults.summary.total) * 100);
+
+        if (testResults.summary.failed === 0) {
+          summaryDiv.className = 'test-result success';
+          summaryDiv.innerHTML = `
                     <h2>✅ すべてのテストが成功しました！</h2>
                     <p>合格: ${testResults.summary.passed}/${testResults.summary.total} (${percentage}%)</p>
                 `;
-            } else {
-                summaryDiv.className = 'test-result error';
-                summaryDiv.innerHTML = `
+        } else {
+          summaryDiv.className = 'test-result error';
+          summaryDiv.innerHTML = `
                     <h2>⚠️ 一部のテストが失敗しました</h2>
                     <p>合格: ${testResults.summary.passed}/${testResults.summary.total} (${percentage}%)</p>
                     <p>失敗: ${testResults.summary.failed}</p>
                 `;
-            }
-            
-            // Log full results to console
-            console.log('Test Results:', testResults);
         }
 
-        // Run all tests
-        async function runAllTests() {
-            await displayEnvInfo();
-            await testAPIEndpoints();
-            await testFrontendFeatures();
-            updateSummary();
-        }
+        // Log full results to console
+        console.log('Test Results:', testResults);
+      }
 
-        // Start tests when page loads
-        window.addEventListener('DOMContentLoaded', runAllTests);
+      // Run all tests
+      async function runAllTests() {
+        await displayEnvInfo();
+        await testAPIEndpoints();
+        await testFrontendFeatures();
+        updateSummary();
+      }
+
+      // Start tests when page loads
+      window.addEventListener('DOMContentLoaded', runAllTests);
     </script>
-</body>
+  </body>
 </html>

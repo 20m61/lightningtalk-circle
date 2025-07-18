@@ -305,11 +305,7 @@ describe('WebSocketService', () => {
 
       websocketService.handleMessage(mockSocket, messageData);
 
-      expect(customHandler).toHaveBeenCalledWith(
-        mockSocket,
-        { data: 'test' },
-        { room: undefined, target: undefined }
-      );
+      expect(customHandler).toHaveBeenCalledWith(mockSocket, { data: 'test' }, { room: undefined, target: undefined });
     });
   });
 

@@ -12,8 +12,8 @@ const mockLogger = {
   error: jest.fn()
 };
 
-jest.unstable_mockModule('../../../server/utils/logger', () => ({
-  logger: mockLogger
+jest.unstable_mockModule('../../../server/utils/logger.js', () => ({
+  createLogger: jest.fn(() => mockLogger)
 }));
 
 jest.unstable_mockModule('compression', () => ({
@@ -70,10 +70,7 @@ describe('Performance Optimization Middleware', () => {
 
       cacheControl(req, res, next);
 
-      expect(res.setHeader).toHaveBeenCalledWith(
-        'Cache-Control',
-        'public, max-age=31536000, immutable'
-      );
+      expect(res.setHeader).toHaveBeenCalledWith('Cache-Control', 'public, max-age=31536000, immutable');
       expect(next).toHaveBeenCalled();
     });
 
@@ -82,10 +79,7 @@ describe('Performance Optimization Middleware', () => {
 
       cacheControl(req, res, next);
 
-      expect(res.setHeader).toHaveBeenCalledWith(
-        'Cache-Control',
-        'public, max-age=31536000, immutable'
-      );
+      expect(res.setHeader).toHaveBeenCalledWith('Cache-Control', 'public, max-age=31536000, immutable');
     });
 
     it('should set cache headers for CSS with hash', () => {
@@ -94,10 +88,7 @@ describe('Performance Optimization Middleware', () => {
 
       cacheControl(req, res, next);
 
-      expect(res.setHeader).toHaveBeenCalledWith(
-        'Cache-Control',
-        'public, max-age=31536000, immutable'
-      );
+      expect(res.setHeader).toHaveBeenCalledWith('Cache-Control', 'public, max-age=31536000, immutable');
     });
 
     it('should set no-cache for HTML', () => {
@@ -105,10 +96,7 @@ describe('Performance Optimization Middleware', () => {
 
       cacheControl(req, res, next);
 
-      expect(res.setHeader).toHaveBeenCalledWith(
-        'Cache-Control',
-        'no-cache, no-store, must-revalidate'
-      );
+      expect(res.setHeader).toHaveBeenCalledWith('Cache-Control', 'no-cache, no-store, must-revalidate');
     });
 
     it('should handle conditional requests with ETag', () => {
@@ -145,9 +133,7 @@ describe('Performance Optimization Middleware', () => {
 
       const linkCalls = res.setHeader.mock.calls.filter(call => call[0] === 'Link');
 
-      expect(
-        linkCalls.some(call => call[1].includes('critical.css') && call[1].includes('rel=preload'))
-      ).toBe(true);
+      expect(linkCalls.some(call => call[1].includes('critical.css') && call[1].includes('rel=preload'))).toBe(true);
     });
 
     it('should not add hints for non-HTML responses', () => {
@@ -185,14 +171,8 @@ describe('Performance Optimization Middleware', () => {
       res.statusCode = 200;
       res.end();
 
-      expect(res.setHeader).toHaveBeenCalledWith(
-        'X-Response-Time',
-        expect.stringMatching(/\d+\.\d+ms/)
-      );
-      expect(res.setHeader).toHaveBeenCalledWith(
-        'Server-Timing',
-        expect.stringMatching(/total;dur=\d+\.\d+/)
-      );
+      expect(res.setHeader).toHaveBeenCalledWith('X-Response-Time', expect.stringMatching(/\d+\.\d+ms/));
+      expect(res.setHeader).toHaveBeenCalledWith('Server-Timing', expect.stringMatching(/total;dur=\d+\.\d+/));
     });
 
     it('should log slow requests', () => {
@@ -224,8 +204,8 @@ describe('Performance Optimization Middleware', () => {
   });
 
   describe('imageOptimization', () => {
-    it('should redirect to WebP for supported browsers', () => {
-      const fs = require('fs');
+    it('should redirect to WebP for supported browsers', async () => {
+      const fs = await import('fs');
       jest.spyOn(fs, 'existsSync').mockReturnValue(true);
 
       req.headers.accept = 'image/webp,image/*';
@@ -251,8 +231,8 @@ describe('Performance Optimization Middleware', () => {
       expect(next).toHaveBeenCalled();
     });
 
-    it('should not redirect if WebP file does not exist', () => {
-      const fs = require('fs');
+    it('should not redirect if WebP file does not exist', async () => {
+      const fs = await import('fs');
       jest.spyOn(fs, 'existsSync').mockReturnValue(false);
 
       req.headers.accept = 'image/webp,image/*';
@@ -310,9 +290,9 @@ describe('Performance Optimization Middleware', () => {
 
   describe('criticalCssInlining', () => {
     it('should inline critical CSS for HTML responses', async () => {
-      const fs = require('fs').promises;
+      const fs = await import('fs');
       const mockCriticalCss = 'body { margin: 0; }';
-      jest.spyOn(fs, 'readFile').mockResolvedValue(mockCriticalCss);
+      jest.spyOn(fs.promises, 'readFile').mockResolvedValue(mockCriticalCss);
 
       req.path = '/index.html';
 
@@ -328,12 +308,12 @@ describe('Performance Optimization Middleware', () => {
         expect.stringContaining(`<style id="critical-css">${mockCriticalCss}</style>`)
       );
 
-      fs.readFile.mockRestore();
+      fs.promises.readFile.mockRestore();
     });
 
     it('should handle missing critical CSS file', async () => {
-      const fs = require('fs').promises;
-      jest.spyOn(fs, 'readFile').mockRejectedValue(new Error('File not found'));
+      const fs = await import('fs');
+      jest.spyOn(fs.promises, 'readFile').mockRejectedValue(new Error('File not found'));
 
       req.path = '/';
 
@@ -347,7 +327,7 @@ describe('Performance Optimization Middleware', () => {
 
       expect(res.send).toHaveBeenCalledWith(htmlContent);
 
-      fs.readFile.mockRestore();
+      fs.promises.readFile.mockRestore();
     });
 
     it('should skip non-HTML responses', async () => {

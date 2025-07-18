@@ -49,13 +49,7 @@
             <!-- Form Header -->
             <div class="auth-form-header">
               <div class="auth-icon-wrapper">
-                <svg
-                  class="auth-icon"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="2"
-                >
+                <svg class="auth-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                   <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"></path>
                   <polyline points="10 17 15 12 10 7"></polyline>
                   <line x1="15" y1="12" x2="3" y2="12"></line>
@@ -68,10 +62,7 @@
             <!-- Google OAuth Button -->
             <div class="auth-oauth-section">
               <button class="btn-google-auth" type="button" onclick="handleGoogleLogin()">
-                <img
-                  src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg"
-                  alt="Google"
-                />
+                <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google" />
                 <span>Googleでログイン</span>
               </button>
             </div>
@@ -95,14 +86,7 @@
                     autocomplete="email"
                   />
                   <span class="ltc-input-icon">
-                    <svg
-                      width="20"
-                      height="20"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      stroke-width="2"
-                    >
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                       <rect x="2" y="4" width="20" height="16" rx="2"></rect>
                       <path d="m22 7-10 5L2 7"></path>
                     </svg>
@@ -123,11 +107,7 @@
                     required
                     autocomplete="current-password"
                   />
-                  <button
-                    type="button"
-                    class="ltc-input-icon password-toggle"
-                    onclick="togglePassword('password')"
-                  >
+                  <button type="button" class="ltc-input-icon password-toggle" onclick="togglePassword('password')">
                     <svg
                       class="eye-icon"
                       width="20"
@@ -168,10 +148,7 @@
                 <a href="/forgot-password.html" class="auth-link">パスワードを忘れた方</a>
               </div>
 
-              <button
-                type="submit"
-                class="ltc-button ltc-button--primary ltc-button--lg ltc-button--full auth-submit"
-              >
+              <button type="submit" class="ltc-button ltc-button--primary ltc-button--lg ltc-button--full auth-submit">
                 <span class="button-content">ログイン</span>
                 <div class="button-loader" style="display: none">
                   <span class="loader-spinner"></span>
@@ -197,14 +174,7 @@
             <div class="auth-features">
               <div class="auth-feature-item">
                 <div class="auth-feature-icon">
-                  <svg
-                    width="24"
-                    height="24"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-width="2"
-                  >
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <path d="M12 2L2 7l10 5 10-5-10-5z"></path>
                     <path d="M2 17l10 5 10-5"></path>
                     <path d="M2 12l10 5 10-5"></path>
@@ -218,14 +188,7 @@
 
               <div class="auth-feature-item">
                 <div class="auth-feature-icon">
-                  <svg
-                    width="24"
-                    height="24"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-width="2"
-                  >
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
                     <circle cx="9" cy="7" r="4"></circle>
                     <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
@@ -240,14 +203,7 @@
 
               <div class="auth-feature-item">
                 <div class="auth-feature-icon">
-                  <svg
-                    width="24"
-                    height="24"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-width="2"
-                  >
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
                   </svg>
                 </div>
@@ -358,10 +314,7 @@
               window.location.href = '/';
             }, 1000);
           } catch (error) {
-            showToast(
-              'ログインに失敗しました。メールアドレスとパスワードを確認してください。',
-              'error'
-            );
+            showToast('ログインに失敗しました。メールアドレスとパスワードを確認してください。', 'error');
 
             // Reset button state
             submitButton.disabled = false;

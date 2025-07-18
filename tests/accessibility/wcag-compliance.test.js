@@ -10,28 +10,28 @@ describe('WCAG 2.1 AA Compliance Tests', () => {
   let browser;
   let page;
 
-  beforeAll(async() => {
+  beforeAll(async () => {
     browser = await chromium.launch();
   });
 
-  beforeEach(async() => {
+  beforeEach(async () => {
     page = await browser.newPage();
   });
 
-  afterEach(async() => {
+  afterEach(async () => {
     await page.close();
   });
 
-  afterAll(async() => {
+  afterAll(async () => {
     await browser.close();
   });
 
   describe('Homepage Accessibility', () => {
-    beforeEach(async() => {
+    beforeEach(async () => {
       await page.goto('http://localhost:3000');
     });
 
-    test('should not have any accessibility violations', async() => {
+    test('should not have any accessibility violations', async () => {
       const accessibilityScanResults = await new AxeBuilder({ page })
         .withTags(['wcag2a', 'wcag2aa', 'wcag21aa'])
         .analyze();
@@ -39,7 +39,7 @@ describe('WCAG 2.1 AA Compliance Tests', () => {
       expect(accessibilityScanResults.violations).toEqual([]);
     });
 
-    test('should have proper heading hierarchy', async() => {
+    test('should have proper heading hierarchy', async () => {
       const headings = await page.$$eval('h1, h2, h3, h4, h5, h6', elements =>
         elements.map(el => ({
           tag: el.tagName.toLowerCase(),
@@ -60,7 +60,7 @@ describe('WCAG 2.1 AA Compliance Tests', () => {
       });
     });
 
-    test('should have proper alt attributes for images', async() => {
+    test('should have proper alt attributes for images', async () => {
       const images = await page.$$eval('img', elements =>
         elements.map(img => ({
           src: img.src,
@@ -78,7 +78,7 @@ describe('WCAG 2.1 AA Compliance Tests', () => {
       });
     });
 
-    test('should have proper form labels', async() => {
+    test('should have proper form labels', async () => {
       const formControls = await page.$$eval('input, select, textarea', elements =>
         elements.map(control => ({
           id: control.id,
@@ -92,20 +92,19 @@ describe('WCAG 2.1 AA Compliance Tests', () => {
       formControls.forEach(control => {
         // hidden要素は除外
         if (control.type !== 'hidden') {
-          const hasAccessibleName =
-            control.hasLabel || control.hasAriaLabel || control.hasAriaLabelledBy;
+          const hasAccessibleName = control.hasLabel || control.hasAriaLabel || control.hasAriaLabelledBy;
           expect(hasAccessibleName).toBe(true);
         }
       });
     });
 
-    test('should have sufficient color contrast', async() => {
+    test('should have sufficient color contrast', async () => {
       const results = await new AxeBuilder({ page }).withTags(['cat.color']).analyze();
 
       expect(results.violations).toEqual([]);
     });
 
-    test('should have keyboard navigation support', async() => {
+    test('should have keyboard navigation support', async () => {
       // Tabキーで移動可能な要素をテスト
       const focusableElements = await page.$$eval(
         'a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])',
@@ -122,25 +121,23 @@ describe('WCAG 2.1 AA Compliance Tests', () => {
   });
 
   describe('Form Accessibility', () => {
-    beforeEach(async() => {
+    beforeEach(async () => {
       await page.goto('http://localhost:3000/events/register');
     });
 
-    test('should have proper form validation messages', async() => {
+    test('should have proper form validation messages', async () => {
       // 必須フィールドをテスト
       const submitButton = await page.$('button[type="submit"], input[type="submit"]');
       if (submitButton) {
         await submitButton.click();
 
         // エラーメッセージの確認
-        const errorMessages = await page.$$eval(
-          '[role="alert"], .error-message, [aria-invalid="true"]',
-          elements =>
-            elements.map(el => ({
-              text: el.textContent,
-              role: el.getAttribute('role'),
-              ariaInvalid: el.getAttribute('aria-invalid')
-            }))
+        const errorMessages = await page.$$eval('[role="alert"], .error-message, [aria-invalid="true"]', elements =>
+          elements.map(el => ({
+            text: el.textContent,
+            role: el.getAttribute('role'),
+            ariaInvalid: el.getAttribute('aria-invalid')
+          }))
         );
 
         if (errorMessages.length > 0) {
@@ -151,7 +148,7 @@ describe('WCAG 2.1 AA Compliance Tests', () => {
       }
     });
 
-    test('should mark required fields appropriately', async() => {
+    test('should mark required fields appropriately', async () => {
       const requiredFields = await page.$$eval('[required]', elements =>
         elements.map(field => ({
           id: field.id,
@@ -171,11 +168,11 @@ describe('WCAG 2.1 AA Compliance Tests', () => {
   });
 
   describe('Navigation Accessibility', () => {
-    beforeEach(async() => {
+    beforeEach(async () => {
       await page.goto('http://localhost:3000');
     });
 
-    test('should have proper landmark roles', async() => {
+    test('should have proper landmark roles', async () => {
       const landmarks = await page.$$eval(
         'header, nav, main, aside, footer, [role="banner"], [role="navigation"], [role="main"], [role="complementary"], [role="contentinfo"]',
         elements =>
@@ -194,15 +191,13 @@ describe('WCAG 2.1 AA Compliance Tests', () => {
       expect(navLandmarks.length).toBeGreaterThanOrEqual(1);
     });
 
-    test('should have skip links', async() => {
-      const skipLinks = await page.$$eval(
-        '.skip-link, a[href^="#main"], a[href^="#content"]',
-        elements =>
-          elements.map(link => ({
-            href: link.href,
-            text: link.textContent.trim(),
-            isVisible: window.getComputedStyle(link).display !== 'none'
-          }))
+    test('should have skip links', async () => {
+      const skipLinks = await page.$$eval('.skip-link, a[href^="#main"], a[href^="#content"]', elements =>
+        elements.map(link => ({
+          href: link.href,
+          text: link.textContent.trim(),
+          isVisible: window.getComputedStyle(link).display !== 'none'
+        }))
       );
 
       expect(skipLinks.length).toBeGreaterThan(0);
@@ -215,7 +210,7 @@ describe('WCAG 2.1 AA Compliance Tests', () => {
       }
     });
 
-    test('should have proper focus management', async() => {
+    test('should have proper focus management', async () => {
       // フォーカス順序のテスト
       const focusableElements = await page.$$(
         'a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])'
@@ -228,11 +223,7 @@ describe('WCAG 2.1 AA Compliance Tests', () => {
         const focusedElement = await page.evaluate(() => document.activeElement);
 
         // フォーカスが適切に移動することを確認
-        const isFocused = await page.evaluate(
-          (el, focused) => el === focused,
-          element,
-          focusedElement
-        );
+        const isFocused = await page.evaluate((el, focused) => el === focused, element, focusedElement);
         if (!isFocused) {
           // 隠れている要素やdisabled要素はスキップされる可能性があるため、警告のみ
           console.warn(`Focus did not move to expected element at tab index ${tabIndex}`);
@@ -243,21 +234,17 @@ describe('WCAG 2.1 AA Compliance Tests', () => {
   });
 
   describe('Modal Accessibility', () => {
-    test('should have proper modal accessibility when opened', async() => {
+    test('should have proper modal accessibility when opened', async () => {
       await page.goto('http://localhost:3000');
 
       // モーダルを開くトリガーを探す
-      const modalTrigger = await page.$(
-        '[data-toggle="modal"], .modal-trigger, button[aria-haspopup="dialog"]'
-      );
+      const modalTrigger = await page.$('[data-toggle="modal"], .modal-trigger, button[aria-haspopup="dialog"]');
 
       if (modalTrigger) {
         await modalTrigger.click();
 
         // モーダルが開いていることを確認
-        const modal = await page.$(
-          '[role="dialog"], [role="alertdialog"], .modal[aria-modal="true"]'
-        );
+        const modal = await page.$('[role="dialog"], [role="alertdialog"], .modal[aria-modal="true"]');
         expect(modal).toBeTruthy();
 
         if (modal) {
@@ -270,28 +257,20 @@ describe('WCAG 2.1 AA Compliance Tests', () => {
             // 最初の要素にフォーカスが当たっているか
             // eslint-disable-next-line prefer-destructuring
             const firstElement = focusableInModal[0];
-            const isFirstFocused = await page.evaluate(
-              el => document.activeElement === el,
-              firstElement
-            );
+            const isFirstFocused = await page.evaluate(el => document.activeElement === el, firstElement);
             expect(isFirstFocused).toBe(true);
 
             // 最後の要素からTabで最初の要素に戻るか
             for (let i = 0; i < focusableInModal.length; i++) {
               await page.keyboard.press('Tab');
             }
-            const isBackToFirst = await page.evaluate(
-              el => document.activeElement === el,
-              firstElement
-            );
+            const isBackToFirst = await page.evaluate(el => document.activeElement === el, firstElement);
             expect(isBackToFirst).toBe(true);
           }
 
           // Escapeキーで閉じるか
           await page.keyboard.press('Escape');
-          const modalAfterEscape = await page.$(
-            '[role="dialog"], [role="alertdialog"], .modal[aria-modal="true"]'
-          );
+          const modalAfterEscape = await page.$('[role="dialog"], [role="alertdialog"], .modal[aria-modal="true"]');
           expect(modalAfterEscape).toBeFalsy();
         }
       }
@@ -299,19 +278,17 @@ describe('WCAG 2.1 AA Compliance Tests', () => {
   });
 
   describe('Dynamic Content Accessibility', () => {
-    test('should announce dynamic content changes', async() => {
+    test('should announce dynamic content changes', async () => {
       await page.goto('http://localhost:3000');
 
       // ライブリージョンの存在確認
-      const liveRegions = await page.$$eval(
-        '[aria-live], [role="alert"], [role="status"]',
-        elements =>
-          elements.map(el => ({
-            ariaLive: el.getAttribute('aria-live'),
-            role: el.getAttribute('role'),
-            id: el.id,
-            className: el.className
-          }))
+      const liveRegions = await page.$$eval('[aria-live], [role="alert"], [role="status"]', elements =>
+        elements.map(el => ({
+          ariaLive: el.getAttribute('aria-live'),
+          role: el.getAttribute('role'),
+          id: el.id,
+          className: el.className
+        }))
       );
 
       expect(liveRegions.length).toBeGreaterThan(0);
@@ -332,12 +309,12 @@ describe('WCAG 2.1 AA Compliance Tests', () => {
   });
 
   describe('Mobile Accessibility', () => {
-    beforeEach(async() => {
+    beforeEach(async () => {
       await page.setViewportSize({ width: 375, height: 667 }); // iPhone サイズ
       await page.goto('http://localhost:3000');
     });
 
-    test('should have proper touch target sizes', async() => {
+    test('should have proper touch target sizes', async () => {
       const touchTargets = await page.$$eval(
         'button, a, input, select, textarea, [onclick], [role="button"]',
         elements =>
@@ -361,7 +338,7 @@ describe('WCAG 2.1 AA Compliance Tests', () => {
       });
     });
 
-    test('should have responsive design without horizontal scroll', async() => {
+    test('should have responsive design without horizontal scroll', async () => {
       const bodyOverflow = await page.evaluate(() => {
         const { body } = document;
         const computedStyle = window.getComputedStyle(body);
@@ -378,7 +355,7 @@ describe('WCAG 2.1 AA Compliance Tests', () => {
   });
 
   describe('Reduced Motion Compliance', () => {
-    test('should respect prefers-reduced-motion', async() => {
+    test('should respect prefers-reduced-motion', async () => {
       await page.emulateMedia({ reducedMotion: 'reduce' });
       await page.goto('http://localhost:3000');
 
@@ -387,9 +364,7 @@ describe('WCAG 2.1 AA Compliance Tests', () => {
         elements
           .filter(el => {
             const computedStyle = window.getComputedStyle(el);
-            return (
-              computedStyle.animationDuration !== '0s' || computedStyle.transitionDuration !== '0s'
-            );
+            return computedStyle.animationDuration !== '0s' || computedStyle.transitionDuration !== '0s';
           })
           .map(el => ({
             tagName: el.tagName.toLowerCase(),
@@ -416,7 +391,7 @@ describe('WCAG 2.1 AA Compliance Tests', () => {
   });
 
   describe('High Contrast Mode', () => {
-    test('should support high contrast mode', async() => {
+    test('should support high contrast mode', async () => {
       await page.emulateMedia({ colorScheme: 'dark', forcedColors: 'active' });
       await page.goto('http://localhost:3000');
 

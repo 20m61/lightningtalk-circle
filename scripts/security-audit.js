@@ -198,7 +198,7 @@ class SecurityAuditor {
 
     // Check for proper environment variable usage
     const serverFiles = this.getJavaScriptFiles('./server');
-    let hardcodedEnvVars = 0;
+    const hardcodedEnvVars = 0;
 
     for (const file of serverFiles) {
       const content = readFileSync(file, 'utf8');
@@ -473,7 +473,9 @@ class SecurityAuditor {
       console.log('🚨 CRITICAL VULNERABILITIES:');
       critical.forEach(vuln => {
         console.log(`  - ${vuln.message || vuln.risk}`);
-        if (vuln.file) console.log(`    File: ${vuln.file}:${vuln.line}`);
+        if (vuln.file) {
+          console.log(`    File: ${vuln.file}:${vuln.line}`);
+        }
       });
       console.log('');
     }
@@ -484,7 +486,9 @@ class SecurityAuditor {
       console.log('❗ High Severity Issues:');
       high.forEach(vuln => {
         console.log(`  - ${vuln.message || vuln.risk}`);
-        if (vuln.file) console.log(`    File: ${vuln.file}`);
+        if (vuln.file) {
+          console.log(`    File: ${vuln.file}`);
+        }
       });
       console.log('');
     }

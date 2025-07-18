@@ -192,9 +192,7 @@ describe('QualityGateSystem', () => {
       const result = await qualityGates.checkCodeQuality();
 
       expect(result.passed).toBe(false);
-      expect(result.details.checks.some(check => check.name === 'ESLint' && !check.passed)).toBe(
-        true
-      );
+      expect(result.details.checks.some(check => check.name === 'ESLint' && !check.passed)).toBe(true);
     });
   });
 
@@ -244,9 +242,7 @@ describe('QualityGateSystem', () => {
       const result = await qualityGates.runSecurityScan();
 
       expect(result.passed).toBe(false);
-      expect(result.details.checks.some(check => check.name === 'npm audit' && !check.passed)).toBe(
-        true
-      );
+      expect(result.details.checks.some(check => check.name === 'npm audit' && !check.passed)).toBe(true);
     });
   });
 
@@ -439,9 +435,7 @@ describe('QualityGateSystem', () => {
         { name: 'Alt attributes', passed: true },
         { name: 'Form labels', passed: true }
       ]);
-      qualityGates.checkWCAGCompliance = jest
-        .fn()
-        .mockReturnValue({ name: 'WCAG Compliance', passed: true });
+      qualityGates.checkWCAGCompliance = jest.fn().mockReturnValue({ name: 'WCAG Compliance', passed: true });
 
       const result = await qualityGates.checkAccessibility();
 
@@ -455,9 +449,7 @@ describe('QualityGateSystem', () => {
         { name: 'Alt attributes', passed: false },
         { name: 'Form labels', passed: true }
       ]);
-      qualityGates.checkWCAGCompliance = jest
-        .fn()
-        .mockReturnValue({ name: 'WCAG Compliance', passed: false });
+      qualityGates.checkWCAGCompliance = jest.fn().mockReturnValue({ name: 'WCAG Compliance', passed: false });
 
       const result = await qualityGates.checkAccessibility();
 
@@ -493,9 +485,7 @@ describe('QualityGateSystem', () => {
       const invalidResult = qualityGates.validateHTMLAccessibility(invalidHtml, 'test.html');
       const validResult = qualityGates.validateHTMLAccessibility(validHtml, 'test.html');
 
-      const invalidHeadingCheck = invalidResult.find(check =>
-        check.name.includes('Heading structure')
-      );
+      const invalidHeadingCheck = invalidResult.find(check => check.name.includes('Heading structure'));
       const validHeadingCheck = validResult.find(check => check.name.includes('Heading structure'));
 
       expect(invalidHeadingCheck.passed).toBe(false);
@@ -506,9 +496,7 @@ describe('QualityGateSystem', () => {
   describe('checkWCAGCompliance', () => {
     it('should check interactive elements accessibility', () => {
       qualityGates.getAllHTMLFiles = jest.fn().mockReturnValue(['test.html']);
-      fs.readFileSync.mockReturnValue(
-        '<button>Click me</button><input type="text" aria-label="Name">'
-      );
+      fs.readFileSync.mockReturnValue('<button>Click me</button><input type="text" aria-label="Name">');
 
       const result = qualityGates.checkWCAGCompliance();
 
@@ -616,10 +604,7 @@ describe('QualityGateSystem', () => {
 
       qualityGates.exportResults('custom-results.json');
 
-      expect(fs.writeFileSync).toHaveBeenCalledWith(
-        'custom-results.json',
-        expect.stringContaining('"timestamp"')
-      );
+      expect(fs.writeFileSync).toHaveBeenCalledWith('custom-results.json', expect.stringContaining('"timestamp"'));
     });
   });
 });

@@ -68,22 +68,22 @@ class InteractivePollsSystem {
     // Response submission
     document.addEventListener('click', e => {
       if (e.target.classList.contains('submit-response-btn')) {
-        const pollId = e.target.dataset.pollId;
+        const { pollId } = e.target.dataset;
         this.submitResponse(pollId);
       }
 
       if (e.target.classList.contains('start-poll-btn')) {
-        const pollId = e.target.dataset.pollId;
+        const { pollId } = e.target.dataset;
         this.startPoll(pollId);
       }
 
       if (e.target.classList.contains('end-poll-btn')) {
-        const pollId = e.target.dataset.pollId;
+        const { pollId } = e.target.dataset;
         this.endPoll(pollId);
       }
 
       if (e.target.classList.contains('view-results-btn')) {
-        const pollId = e.target.dataset.pollId;
+        const { pollId } = e.target.dataset;
         this.viewResults(pollId);
       }
     });
@@ -99,7 +99,9 @@ class InteractivePollsSystem {
   }
 
   async loadEventPolls() {
-    if (!this.currentEventId) return;
+    if (!this.currentEventId) {
+      return;
+    }
 
     try {
       const response = await fetch(
@@ -128,7 +130,9 @@ class InteractivePollsSystem {
 
   renderPolls() {
     const pollsContainer = document.getElementById('pollsContainer');
-    if (!pollsContainer) return;
+    if (!pollsContainer) {
+      return;
+    }
 
     pollsContainer.innerHTML = '';
 
@@ -307,7 +311,9 @@ class InteractivePollsSystem {
   }
 
   renderPollResults(poll) {
-    if (!poll.results) return '';
+    if (!poll.results) {
+      return '';
+    }
 
     switch (poll.type) {
       case 'multiple_choice':
@@ -509,7 +515,9 @@ class InteractivePollsSystem {
 
   async submitResponse(pollId) {
     const poll = this.polls.find(p => p.id === pollId);
-    if (!poll) return;
+    if (!poll) {
+      return;
+    }
 
     try {
       const answers = this.collectAnswers(poll);
@@ -550,7 +558,9 @@ class InteractivePollsSystem {
 
   collectAnswers(poll) {
     const pollInterface = document.querySelector(`[data-poll-id="${poll.id}"]`);
-    if (!pollInterface) return [];
+    if (!pollInterface) {
+      return [];
+    }
 
     switch (poll.type) {
       case 'multiple_choice': {
@@ -827,7 +837,7 @@ class InteractivePollsSystem {
 
   handlePollEnded(data) {
     if (data.eventId === this.currentEventId) {
-      this.showNotification(`投票が終了しました`, 'info');
+      this.showNotification('投票が終了しました', 'info');
       this.loadEventPolls();
     }
   }
@@ -850,10 +860,18 @@ class InteractivePollsSystem {
 
   // Utility functions
   canViewResults(poll) {
-    if (poll.status === 'ended') return true;
-    if (poll.settings.showResults === 'immediately') return true;
-    if (poll.settings.showResults === 'after_voting' && poll.hasResponded) return true;
-    if (this.isAdmin) return true;
+    if (poll.status === 'ended') {
+      return true;
+    }
+    if (poll.settings.showResults === 'immediately') {
+      return true;
+    }
+    if (poll.settings.showResults === 'after_voting' && poll.hasResponded) {
+      return true;
+    }
+    if (this.isAdmin) {
+      return true;
+    }
     return false;
   }
 

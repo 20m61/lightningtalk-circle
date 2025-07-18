@@ -46,11 +46,11 @@ class CallbackHandler {
   showSuccess() {
     const statusElement = document.getElementById('status-message');
     const successElement = document.getElementById('success-message');
-    
+
     if (statusElement) {
       statusElement.classList.add('hidden');
     }
-    
+
     if (successElement) {
       successElement.classList.remove('hidden');
     }
@@ -59,11 +59,11 @@ class CallbackHandler {
   showError(error) {
     const statusElement = document.getElementById('status-message');
     const errorElement = document.getElementById('error-message');
-    
+
     if (statusElement) {
       statusElement.classList.add('hidden');
     }
-    
+
     if (errorElement) {
       errorElement.classList.remove('hidden');
       const errorText = errorElement.querySelector('p');

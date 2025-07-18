@@ -255,7 +255,7 @@ class ChatSystem {
 
     // Control buttons
     this.chatContainer.addEventListener('click', e => {
-      const action = e.target.dataset.action;
+      const { action } = e.target.dataset;
       if (action) {
         this.handleControlAction(action, e.target);
       }
@@ -264,13 +264,13 @@ class ChatSystem {
     // Message interactions
     this.messageList.addEventListener('click', e => {
       if (e.target.classList.contains('message-reaction-btn')) {
-        const messageId = e.target.closest('.message-item').dataset.messageId;
-        const emoji = e.target.dataset.emoji;
+        const { messageId } = e.target.closest('.message-item').dataset;
+        const { emoji } = e.target.dataset;
         this.toggleReaction(messageId, emoji);
       }
 
       if (e.target.classList.contains('message-reply-btn')) {
-        const messageId = e.target.closest('.message-item').dataset.messageId;
+        const { messageId } = e.target.closest('.message-item').dataset;
         this.replyToMessage(messageId);
       }
     });
@@ -289,7 +289,7 @@ class ChatSystem {
 
       // Emit join room event
       this.socket.emit('chat:join-room', {
-        roomId: roomId,
+        roomId,
         userId: await this.getCurrentUserId()
       });
 
@@ -344,7 +344,7 @@ class ChatSystem {
       const messageData = {
         roomId: this.currentRoom,
         content: text,
-        mentions: mentions,
+        mentions,
         replyTo: this.replyToMessageId || null
       };
 
@@ -611,7 +611,7 @@ class ChatSystem {
 
   autoResizeTextarea(textarea) {
     textarea.style.height = 'auto';
-    textarea.style.height = Math.min(textarea.scrollHeight, 120) + 'px';
+    textarea.style.height = `${Math.min(textarea.scrollHeight, 120)}px`;
   }
 
   scrollToBottom() {

@@ -569,7 +569,7 @@ class UnifiedComponentSystem {
 
     let styles = '';
     this.componentStyles.forEach(style => {
-      styles += style + '\n';
+      styles += `${style}\n`;
     });
 
     styleElement.textContent = styles;
@@ -609,7 +609,9 @@ class UnifiedComponentSystem {
 
       // リップルエフェクトの追加
       button.addEventListener('click', e => {
-        if (disabled || loading) return;
+        if (disabled || loading) {
+          return;
+        }
 
         const ripple = document.createElement('span');
         const rect = button.getBoundingClientRect();
@@ -617,9 +619,9 @@ class UnifiedComponentSystem {
         const x = e.clientX - rect.left - size / 2;
         const y = e.clientY - rect.top - size / 2;
 
-        ripple.style.width = ripple.style.height = size + 'px';
-        ripple.style.left = x + 'px';
-        ripple.style.top = y + 'px';
+        ripple.style.width = ripple.style.height = `${size}px`;
+        ripple.style.left = `${x}px`;
+        ripple.style.top = `${y}px`;
         ripple.className = 'btn-ripple';
 
         button.appendChild(ripple);

@@ -9,7 +9,7 @@ export function createLogger(moduleName) {
 
   const formatMessage = (level, message, ...args) => {
     const timestamp = new Date().toISOString();
-    const formattedArgs = args.length > 0 ? ' ' + JSON.stringify(args) : '';
+    const formattedArgs = args.length > 0 ? ` ${JSON.stringify(args)}` : '';
     return `${timestamp} ${prefix} ${level}: ${message}${formattedArgs}`;
   };
 
@@ -17,7 +17,7 @@ export function createLogger(moduleName) {
     info: (message, ...args) => {
       if (isProduction) {
         // In production, write structured logs to stdout
-        process.stdout.write(formatMessage('INFO', message, ...args) + '\n');
+        process.stdout.write(`${formatMessage('INFO', message, ...args)}\n`);
       } else {
         console.log(`${prefix} INFO:`, message, ...args);
       }
@@ -26,7 +26,7 @@ export function createLogger(moduleName) {
     error: (message, ...args) => {
       if (isProduction) {
         // In production, write structured logs to stderr
-        process.stderr.write(formatMessage('ERROR', message, ...args) + '\n');
+        process.stderr.write(`${formatMessage('ERROR', message, ...args)}\n`);
       } else {
         console.error(`${prefix} ERROR:`, message, ...args);
       }
@@ -34,7 +34,7 @@ export function createLogger(moduleName) {
 
     warn: (message, ...args) => {
       if (isProduction) {
-        process.stderr.write(formatMessage('WARN', message, ...args) + '\n');
+        process.stderr.write(`${formatMessage('WARN', message, ...args)}\n`);
       } else {
         console.warn(`${prefix} WARN:`, message, ...args);
       }

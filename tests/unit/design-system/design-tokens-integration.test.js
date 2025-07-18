@@ -22,18 +22,9 @@ describe('Design Tokens Integration', () => {
   beforeAll(() => {
     // Load CSS files for testing
     try {
-      designTokensCSS = fs.readFileSync(
-        path.resolve(process.cwd(), 'public/css/design-tokens.css'),
-        'utf8'
-      );
-      buttonComponentCSS = fs.readFileSync(
-        path.resolve(process.cwd(), 'public/css/components/button.css'),
-        'utf8'
-      );
-      architectureCSS = fs.readFileSync(
-        path.resolve(process.cwd(), 'public/css/architecture-integration.css'),
-        'utf8'
-      );
+      designTokensCSS = fs.readFileSync(path.resolve(process.cwd(), 'public/css/design-tokens.css'), 'utf8');
+      buttonComponentCSS = fs.readFileSync(path.resolve(process.cwd(), 'public/css/components/button.css'), 'utf8');
+      architectureCSS = fs.readFileSync(path.resolve(process.cwd(), 'public/css/architecture-integration.css'), 'utf8');
     } catch (error) {
       console.warn('CSS files not found, using fallback tests');
       designTokensCSS = '';
@@ -95,12 +86,7 @@ describe('Design Tokens Integration', () => {
     });
 
     it('should have semantic color tokens', () => {
-      const semanticTokens = [
-        '--color-success-500',
-        '--color-error-500',
-        '--color-warning-500',
-        '--color-info-500'
-      ];
+      const semanticTokens = ['--color-success-500', '--color-error-500', '--color-warning-500', '--color-info-500'];
 
       semanticTokens.forEach(token => {
         expect(designTokensCSS).toContain(token);
@@ -143,12 +129,7 @@ describe('Design Tokens Integration', () => {
     });
 
     it('should have container sizes', () => {
-      const containerSizes = [
-        '--container-sm',
-        '--container-md',
-        '--container-lg',
-        '--container-xl'
-      ];
+      const containerSizes = ['--container-sm', '--container-md', '--container-lg', '--container-xl'];
 
       containerSizes.forEach(size => {
         expect(designTokensCSS).toContain(size);
@@ -158,11 +139,7 @@ describe('Design Tokens Integration', () => {
 
   describe('Component Token System', () => {
     it('should have button-specific tokens', () => {
-      const buttonTokens = [
-        '--button-padding-base',
-        '--button-radius-base',
-        '--button-font-weight'
-      ];
+      const buttonTokens = ['--button-padding-base', '--button-radius-base', '--button-font-weight'];
 
       buttonTokens.forEach(token => {
         expect(designTokensCSS).toContain(token);
@@ -206,13 +183,7 @@ describe('Design Tokens Integration', () => {
     });
 
     it('should have all button variants', () => {
-      const variants = [
-        '.btn-primary',
-        '.btn-secondary',
-        '.btn-outline',
-        '.btn-ghost',
-        '.btn-link'
-      ];
+      const variants = ['.btn-primary', '.btn-secondary', '.btn-outline', '.btn-ghost', '.btn-link'];
 
       variants.forEach(variant => {
         expect(buttonComponentCSS).toContain(variant);

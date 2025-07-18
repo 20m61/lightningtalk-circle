@@ -103,7 +103,7 @@ router.get('/dashboard', async (req, res) => {
           submittedAt: t.createdAt
         }))
       },
-      participationVotes: participationVotes,
+      participationVotes,
       systemHealth: {
         uptime: process.uptime(),
         memoryUsage: process.memoryUsage(),

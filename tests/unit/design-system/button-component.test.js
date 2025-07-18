@@ -44,11 +44,11 @@ const mockCSSVariables = {
 // Mock getComputedStyle to return our CSS variables
 const originalGetComputedStyle = global.getComputedStyle;
 global.getComputedStyle = jest.fn(element => {
-  const computedStyle = originalGetComputedStyle(element);
+  const computedStyle = originalGetComputedStyle ? originalGetComputedStyle(element) : {};
   return {
     ...computedStyle,
     getPropertyValue: jest.fn(prop => {
-      return mockCSSVariables[prop] || computedStyle.getPropertyValue(prop);
+      return mockCSSVariables[prop] || (computedStyle.getPropertyValue ? computedStyle.getPropertyValue(prop) : '');
     })
   };
 });

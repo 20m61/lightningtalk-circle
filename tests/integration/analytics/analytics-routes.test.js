@@ -13,8 +13,8 @@ const mockLogger = {
   error: jest.fn()
 };
 
-jest.unstable_mockModule('../../../server/utils/logger', () => ({
-  logger: mockLogger
+jest.unstable_mockModule('../../../server/utils/logger.js', () => ({
+  createLogger: jest.fn(() => mockLogger)
 }));
 
 // Convert analytics routes to ES module compatible
@@ -486,9 +486,7 @@ describe('Analytics Routes Integration', () => {
     });
 
     it('should mark error as resolved', async () => {
-      const response = await request(app)
-        .post(`/api/analytics/errors/${errorId}/resolve`)
-        .expect(200);
+      const response = await request(app).post(`/api/analytics/errors/${errorId}/resolve`).expect(200);
 
       expect(response.body).toMatchObject({
         success: true,

@@ -114,7 +114,7 @@
 
 .focus-trap::before,
 .focus-trap::after {
-  content: '';
+  content: "";
   position: absolute;
   width: 1px;
   height: 1px;
@@ -131,7 +131,7 @@
   * {
     border-width: 2px !important;
   }
-  
+
   button,
   input,
   select,
@@ -139,11 +139,11 @@
   .btn {
     border: 2px solid currentColor !important;
   }
-  
+
   a {
     text-decoration: underline !important;
   }
-  
+
   .card,
   .modal,
   .dropdown-menu {
@@ -191,12 +191,12 @@
     transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
   }
-  
+
   /* パララックス効果を無効化 */
   .parallax {
     transform: none !important;
   }
-  
+
   /* 自動スクロール要素を無効化 */
   .auto-scroll {
     animation: none !important;
@@ -518,7 +518,12 @@
    ======================================== */
 
 /* 見出しの階層 */
-h1, h2, h3, h4, h5, h6 {
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
   margin-top: 0;
   line-height: 1.3;
 }
@@ -648,14 +653,14 @@ img[alt=""]::after {
   .modal-overlay {
     display: none !important;
   }
-  
+
   /* リンクURLの表示 */
   a[href^="http"]:after {
     content: " (" attr(href) ")";
     font-size: 0.8em;
     color: #666;
   }
-  
+
   /* フォーカススタイルの除去 */
   *:focus {
     outline: none !important;
@@ -678,23 +683,23 @@ img[alt=""]::after {
     padding: 1rem;
     margin-top: 2rem;
   }
-  
+
   .accessibility-control {
     background: white;
     border: 1px solid #e2e8f0;
   }
-  
+
   .accessibility-toggle {
     color: #334155;
     border-color: #e2e8f0;
   }
-  
+
   .accessibility-toggle:hover,
   .accessibility-toggle:focus {
     background: #f1f5f9;
     border-color: #cbd5e1;
   }
-  
+
   /* タッチターゲットのサイズ確保 */
   button,
   a,
@@ -705,9 +710,9 @@ img[alt=""]::after {
     min-height: 44px;
     min-width: 44px;
   }
-  
+
   /* スキップリンクの調整 */
-  .skip-links .skip-link:nth-child(n+2) {
+  .skip-links .skip-link:nth-child(n + 2) {
     left: 0;
     top: calc(-40px + (var(--skip-index, 1) * 40px));
   }
@@ -720,19 +725,19 @@ img[alt=""]::after {
     color: #e5e7eb;
     border-left-color: #3b82f6;
   }
-  
+
   [role="alert"] {
     background: #7f1d1d;
     color: #fecaca;
     border-color: #991b1b;
   }
-  
+
   [role="status"] {
     background: #1e3a8a;
     color: #bfdbfe;
     border-color: #3730a3;
   }
-  
+
   .table-caption {
     background: #374151;
     color: #e5e7eb;

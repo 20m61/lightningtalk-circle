@@ -37,24 +37,15 @@
     <meta name="apple-mobile-web-app-title" content="LT Circle" />
 
     <!-- Social Media Meta Tags -->
-    <meta
-      property="og:title"
-      content="プレゼンテーション・アーカイブ ⚡ なんでもライトニングトーク"
-    />
-    <meta
-      property="og:description"
-      content="過去のライトニングトーク発表を検索・閲覧できるアーカイブです。"
-    />
+    <meta property="og:title" content="プレゼンテーション・アーカイブ ⚡ なんでもライトニングトーク" />
+    <meta property="og:description" content="過去のライトニングトーク発表を検索・閲覧できるアーカイブです。" />
     <meta property="og:image" content="/icons/android-chrome-512x512.png" />
     <meta property="og:type" content="website" />
     <meta name="twitter:card" content="summary_large_image" />
 
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;600;700&display=swap"
-      rel="stylesheet"
-    />
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;600;700&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="css/style.css" />
     <style>
       /* Archive-specific styles */
@@ -333,12 +324,7 @@
           <div class="filter-grid">
             <div class="search-box">
               <span class="search-icon">🔍</span>
-              <input
-                type="text"
-                id="searchInput"
-                class="search-input"
-                placeholder="タイトル、発表者、内容で検索..."
-              />
+              <input type="text" id="searchInput" class="search-input" placeholder="タイトル、発表者、内容で検索..." />
             </div>
             <select id="skillFilter" class="filter-select">
               <option value="">すべてのレベル</option>
@@ -509,9 +495,7 @@
 
           // Tag filters
           if (this.filters.tags.length > 0) {
-            filtered = filtered.filter(
-              p => p.tags && this.filters.tags.every(tag => p.tags.includes(tag))
-            );
+            filtered = filtered.filter(p => p.tags && this.filters.tags.every(tag => p.tags.includes(tag)));
           }
 
           // Skill level filter

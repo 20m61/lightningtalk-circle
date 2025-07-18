@@ -6,7 +6,9 @@
 import jwt from 'jsonwebtoken';
 import jwkToPem from 'jwk-to-pem';
 import axios from 'axios';
-import { logger } from '../utils/logger.js';
+import { createLogger } from '../utils/logger.js';
+
+const logger = createLogger('CognitoAuth');
 import { hashPassword } from './auth.js';
 
 // Cache for Cognito JWKS
@@ -56,7 +58,7 @@ export async function verifyCognitoToken(idToken) {
       throw new Error('Invalid token format');
     }
 
-    const kid = decodedHeader.header.kid;
+    const { kid } = decodedHeader.header;
     const jwks = await getJWKS();
 
     // Find the signing key

@@ -109,9 +109,7 @@ router.use(authenticateToken);
  */
 router.get(
   '/events/:eventId',
-  [
-    param('eventId').isString().notEmpty().withMessage('Event ID is required')
-  ],
+  [param('eventId').isString().notEmpty().withMessage('Event ID is required')],
   async (req, res) => {
     try {
       const errors = validationResult(req);
@@ -135,7 +133,7 @@ router.get(
 
       // Get emergency contacts for the event
       const contacts = await req.app.locals.database.query('emergencyContacts', {
-        eventId: eventId
+        eventId
       });
 
       res.json({
@@ -205,11 +203,25 @@ router.post(
   '/events/:eventId',
   [
     param('eventId').isString().notEmpty().withMessage('Event ID is required'),
-    body('name').isString().trim().isLength({ min: 1, max: 100 }).withMessage('Name is required and must be 1-100 characters'),
-    body('phone').isString().trim().matches(/^[\d\-\+\(\)\s]+$/).withMessage('Valid phone number is required'),
-    body('type').isIn(['medical', 'security', 'fire', 'general', 'venue']).withMessage('Valid type is required'),
+    body('name')
+      .isString()
+      .trim()
+      .isLength({ min: 1, max: 100 })
+      .withMessage('Name is required and must be 1-100 characters'),
+    body('phone')
+      .isString()
+      .trim()
+      .matches(/^[\d\-+()s]+$/)
+      .withMessage('Valid phone number is required'),
+    body('type')
+      .isIn(['medical', 'security', 'fire', 'general', 'venue'])
+      .withMessage('Valid type is required'),
     body('priority').optional().isInt({ min: 1, max: 3 }).withMessage('Priority must be 1-3'),
-    body('description').optional().isString().isLength({ max: 500 }).withMessage('Description must be less than 500 characters'),
+    body('description')
+      .optional()
+      .isString()
+      .isLength({ max: 500 })
+      .withMessage('Description must be less than 500 characters'),
     body('verified').optional().isBoolean()
   ],
   async (req, res) => {
@@ -268,7 +280,9 @@ router.post(
         message: 'Emergency contact created successfully'
       });
 
-      logger.info(`Emergency contact created: ${contactId} for event ${eventId} by user ${req.user.id}`);
+      logger.info(
+        `Emergency contact created: ${contactId} for event ${eventId} by user ${req.user.id}`
+      );
     } catch (error) {
       logger.error('Error creating emergency contact:', error);
       res.status(500).json({
@@ -324,11 +338,28 @@ router.put(
   '/:contactId',
   [
     param('contactId').isString().notEmpty().withMessage('Contact ID is required'),
-    body('name').optional().isString().trim().isLength({ min: 1, max: 100 }).withMessage('Name must be 1-100 characters'),
-    body('phone').optional().isString().trim().matches(/^[\d\-\+\(\)\s]+$/).withMessage('Valid phone number required'),
-    body('type').optional().isIn(['medical', 'security', 'fire', 'general', 'venue']).withMessage('Valid type required'),
+    body('name')
+      .optional()
+      .isString()
+      .trim()
+      .isLength({ min: 1, max: 100 })
+      .withMessage('Name must be 1-100 characters'),
+    body('phone')
+      .optional()
+      .isString()
+      .trim()
+      .matches(/^[\d\-+()s]+$/)
+      .withMessage('Valid phone number required'),
+    body('type')
+      .optional()
+      .isIn(['medical', 'security', 'fire', 'general', 'venue'])
+      .withMessage('Valid type required'),
     body('priority').optional().isInt({ min: 1, max: 3 }).withMessage('Priority must be 1-3'),
-    body('description').optional().isString().isLength({ max: 500 }).withMessage('Description must be less than 500 characters'),
+    body('description')
+      .optional()
+      .isString()
+      .isLength({ max: 500 })
+      .withMessage('Description must be less than 500 characters'),
     body('verified').optional().isBoolean()
   ],
   async (req, res) => {
@@ -371,7 +402,8 @@ router.put(
       const updates = {};
       ['name', 'phone', 'type', 'priority', 'description', 'verified'].forEach(field => {
         if (req.body[field] !== undefined) {
-          updates[field] = typeof req.body[field] === 'string' ? req.body[field].trim() : req.body[field];
+          updates[field] =
+            typeof req.body[field] === 'string' ? req.body[field].trim() : req.body[field];
         }
       });
 
@@ -421,9 +453,7 @@ router.put(
  */
 router.delete(
   '/:contactId',
-  [
-    param('contactId').isString().notEmpty().withMessage('Contact ID is required')
-  ],
+  [param('contactId').isString().notEmpty().withMessage('Contact ID is required')],
   async (req, res) => {
     try {
       const errors = validationResult(req);
@@ -519,12 +549,24 @@ router.post(
   '/alert',
   alertRateLimit,
   [
-    body('type').isIn(['medical', 'security', 'fire', 'general', 'venue']).withMessage('Valid alert type required'),
+    body('type')
+      .isIn(['medical', 'security', 'fire', 'general', 'venue'])
+      .withMessage('Valid alert type required'),
     body('location').optional().isObject().withMessage('Location must be an object'),
-    body('location.lat').optional().isFloat({ min: -90, max: 90 }).withMessage('Valid latitude required'),
-    body('location.lng').optional().isFloat({ min: -180, max: 180 }).withMessage('Valid longitude required'),
+    body('location.lat')
+      .optional()
+      .isFloat({ min: -90, max: 90 })
+      .withMessage('Valid latitude required'),
+    body('location.lng')
+      .optional()
+      .isFloat({ min: -180, max: 180 })
+      .withMessage('Valid longitude required'),
     body('eventId').optional().isString(),
-    body('details').optional().isString().isLength({ max: 1000 }).withMessage('Details must be less than 1000 characters')
+    body('details')
+      .optional()
+      .isString()
+      .isLength({ max: 1000 })
+      .withMessage('Details must be less than 1000 characters')
   ],
   async (req, res) => {
     try {
@@ -557,11 +599,11 @@ router.post(
 
       // Get relevant emergency contacts for notification
       const contacts = [];
-      
+
       if (eventId) {
         const eventContacts = await req.app.locals.database.query('emergencyContacts', {
-          eventId: eventId,
-          type: type
+          eventId,
+          type
         });
         contacts.push(...(eventContacts || []));
       }
@@ -569,7 +611,7 @@ router.post(
       // Get system contacts for this type
       const systemContacts = await req.app.locals.database.query('emergencyContacts', {
         isSystem: true,
-        type: type
+        type
       });
       contacts.push(...(systemContacts || []));
 
@@ -656,7 +698,9 @@ router.post(
 router.post(
   '/log',
   [
-    body('action').isIn(['call', 'location_share', 'alert_sent', 'contact_view']).withMessage('Valid action required'),
+    body('action')
+      .isIn(['call', 'location_share', 'alert_sent', 'contact_view'])
+      .withMessage('Valid action required'),
     body('data').isObject().withMessage('Data object required'),
     body('timestamp').optional().isISO8601().withMessage('Valid timestamp required'),
     body('eventId').optional().isString()
@@ -732,9 +776,7 @@ router.post(
  */
 router.post(
   '/verify/:contactId',
-  [
-    param('contactId').isString().notEmpty().withMessage('Contact ID is required')
-  ],
+  [param('contactId').isString().notEmpty().withMessage('Contact ID is required')],
   async (req, res) => {
     try {
       const errors = validationResult(req);

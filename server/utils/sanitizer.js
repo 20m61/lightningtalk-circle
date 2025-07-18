@@ -7,7 +7,7 @@ import createDOMPurify from 'dompurify';
 import { JSDOM } from 'jsdom';
 
 // Create DOMPurify instance with jsdom
-const window = new JSDOM('').window;
+const { window } = new JSDOM('');
 const DOMPurify = createDOMPurify(window);
 
 // Configure DOMPurify for our use cases

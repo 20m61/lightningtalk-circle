@@ -222,18 +222,34 @@ function calculatePasswordStrength(password) {
   let score = 0;
 
   // Length
-  if (password.length >= 8) score += 20;
-  if (password.length >= 12) score += 20;
+  if (password.length >= 8) {
+    score += 20;
+  }
+  if (password.length >= 12) {
+    score += 20;
+  }
 
   // Character variety
-  if (/[a-z]/.test(password)) score += 10;
-  if (/[A-Z]/.test(password)) score += 10;
-  if (/[0-9]/.test(password)) score += 10;
-  if (/[^a-zA-Z0-9]/.test(password)) score += 10;
+  if (/[a-z]/.test(password)) {
+    score += 10;
+  }
+  if (/[A-Z]/.test(password)) {
+    score += 10;
+  }
+  if (/[0-9]/.test(password)) {
+    score += 10;
+  }
+  if (/[^a-zA-Z0-9]/.test(password)) {
+    score += 10;
+  }
 
   // Common patterns (negative score)
-  if (/^[a-zA-Z]+$/.test(password)) score -= 10;
-  if (/^[0-9]+$/.test(password)) score -= 10;
+  if (/^[a-zA-Z]+$/.test(password)) {
+    score -= 10;
+  }
+  if (/^[0-9]+$/.test(password)) {
+    score -= 10;
+  }
 
   return Math.max(0, Math.min(100, score));
 }

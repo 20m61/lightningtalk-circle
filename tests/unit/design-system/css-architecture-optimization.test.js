@@ -23,22 +23,10 @@ describe('CSS Architecture Optimization', () => {
   beforeAll(() => {
     // Load CSS files for testing
     try {
-      architectureCSS = fs.readFileSync(
-        path.resolve(process.cwd(), 'public/css/architecture-integration.css'),
-        'utf8'
-      );
-      designTokensCSS = fs.readFileSync(
-        path.resolve(process.cwd(), 'public/css/design-tokens.css'),
-        'utf8'
-      );
-      buttonCSS = fs.readFileSync(
-        path.resolve(process.cwd(), 'public/css/components/button.css'),
-        'utf8'
-      );
-      cardCSS = fs.readFileSync(
-        path.resolve(process.cwd(), 'public/css/components/card.css'),
-        'utf8'
-      );
+      architectureCSS = fs.readFileSync(path.resolve(process.cwd(), 'public/css/architecture-integration.css'), 'utf8');
+      designTokensCSS = fs.readFileSync(path.resolve(process.cwd(), 'public/css/design-tokens.css'), 'utf8');
+      buttonCSS = fs.readFileSync(path.resolve(process.cwd(), 'public/css/components/button.css'), 'utf8');
+      cardCSS = fs.readFileSync(path.resolve(process.cwd(), 'public/css/components/card.css'), 'utf8');
     } catch (error) {
       console.warn('CSS files not found, using fallback tests');
       architectureCSS = '';
@@ -108,13 +96,7 @@ describe('CSS Architecture Optimization', () => {
     });
 
     it('should have responsive container sizes', () => {
-      const containerSizes = [
-        '.container--xs',
-        '.container--sm',
-        '.container--md',
-        '.container--lg',
-        '.container--xl'
-      ];
+      const containerSizes = ['.container--xs', '.container--sm', '.container--md', '.container--lg', '.container--xl'];
 
       containerSizes.forEach(size => {
         expect(architectureCSS).toContain(size);

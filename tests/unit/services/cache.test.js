@@ -59,9 +59,9 @@ describe('CacheService', () => {
     it('should clear all values', () => {
       cacheService.set('key1', 'value1');
       cacheService.set('key2', 'value2');
-      
+
       cacheService.clear();
-      
+
       expect(cacheService.get('key1')).toBeNull();
       expect(cacheService.get('key2')).toBeNull();
     });
@@ -70,22 +70,22 @@ describe('CacheService', () => {
   describe('TTL (Time To Live)', () => {
     it('should expire entries after TTL', () => {
       cacheService.set('key1', 'value1', 500);
-      
+
       expect(cacheService.get('key1')).toBe('value1');
-      
+
       // Fast-forward time
       jest.advanceTimersByTime(600);
-      
+
       expect(cacheService.get('key1')).toBeNull();
     });
 
     it('should use default TTL when not specified', () => {
       cacheService.set('key1', 'value1');
-      
+
       // Fast-forward to just before default TTL
       jest.advanceTimersByTime(999);
       expect(cacheService.get('key1')).toBe('value1');
-      
+
       // Fast-forward past default TTL
       jest.advanceTimersByTime(2);
       expect(cacheService.get('key1')).toBeNull();
@@ -93,11 +93,11 @@ describe('CacheService', () => {
 
     it('should handle has() with expired entries', () => {
       cacheService.set('key1', 'value1', 500);
-      
+
       expect(cacheService.has('key1')).toBe(true);
-      
+
       jest.advanceTimersByTime(600);
-      
+
       expect(cacheService.has('key1')).toBe(false);
     });
   });
@@ -108,13 +108,13 @@ describe('CacheService', () => {
       for (let i = 1; i <= 5; i++) {
         cacheService.set(`key${i}`, `value${i}`);
       }
-      
+
       // Access key2 to make it more recently used
       cacheService.get('key2');
-      
+
       // Add one more item to trigger eviction
       cacheService.set('key6', 'value6');
-      
+
       // key1 should be evicted (least recently used)
       expect(cacheService.get('key1')).toBeNull();
       expect(cacheService.get('key2')).toBe('value2');
@@ -126,10 +126,10 @@ describe('CacheService', () => {
       for (let i = 1; i <= 5; i++) {
         cacheService.set(`key${i}`, `value${i}`);
       }
-      
+
       // Trigger eviction
       cacheService.set('key6', 'value6');
-      
+
       const stats = cacheService.getStats();
       expect(stats.evictions).toBe(1);
     });
@@ -138,15 +138,15 @@ describe('CacheService', () => {
   describe('statistics', () => {
     it('should track hit and miss statistics', () => {
       cacheService.set('key1', 'value1');
-      
+
       // Generate hits
       cacheService.get('key1');
       cacheService.get('key1');
-      
+
       // Generate misses
       cacheService.get('nonexistent1');
       cacheService.get('nonexistent2');
-      
+
       const stats = cacheService.getStats();
       expect(stats.hits).toBe(2);
       expect(stats.misses).toBe(2);
@@ -157,7 +157,7 @@ describe('CacheService', () => {
       cacheService.set('key1', 'value1');
       cacheService.set('key2', 'value2');
       cacheService.delete('key1');
-      
+
       const stats = cacheService.getStats();
       expect(stats.sets).toBe(2);
       expect(stats.deletes).toBe(1);
@@ -174,9 +174,9 @@ describe('CacheService', () => {
       cacheService.set('key1', 'value1');
       cacheService.set('key2', 'value2');
       cacheService.set('key3', 'value3');
-      
+
       const results = cacheService.mget(['key1', 'key2', 'nonexistent']);
-      
+
       expect(results).toEqual({
         key1: 'value1',
         key2: 'value2'
@@ -189,13 +189,13 @@ describe('CacheService', () => {
         key2: 'value2',
         key3: 'value3'
       });
-      
+
       expect(results).toEqual({
         key1: true,
         key2: true,
         key3: true
       });
-      
+
       expect(cacheService.get('key1')).toBe('value1');
       expect(cacheService.get('key2')).toBe('value2');
       expect(cacheService.get('key3')).toBe('value3');
@@ -223,7 +223,7 @@ describe('CacheService', () => {
 
     it('should invalidate keys by pattern', () => {
       const deleted = cacheService.invalidate('user:*');
-      
+
       expect(deleted).toBe(2);
       expect(cacheService.get('user:1')).toBeNull();
       expect(cacheService.get('user:2')).toBeNull();
@@ -234,10 +234,10 @@ describe('CacheService', () => {
   describe('getOrSet pattern', () => {
     it('should return cached value if exists', async () => {
       cacheService.set('key1', 'cached-value');
-      
+
       const fetchFunction = jest.fn().mockResolvedValue('fetched-value');
       const result = await cacheService.getOrSet('key1', fetchFunction);
-      
+
       expect(result).toBe('cached-value');
       expect(fetchFunction).not.toHaveBeenCalled();
     });
@@ -245,7 +245,7 @@ describe('CacheService', () => {
     it('should fetch and cache value if not exists', async () => {
       const fetchFunction = jest.fn().mockResolvedValue('fetched-value');
       const result = await cacheService.getOrSet('key1', fetchFunction, 500);
-      
+
       expect(result).toBe('fetched-value');
       expect(fetchFunction).toHaveBeenCalled();
       expect(cacheService.get('key1')).toBe('fetched-value');
@@ -253,7 +253,7 @@ describe('CacheService', () => {
 
     it('should propagate errors from fetch function', async () => {
       const fetchFunction = jest.fn().mockRejectedValue(new Error('Fetch failed'));
-      
+
       await expect(cacheService.getOrSet('key1', fetchFunction)).rejects.toThrow('Fetch failed');
       expect(cacheService.get('key1')).toBeNull();
     });
@@ -262,24 +262,24 @@ describe('CacheService', () => {
   describe('namespaces', () => {
     it('should create namespaced cache', () => {
       const userCache = cacheService.namespace('users');
-      
+
       userCache.set('123', { name: 'John' });
-      
+
       expect(userCache.get('123')).toEqual({ name: 'John' });
       expect(cacheService.get('users:123')).toEqual({ name: 'John' });
     });
 
     it('should support namespaced operations', () => {
       const userCache = cacheService.namespace('users');
-      
+
       userCache.set('123', { name: 'John' });
       userCache.set('456', { name: 'Jane' });
-      
+
       expect(userCache.has('123')).toBe(true);
       expect(userCache.keys('*')).toContain('users:123');
-      
+
       userCache.invalidate();
-      
+
       expect(userCache.get('123')).toBeNull();
       expect(userCache.get('456')).toBeNull();
     });
@@ -287,9 +287,9 @@ describe('CacheService', () => {
     it('should support namespaced getOrSet', async () => {
       const userCache = cacheService.namespace('users');
       const fetchFunction = jest.fn().mockResolvedValue({ name: 'John' });
-      
+
       const result = await userCache.getOrSet('123', fetchFunction);
-      
+
       expect(result).toEqual({ name: 'John' });
       expect(cacheService.get('users:123')).toEqual({ name: 'John' });
     });
@@ -300,12 +300,12 @@ describe('CacheService', () => {
       cacheService.set('key1', 'value1', 100);
       cacheService.set('key2', 'value2', 200);
       cacheService.set('key3', 'value3', 300);
-      
+
       // Fast-forward to expire some entries
       jest.advanceTimersByTime(150);
-      
+
       cacheService.cleanup();
-      
+
       expect(cacheService.get('key1')).toBeNull();
       expect(cacheService.get('key2')).toBe('value2');
       expect(cacheService.get('key3')).toBe('value3');
@@ -316,9 +316,9 @@ describe('CacheService', () => {
     it('should export cache state', () => {
       cacheService.set('key1', 'value1', 1000);
       cacheService.set('key2', 'value2');
-      
+
       const exported = cacheService.export();
-      
+
       expect(exported).toHaveProperty('key1');
       expect(exported).toHaveProperty('key2');
       expect(exported.key1.value).toBe('value1');
@@ -327,7 +327,7 @@ describe('CacheService', () => {
 
     it('should import cache state', () => {
       const data = {
-        'key1': {
+        key1: {
           value: 'value1',
           meta: {
             createdAt: Date.now(),
@@ -336,13 +336,13 @@ describe('CacheService', () => {
           }
         }
       };
-      
+
       cacheService.import(data);
-      
+
       // Check metadata before calling get (which increments hits)
       const metaBeforeGet = cacheService.metadata.get('key1');
       expect(metaBeforeGet.hits).toBe(5);
-      
+
       expect(cacheService.get('key1')).toBe('value1');
     });
   });
@@ -351,7 +351,7 @@ describe('CacheService', () => {
     it('should estimate memory usage', () => {
       cacheService.set('key1', 'small');
       cacheService.set('key2', { large: 'object with more data' });
-      
+
       const usage = cacheService.calculateMemoryUsage();
       expect(usage).toBeGreaterThan(0);
     });
@@ -362,15 +362,15 @@ describe('CacheService', () => {
       const hitSpy = jest.fn();
       const setSpy = jest.fn();
       const deleteSpy = jest.fn();
-      
+
       cacheService.on('hit', hitSpy);
       cacheService.on('set', setSpy);
       cacheService.on('delete', deleteSpy);
-      
+
       cacheService.set('key1', 'value1', 1000); // Set with explicit TTL
       cacheService.get('key1');
       cacheService.delete('key1');
-      
+
       expect(setSpy).toHaveBeenCalledWith({
         key: 'key1',
         value: 'value1',

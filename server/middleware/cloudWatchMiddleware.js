@@ -46,7 +46,7 @@ export function cloudWatchErrorLogger() {
     // Sanitize error and request data before logging
     const sanitizedError = sanitizeError(error);
     const sanitizedRequest = sanitizeRequest(req);
-    
+
     // Log error to CloudWatch
     cloudWatch
       .logEvent('ERROR', 'Application Error', {

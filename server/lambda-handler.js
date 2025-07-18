@@ -123,7 +123,7 @@ app.get('/api/monitoring/health', (req, res) => {
 
 // Specific voting participation endpoint
 app.get('/api/voting/participation/:eventId', (req, res) => {
-  const eventId = req.params.eventId;
+  const { eventId } = req.params;
   console.log('Voting participation endpoint accessed:', eventId);
 
   res.json({
@@ -155,7 +155,7 @@ app.post('/api/voting', (req, res) => {
 
 // General voting endpoints
 app.get('/api/voting/*', (req, res) => {
-  const path = req.path;
+  const { path } = req;
   console.log('Voting wildcard endpoint accessed:', path);
 
   if (path.includes('/participation/')) {
@@ -169,7 +169,7 @@ app.get('/api/voting/*', (req, res) => {
   } else {
     res.json({
       message: 'Voting endpoint',
-      path: path,
+      path,
       timestamp: new Date().toISOString()
     });
   }
@@ -245,7 +245,7 @@ app.use((req, res) => {
 // Export handler for Lambda
 const serverlessHandler = serverless(app);
 
-export const handler = async (event, context) => {
+export const handler = async(event, context) => {
   // Add debugging
   console.log('Lambda event:', JSON.stringify(event, null, 2));
 
@@ -260,11 +260,11 @@ export const handler = async (event, context) => {
     if (event.pathParameters && event.pathParameters.proxy) {
       // For root proxy, the full path is in the proxy parameter
       if (event.resource === '/{proxy+}') {
-        event.path = '/' + event.pathParameters.proxy;
+        event.path = `/${event.pathParameters.proxy}`;
       } else {
         // For nested proxy, reconstruct the path
         const basePath = event.resource.replace('/{proxy+}', '');
-        const fullPath = basePath + '/' + event.pathParameters.proxy;
+        const fullPath = `${basePath}/${event.pathParameters.proxy}`;
         event.path = fullPath;
       }
 

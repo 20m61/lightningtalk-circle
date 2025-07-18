@@ -33,11 +33,11 @@ class QualityGateSystem {
     };
 
     this.log = {
-      info: (msg) => console.log(chalk.blue('ℹ️ '), msg),
-      success: (msg) => console.log(chalk.green('✅'), msg),
-      warning: (msg) => console.log(chalk.yellow('⚠️ '), msg),
-      error: (msg) => console.log(chalk.red('❌'), msg),
-      gate: (msg) => console.log(chalk.cyan('🚪'), msg)
+      info: msg => console.log(chalk.blue('ℹ️ '), msg),
+      success: msg => console.log(chalk.green('✅'), msg),
+      warning: msg => console.log(chalk.yellow('⚠️ '), msg),
+      error: msg => console.log(chalk.red('❌'), msg),
+      gate: msg => console.log(chalk.cyan('🚪'), msg)
     };
   }
 
@@ -80,7 +80,7 @@ class QualityGateSystem {
    * 品質ゲートを並列実行
    */
   async runGatesInParallel(gates) {
-    const promises = gates.map(async(gate) => {
+    const promises = gates.map(async gate => {
       try {
         const result = await this.executeGate(gate);
         this.results.gates.push(result);
@@ -172,7 +172,7 @@ class QualityGateSystem {
       const failing = failMatch ? parseInt(failMatch[1]) : 0;
 
       const passed = failing === 0;
-      const score = passing / (passing + failing) * 100;
+      const score = (passing / (passing + failing)) * 100;
 
       return {
         passed,
@@ -209,7 +209,7 @@ class QualityGateSystem {
       const failing = failMatch ? parseInt(failMatch[1]) : 0;
 
       const passed = failing === 0;
-      const score = passing / (passing + failing) * 100;
+      const score = (passing / (passing + failing)) * 100;
 
       return {
         passed,
@@ -316,7 +316,7 @@ class QualityGateSystem {
     }
 
     const allPassed = qualityChecks.every(check => check.passed);
-    const score = qualityChecks.filter(check => check.passed).length / qualityChecks.length * 100;
+    const score = (qualityChecks.filter(check => check.passed).length / qualityChecks.length) * 100;
 
     return {
       passed: allPassed,
@@ -372,7 +372,8 @@ class QualityGateSystem {
     securityChecks.push(securityPatterns);
 
     const allPassed = securityChecks.every(check => check.passed);
-    const score = securityChecks.filter(check => check.passed).length / securityChecks.length * 100;
+    const score =
+      (securityChecks.filter(check => check.passed).length / securityChecks.length) * 100;
 
     return {
       passed: allPassed,
@@ -433,7 +434,7 @@ class QualityGateSystem {
       const responseTime = responseTimeMatch ? parseFloat(responseTimeMatch[1]) : null;
 
       const passed = !responseTime || responseTime < 1000; // 1秒以下
-      const score = responseTime ? Math.max(0, 100 - (responseTime / 10)) : 100;
+      const score = responseTime ? Math.max(0, 100 - responseTime / 10) : 100;
 
       return {
         passed,
@@ -441,7 +442,9 @@ class QualityGateSystem {
         details: {
           responseTime,
           threshold: '1000ms',
-          note: responseTime ? `Average response: ${responseTime}ms` : 'Performance tests not configured'
+          note: responseTime
+            ? `Average response: ${responseTime}ms`
+            : 'Performance tests not configured'
         }
       };
     } catch (error) {
@@ -508,7 +511,7 @@ class QualityGateSystem {
     }
 
     const allPassed = checks.every(check => check.passed);
-    const score = checks.filter(check => check.passed).length / checks.length * 100;
+    const score = (checks.filter(check => check.passed).length / checks.length) * 100;
 
     return {
       passed: allPassed,
@@ -601,7 +604,9 @@ class QualityGateSystem {
     for (const searchPath of searchPaths) {
       if (fs.existsSync(searchPath)) {
         try {
-          const pathFiles = execSync(`find ${searchPath} -name "*.html" -type f | head -20`, { encoding: 'utf8' })
+          const pathFiles = execSync(`find ${searchPath} -name "*.html" -type f | head -20`, {
+            encoding: 'utf8'
+          })
             .split('\n')
             .filter(Boolean);
           files.push(...pathFiles);
@@ -639,8 +644,12 @@ class QualityGateSystem {
 
           // 問題のある色の組み合わせを検出（簡易版）
           const problematicColors = [
-            '#999', '#ccc', '#ddd', // 低コントラストのグレー
-            'lightgray', 'lightgrey', 'silver'
+            '#999',
+            '#ccc',
+            '#ddd', // 低コントラストのグレー
+            'lightgray',
+            'lightgrey',
+            'silver'
           ];
 
           for (const rule of [...colorRules, ...backgroundRules]) {
@@ -651,7 +660,7 @@ class QualityGateSystem {
         }
       }
 
-      const score = totalRules > 0 ? Math.max(0, 100 - (contrastIssues / totalRules * 100)) : 100;
+      const score = totalRules > 0 ? Math.max(0, 100 - (contrastIssues / totalRules) * 100) : 100;
 
       return {
         passed: contrastIssues === 0,
@@ -680,16 +689,17 @@ class QualityGateSystem {
       let ariaIssues = 0;
       let totalElements = 0;
 
-      for (const htmlFile of htmlFiles.slice(0, 5)) { // 最大5ファイル
+      for (const htmlFile of htmlFiles.slice(0, 5)) {
+        // 最大5ファイル
         if (fs.existsSync(htmlFile)) {
           const htmlContent = fs.readFileSync(htmlFile, 'utf8');
 
           // 基本的なARIA属性の存在確認
           const interactiveElements = [
-            ...htmlContent.match(/<button[^>]*>/g) || [],
-            ...htmlContent.match(/<input[^>]*>/g) || [],
-            ...htmlContent.match(/<a[^>]*>/g) || [],
-            ...htmlContent.match(/<div[^>]*role=/g) || []
+            ...(htmlContent.match(/<button[^>]*>/g) || []),
+            ...(htmlContent.match(/<input[^>]*>/g) || []),
+            ...(htmlContent.match(/<a[^>]*>/g) || []),
+            ...(htmlContent.match(/<div[^>]*role=/g) || [])
           ];
 
           totalElements += interactiveElements.length;
@@ -703,7 +713,7 @@ class QualityGateSystem {
         }
       }
 
-      const score = totalElements > 0 ? Math.max(0, 100 - (ariaIssues / totalElements * 100)) : 100;
+      const score = totalElements > 0 ? Math.max(0, 100 - (ariaIssues / totalElements) * 100) : 100;
 
       return {
         passed: ariaIssues < totalElements * 0.2, // 20%未満なら合格
@@ -738,11 +748,11 @@ class QualityGateSystem {
 
           // フォーカス可能要素の検出
           const focusableElements = [
-            ...htmlContent.match(/<a[^>]*href/g) || [],
-            ...htmlContent.match(/<button[^>]*>/g) || [],
-            ...htmlContent.match(/<input[^>]*>/g) || [],
-            ...htmlContent.match(/<select[^>]*>/g) || [],
-            ...htmlContent.match(/<textarea[^>]*>/g) || []
+            ...(htmlContent.match(/<a[^>]*href/g) || []),
+            ...(htmlContent.match(/<button[^>]*>/g) || []),
+            ...(htmlContent.match(/<input[^>]*>/g) || []),
+            ...(htmlContent.match(/<select[^>]*>/g) || []),
+            ...(htmlContent.match(/<textarea[^>]*>/g) || [])
           ];
 
           totalInteractiveElements += focusableElements.length;
@@ -757,7 +767,7 @@ class QualityGateSystem {
         }
       }
 
-      const score = Math.max(0, 100 - (keyboardIssues * 10));
+      const score = Math.max(0, 100 - keyboardIssues * 10);
 
       return {
         passed: keyboardIssues === 0,
@@ -792,9 +802,9 @@ class QualityGateSystem {
 
           // モーダル要素の検出
           const modals = [
-            ...htmlContent.match(/<div[^>]*class="[^"]*modal[^"]*"/g) || [],
-            ...htmlContent.match(/<div[^>]*id="[^"]*modal[^"]*"/g) || [],
-            ...htmlContent.match(/<div[^>]*role="dialog"/g) || []
+            ...(htmlContent.match(/<div[^>]*class="[^"]*modal[^"]*"/g) || []),
+            ...(htmlContent.match(/<div[^>]*id="[^"]*modal[^"]*"/g) || []),
+            ...(htmlContent.match(/<div[^>]*role="dialog"/g) || [])
           ];
 
           totalModals += modals.length;
@@ -814,7 +824,8 @@ class QualityGateSystem {
         }
       }
 
-      const score = totalModals > 0 ? Math.max(0, 100 - (modalIssues / (totalModals * 3) * 100)) : 100;
+      const score =
+        totalModals > 0 ? Math.max(0, 100 - (modalIssues / (totalModals * 3)) * 100) : 100;
 
       return {
         passed: modalIssues === 0,
@@ -853,7 +864,6 @@ class QualityGateSystem {
       // WCAG 2.1 AA 準拠チェック
       const wcagChecks = this.checkWCAGCompliance();
       accessibilityChecks.push(wcagChecks);
-
     } catch (error) {
       accessibilityChecks.push({
         name: 'Accessibility Check',
@@ -863,8 +873,11 @@ class QualityGateSystem {
     }
 
     const allPassed = accessibilityChecks.every(check => check.passed);
-    const score = accessibilityChecks.length > 0 ?
-      accessibilityChecks.filter(check => check.passed).length / accessibilityChecks.length * 100 : 100;
+    const score =
+      accessibilityChecks.length > 0
+        ? (accessibilityChecks.filter(check => check.passed).length / accessibilityChecks.length) *
+          100
+        : 100;
 
     return {
       passed: allPassed,
@@ -896,7 +909,9 @@ class QualityGateSystem {
     }
 
     // form 要素の label チェック
-    const inputsWithoutLabels = content.match(/<input(?![^>]*\sid\s*=\s*["'][^"']*["'][^>]*>[\s\S]*?<label[^>]*\sfor\s*=\s*["']\1["'])/gi);
+    const inputsWithoutLabels = content.match(
+      /<input(?![^>]*\sid\s*=\s*["'][^"']*["'][^>]*>[\s\S]*?<label[^>]*\sfor\s*=\s*["']\1["'])/gi
+    );
     if (inputsWithoutLabels && inputsWithoutLabels.length > 0) {
       issues.push({
         name: `${fileName}: Form labels`,
@@ -926,9 +941,9 @@ class QualityGateSystem {
     issues.push({
       name: `${fileName}: Heading structure`,
       passed: headingStructureValid,
-      message: headingStructureValid ?
-        'Heading structure is logical' :
-        'Heading structure may skip levels'
+      message: headingStructureValid
+        ? 'Heading structure is logical'
+        : 'Heading structure may skip levels'
     });
 
     // color contrast のチェック (簡易版)
@@ -936,9 +951,9 @@ class QualityGateSystem {
     issues.push({
       name: `${fileName}: Color contrast`,
       passed: !hasLowContrastColors,
-      message: hasLowContrastColors ?
-        'Potential color contrast issues detected' :
-        'No obvious color contrast issues'
+      message: hasLowContrastColors
+        ? 'Potential color contrast issues detected'
+        : 'No obvious color contrast issues'
     });
 
     return issues;
@@ -964,11 +979,14 @@ class QualityGateSystem {
 
       // tabindex, role, aria-* 属性を持つ要素をカウント
       const accessibleElements = content.match(/<[^>]*(tabindex|role|aria-)[^>]*>/gi) || [];
-      accessibleInteractiveElements += Math.min(accessibleElements.length, interactiveElements.length);
+      accessibleInteractiveElements += Math.min(
+        accessibleElements.length,
+        interactiveElements.length
+      );
     }
 
-    const accessibilityRatio = totalInteractiveElements > 0 ?
-      accessibleInteractiveElements / totalInteractiveElements : 1;
+    const accessibilityRatio =
+      totalInteractiveElements > 0 ? accessibleInteractiveElements / totalInteractiveElements : 1;
 
     wcagIssues.push({
       name: 'Interactive elements accessibility',
@@ -1017,7 +1035,9 @@ class QualityGateSystem {
    * HTML ファイルを取得
    */
   getAllHTMLFiles(dir) {
-    if (!fs.existsSync(dir)) {return [];}
+    if (!fs.existsSync(dir)) {
+      return [];
+    }
 
     const files = [];
     const items = fs.readdirSync(dir, { withFileTypes: true });
@@ -1041,7 +1061,7 @@ class QualityGateSystem {
 
       const sizeThreshold = 2 * 1024 * 1024; // 2MB
       const passed = stats.totalSize < sizeThreshold;
-      const score = Math.max(0, 100 - (stats.totalSize / sizeThreshold * 100));
+      const score = Math.max(0, 100 - (stats.totalSize / sizeThreshold) * 100);
 
       return {
         passed,
@@ -1081,7 +1101,9 @@ class QualityGateSystem {
    * ディレクトリサイズを取得
    */
   getDirectorySize(dir) {
-    if (!fs.existsSync(dir)) {return 0;}
+    if (!fs.existsSync(dir)) {
+      return 0;
+    }
 
     let totalSize = 0;
     const files = fs.readdirSync(dir, { withFileTypes: true });
@@ -1103,7 +1125,9 @@ class QualityGateSystem {
    * JavaScript ファイルを取得
    */
   getAllJSFiles(dir) {
-    if (!fs.existsSync(dir)) {return [];}
+    if (!fs.existsSync(dir)) {
+      return [];
+    }
 
     const files = [];
     const items = fs.readdirSync(dir, { withFileTypes: true });
@@ -1182,9 +1206,9 @@ class QualityGateSystem {
 
     // 全体結果
     console.log(chalk.white('\n🎯 Overall Assessment:'));
-    const overallStatus = this.results.overall.passed ?
-      chalk.green('✅ ALL GATES PASSED') :
-      chalk.red('❌ SOME GATES FAILED');
+    const overallStatus = this.results.overall.passed
+      ? chalk.green('✅ ALL GATES PASSED')
+      : chalk.red('❌ SOME GATES FAILED');
 
     console.log(`   Status: ${overallStatus}`);
     console.log(`   Score: ${chalk.blue(`${Math.round(this.results.overall.score)}%`)}`);
@@ -1268,11 +1292,7 @@ class QualityGateSystem {
         'Remove unused dependencies',
         'Review breaking changes'
       ],
-      'Bundle Analysis': [
-        'Optimize bundle size',
-        'Use code splitting',
-        'Review large dependencies'
-      ]
+      'Bundle Analysis': ['Optimize bundle size', 'Use code splitting', 'Review large dependencies']
     };
 
     return recommendations[gateName] || ['Review and fix identified issues'];
@@ -1303,7 +1323,8 @@ if (import.meta.url === `file://${process.argv[1]}`) {
 
   const qualityGates = new QualityGateSystem(options);
 
-  qualityGates.runAllGates()
+  qualityGates
+    .runAllGates()
     .then(results => {
       qualityGates.exportResults();
 

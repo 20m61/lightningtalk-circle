@@ -66,7 +66,7 @@ function securityLoggingMiddleware() {
       /<iframe/i // iframe injection
     ];
 
-    const url = req.url;
+    const { url } = req;
     const userAgent = req.get('User-Agent') || '';
     const body = JSON.stringify(req.body);
 

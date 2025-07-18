@@ -1,529 +1,510 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="ja">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="google-maps-api-key" content="AIzaSyDemoKeyForTestingPurposes">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="google-maps-api-key" content="AIzaSyDemoKeyForTestingPurposes" />
     <title>イベント マップ & 緊急連絡先 | Lightning Talk Circle</title>
-    
+
     <!-- External CSS -->
-    <link rel="stylesheet" href="/public/css/style.css">
-    <link rel="stylesheet" href="/public/css/admin.css">
-    <link rel="stylesheet" href="/public/css/maps.css">
-    <link rel="stylesheet" href="/public/css/emergency-contacts.css">
-    
+    <link rel="stylesheet" href="/public/css/style.css" />
+    <link rel="stylesheet" href="/public/css/admin.css" />
+    <link rel="stylesheet" href="/public/css/maps.css" />
+    <link rel="stylesheet" href="/public/css/emergency-contacts.css" />
+
     <!-- Custom CSS -->
     <style>
+      .maps-emergency-container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: var(--space-6);
+      }
+
+      .page-header {
+        text-align: center;
+        margin-bottom: var(--space-8);
+      }
+
+      .page-header h1 {
+        margin: 0 0 var(--space-2) 0;
+        font-size: var(--font-size-3xl);
+        font-weight: var(--font-weight-bold);
+        color: var(--color-neutral-900);
+      }
+
+      .page-header p {
+        margin: 0;
+        font-size: var(--font-size-lg);
+        color: var(--color-neutral-600);
+      }
+
+      .maps-emergency-grid {
+        display: grid;
+        grid-template-columns: 2fr 1fr;
+        gap: var(--space-6);
+        margin-bottom: var(--space-8);
+      }
+
+      .map-section {
+        background: var(--color-neutral-0);
+        border: 1px solid var(--color-neutral-200);
+        border-radius: var(--radius-lg);
+        padding: var(--space-6);
+        box-shadow: var(--shadow-md);
+      }
+
+      .emergency-section {
+        display: flex;
+        flex-direction: column;
+        gap: var(--space-4);
+      }
+
+      .emergency-widget {
+        background: var(--color-neutral-0);
+        border: 1px solid var(--color-neutral-200);
+        border-radius: var(--radius-lg);
+        padding: var(--space-4);
+        box-shadow: var(--shadow-sm);
+      }
+
+      .widget-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: var(--space-3);
+        padding-bottom: var(--space-2);
+        border-bottom: 1px solid var(--color-neutral-200);
+      }
+
+      .widget-header h3 {
+        margin: 0;
+        font-size: var(--font-size-lg);
+        font-weight: var(--font-weight-semibold);
+        color: var(--color-neutral-900);
+      }
+
+      .quick-actions {
+        display: flex;
+        flex-direction: column;
+        gap: var(--space-3);
+        margin-top: var(--space-4);
+      }
+
+      .action-btn {
+        padding: var(--space-3) var(--space-4);
+        border: 1px solid var(--color-primary-300);
+        border-radius: var(--radius-md);
+        background: var(--color-primary-50);
+        color: var(--color-primary-700);
+        font-size: var(--font-size-sm);
+        font-weight: var(--font-weight-medium);
+        cursor: pointer;
+        transition: var(--transition-colors);
+        text-align: center;
+      }
+
+      .action-btn:hover {
+        background: var(--color-primary-100);
+        border-color: var(--color-primary-400);
+      }
+
+      .action-btn.emergency {
+        border-color: var(--color-error-300);
+        background: var(--color-error-50);
+        color: var(--color-error-700);
+      }
+
+      .action-btn.emergency:hover {
+        background: var(--color-error-100);
+        border-color: var(--color-error-400);
+      }
+
+      .status-indicators {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: var(--space-4);
+        padding: var(--space-3);
+        background: var(--color-neutral-50);
+        border-radius: var(--radius-md);
+      }
+
+      .status-item {
+        text-align: center;
+      }
+
+      .status-value {
+        font-size: var(--font-size-xl);
+        font-weight: var(--font-weight-bold);
+        color: var(--color-primary-600);
+      }
+
+      .status-label {
+        font-size: var(--font-size-xs);
+        color: var(--color-neutral-600);
+        margin-top: var(--space-1);
+      }
+
+      .event-selector {
+        margin-bottom: var(--space-6);
+        padding: var(--space-4);
+        background: var(--color-info-50);
+        border: 1px solid var(--color-info-200);
+        border-radius: var(--radius-md);
+      }
+
+      .event-selector label {
+        display: block;
+        margin-bottom: var(--space-2);
+        font-weight: var(--font-weight-medium);
+        color: var(--color-info-700);
+      }
+
+      .event-selector select {
+        width: 100%;
+        padding: var(--space-2) var(--space-3);
+        border: 1px solid var(--color-neutral-300);
+        border-radius: var(--radius-md);
+        font-size: var(--font-size-sm);
+      }
+
+      .loading-overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(255, 255, 255, 0.9);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: var(--radius-lg);
+        z-index: 10;
+      }
+
+      .loading-spinner {
+        width: 40px;
+        height: 40px;
+        border: 3px solid var(--color-neutral-200);
+        border-top-color: var(--color-primary-500);
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+      }
+
+      @keyframes spin {
+        to {
+          transform: rotate(360deg);
+        }
+      }
+
+      /* Responsive Design */
+      @media (max-width: 768px) {
         .maps-emergency-container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: var(--space-6);
-        }
-
-        .page-header {
-            text-align: center;
-            margin-bottom: var(--space-8);
-        }
-
-        .page-header h1 {
-            margin: 0 0 var(--space-2) 0;
-            font-size: var(--font-size-3xl);
-            font-weight: var(--font-weight-bold);
-            color: var(--color-neutral-900);
-        }
-
-        .page-header p {
-            margin: 0;
-            font-size: var(--font-size-lg);
-            color: var(--color-neutral-600);
+          padding: var(--space-4);
         }
 
         .maps-emergency-grid {
-            display: grid;
-            grid-template-columns: 2fr 1fr;
-            gap: var(--space-6);
-            margin-bottom: var(--space-8);
+          grid-template-columns: 1fr;
+          gap: var(--space-4);
         }
 
-        .map-section {
-            background: var(--color-neutral-0);
-            border: 1px solid var(--color-neutral-200);
-            border-radius: var(--radius-lg);
-            padding: var(--space-6);
-            box-shadow: var(--shadow-md);
-        }
-
-        .emergency-section {
-            display: flex;
-            flex-direction: column;
-            gap: var(--space-4);
-        }
-
+        .map-section,
         .emergency-widget {
-            background: var(--color-neutral-0);
-            border: 1px solid var(--color-neutral-200);
-            border-radius: var(--radius-lg);
-            padding: var(--space-4);
-            box-shadow: var(--shadow-sm);
-        }
-
-        .widget-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: var(--space-3);
-            padding-bottom: var(--space-2);
-            border-bottom: 1px solid var(--color-neutral-200);
-        }
-
-        .widget-header h3 {
-            margin: 0;
-            font-size: var(--font-size-lg);
-            font-weight: var(--font-weight-semibold);
-            color: var(--color-neutral-900);
+          padding: var(--space-4);
         }
 
         .quick-actions {
-            display: flex;
-            flex-direction: column;
-            gap: var(--space-3);
-            margin-top: var(--space-4);
+          flex-direction: row;
+          flex-wrap: wrap;
         }
 
         .action-btn {
-            padding: var(--space-3) var(--space-4);
-            border: 1px solid var(--color-primary-300);
-            border-radius: var(--radius-md);
-            background: var(--color-primary-50);
-            color: var(--color-primary-700);
-            font-size: var(--font-size-sm);
-            font-weight: var(--font-weight-medium);
-            cursor: pointer;
-            transition: var(--transition-colors);
-            text-align: center;
+          flex: 1;
+          min-width: 120px;
         }
+      }
 
-        .action-btn:hover {
-            background: var(--color-primary-100);
-            border-color: var(--color-primary-400);
-        }
-
-        .action-btn.emergency {
-            border-color: var(--color-error-300);
-            background: var(--color-error-50);
-            color: var(--color-error-700);
-        }
-
-        .action-btn.emergency:hover {
-            background: var(--color-error-100);
-            border-color: var(--color-error-400);
-        }
-
+      @media (max-width: 480px) {
         .status-indicators {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: var(--space-4);
-            padding: var(--space-3);
-            background: var(--color-neutral-50);
-            border-radius: var(--radius-md);
+          flex-direction: column;
+          gap: var(--space-2);
         }
 
-        .status-item {
-            text-align: center;
+        .quick-actions {
+          flex-direction: column;
         }
-
-        .status-value {
-            font-size: var(--font-size-xl);
-            font-weight: var(--font-weight-bold);
-            color: var(--color-primary-600);
-        }
-
-        .status-label {
-            font-size: var(--font-size-xs);
-            color: var(--color-neutral-600);
-            margin-top: var(--space-1);
-        }
-
-        .event-selector {
-            margin-bottom: var(--space-6);
-            padding: var(--space-4);
-            background: var(--color-info-50);
-            border: 1px solid var(--color-info-200);
-            border-radius: var(--radius-md);
-        }
-
-        .event-selector label {
-            display: block;
-            margin-bottom: var(--space-2);
-            font-weight: var(--font-weight-medium);
-            color: var(--color-info-700);
-        }
-
-        .event-selector select {
-            width: 100%;
-            padding: var(--space-2) var(--space-3);
-            border: 1px solid var(--color-neutral-300);
-            border-radius: var(--radius-md);
-            font-size: var(--font-size-sm);
-        }
-
-        .loading-overlay {
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(255, 255, 255, 0.9);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: var(--radius-lg);
-            z-index: 10;
-        }
-
-        .loading-spinner {
-            width: 40px;
-            height: 40px;
-            border: 3px solid var(--color-neutral-200);
-            border-top-color: var(--color-primary-500);
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-        }
-
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
-
-        /* Responsive Design */
-        @media (max-width: 768px) {
-            .maps-emergency-container {
-                padding: var(--space-4);
-            }
-
-            .maps-emergency-grid {
-                grid-template-columns: 1fr;
-                gap: var(--space-4);
-            }
-
-            .map-section,
-            .emergency-widget {
-                padding: var(--space-4);
-            }
-
-            .quick-actions {
-                flex-direction: row;
-                flex-wrap: wrap;
-            }
-
-            .action-btn {
-                flex: 1;
-                min-width: 120px;
-            }
-        }
-
-        @media (max-width: 480px) {
-            .status-indicators {
-                flex-direction: column;
-                gap: var(--space-2);
-            }
-
-            .quick-actions {
-                flex-direction: column;
-            }
-        }
+      }
     </style>
-</head>
-<body>
+  </head>
+  <body>
     <div class="maps-emergency-container">
-        <!-- Page Header -->
-        <header class="page-header">
-            <h1>🗺️ イベント マップ & 緊急連絡先</h1>
-            <p>会場の位置確認、ナビゲーション、緊急時対応の総合システム</p>
-        </header>
+      <!-- Page Header -->
+      <header class="page-header">
+        <h1>🗺️ イベント マップ & 緊急連絡先</h1>
+        <p>会場の位置確認、ナビゲーション、緊急時対応の総合システム</p>
+      </header>
 
-        <!-- Event Selector -->
-        <div class="event-selector">
-            <label for="event-select">🎯 イベントを選択:</label>
-            <select id="event-select" onchange="loadEventData(this.value)">
-                <option value="">イベントを選択してください...</option>
-            </select>
+      <!-- Event Selector -->
+      <div class="event-selector">
+        <label for="event-select">🎯 イベントを選択:</label>
+        <select id="event-select" onchange="loadEventData(this.value)">
+          <option value="">イベントを選択してください...</option>
+        </select>
+      </div>
+
+      <!-- Status Indicators -->
+      <div class="status-indicators">
+        <div class="status-item">
+          <div class="status-value" id="maps-status">❌</div>
+          <div class="status-label">マップ状態</div>
+        </div>
+        <div class="status-item">
+          <div class="status-value" id="emergency-status">❌</div>
+          <div class="status-label">緊急システム</div>
+        </div>
+        <div class="status-item">
+          <div class="status-value" id="location-status">❌</div>
+          <div class="status-label">位置情報</div>
+        </div>
+        <div class="status-item">
+          <div class="status-value" id="contacts-count">0</div>
+          <div class="status-label">緊急連絡先</div>
+        </div>
+      </div>
+
+      <!-- Main Grid -->
+      <div class="maps-emergency-grid">
+        <!-- Map Section -->
+        <div class="map-section">
+          <div class="widget-header">
+            <h3>🗺️ イベント会場マップ</h3>
+            <div>
+              <button class="action-btn" onclick="toggleFullscreen()">全画面表示</button>
+              <button class="action-btn" onclick="centerOnVenue()">会場を中心に</button>
+            </div>
+          </div>
+
+          <div id="map-container" style="position: relative">
+            <div class="loading-overlay" id="map-loading">
+              <div class="loading-spinner"></div>
+            </div>
+          </div>
+
+          <!-- Directions Panel -->
+          <div id="directions-panel" class="directions-panel">
+            <div class="directions-header">
+              <h3>🧭 道順案内</h3>
+              <button class="directions-close" onclick="hideDirections()">✕</button>
+            </div>
+            <div class="directions-content"></div>
+          </div>
         </div>
 
-        <!-- Status Indicators -->
-        <div class="status-indicators">
-            <div class="status-item">
-                <div class="status-value" id="maps-status">❌</div>
-                <div class="status-label">マップ状態</div>
+        <!-- Emergency Section -->
+        <div class="emergency-section">
+          <!-- Emergency Quick Access -->
+          <div class="emergency-widget">
+            <div class="widget-header">
+              <h3>🚨 緊急連絡先</h3>
+              <button class="action-btn emergency" onclick="showAllEmergencyContacts()">すべて表示</button>
             </div>
-            <div class="status-item">
-                <div class="status-value" id="emergency-status">❌</div>
-                <div class="status-label">緊急システム</div>
+
+            <div id="emergency-quick-list">
+              <!-- Quick emergency contacts will be populated here -->
             </div>
-            <div class="status-item">
-                <div class="status-value" id="location-status">❌</div>
-                <div class="status-label">位置情報</div>
+          </div>
+
+          <!-- Location Services -->
+          <div class="emergency-widget">
+            <div class="widget-header">
+              <h3>📍 位置情報サービス</h3>
             </div>
-            <div class="status-item">
-                <div class="status-value" id="contacts-count">0</div>
-                <div class="status-label">緊急連絡先</div>
+
+            <div class="quick-actions">
+              <button class="action-btn" onclick="shareCurrentLocation()">📤 現在地を共有</button>
+              <button class="action-btn" onclick="shareVenueLocation()">🏢 会場位置を共有</button>
+              <button class="action-btn emergency" onclick="sendEmergencyAlert()">🚨 緊急アラート送信</button>
             </div>
+          </div>
+
+          <!-- Nearby Services -->
+          <div class="emergency-widget">
+            <div class="widget-header">
+              <h3>🏪 周辺サービス</h3>
+            </div>
+
+            <div class="quick-actions">
+              <button class="action-btn" onclick="toggleNearbyServices('restaurant')">🍽️ レストラン</button>
+              <button class="action-btn" onclick="toggleNearbyServices('hospital')">🏥 病院</button>
+              <button class="action-btn" onclick="toggleNearbyServices('convenience_store')">🏪 コンビニ</button>
+              <button class="action-btn" onclick="toggleNearbyServices('subway_station')">🚇 駅</button>
+            </div>
+          </div>
         </div>
+      </div>
 
-        <!-- Main Grid -->
-        <div class="maps-emergency-grid">
-            <!-- Map Section -->
-            <div class="map-section">
-                <div class="widget-header">
-                    <h3>🗺️ イベント会場マップ</h3>
-                    <div>
-                        <button class="action-btn" onclick="toggleFullscreen()">全画面表示</button>
-                        <button class="action-btn" onclick="centerOnVenue()">会場を中心に</button>
-                    </div>
-                </div>
-                
-                <div id="map-container" style="position: relative;">
-                    <div class="loading-overlay" id="map-loading">
-                        <div class="loading-spinner"></div>
-                    </div>
-                </div>
-
-                <!-- Directions Panel -->
-                <div id="directions-panel" class="directions-panel">
-                    <div class="directions-header">
-                        <h3>🧭 道順案内</h3>
-                        <button class="directions-close" onclick="hideDirections()">✕</button>
-                    </div>
-                    <div class="directions-content"></div>
-                </div>
-            </div>
-
-            <!-- Emergency Section -->
-            <div class="emergency-section">
-                <!-- Emergency Quick Access -->
-                <div class="emergency-widget">
-                    <div class="widget-header">
-                        <h3>🚨 緊急連絡先</h3>
-                        <button class="action-btn emergency" onclick="showAllEmergencyContacts()">
-                            すべて表示
-                        </button>
-                    </div>
-                    
-                    <div id="emergency-quick-list">
-                        <!-- Quick emergency contacts will be populated here -->
-                    </div>
-                </div>
-
-                <!-- Location Services -->
-                <div class="emergency-widget">
-                    <div class="widget-header">
-                        <h3>📍 位置情報サービス</h3>
-                    </div>
-                    
-                    <div class="quick-actions">
-                        <button class="action-btn" onclick="shareCurrentLocation()">
-                            📤 現在地を共有
-                        </button>
-                        <button class="action-btn" onclick="shareVenueLocation()">
-                            🏢 会場位置を共有
-                        </button>
-                        <button class="action-btn emergency" onclick="sendEmergencyAlert()">
-                            🚨 緊急アラート送信
-                        </button>
-                    </div>
-                </div>
-
-                <!-- Nearby Services -->
-                <div class="emergency-widget">
-                    <div class="widget-header">
-                        <h3>🏪 周辺サービス</h3>
-                    </div>
-                    
-                    <div class="quick-actions">
-                        <button class="action-btn" onclick="toggleNearbyServices('restaurant')">
-                            🍽️ レストラン
-                        </button>
-                        <button class="action-btn" onclick="toggleNearbyServices('hospital')">
-                            🏥 病院
-                        </button>
-                        <button class="action-btn" onclick="toggleNearbyServices('convenience_store')">
-                            🏪 コンビニ
-                        </button>
-                        <button class="action-btn" onclick="toggleNearbyServices('subway_station')">
-                            🚇 駅
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Additional Actions -->
-        <div class="quick-actions" style="margin-top: var(--space-6);">
-            <button class="action-btn" onclick="exportMapData()">
-                📤 マップデータをエクスポート
-            </button>
-            <button class="action-btn" onclick="printDirections()">
-                🖨️ 道順を印刷
-            </button>
-            <button class="action-btn" onclick="refreshSystems()">
-                🔄 システムを更新
-            </button>
-        </div>
+      <!-- Additional Actions -->
+      <div class="quick-actions" style="margin-top: var(--space-6)">
+        <button class="action-btn" onclick="exportMapData()">📤 マップデータをエクスポート</button>
+        <button class="action-btn" onclick="printDirections()">🖨️ 道順を印刷</button>
+        <button class="action-btn" onclick="refreshSystems()">🔄 システムを更新</button>
+      </div>
     </div>
 
     <!-- Scripts -->
     <script src="/public/js/maps.js"></script>
     <script src="/public/js/emergency-contacts.js"></script>
     <script>
-        // Global state
-        let currentEventId = null;
-        let currentEventData = null;
+      // Global state
+      let currentEventId = null;
+      let currentEventData = null;
 
-        // Initialize systems when page loads
-        document.addEventListener('DOMContentLoaded', async () => {
-            try {
-                await initializePage();
-            } catch (error) {
-                console.error('Failed to initialize page:', error);
-                showError('ページの初期化に失敗しました');
+      // Initialize systems when page loads
+      document.addEventListener('DOMContentLoaded', async () => {
+        try {
+          await initializePage();
+        } catch (error) {
+          console.error('Failed to initialize page:', error);
+          showError('ページの初期化に失敗しました');
+        }
+      });
+
+      /**
+       * Initialize the page
+       */
+      async function initializePage() {
+        // Load available events
+        await loadEventsList();
+
+        // Update status indicators
+        updateStatusIndicators();
+
+        // Initialize systems status checks
+        checkSystemsStatus();
+      }
+
+      /**
+       * Load events list for selector
+       */
+      async function loadEventsList() {
+        try {
+          const response = await fetch('/api/events', {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem('authToken')}`
             }
+          });
+
+          if (response.ok) {
+            const result = await response.json();
+            const events = result.data || [];
+
+            const selector = document.getElementById('event-select');
+            selector.innerHTML = '<option value="">イベントを選択してください...</option>';
+
+            events.forEach(event => {
+              const option = document.createElement('option');
+              option.value = event.id;
+              option.textContent = `${event.title} - ${new Date(event.datetime).toLocaleDateString('ja-JP')}`;
+              selector.appendChild(option);
+            });
+          }
+        } catch (error) {
+          console.error('Error loading events:', error);
+        }
+      }
+
+      /**
+       * Load event data and initialize maps/emergency systems
+       */
+      async function loadEventData(eventId) {
+        if (!eventId) {
+          clearSystems();
+          return;
+        }
+
+        currentEventId = eventId;
+        showLoading();
+
+        try {
+          // Load event data
+          const eventResponse = await fetch(`/api/events/${eventId}`, {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem('authToken')}`
+            }
+          });
+
+          if (!eventResponse.ok) {
+            throw new Error('Failed to load event data');
+          }
+
+          currentEventData = await eventResponse.json();
+
+          // Initialize maps system
+          await initializeMapsSystem();
+
+          // Load emergency contacts
+          await loadEmergencyContacts();
+
+          // Update status
+          updateStatusIndicators();
+
+          hideLoading();
+          showSuccess('イベントデータを読み込みました');
+        } catch (error) {
+          console.error('Error loading event data:', error);
+          showError('イベントデータの読み込みに失敗しました');
+          hideLoading();
+        }
+      }
+
+      /**
+       * Initialize maps system for the current event
+       */
+      async function initializeMapsSystem() {
+        if (!currentEventData || !window.MapsSystem) {
+          throw new Error('Maps system or event data not available');
+        }
+
+        // Create maps system instance
+        window.mapsSystem = new MapsSystem({
+          mapContainerId: 'map-container'
         });
 
-        /**
-         * Initialize the page
-         */
-        async function initializePage() {
-            // Load available events
-            await loadEventsList();
-            
-            // Update status indicators
-            updateStatusIndicators();
-            
-            // Initialize systems status checks
-            checkSystemsStatus();
-        }
+        // Initialize map with event data
+        await window.mapsSystem.initializeEventMap(currentEventData);
 
-        /**
-         * Load events list for selector
-         */
-        async function loadEventsList() {
-            try {
-                const response = await fetch('/api/events', {
-                    headers: {
-                        'Authorization': `Bearer ${localStorage.getItem('authToken')}`
-                    }
-                });
+        // Update maps status
+        document.getElementById('maps-status').textContent = '✅';
+      }
 
-                if (response.ok) {
-                    const result = await response.json();
-                    const events = result.data || [];
-                    
-                    const selector = document.getElementById('event-select');
-                    selector.innerHTML = '<option value="">イベントを選択してください...</option>';
-                    
-                    events.forEach(event => {
-                        const option = document.createElement('option');
-                        option.value = event.id;
-                        option.textContent = `${event.title} - ${new Date(event.datetime).toLocaleDateString('ja-JP')}`;
-                        selector.appendChild(option);
-                    });
-                }
-            } catch (error) {
-                console.error('Error loading events:', error);
-            }
-        }
+      /**
+       * Load emergency contacts for the current event
+       */
+      async function loadEmergencyContacts() {
+        if (!currentEventId) return;
 
-        /**
-         * Load event data and initialize maps/emergency systems
-         */
-        async function loadEventData(eventId) {
-            if (!eventId) {
-                clearSystems();
-                return;
-            }
+        // Load event-specific emergency contacts
+        await window.emergencySystem.loadEventContacts(currentEventId);
 
-            currentEventId = eventId;
-            showLoading();
+        // Update quick emergency contacts display
+        updateEmergencyContactsDisplay();
 
-            try {
-                // Load event data
-                const eventResponse = await fetch(`/api/events/${eventId}`, {
-                    headers: {
-                        'Authorization': `Bearer ${localStorage.getItem('authToken')}`
-                    }
-                });
+        // Update emergency system status
+        document.getElementById('emergency-status').textContent = '✅';
+      }
 
-                if (!eventResponse.ok) {
-                    throw new Error('Failed to load event data');
-                }
+      /**
+       * Update emergency contacts display
+       */
+      function updateEmergencyContactsDisplay() {
+        const quickList = document.getElementById('emergency-quick-list');
+        const contacts = Array.from(window.emergencySystem.contacts.values())
+          .filter(contact => contact.priority <= 2)
+          .sort((a, b) => a.priority - b.priority)
+          .slice(0, 3);
 
-                currentEventData = await eventResponse.json();
-                
-                // Initialize maps system
-                await initializeMapsSystem();
-                
-                // Load emergency contacts
-                await loadEmergencyContacts();
-                
-                // Update status
-                updateStatusIndicators();
-                
-                hideLoading();
-                showSuccess('イベントデータを読み込みました');
-                
-            } catch (error) {
-                console.error('Error loading event data:', error);
-                showError('イベントデータの読み込みに失敗しました');
-                hideLoading();
-            }
-        }
-
-        /**
-         * Initialize maps system for the current event
-         */
-        async function initializeMapsSystem() {
-            if (!currentEventData || !window.MapsSystem) {
-                throw new Error('Maps system or event data not available');
-            }
-
-            // Create maps system instance
-            window.mapsSystem = new MapsSystem({
-                mapContainerId: 'map-container'
-            });
-
-            // Initialize map with event data
-            await window.mapsSystem.initializeEventMap(currentEventData);
-            
-            // Update maps status
-            document.getElementById('maps-status').textContent = '✅';
-        }
-
-        /**
-         * Load emergency contacts for the current event
-         */
-        async function loadEmergencyContacts() {
-            if (!currentEventId) return;
-
-            // Load event-specific emergency contacts
-            await window.emergencySystem.loadEventContacts(currentEventId);
-            
-            // Update quick emergency contacts display
-            updateEmergencyContactsDisplay();
-            
-            // Update emergency system status
-            document.getElementById('emergency-status').textContent = '✅';
-        }
-
-        /**
-         * Update emergency contacts display
-         */
-        function updateEmergencyContactsDisplay() {
-            const quickList = document.getElementById('emergency-quick-list');
-            const contacts = Array.from(window.emergencySystem.contacts.values())
-                .filter(contact => contact.priority <= 2)
-                .sort((a, b) => a.priority - b.priority)
-                .slice(0, 3);
-
-            quickList.innerHTML = contacts.map(contact => `
+        quickList.innerHTML = contacts
+          .map(
+            contact => `
                 <div class="emergency-contact-item" style="margin-bottom: var(--space-2);">
                     <div class="contact-info">
                         <div class="contact-name">${contact.name}</div>
@@ -533,215 +514,217 @@
                         📞 ${contact.phone}
                     </button>
                 </div>
-            `).join('');
+            `
+          )
+          .join('');
 
-            // Update contacts count
-            document.getElementById('contacts-count').textContent = window.emergencySystem.contacts.size;
-        }
+        // Update contacts count
+        document.getElementById('contacts-count').textContent = window.emergencySystem.contacts.size;
+      }
 
-        /**
-         * Check systems status
-         */
-        function checkSystemsStatus() {
-            // Check location services
-            if (navigator.geolocation) {
-                navigator.geolocation.getCurrentPosition(
-                    () => {
-                        document.getElementById('location-status').textContent = '✅';
-                    },
-                    () => {
-                        document.getElementById('location-status').textContent = '⚠️';
-                    }
-                );
-            } else {
-                document.getElementById('location-status').textContent = '❌';
+      /**
+       * Check systems status
+       */
+      function checkSystemsStatus() {
+        // Check location services
+        if (navigator.geolocation) {
+          navigator.geolocation.getCurrentPosition(
+            () => {
+              document.getElementById('location-status').textContent = '✅';
+            },
+            () => {
+              document.getElementById('location-status').textContent = '⚠️';
             }
+          );
+        } else {
+          document.getElementById('location-status').textContent = '❌';
+        }
+      }
+
+      /**
+       * Update status indicators
+       */
+      function updateStatusIndicators() {
+        // Maps status
+        if (window.mapsSystem && window.mapsSystem.map) {
+          document.getElementById('maps-status').textContent = '✅';
+        } else {
+          document.getElementById('maps-status').textContent = '❌';
         }
 
-        /**
-         * Update status indicators
-         */
-        function updateStatusIndicators() {
-            // Maps status
-            if (window.mapsSystem && window.mapsSystem.map) {
-                document.getElementById('maps-status').textContent = '✅';
-            } else {
-                document.getElementById('maps-status').textContent = '❌';
-            }
-
-            // Emergency system status
-            if (window.emergencySystem && window.emergencySystem.isInitialized) {
-                document.getElementById('emergency-status').textContent = '✅';
-            } else {
-                document.getElementById('emergency-status').textContent = '❌';
-            }
-
-            // Contacts count
-            if (window.emergencySystem) {
-                document.getElementById('contacts-count').textContent = window.emergencySystem.contacts.size;
-            }
+        // Emergency system status
+        if (window.emergencySystem && window.emergencySystem.isInitialized) {
+          document.getElementById('emergency-status').textContent = '✅';
+        } else {
+          document.getElementById('emergency-status').textContent = '❌';
         }
 
-        /**
-         * Clear all systems
-         */
-        function clearSystems() {
-            currentEventId = null;
-            currentEventData = null;
-            
-            if (window.mapsSystem) {
-                window.mapsSystem.clearMarkers();
-            }
-            
-            document.getElementById('emergency-quick-list').innerHTML = '<p>イベントを選択してください</p>';
-            
-            // Reset status indicators
-            document.getElementById('maps-status').textContent = '❌';
-            document.getElementById('emergency-status').textContent = '❌';
-            document.getElementById('contacts-count').textContent = '0';
+        // Contacts count
+        if (window.emergencySystem) {
+          document.getElementById('contacts-count').textContent = window.emergencySystem.contacts.size;
+        }
+      }
+
+      /**
+       * Clear all systems
+       */
+      function clearSystems() {
+        currentEventId = null;
+        currentEventData = null;
+
+        if (window.mapsSystem) {
+          window.mapsSystem.clearMarkers();
         }
 
-        // UI Action Functions
-        function toggleFullscreen() {
-            const mapContainer = document.getElementById('map-container');
-            mapContainer.classList.toggle('map-fullscreen');
-            
-            if (window.mapsSystem && window.mapsSystem.map) {
-                setTimeout(() => {
-                    google.maps.event.trigger(window.mapsSystem.map, 'resize');
-                }, 100);
-            }
+        document.getElementById('emergency-quick-list').innerHTML = '<p>イベントを選択してください</p>';
+
+        // Reset status indicators
+        document.getElementById('maps-status').textContent = '❌';
+        document.getElementById('emergency-status').textContent = '❌';
+        document.getElementById('contacts-count').textContent = '0';
+      }
+
+      // UI Action Functions
+      function toggleFullscreen() {
+        const mapContainer = document.getElementById('map-container');
+        mapContainer.classList.toggle('map-fullscreen');
+
+        if (window.mapsSystem && window.mapsSystem.map) {
+          setTimeout(() => {
+            google.maps.event.trigger(window.mapsSystem.map, 'resize');
+          }, 100);
+        }
+      }
+
+      function centerOnVenue() {
+        if (window.mapsSystem) {
+          window.mapsSystem.centerOnVenue();
+        }
+      }
+
+      function hideDirections() {
+        const panel = document.getElementById('directions-panel');
+        if (panel) {
+          panel.style.display = 'none';
+        }
+      }
+
+      function showAllEmergencyContacts() {
+        if (window.emergencySystem) {
+          window.emergencySystem.showAllContacts();
+        }
+      }
+
+      function shareCurrentLocation() {
+        if (window.emergencySystem) {
+          window.emergencySystem.shareLocation();
+        }
+      }
+
+      function shareVenueLocation() {
+        if (window.mapsSystem) {
+          window.mapsSystem.shareLocation();
+        }
+      }
+
+      function sendEmergencyAlert() {
+        if (window.emergencySystem) {
+          window.emergencySystem.sendAlert();
+        }
+      }
+
+      function toggleNearbyServices(serviceType) {
+        if (window.mapsSystem) {
+          window.mapsSystem.toggleNearbyServices(serviceType);
+        }
+      }
+
+      function exportMapData() {
+        if (!currentEventData) {
+          showError('マップデータがありません');
+          return;
         }
 
-        function centerOnVenue() {
-            if (window.mapsSystem) {
-                window.mapsSystem.centerOnVenue();
-            }
+        const mapData = {
+          event: currentEventData,
+          timestamp: new Date().toISOString(),
+          contacts: Array.from(window.emergencySystem.contacts.values())
+        };
+
+        const blob = new Blob([JSON.stringify(mapData, null, 2)], { type: 'application/json' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `map-data-${currentEventId}.json`;
+        a.click();
+        URL.revokeObjectURL(url);
+      }
+
+      function printDirections() {
+        const panel = document.getElementById('directions-panel');
+        if (panel && panel.style.display !== 'none') {
+          window.print();
+        } else {
+          showError('表示する道順がありません');
         }
+      }
 
-        function hideDirections() {
-            const panel = document.getElementById('directions-panel');
-            if (panel) {
-                panel.style.display = 'none';
-            }
+      function refreshSystems() {
+        if (currentEventId) {
+          loadEventData(currentEventId);
+        } else {
+          checkSystemsStatus();
+          updateStatusIndicators();
         }
+      }
 
-        function showAllEmergencyContacts() {
-            if (window.emergencySystem) {
-                window.emergencySystem.showAllContacts();
-            }
-        }
+      // Utility Functions
+      function showLoading() {
+        document.getElementById('map-loading').style.display = 'flex';
+      }
 
-        function shareCurrentLocation() {
-            if (window.emergencySystem) {
-                window.emergencySystem.shareLocation();
-            }
-        }
+      function hideLoading() {
+        document.getElementById('map-loading').style.display = 'none';
+      }
 
-        function shareVenueLocation() {
-            if (window.mapsSystem) {
-                window.mapsSystem.shareLocation();
-            }
-        }
+      function showSuccess(message) {
+        // Create success notification
+        const notification = document.createElement('div');
+        notification.className = 'emergency-notification success';
+        notification.textContent = message;
+        document.body.appendChild(notification);
 
-        function sendEmergencyAlert() {
-            if (window.emergencySystem) {
-                window.emergencySystem.sendAlert();
-            }
-        }
+        setTimeout(() => {
+          if (notification.parentNode) {
+            notification.remove();
+          }
+        }, 3000);
+      }
 
-        function toggleNearbyServices(serviceType) {
-            if (window.mapsSystem) {
-                window.mapsSystem.toggleNearbyServices(serviceType);
-            }
-        }
+      function showError(message) {
+        // Create error notification
+        const notification = document.createElement('div');
+        notification.className = 'emergency-notification error';
+        notification.textContent = message;
+        document.body.appendChild(notification);
 
-        function exportMapData() {
-            if (!currentEventData) {
-                showError('マップデータがありません');
-                return;
-            }
+        setTimeout(() => {
+          if (notification.parentNode) {
+            notification.remove();
+          }
+        }, 5000);
+      }
 
-            const mapData = {
-                event: currentEventData,
-                timestamp: new Date().toISOString(),
-                contacts: Array.from(window.emergencySystem.contacts.values())
-            };
+      // Error handling for system failures
+      window.addEventListener('error', event => {
+        console.error('Global error:', event.error);
+        showError('システムエラーが発生しました');
+      });
 
-            const blob = new Blob([JSON.stringify(mapData, null, 2)], { type: 'application/json' });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = `map-data-${currentEventId}.json`;
-            a.click();
-            URL.revokeObjectURL(url);
-        }
-
-        function printDirections() {
-            const panel = document.getElementById('directions-panel');
-            if (panel && panel.style.display !== 'none') {
-                window.print();
-            } else {
-                showError('表示する道順がありません');
-            }
-        }
-
-        function refreshSystems() {
-            if (currentEventId) {
-                loadEventData(currentEventId);
-            } else {
-                checkSystemsStatus();
-                updateStatusIndicators();
-            }
-        }
-
-        // Utility Functions
-        function showLoading() {
-            document.getElementById('map-loading').style.display = 'flex';
-        }
-
-        function hideLoading() {
-            document.getElementById('map-loading').style.display = 'none';
-        }
-
-        function showSuccess(message) {
-            // Create success notification
-            const notification = document.createElement('div');
-            notification.className = 'emergency-notification success';
-            notification.textContent = message;
-            document.body.appendChild(notification);
-            
-            setTimeout(() => {
-                if (notification.parentNode) {
-                    notification.remove();
-                }
-            }, 3000);
-        }
-
-        function showError(message) {
-            // Create error notification
-            const notification = document.createElement('div');
-            notification.className = 'emergency-notification error';
-            notification.textContent = message;
-            document.body.appendChild(notification);
-            
-            setTimeout(() => {
-                if (notification.parentNode) {
-                    notification.remove();
-                }
-            }, 5000);
-        }
-
-        // Error handling for system failures
-        window.addEventListener('error', (event) => {
-            console.error('Global error:', event.error);
-            showError('システムエラーが発生しました');
-        });
-
-        window.addEventListener('unhandledrejection', (event) => {
-            console.error('Unhandled promise rejection:', event.reason);
-            showError('システムエラーが発生しました');
-        });
+      window.addEventListener('unhandledrejection', event => {
+        console.error('Unhandled promise rejection:', event.reason);
+        showError('システムエラーが発生しました');
+      });
     </script>
-</body>
+  </body>
 </html>

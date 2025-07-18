@@ -3,7 +3,7 @@ const AWS = require('aws-sdk');
 const dynamodb = new AWS.DynamoDB.DocumentClient();
 
 exports.handler = async event => {
-  const connectionId = event.requestContext.connectionId;
+  const { connectionId } = event.requestContext;
   const connectionsTable = process.env.CONNECTIONS_TABLE;
 
   try {

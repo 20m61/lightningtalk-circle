@@ -126,13 +126,9 @@ describe('AnalyticsService', () => {
     it('should handle errors gracefully', async () => {
       const eventId = 'invalid-event';
 
-      analyticsService.getBasicEventStats = jest
-        .fn()
-        .mockRejectedValue(new Error('Event not found'));
+      analyticsService.getBasicEventStats = jest.fn().mockRejectedValue(new Error('Event not found'));
 
-      await expect(analyticsService.getEventStatistics(eventId)).rejects.toThrow(
-        'Failed to generate event statistics'
-      );
+      await expect(analyticsService.getEventStatistics(eventId)).rejects.toThrow('Failed to generate event statistics');
     });
   });
 
@@ -333,9 +329,7 @@ describe('AnalyticsService', () => {
 
       analyticsService.getEventStatistics = jest.fn().mockResolvedValue({});
 
-      await expect(analyticsService.generateReport(eventId, reportType)).rejects.toThrow(
-        'Failed to generate report'
-      );
+      await expect(analyticsService.generateReport(eventId, reportType)).rejects.toThrow('Failed to generate report');
     });
   });
 

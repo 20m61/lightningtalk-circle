@@ -25,7 +25,9 @@ async function remove(path) {
   try {
     await fs.rm(path, { recursive: true, force: true });
   } catch (error) {
-    if (error.code !== 'ENOENT') throw error;
+    if (error.code !== 'ENOENT') {
+      throw error;
+    }
   }
 }
 
@@ -33,7 +35,9 @@ async function ensureDir(dir) {
   try {
     await fs.mkdir(dir, { recursive: true });
   } catch (error) {
-    if (error.code !== 'EEXIST') throw error;
+    if (error.code !== 'EEXIST') {
+      throw error;
+    }
   }
 }
 

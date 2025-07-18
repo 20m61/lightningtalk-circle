@@ -38,13 +38,9 @@ function validateIssueLabels(labels) {
   }
 
   // 必須ラベルの検証
-  const hasTypeLabel = labels.some(label =>
-    ['bug', 'enhancement', 'documentation', 'infrastructure'].includes(label)
-  );
+  const hasTypeLabel = labels.some(label => ['bug', 'enhancement', 'documentation', 'infrastructure'].includes(label));
 
-  const hasPriorityLabel = labels.some(label =>
-    ['low-priority', 'medium-priority', 'high-priority'].includes(label)
-  );
+  const hasPriorityLabel = labels.some(label => ['low-priority', 'medium-priority', 'high-priority'].includes(label));
 
   return hasTypeLabel && hasPriorityLabel;
 }
@@ -74,9 +70,7 @@ describe('Issue Validator', () => {
 
     it('should reject issue with invalid priority', () => {
       const invalidIssue = issueFixtures.invalid.invalidPriority;
-      expect(() => validateIssue(invalidIssue)).toThrow(
-        'Issue must have a valid priority (low, medium, high)'
-      );
+      expect(() => validateIssue(invalidIssue)).toThrow('Issue must have a valid priority (low, medium, high)');
     });
 
     it('should reject null or undefined issue', () => {

@@ -78,10 +78,7 @@ describe('Multi-Event Management Integration Tests', () => {
         }
       ];
 
-      await request(app)
-        .post('/api/multi-events/create-batch')
-        .send({ events: invalidEventsData })
-        .expect(400);
+      await request(app).post('/api/multi-events/create-batch').send({ events: invalidEventsData }).expect(400);
     });
 
     it('should detect and handle conflicts in batch creation', async () => {

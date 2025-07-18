@@ -71,7 +71,7 @@
   display: block;
   font-size: 1.5rem;
   font-weight: 700;
-  color: var(--primary, #4A90E2);
+  color: var(--primary, #4a90e2);
   margin-bottom: 0.25rem;
 }
 
@@ -99,23 +99,23 @@
 }
 
 .nav-item:hover {
-  color: var(--primary, #4A90E2);
+  color: var(--primary, #4a90e2);
   background-color: var(--primary-light, #f0f4f8);
 }
 
 .nav-item.active {
-  color: var(--primary, #4A90E2);
+  color: var(--primary, #4a90e2);
   background-color: var(--primary-light, #f0f4f8);
 }
 
 .nav-item.active::before {
-  content: '';
+  content: "";
   position: absolute;
   left: 0;
   top: 0;
   bottom: 0;
   width: 4px;
-  background-color: var(--primary, #4A90E2);
+  background-color: var(--primary, #4a90e2);
 }
 
 .nav-icon {
@@ -167,7 +167,9 @@
   display: flex;
   align-items: center;
   gap: 1.5rem;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  transition:
+    transform 0.3s ease,
+    box-shadow 0.3s ease;
 }
 
 .stat-card:hover {
@@ -216,7 +218,7 @@
   border-radius: 12px;
   padding: 1.5rem;
   margin-bottom: 1rem;
-  border-left: 4px solid var(--primary, #4A90E2);
+  border-left: 4px solid var(--primary, #4a90e2);
 }
 
 .talk-card.upcoming {
@@ -393,7 +395,7 @@
 .tag {
   padding: 0.25rem 0.75rem;
   background: var(--primary-light, #e8ecf0);
-  color: var(--primary, #4A90E2);
+  color: var(--primary, #4a90e2);
   border-radius: 16px;
   font-size: 0.75rem;
   font-weight: 500;
@@ -422,8 +424,8 @@
 }
 
 .btn-icon:hover {
-  background: var(--primary, #4A90E2);
-  border-color: var(--primary, #4A90E2);
+  background: var(--primary, #4a90e2);
+  border-color: var(--primary, #4a90e2);
   transform: scale(1.1);
 }
 
@@ -439,7 +441,7 @@
 
 .progress-fill {
   height: 100%;
-  background: var(--primary, #4A90E2);
+  background: var(--primary, #4a90e2);
   border-radius: 4px;
   transition: width 0.3s ease;
 }
@@ -562,7 +564,7 @@
   display: block;
   font-size: 1.5rem;
   font-weight: 700;
-  color: var(--primary, #4A90E2);
+  color: var(--primary, #4a90e2);
 }
 
 .feedback-comments {
@@ -587,7 +589,7 @@
   font-size: 0.875rem;
   padding: 0.25rem 0.75rem;
   background: var(--primary-light, #e8ecf0);
-  color: var(--primary, #4A90E2);
+  color: var(--primary, #4a90e2);
   border-radius: 12px;
 }
 
@@ -677,7 +679,7 @@
 }
 
 .notification.info {
-  background: var(--primary, #4A90E2);
+  background: var(--primary, #4a90e2);
 }
 
 /* No Content States */
@@ -724,7 +726,7 @@
 .form-group input:focus,
 .form-group textarea:focus {
   outline: none;
-  border-color: var(--primary, #4A90E2);
+  border-color: var(--primary, #4a90e2);
 }
 
 .form-actions {

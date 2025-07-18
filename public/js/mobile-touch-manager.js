@@ -44,7 +44,7 @@ class MobileTouchManager {
    * デバイス情報の検出
    */
   detectDevice() {
-    const userAgent = navigator.userAgent;
+    const { userAgent } = navigator;
     const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
       userAgent
     );
@@ -84,7 +84,9 @@ class MobileTouchManager {
    * ノッチの検出（iPhone X以降）
    */
   detectNotch() {
-    if (!this.deviceInfo?.isIOS) return false;
+    if (!this.deviceInfo?.isIOS) {
+      return false;
+    }
 
     // iOS 11以降で利用可能
     if (CSS.supports('padding: env(safe-area-inset-top)')) {
@@ -136,7 +138,7 @@ class MobileTouchManager {
         startY: touch.clientY,
         currentX: touch.clientX,
         currentY: touch.clientY,
-        startTime: startTime,
+        startTime,
         target: event.target,
         moved: false
       });
@@ -207,7 +209,9 @@ class MobileTouchManager {
 
     Array.from(event.touches).forEach(touch => {
       const touchData = this.touches.get(touch.identifier);
-      if (!touchData) return;
+      if (!touchData) {
+        return;
+      }
 
       // 移動距離の計算
       const deltaX = touch.clientX - touchData.currentX;
@@ -247,7 +251,9 @@ class MobileTouchManager {
    */
   handleSwipeMove(touch, event) {
     const touchData = this.touches.get(touch.identifier);
-    if (!touchData) return;
+    if (!touchData) {
+      return;
+    }
 
     const deltaX = touch.clientX - touchData.startX;
     const deltaY = touch.clientY - touchData.startY;
@@ -288,7 +294,9 @@ class MobileTouchManager {
 
     Array.from(event.changedTouches).forEach(touch => {
       const touchData = this.touches.get(touch.identifier);
-      if (!touchData) return;
+      if (!touchData) {
+        return;
+      }
 
       // 長押しタイマーのクリア
       if (touchData.longPressTimer) {
@@ -622,7 +630,7 @@ class MobileTouchManager {
    * パフォーマンスレポート取得
    */
   getPerformanceReport() {
-    const touchLatency = this.performance.touchLatency;
+    const { touchLatency } = this.performance;
     const avgLatency =
       touchLatency.length > 0 ? touchLatency.reduce((a, b) => a + b, 0) / touchLatency.length : 0;
 

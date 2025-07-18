@@ -228,7 +228,7 @@
         // Add click handlers
         quickActions.addEventListener('click', e => {
           if (e.target.classList.contains('quick-action-btn')) {
-            const message = e.target.dataset.message;
+            const { message } = e.target.dataset;
             if (message && this.chatSystem.messageInput) {
               this.chatSystem.messageInput.value = message;
               this.chatSystem.sendMessage();
@@ -326,7 +326,7 @@
 
     if (eventId) {
       window.eventChat = new ChatIntegration({
-        eventId: eventId,
+        eventId,
         minimized: true
       });
     }

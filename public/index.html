@@ -56,10 +56,7 @@
     <!-- Optimized font loading -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;600;700&display=swap"
-      rel="stylesheet"
-    />
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;600;700&display=swap" rel="stylesheet" />
 
     <!-- Design System CSS - Load first -->
     <link rel="stylesheet" href="css/design-tokens.css" />
@@ -69,6 +66,9 @@
 
     <!-- Mobile Optimizations -->
     <link rel="stylesheet" href="css/mobile-optimizations.css" />
+
+    <!-- Hero Events Section -->
+    <link rel="stylesheet" href="css/hero-events.css" />
 
     <!-- Legacy CSS - To be migrated -->
     <link rel="stylesheet" href="css/tailwind.css" />
@@ -99,7 +99,8 @@
       <nav class="container flex flex--items-center flex--justify-between">
         <div class="logo text-primary font-bold">⚡ なんでもLT</div>
         <ul class="nav-links flex flex--items-center">
-          <li><a href="#event" class="nav-link">イベント情報</a></li>
+          <li><a href="#hero" class="nav-link">イベント一覧</a></li>
+          <li><a href="#event-detail" class="nav-link">現在のイベント</a></li>
           <li><a href="/presentations.html" class="nav-link">アーカイブ</a></li>
           <li><a href="#about" class="nav-link">ライトニングトークとは</a></li>
           <li><a href="#join" class="nav-link">参加方法</a></li>
@@ -119,7 +120,7 @@
     </header>
 
     <main>
-      <section class="hero">
+      <section id="hero" class="hero">
         <div class="container">
           <div class="floating-elements">
             <div class="floating-sun">☀️</div>
@@ -128,11 +129,108 @@
           </div>
           <h1>なんでもライトニングトーク ⚡</h1>
           <p>5分間で世界を変える！あなたの「なんでも」を聞かせて！</p>
-          <a href="#event" class="btn btn-primary btn-lg">第1回イベント詳細を見る 🚀</a>
+
+          <!-- イベント一覧を目立つ場所に配置 -->
+          <div class="hero-events-preview">
+            <div class="hero-events-header">
+              <h2 class="hero-events-title">🎉 開催予定のイベント</h2>
+              <div class="hero-events-filter">
+                <button class="filter-btn active" data-filter="all">すべて</button>
+                <button class="filter-btn" data-filter="upcoming">開催予定</button>
+                <button class="filter-btn" data-filter="planning">企画中</button>
+                <button class="filter-btn" data-filter="past">過去のイベント</button>
+              </div>
+            </div>
+
+            <div id="hero-events-grid" class="hero-events-grid">
+              <!-- イベントはJavaScriptで動的に読み込み -->
+              <div class="loading-placeholder">
+                <div class="loading-spinner"></div>
+                <p>イベント情報を読み込み中...</p>
+              </div>
+            </div>
+
+            <div class="hero-events-actions">
+              <button class="btn btn-outline" id="load-more-events" style="display: none">さらに表示する</button>
+              <a href="#all-events" class="btn btn-secondary">すべてのイベントを見る</a>
+            </div>
+          </div>
+
+          <div class="hero-cta">
+            <a href="#event-detail" class="btn btn-primary btn-lg">第1回イベント詳細を見る 🚀</a>
+            <a href="#join" class="btn btn-secondary btn-lg">参加方法を確認する 📋</a>
+          </div>
         </div>
       </section>
 
-      <section id="event" class="event-info">
+      <!-- 全イベント一覧セクション -->
+      <section id="all-events" class="all-events-section">
+        <div class="container">
+          <div class="section-header">
+            <h2 class="section-title">📅 すべてのイベント</h2>
+            <p class="section-description">過去から未来まで、なんでもライトニングトークのイベント一覧です</p>
+          </div>
+
+          <div class="events-filter-bar">
+            <div class="filter-group">
+              <label>ステータス:</label>
+              <select id="status-filter">
+                <option value="all">すべて</option>
+                <option value="upcoming">開催予定</option>
+                <option value="ongoing">開催中</option>
+                <option value="past">終了</option>
+                <option value="planning">企画中</option>
+              </select>
+            </div>
+
+            <div class="filter-group">
+              <label>開催形式:</label>
+              <select id="format-filter">
+                <option value="all">すべて</option>
+                <option value="onsite">現地開催</option>
+                <option value="online">オンライン</option>
+                <option value="hybrid">ハイブリッド</option>
+              </select>
+            </div>
+
+            <div class="filter-group">
+              <label>年月:</label>
+              <select id="date-filter">
+                <option value="all">すべて</option>
+                <option value="2025-07">2025年7月</option>
+                <option value="2025-08">2025年8月</option>
+                <option value="2025-09">2025年9月</option>
+              </select>
+            </div>
+
+            <div class="search-group">
+              <input type="text" id="event-search" placeholder="イベントを検索..." />
+              <button class="search-btn">🔍</button>
+            </div>
+          </div>
+
+          <div class="events-view-toggle">
+            <button class="view-toggle-btn active" data-view="grid"><span class="icon">⊞</span> グリッド</button>
+            <button class="view-toggle-btn" data-view="list"><span class="icon">☰</span> リスト</button>
+          </div>
+
+          <div id="all-events-container" class="events-container grid-view">
+            <!-- イベントはJavaScriptで動的に読み込み -->
+            <div class="loading-placeholder">
+              <div class="loading-spinner"></div>
+              <p>イベント情報を読み込み中...</p>
+            </div>
+          </div>
+
+          <div class="events-pagination">
+            <button class="pagination-btn" id="prev-page" disabled>← 前へ</button>
+            <span class="pagination-info"> <span id="current-page">1</span> / <span id="total-pages">1</span> </span>
+            <button class="pagination-btn" id="next-page">次へ →</button>
+          </div>
+        </div>
+      </section>
+
+      <section id="event-detail" class="event-info">
         <div class="container">
           <h2 class="section-title">🎉 第1回 なんでもライトニングトーク 🎉</h2>
 
@@ -169,10 +267,7 @@
               <h4>📍 会場について</h4>
               <p><strong>新宿某所</strong>（6月20日に詳細確定予定）</p>
               <p>
-                <a
-                  href="https://maps.app.goo.gl/51TFv825jmuBsjbq5?g_st=ic"
-                  target="_blank"
-                  class="map-link"
+                <a href="https://maps.app.goo.gl/51TFv825jmuBsjbq5?g_st=ic" target="_blank" class="map-link"
                   >🗺️ 地図を見る</a
                 >
               </p>
@@ -207,9 +302,7 @@
                   <button class="btn btn-outline vote-btn online-btn" data-type="online">
                     💻 オンラインで参加予定
                   </button>
-                  <button class="btn btn-outline vote-btn onsite-btn" data-type="onsite">
-                    🏢 現地で参加予定
-                  </button>
+                  <button class="btn btn-outline vote-btn onsite-btn" data-type="onsite">🏢 現地で参加予定</button>
                 </div>
                 <div class="vote-message" id="vote-message"></div>
               </div>
@@ -235,18 +328,10 @@
               <div class="survey-section">
                 <h4>💭 当日参加アンケート</h4>
                 <div class="survey-buttons flex flex--justify-center">
-                  <button
-                    id="onlineBtn"
-                    class="btn btn-secondary survey-btn"
-                    data-action="survey-online"
-                  >
+                  <button id="onlineBtn" class="btn btn-secondary survey-btn" data-action="survey-online">
                     💻 オンライン参加 <span id="onlineCount" class="count">0</span>
                   </button>
-                  <button
-                    id="offlineBtn"
-                    class="btn btn-secondary survey-btn"
-                    data-action="survey-offline"
-                  >
+                  <button id="offlineBtn" class="btn btn-secondary survey-btn" data-action="survey-offline">
                     🏢 現地参加 <span id="offlineCount" class="count">0</span>
                   </button>
                 </div>
@@ -278,10 +363,7 @@
               <div class="timeline-dot"></div>
               <div class="timeline-content">
                 <h4>🏁 1997年</h4>
-                <p>
-                  Perl Conference
-                  でライトニングトークが誕生！技術者コミュニティから生まれた文化です。
-                </p>
+                <p>Perl Conference でライトニングトークが誕生！技術者コミュニティから生まれた文化です。</p>
               </div>
             </div>
 
@@ -289,9 +371,7 @@
               <div class="timeline-dot"></div>
               <div class="timeline-content">
                 <h4>🌍 2000年代</h4>
-                <p>
-                  世界中の技術カンファレンスに広がり、5分間で効果的に情報を伝える手法として確立。
-                </p>
+                <p>世界中の技術カンファレンスに広がり、5分間で効果的に情報を伝える手法として確立。</p>
               </div>
             </div>
 
@@ -315,16 +395,10 @@
           <div class="lt-benefits">
             <h4>💡 ライトニングトークの魅力</h4>
             <div class="benefits-grid">
-              <div class="benefit-item">
-                ⏰ <strong>短時間集中</strong><br />5分だから緊張しすぎない！
-              </div>
-              <div class="benefit-item">
-                🎤 <strong>気軽な発表</strong><br />完璧でなくても大丈夫！
-              </div>
+              <div class="benefit-item">⏰ <strong>短時間集中</strong><br />5分だから緊張しすぎない！</div>
+              <div class="benefit-item">🎤 <strong>気軽な発表</strong><br />完璧でなくても大丈夫！</div>
               <div class="benefit-item">🌟 <strong>多様性</strong><br />様々な話題が聞ける！</div>
-              <div class="benefit-item">
-                🤝 <strong>交流促進</strong><br />新しい出会いとつながり！
-              </div>
+              <div class="benefit-item">🤝 <strong>交流促進</strong><br />新しい出会いとつながり！</div>
             </div>
           </div>
         </div>
@@ -385,9 +459,7 @@
               <div class="topic-item" data-category="sports">🏃‍♂️ スポーツ・健康</div>
               <div class="topic-item" data-category="music">🎵 音楽・演奏</div>
             </div>
-            <p class="topics-note">
-              ...などなど、本当になんでもOK！あなたの「これ話したい！」を聞かせてください 🌟
-            </p>
+            <p class="topics-note">...などなど、本当になんでもOK！あなたの「これ話したい！」を聞かせてください 🌟</p>
           </div>
         </div>
       </section>
@@ -432,30 +504,15 @@
         <form id="voteForm" class="vote-form">
           <div class="vote-form-group">
             <label for="voteName">お名前 (必須)</label>
-            <input
-              type="text"
-              id="voteName"
-              name="name"
-              required
-              placeholder="山田太郎"
-              maxlength="50"
-            />
+            <input type="text" id="voteName" name="name" required placeholder="山田太郎" maxlength="50" />
           </div>
           <div class="vote-form-group">
             <label for="voteEmail">メールアドレス (任意)</label>
-            <input
-              type="email"
-              id="voteEmail"
-              name="email"
-              placeholder="example@email.com"
-              maxlength="100"
-            />
+            <input type="email" id="voteEmail" name="email" placeholder="example@email.com" maxlength="100" />
           </div>
           <div class="vote-form-buttons">
             <button type="submit" class="vote-submit-btn">投票する</button>
-            <button type="button" class="vote-cancel-btn" onclick="closeVoteModal()">
-              キャンセル
-            </button>
+            <button type="button" class="vote-cancel-btn" onclick="closeVoteModal()">キャンセル</button>
           </div>
         </form>
       </div>
@@ -473,10 +530,7 @@
         <!-- Google認証ボタン（管理者向け） -->
         <div class="google-login-section">
           <button type="button" onclick="loginWithGoogle()" class="btn-google-login-modal">
-            <img
-              src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg"
-              alt="Google"
-            />
+            <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google" />
             管理者Googleアカウントでログイン
           </button>
           <div class="divider">
@@ -487,24 +541,11 @@
         <form id="adminLoginForm" class="admin-login-form">
           <div class="form-group">
             <label for="adminEmail"> <i class="icon">📧</i> メールアドレス </label>
-            <input
-              type="email"
-              id="adminEmail"
-              name="email"
-              required
-              placeholder="admin@example.com"
-              autofocus
-            />
+            <input type="email" id="adminEmail" name="email" required placeholder="admin@example.com" autofocus />
           </div>
           <div class="form-group">
             <label for="adminPassword"> <i class="icon">🔑</i> パスワード </label>
-            <input
-              type="password"
-              id="adminPassword"
-              name="password"
-              required
-              placeholder="パスワードを入力"
-            />
+            <input type="password" id="adminPassword" name="password" required placeholder="パスワードを入力" />
           </div>
           <div class="form-group remember-me">
             <label>
@@ -521,10 +562,7 @@
             <button type="button" class="cancel-btn" onclick="closeAdminLogin()">キャンセル</button>
           </div>
           <div class="login-help">
-            <p>
-              パスワードをお忘れの場合は<a href="mailto:admin@lightningtalk.com">管理者</a
-              >までご連絡ください
-            </p>
+            <p>パスワードをお忘れの場合は<a href="mailto:admin@lightningtalk.com">管理者</a>までご連絡ください</p>
           </div>
         </form>
       </div>
@@ -544,13 +582,7 @@
           <div class="chat-welcome">ようこそ！質問や感想をお気軽にどうぞ 🌟</div>
         </div>
         <div class="chat-input-container">
-          <input
-            type="text"
-            id="chatInput"
-            class="chat-input"
-            placeholder="メッセージを入力..."
-            maxlength="200"
-          />
+          <input type="text" id="chatInput" class="chat-input" placeholder="メッセージを入力..." maxlength="200" />
           <button id="chatSend" class="chat-send">送信</button>
         </div>
       </div>
@@ -565,6 +597,7 @@
     <script src="js/mobile-touch-manager.js"></script>
     <script src="js/mobile-components.js"></script>
     <script src="js/mobile-performance-optimizer.js"></script>
+    <script src="js/events-manager.js"></script>
     <script src="js/main.js"></script>
 
     <!-- React Components Integration -->

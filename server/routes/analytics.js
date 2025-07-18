@@ -282,7 +282,7 @@ router.get('/errors', async (req, res) => {
   try {
     const { resolved = false } = req.query;
 
-    let errors = analyticsStore.errors;
+    let { errors } = analyticsStore;
     if (resolved !== undefined) {
       errors = errors.filter(e => e.resolved === (resolved === 'true'));
     }
@@ -376,7 +376,9 @@ function calculateErrorRate() {
     e => e.type === 'pageView' || e.type === 'api'
   ).length;
 
-  if (totalRequests === 0) return 0;
+  if (totalRequests === 0) {
+    return 0;
+  }
 
   return ((analyticsStore.errors.length / totalRequests) * 100).toFixed(2);
 }
@@ -386,7 +388,7 @@ function getTopPages(events) {
   events
     .filter(e => e.type === 'pageView')
     .forEach(e => {
-      const url = e.data.url;
+      const { url } = e.data;
       pageCounts[url] = (pageCounts[url] || 0) + 1;
     });
 
@@ -398,7 +400,9 @@ function getTopPages(events) {
 
 function calculatePerformanceMetrics() {
   const navMetrics = analyticsStore.metrics.filter(m => m.type === 'navigation');
-  if (navMetrics.length === 0) return null;
+  if (navMetrics.length === 0) {
+    return null;
+  }
 
   const latest = navMetrics[navMetrics.length - 1].data;
 
@@ -447,7 +451,9 @@ function calculateUserBehavior() {
 
 function calculateWebVitals() {
   const webVitalMetrics = analyticsStore.metrics.filter(m => m.type === 'webVitals');
-  if (webVitalMetrics.length === 0) return null;
+  if (webVitalMetrics.length === 0) {
+    return null;
+  }
 
   const lcp = webVitalMetrics.filter(m => m.data.lcp).map(m => m.data.lcp);
 
@@ -490,7 +496,9 @@ function calculateWebVitals() {
 
 function calculateResourceBreakdown() {
   const resources = analyticsStore.metrics.filter(m => m.type === 'resources');
-  if (resources.length === 0) return null;
+  if (resources.length === 0) {
+    return null;
+  }
 
   const latest = resources[resources.length - 1].data;
   const breakdown = {};
@@ -533,13 +541,17 @@ function generateTimeSeries(metrics) {
 }
 
 function percentile(arr, p) {
-  if (arr.length === 0) return 0;
+  if (arr.length === 0) {
+    return 0;
+  }
   const index = Math.ceil((p / 100) * arr.length) - 1;
   return arr[index];
 }
 
 function average(arr) {
-  if (arr.length === 0) return 0;
+  if (arr.length === 0) {
+    return 0;
+  }
   return arr.reduce((a, b) => a + b, 0) / arr.length;
 }
 

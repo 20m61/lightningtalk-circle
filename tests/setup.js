@@ -25,7 +25,14 @@ jest.setTimeout(10000);
 beforeAll(async () => {
   // テスト用データディレクトリの作成
   const testDataDir = path.join(process.cwd(), 'tests', 'data');
-  await fs.ensureDir(testDataDir);
+  try {
+    await fs.mkdir(testDataDir, { recursive: true });
+  } catch (error) {
+    // ディレクトリが既に存在する場合は無視
+    if (error.code !== 'EEXIST') {
+      console.warn('Failed to create test data directory:', error.message);
+    }
+  }
 });
 
 // 各テスト後のクリーンアップ
@@ -38,8 +45,14 @@ afterEach(() => {
 afterAll(async () => {
   // テスト用ファイルのクリーンアップ
   const testDataDir = path.join(process.cwd(), 'tests', 'data');
-  if (await fs.pathExists(testDataDir)) {
-    await fs.remove(testDataDir);
+  try {
+    await fs.access(testDataDir);
+    await fs.rmdir(testDataDir, { recursive: true });
+  } catch (error) {
+    // ディレクトリが存在しない場合は無視
+    if (error.code !== 'ENOENT') {
+      console.warn('Failed to clean up test data directory:', error.message);
+    }
   }
 });
 

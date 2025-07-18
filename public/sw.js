@@ -187,7 +187,9 @@ function matchesPatterns(url, patterns) {
 
 // プッシュ通知
 self.addEventListener('push', event => {
-  if (!event.data) return;
+  if (!event.data) {
+    return;
+  }
 
   const data = event.data.json();
   const options = {
@@ -220,7 +222,7 @@ self.addEventListener('notificationclick', event => {
   event.notification.close();
 
   if (event.action === 'view' || !event.action) {
-    const url = event.notification.data.url;
+    const { url } = event.notification.data;
     event.waitUntil(clients.openWindow(url));
   }
 });

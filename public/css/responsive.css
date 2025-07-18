@@ -8,15 +8,15 @@
    ======================================== */
 :root {
   /* ブレークポイント定義 */
-  --mobile-small: 320px;    /* iPhone SE */
-  --mobile: 375px;          /* iPhone X/11/12/13 */
-  --mobile-large: 414px;    /* iPhone Plus */
-  --tablet: 768px;          /* iPad */
-  --desktop-small: 1024px;  /* 小型デスクトップ */
-  --desktop: 1280px;        /* デスクトップ */
-  --desktop-large: 1440px;  /* 大型デスクトップ */
-  --desktop-xl: 1920px;     /* フルHD */
-  
+  --mobile-small: 320px; /* iPhone SE */
+  --mobile: 375px; /* iPhone X/11/12/13 */
+  --mobile-large: 414px; /* iPhone Plus */
+  --tablet: 768px; /* iPad */
+  --desktop-small: 1024px; /* 小型デスクトップ */
+  --desktop: 1280px; /* デスクトップ */
+  --desktop-large: 1440px; /* 大型デスクトップ */
+  --desktop-xl: 1920px; /* フルHD */
+
   /* コンテナ幅 */
   --container-padding: 1rem;
   --container-max-width: 1200px;
@@ -32,11 +32,11 @@
   --h2-size: clamp(1.5rem, 4vw, 2.5rem);
   --h3-size: clamp(1.25rem, 3vw, 2rem);
   --h4-size: clamp(1.125rem, 2.5vw, 1.5rem);
-  
+
   /* 本文 */
   --body-size: clamp(0.875rem, 2vw, 1rem);
   --small-size: clamp(0.75rem, 1.5vw, 0.875rem);
-  
+
   /* 行の高さ */
   --line-height-tight: 1.2;
   --line-height-normal: 1.6;
@@ -83,26 +83,52 @@
 }
 
 /* グリッドバリエーション */
-.grid-2 { grid-template-columns: repeat(auto-fit, minmax(min(100%, 250px), 1fr)); }
-.grid-3 { grid-template-columns: repeat(auto-fit, minmax(min(100%, 200px), 1fr)); }
-.grid-4 { grid-template-columns: repeat(auto-fit, minmax(min(100%, 150px), 1fr)); }
+.grid-2 {
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 250px), 1fr));
+}
+.grid-3 {
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 200px), 1fr));
+}
+.grid-4 {
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 150px), 1fr));
+}
 
 /* タブレット以上でのグリッド調整 */
 @media (min-width: 768px) {
-  .grid { gap: 1.5rem; }
-  .grid-md-2 { grid-template-columns: repeat(2, 1fr); }
-  .grid-md-3 { grid-template-columns: repeat(3, 1fr); }
-  .grid-md-4 { grid-template-columns: repeat(4, 1fr); }
+  .grid {
+    gap: 1.5rem;
+  }
+  .grid-md-2 {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .grid-md-3 {
+    grid-template-columns: repeat(3, 1fr);
+  }
+  .grid-md-4 {
+    grid-template-columns: repeat(4, 1fr);
+  }
 }
 
 /* デスクトップでのグリッド調整 */
 @media (min-width: 1024px) {
-  .grid { gap: 2rem; }
-  .grid-lg-2 { grid-template-columns: repeat(2, 1fr); }
-  .grid-lg-3 { grid-template-columns: repeat(3, 1fr); }
-  .grid-lg-4 { grid-template-columns: repeat(4, 1fr); }
-  .grid-lg-5 { grid-template-columns: repeat(5, 1fr); }
-  .grid-lg-6 { grid-template-columns: repeat(6, 1fr); }
+  .grid {
+    gap: 2rem;
+  }
+  .grid-lg-2 {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .grid-lg-3 {
+    grid-template-columns: repeat(3, 1fr);
+  }
+  .grid-lg-4 {
+    grid-template-columns: repeat(4, 1fr);
+  }
+  .grid-lg-5 {
+    grid-template-columns: repeat(5, 1fr);
+  }
+  .grid-lg-6 {
+    grid-template-columns: repeat(6, 1fr);
+  }
 }
 
 /* ========================================
@@ -236,7 +262,9 @@ header {
   border-radius: 8px;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
   padding: 1.5rem;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  transition:
+    transform 0.3s ease,
+    box-shadow 0.3s ease;
   height: 100%;
   display: flex;
   flex-direction: column;
@@ -718,56 +746,126 @@ img {
    Utility Classes
    ======================================== */
 /* 表示制御 */
-.d-none { display: none !important; }
-.d-block { display: block !important; }
-.d-inline-block { display: inline-block !important; }
-.d-flex { display: flex !important; }
-.d-grid { display: grid !important; }
+.d-none {
+  display: none !important;
+}
+.d-block {
+  display: block !important;
+}
+.d-inline-block {
+  display: inline-block !important;
+}
+.d-flex {
+  display: flex !important;
+}
+.d-grid {
+  display: grid !important;
+}
 
 /* レスポンシブ表示制御 */
 @media (min-width: 768px) {
-  .d-md-none { display: none !important; }
-  .d-md-block { display: block !important; }
-  .d-md-inline-block { display: inline-block !important; }
-  .d-md-flex { display: flex !important; }
-  .d-md-grid { display: grid !important; }
+  .d-md-none {
+    display: none !important;
+  }
+  .d-md-block {
+    display: block !important;
+  }
+  .d-md-inline-block {
+    display: inline-block !important;
+  }
+  .d-md-flex {
+    display: flex !important;
+  }
+  .d-md-grid {
+    display: grid !important;
+  }
 }
 
 @media (min-width: 1024px) {
-  .d-lg-none { display: none !important; }
-  .d-lg-block { display: block !important; }
-  .d-lg-inline-block { display: inline-block !important; }
-  .d-lg-flex { display: flex !important; }
-  .d-lg-grid { display: grid !important; }
+  .d-lg-none {
+    display: none !important;
+  }
+  .d-lg-block {
+    display: block !important;
+  }
+  .d-lg-inline-block {
+    display: inline-block !important;
+  }
+  .d-lg-flex {
+    display: flex !important;
+  }
+  .d-lg-grid {
+    display: grid !important;
+  }
 }
 
 /* テキスト配置 */
-.text-left { text-align: left !important; }
-.text-center { text-align: center !important; }
-.text-right { text-align: right !important; }
+.text-left {
+  text-align: left !important;
+}
+.text-center {
+  text-align: center !important;
+}
+.text-right {
+  text-align: right !important;
+}
 
 @media (min-width: 768px) {
-  .text-md-left { text-align: left !important; }
-  .text-md-center { text-align: center !important; }
-  .text-md-right { text-align: right !important; }
+  .text-md-left {
+    text-align: left !important;
+  }
+  .text-md-center {
+    text-align: center !important;
+  }
+  .text-md-right {
+    text-align: right !important;
+  }
 }
 
 /* マージン・パディングユーティリティ */
-.m-0 { margin: 0 !important; }
-.mt-1 { margin-top: 0.5rem !important; }
-.mt-2 { margin-top: 1rem !important; }
-.mt-3 { margin-top: 1.5rem !important; }
-.mb-1 { margin-bottom: 0.5rem !important; }
-.mb-2 { margin-bottom: 1rem !important; }
-.mb-3 { margin-bottom: 1.5rem !important; }
+.m-0 {
+  margin: 0 !important;
+}
+.mt-1 {
+  margin-top: 0.5rem !important;
+}
+.mt-2 {
+  margin-top: 1rem !important;
+}
+.mt-3 {
+  margin-top: 1.5rem !important;
+}
+.mb-1 {
+  margin-bottom: 0.5rem !important;
+}
+.mb-2 {
+  margin-bottom: 1rem !important;
+}
+.mb-3 {
+  margin-bottom: 1.5rem !important;
+}
 
-.p-0 { padding: 0 !important; }
-.pt-1 { padding-top: 0.5rem !important; }
-.pt-2 { padding-top: 1rem !important; }
-.pt-3 { padding-top: 1.5rem !important; }
-.pb-1 { padding-bottom: 0.5rem !important; }
-.pb-2 { padding-bottom: 1rem !important; }
-.pb-3 { padding-bottom: 1.5rem !important; }
+.p-0 {
+  padding: 0 !important;
+}
+.pt-1 {
+  padding-top: 0.5rem !important;
+}
+.pt-2 {
+  padding-top: 1rem !important;
+}
+.pt-3 {
+  padding-top: 1.5rem !important;
+}
+.pb-1 {
+  padding-bottom: 0.5rem !important;
+}
+.pb-2 {
+  padding-bottom: 1rem !important;
+}
+.pb-3 {
+  padding-bottom: 1.5rem !important;
+}
 
 /* ========================================
    Performance Optimizations

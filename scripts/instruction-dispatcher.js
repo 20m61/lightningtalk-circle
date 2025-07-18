@@ -14,10 +14,10 @@ class InstructionDispatcher {
     this.context = this.loadContext();
 
     this.log = {
-      info: (msg) => console.log(chalk.blue('📋'), msg),
-      success: (msg) => console.log(chalk.green('✅'), msg),
-      warning: (msg) => console.log(chalk.yellow('⚠️ '), msg),
-      error: (msg) => console.log(chalk.red('❌'), msg)
+      info: msg => console.log(chalk.blue('📋'), msg),
+      success: msg => console.log(chalk.green('✅'), msg),
+      warning: msg => console.log(chalk.yellow('⚠️ '), msg),
+      error: msg => console.log(chalk.red('❌'), msg)
     };
   }
 
@@ -168,12 +168,24 @@ class InstructionDispatcher {
         if (packageData.dependencies) {
           const deps = Object.keys(packageData.dependencies);
 
-          if (deps.includes('react')) {context.frameworks.push('React');}
-          if (deps.includes('vue')) {context.frameworks.push('Vue');}
-          if (deps.includes('angular')) {context.frameworks.push('Angular');}
-          if (deps.includes('express')) {context.frameworks.push('Express');}
-          if (deps.includes('fastify')) {context.frameworks.push('Fastify');}
-          if (deps.includes('next')) {context.frameworks.push('Next.js');}
+          if (deps.includes('react')) {
+            context.frameworks.push('React');
+          }
+          if (deps.includes('vue')) {
+            context.frameworks.push('Vue');
+          }
+          if (deps.includes('angular')) {
+            context.frameworks.push('Angular');
+          }
+          if (deps.includes('express')) {
+            context.frameworks.push('Express');
+          }
+          if (deps.includes('fastify')) {
+            context.frameworks.push('Fastify');
+          }
+          if (deps.includes('next')) {
+            context.frameworks.push('Next.js');
+          }
         }
       }
 
@@ -192,11 +204,11 @@ class InstructionDispatcher {
       // 既知の問題をGitHubイシューから取得（簡易版）
       if (fs.existsSync('docs/project/known-issues.md')) {
         const issuesContent = fs.readFileSync('docs/project/known-issues.md', 'utf8');
-        context.knownIssues = issuesContent.split('\n')
+        context.knownIssues = issuesContent
+          .split('\n')
           .filter(line => line.trim().startsWith('-'))
           .map(line => line.replace(/^-\s*/, '').trim());
       }
-
     } catch (error) {
       console.warn('Warning: Could not load full project context:', error.message);
     }
@@ -280,10 +292,10 @@ class InstructionDispatcher {
 
     // 特定のコンテキストキーワード
     const contextBonus = {
-      'authentication': ['auth', 'login', 'user', 'session'],
-      'database': ['db', 'sql', 'table', 'schema', 'model'],
-      'api': ['endpoint', 'route', 'controller', 'service'],
-      'ui': ['component', 'page', 'style', 'design']
+      authentication: ['auth', 'login', 'user', 'session'],
+      database: ['db', 'sql', 'table', 'schema', 'model'],
+      api: ['endpoint', 'route', 'controller', 'service'],
+      ui: ['component', 'page', 'style', 'design']
     };
 
     for (const [context, keywords] of Object.entries(contextBonus)) {
@@ -313,8 +325,7 @@ class InstructionDispatcher {
       }
     }
 
-    const bestType = Object.entries(typeScores)
-      .sort(([,a], [,b]) => b - a)[0];
+    const bestType = Object.entries(typeScores).sort(([, a], [, b]) => b - a)[0];
 
     return bestType[1] > 0 ? bestType[0] : 'feature';
   }
@@ -342,11 +353,11 @@ class InstructionDispatcher {
 
     // 一般的なファイルパターン
     const filePatterns = {
-      'authentication': ['src/auth/', 'src/middleware/auth.js', 'src/models/User.js'],
-      'database': ['src/models/', 'migrations/', 'src/db/'],
-      'api': ['src/routes/', 'src/controllers/', 'src/services/'],
-      'ui': ['src/components/', 'src/pages/', 'src/styles/'],
-      'test': ['tests/', 'src/**/*.test.js', 'src/**/*.spec.js']
+      authentication: ['src/auth/', 'src/middleware/auth.js', 'src/models/User.js'],
+      database: ['src/models/', 'migrations/', 'src/db/'],
+      api: ['src/routes/', 'src/controllers/', 'src/services/'],
+      ui: ['src/components/', 'src/pages/', 'src/styles/'],
+      test: ['tests/', 'src/**/*.test.js', 'src/**/*.spec.js']
     };
 
     // 説明文からファイル候補を特定
@@ -358,18 +369,18 @@ class InstructionDispatcher {
 
     // タスクタイプベースの候補
     switch (analysis.taskType) {
-    case 'feature':
-      files.push('src/features/', 'src/components/');
-      break;
-    case 'bugfix':
-      files.push('src/', 'tests/');
-      break;
-    case 'docs':
-      files.push('docs/', 'README.md');
-      break;
-    case 'test':
-      files.push('tests/', 'src/**/*.test.js');
-      break;
+      case 'feature':
+        files.push('src/features/', 'src/components/');
+        break;
+      case 'bugfix':
+        files.push('src/', 'tests/');
+        break;
+      case 'docs':
+        files.push('docs/', 'README.md');
+        break;
+      case 'test':
+        files.push('tests/', 'src/**/*.test.js');
+        break;
     }
 
     return [...new Set(files)]; // 重複除去
@@ -415,25 +426,25 @@ class InstructionDispatcher {
 
     // タスクタイプ別の提案
     switch (analysis.taskType) {
-    case 'feature':
-      suggestions.push('Consider writing tests alongside the feature');
-      suggestions.push('Update documentation after implementation');
-      break;
+      case 'feature':
+        suggestions.push('Consider writing tests alongside the feature');
+        suggestions.push('Update documentation after implementation');
+        break;
 
-    case 'bugfix':
-      suggestions.push('Add regression tests to prevent future occurrences');
-      suggestions.push('Consider if this indicates a larger architectural issue');
-      break;
+      case 'bugfix':
+        suggestions.push('Add regression tests to prevent future occurrences');
+        suggestions.push('Consider if this indicates a larger architectural issue');
+        break;
 
-    case 'refactor':
-      suggestions.push('Ensure comprehensive test coverage before refactoring');
-      suggestions.push('Consider performance benchmarks');
-      break;
+      case 'refactor':
+        suggestions.push('Ensure comprehensive test coverage before refactoring');
+        suggestions.push('Consider performance benchmarks');
+        break;
 
-    case 'docs':
-      suggestions.push('Include code examples and usage scenarios');
-      suggestions.push('Consider adding diagrams for complex concepts');
-      break;
+      case 'docs':
+        suggestions.push('Include code examples and usage scenarios');
+        suggestions.push('Consider adding diagrams for complex concepts');
+        break;
     }
 
     // 優先度別の提案
@@ -463,9 +474,13 @@ class InstructionDispatcher {
     console.log(chalk.gray(`   "${analysis.instruction}"`));
 
     console.log(chalk.white('\n🔍 Analysis Results:'));
-    console.log(`   Task Type: ${this.getTaskTypeEmoji(analysis.taskType)} ${chalk.bold(analysis.taskType.toUpperCase())}`);
+    console.log(
+      `   Task Type: ${this.getTaskTypeEmoji(analysis.taskType)} ${chalk.bold(analysis.taskType.toUpperCase())}`
+    );
     console.log(`   Description: ${chalk.green(analysis.description)}`);
-    console.log(`   Priority: ${this.getPriorityEmoji(analysis.priority)} ${chalk.bold(analysis.priority.toUpperCase())}`);
+    console.log(
+      `   Priority: ${this.getPriorityEmoji(analysis.priority)} ${chalk.bold(analysis.priority.toUpperCase())}`
+    );
     console.log(`   Estimated Hours: ${chalk.yellow(`${analysis.estimatedHours}h`)}`);
     console.log(`   Confidence: ${chalk.blue(`${Math.round(analysis.confidence * 100)}%`)}`);
 

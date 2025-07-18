@@ -216,8 +216,7 @@
 /* Card Image */
 .card-image {
   position: relative;
-  margin: calc(-1 * var(--card-padding)) calc(-1 * var(--card-padding)) var(--space-4)
-    calc(-1 * var(--card-padding));
+  margin: calc(-1 * var(--card-padding)) calc(-1 * var(--card-padding)) var(--space-4) calc(-1 * var(--card-padding));
   border-radius: var(--card-radius) var(--card-radius) 0 0;
   overflow: hidden;
 }

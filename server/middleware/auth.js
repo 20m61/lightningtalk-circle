@@ -12,7 +12,9 @@ const getJwtSecret = () => {
 
   if (!secret || secret.length < 32) {
     if (process.env.NODE_ENV === 'production') {
-      throw new Error('JWT_SECRET environment variable is required in production and must be at least 32 characters long');
+      throw new Error(
+        'JWT_SECRET environment variable is required in production and must be at least 32 characters long'
+      );
     }
 
     if (process.env.NODE_ENV !== 'test') {
@@ -110,7 +112,7 @@ export const comparePassword = async (password, hash) => {
  */
 export const validatePassword = password => {
   const errors = [];
-  
+
   if (!password || password.length < 8) {
     errors.push('Password must be at least 8 characters long');
   }
@@ -135,7 +137,7 @@ export const validatePassword = password => {
   return {
     valid: errors.length === 0,
     message: errors[0] || '',
-    errors: errors
+    errors
   };
 };
 

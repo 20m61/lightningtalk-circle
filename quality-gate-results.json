@@ -24,13 +24,7 @@
     "maxCriticalIssues": 0,
     "maxHighIssues": 5,
     "maxMediumIssues": 20,
-    "requiredChecks": [
-      "tests",
-      "linting",
-      "security",
-      "coverage",
-      "build"
-    ]
+    "requiredChecks": ["tests", "linting", "security", "coverage", "build"]
   },
   "environment": {
     "nodeVersion": "v22.16.0",

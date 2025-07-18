@@ -8,7 +8,7 @@ const COGNITO_CONFIG = {
   clientId: '5t48tpbh5qe26otojkfq1rf0ls',
   region: 'ap-northeast-1',
   domain: 'lightningtalk-auth-v2.auth.ap-northeast-1.amazoncognito.com',
-  redirectUri: window.location.origin + '/callback',
+  redirectUri: `${window.location.origin}/callback`,
   apiEndpoint: 'https://wf6gf7eisk.execute-api.ap-northeast-1.amazonaws.com/dev/api'
 };
 
@@ -47,7 +47,9 @@ async function initAuth() {
  */
 function updateAuthUI() {
   const authHeader = document.getElementById('auth-header');
-  if (!authHeader) return;
+  if (!authHeader) {
+    return;
+  }
 
   if (currentUser) {
     authHeader.innerHTML = `
@@ -85,10 +87,10 @@ function loginWithGoogle() {
   const authUrl =
     `https://${COGNITO_CONFIG.domain}/oauth2/authorize?` +
     `client_id=${COGNITO_CONFIG.clientId}&` +
-    `response_type=code&` +
-    `scope=email+openid+profile&` +
+    'response_type=code&' +
+    'scope=email+openid+profile&' +
     `redirect_uri=${encodeURIComponent(COGNITO_CONFIG.redirectUri)}&` +
-    `identity_provider=Google`;
+    'identity_provider=Google';
 
   window.location.href = authUrl;
 }

@@ -214,7 +214,7 @@ function sanitizeFrontendMetadata(metadata) {
     } catch (error) {
       // URL解析失敗時はドメインのみ保持
       try {
-        const hostname = new URL(sanitized.url).hostname;
+        const { hostname } = new URL(sanitized.url);
         sanitized.url = `${hostname}/[malformed-url]`;
       } catch (e) {
         sanitized.url = '[invalid-url]';
@@ -252,8 +252,8 @@ function isCriticalFrontendError(logEntry) {
  * パフォーマンスログの処理
  */
 function handlePerformanceLog(logEntry, req) {
-  const duration = logEntry.duration;
-  const operation = logEntry.operation;
+  const { duration } = logEntry;
+  const { operation } = logEntry;
 
   if (duration && operation) {
     logger.performance(`Frontend: ${operation}`, duration, {

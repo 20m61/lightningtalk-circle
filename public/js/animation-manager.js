@@ -190,7 +190,9 @@ class AnimationManager {
       if (config.respectReducedMotion !== false) {
         // アニメーションを即座に完了状態にする
         this.applyFinalState(element, keyframes);
-        if (config.onComplete) config.onComplete();
+        if (config.onComplete) {
+          config.onComplete();
+        }
         return null;
       }
       // または短縮バージョンを使用
@@ -228,7 +230,9 @@ class AnimationManager {
       // 完了時のクリーンアップ
       animation.onfinish = () => {
         this.cleanup(animationId);
-        if (config.onComplete) config.onComplete();
+        if (config.onComplete) {
+          config.onComplete();
+        }
       };
 
       return animation;
@@ -314,7 +318,7 @@ class AnimationManager {
     };
 
     let position = this.getElementPosition(element);
-    let velocity = config.velocity;
+    let { velocity } = config;
     let animationId;
 
     const animate = () => {
@@ -332,7 +336,9 @@ class AnimationManager {
       if (Math.abs(velocity) < 0.01 && Math.abs(position - target) < 0.01) {
         this.updateElementPosition(element, target);
         cancelAnimationFrame(animationId);
-        if (config.onComplete) config.onComplete();
+        if (config.onComplete) {
+          config.onComplete();
+        }
       } else {
         animationId = requestAnimationFrame(animate);
       }
@@ -401,7 +407,9 @@ class AnimationManager {
     animation.onfinish = () => {
       toElement.style.opacity = '1';
       clone.remove();
-      if (options.onComplete) options.onComplete();
+      if (options.onComplete) {
+        options.onComplete();
+      }
     };
 
     return animation;
@@ -571,8 +579,10 @@ class AnimationManager {
   }
 
   getElementPosition(element) {
-    const transform = window.getComputedStyle(element).transform;
-    if (transform === 'none') return 0;
+    const { transform } = window.getComputedStyle(element);
+    if (transform === 'none') {
+      return 0;
+    }
     const matrix = new DOMMatrix(transform);
     return matrix.m41; // X座標
   }
@@ -594,7 +604,9 @@ class AnimationManager {
     const interpolatedStyles = {};
 
     keyframes.forEach((keyframe, index) => {
-      if (index === 0) return;
+      if (index === 0) {
+        return;
+      }
 
       const prevKeyframe = keyframes[index - 1];
       Object.keys(keyframe).forEach(property => {
@@ -640,7 +652,9 @@ class GPUOptimizer {
 
   prepare(element, keyframes) {
     // すでに最適化済みの場合はスキップ
-    if (this.optimizedElements.has(element)) return;
+    if (this.optimizedElements.has(element)) {
+      return;
+    }
 
     // will-changeプロパティの設定
     const properties = this.extractAnimatedProperties(keyframes);

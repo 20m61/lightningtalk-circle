@@ -361,12 +361,14 @@ class ImageEditor {
    * Draw image on canvas with current transformations
    */
   drawImage() {
-    if (!this.currentImage) return;
+    if (!this.currentImage) {
+      return;
+    }
 
     this.clearCanvas();
 
-    const canvas = this.canvas;
-    const ctx = this.ctx;
+    const { canvas } = this;
+    const { ctx } = this;
 
     // Calculate display size
     const imageAspect = this.currentImage.width / this.currentImage.height;
@@ -557,7 +559,9 @@ class ImageEditor {
   }
 
   drawCropOverlay() {
-    if (!this.cropArea) return;
+    if (!this.cropArea) {
+      return;
+    }
 
     // Clear previous overlay
     this.cropOverlay.innerHTML = '';
@@ -575,7 +579,9 @@ class ImageEditor {
   }
 
   applyCrop() {
-    if (!this.cropArea || !this.currentImage) return;
+    if (!this.cropArea || !this.currentImage) {
+      return;
+    }
 
     // Create temporary canvas for cropping
     const tempCanvas = document.createElement('canvas');
@@ -632,7 +638,9 @@ class ImageEditor {
    * State management
    */
   saveState() {
-    if (!this.options.allowUndo) return;
+    if (!this.options.allowUndo) {
+      return;
+    }
 
     // Create state snapshot
     const state = {
@@ -660,7 +668,9 @@ class ImageEditor {
   }
 
   undo() {
-    if (this.undoStack.length === 0) return;
+    if (this.undoStack.length === 0) {
+      return;
+    }
 
     // Save current state to redo stack
     this.redoStack.push(this.getCurrentState());
@@ -673,7 +683,9 @@ class ImageEditor {
   }
 
   redo() {
-    if (this.redoStack.length === 0) return;
+    if (this.redoStack.length === 0) {
+      return;
+    }
 
     // Save current state to undo stack
     this.undoStack.push(this.getCurrentState());
@@ -739,7 +751,9 @@ class ImageEditor {
    * Reset all transformations
    */
   reset() {
-    if (!this.originalImage) return;
+    if (!this.originalImage) {
+      return;
+    }
 
     this.currentImage = this.originalImage;
     this.resetTransforms();
@@ -805,7 +819,9 @@ class ImageEditor {
    * Update image info display
    */
   updateImageInfo() {
-    if (!this.currentImage) return;
+    if (!this.currentImage) {
+      return;
+    }
 
     const info = `${this.currentImage.width} × ${this.currentImage.height}px`;
     this.container.querySelector('#imageInfo').textContent = info;
