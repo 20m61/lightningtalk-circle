@@ -1,0 +1,99 @@
+{
+  "alarms": [
+    {
+      "name": "lightningtalk-prod-api-errors",
+      "description": "Lambda function error rate",
+      "metric": {
+        "namespace": "AWS/Lambda",
+        "name": "Errors",
+        "dimensions": [
+          {
+            "Name": "FunctionName",
+            "Value": "lightningtalk-prod-api"
+          }
+        ]
+      },
+      "statistic": "Sum",
+      "period": 300,
+      "evaluationPeriods": 1,
+      "threshold": 10,
+      "comparisonOperator": "GreaterThanThreshold"
+    },
+    {
+      "name": "lightningtalk-prod-api-throttles",
+      "description": "Lambda function throttles",
+      "metric": {
+        "namespace": "AWS/Lambda",
+        "name": "Throttles",
+        "dimensions": [
+          {
+            "Name": "FunctionName",
+            "Value": "lightningtalk-prod-api"
+          }
+        ]
+      },
+      "statistic": "Sum",
+      "period": 300,
+      "evaluationPeriods": 1,
+      "threshold": 5,
+      "comparisonOperator": "GreaterThanThreshold"
+    },
+    {
+      "name": "lightningtalk-prod-api-duration",
+      "description": "Lambda function duration",
+      "metric": {
+        "namespace": "AWS/Lambda",
+        "name": "Duration",
+        "dimensions": [
+          {
+            "Name": "FunctionName",
+            "Value": "lightningtalk-prod-api"
+          }
+        ]
+      },
+      "statistic": "Average",
+      "period": 300,
+      "evaluationPeriods": 2,
+      "threshold": 10000,
+      "comparisonOperator": "GreaterThanThreshold"
+    },
+    {
+      "name": "lightningtalk-prod-api-gateway-4xx",
+      "description": "API Gateway 4XX errors",
+      "metric": {
+        "namespace": "AWS/ApiGateway",
+        "name": "4XXError",
+        "dimensions": [
+          {
+            "Name": "ApiName",
+            "Value": "lightningtalk-prod-api"
+          }
+        ]
+      },
+      "statistic": "Sum",
+      "period": 300,
+      "evaluationPeriods": 1,
+      "threshold": 50,
+      "comparisonOperator": "GreaterThanThreshold"
+    },
+    {
+      "name": "lightningtalk-prod-api-gateway-5xx",
+      "description": "API Gateway 5XX errors",
+      "metric": {
+        "namespace": "AWS/ApiGateway",
+        "name": "5XXError",
+        "dimensions": [
+          {
+            "Name": "ApiName",
+            "Value": "lightningtalk-prod-api"
+          }
+        ]
+      },
+      "statistic": "Sum",
+      "period": 300,
+      "evaluationPeriods": 1,
+      "threshold": 10,
+      "comparisonOperator": "GreaterThanThreshold"
+    }
+  ]
+}

@@ -839,6 +839,49 @@ class MobileComponentSystem {
     `;
   }
 
+  getPullToRefreshStyles() {
+    return `
+      .pull-to-refresh {
+        position: relative;
+        overflow: hidden;
+      }
+      
+      .pull-to-refresh__indicator {
+        position: absolute;
+        top: -60px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background: var(--color-primary-500);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: top 0.3s ease;
+        z-index: 10;
+      }
+      
+      .pull-to-refresh__indicator--visible {
+        top: 20px;
+      }
+      
+      .pull-to-refresh__spinner {
+        width: 20px;
+        height: 20px;
+        border: 2px solid white;
+        border-top: 2px solid transparent;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+      }
+      
+      @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+      }
+    `;
+  }
+
   getSwipeCardStyles() {
     return `
       .swipe-card {
@@ -890,20 +933,350 @@ class MobileComponentSystem {
     `;
   }
 
+  getMobileModalStyles() {
+    return `
+      .mobile-modal {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.5);
+        z-index: 1000;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 20px;
+        opacity: 0;
+        visibility: hidden;
+        transition: opacity 0.3s ease, visibility 0.3s ease;
+      }
+      
+      .mobile-modal--visible {
+        opacity: 1;
+        visibility: visible;
+      }
+      
+      .mobile-modal__content {
+        background: white;
+        border-radius: 12px;
+        max-width: 90%;
+        max-height: 90%;
+        overflow-y: auto;
+        position: relative;
+        transform: scale(0.8);
+        transition: transform 0.3s ease;
+      }
+      
+      .mobile-modal--visible .mobile-modal__content {
+        transform: scale(1);
+      }
+      
+      .mobile-modal__header {
+        padding: 16px;
+        border-bottom: 1px solid #e5e7eb;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+      
+      .mobile-modal__title {
+        font-size: 18px;
+        font-weight: 600;
+        margin: 0;
+      }
+      
+      .mobile-modal__close {
+        background: none;
+        border: none;
+        font-size: 24px;
+        cursor: pointer;
+        padding: 4px;
+        color: #6b7280;
+      }
+      
+      .mobile-modal__body {
+        padding: 16px;
+      }
+      
+      .mobile-modal__actions {
+        padding: 16px;
+        border-top: 1px solid #e5e7eb;
+        display: flex;
+        gap: 8px;
+        justify-content: flex-end;
+      }
+    `;
+  }
+
+  getTouchSliderStyles() {
+    return `
+      .touch-slider {
+        position: relative;
+        overflow: hidden;
+        touch-action: pan-x;
+      }
+      
+      .touch-slider__track {
+        display: flex;
+        transition: transform 0.3s ease;
+      }
+      
+      .touch-slider__slide {
+        flex: 0 0 auto;
+        width: 100%;
+      }
+      
+      .touch-slider__dots {
+        display: flex;
+        justify-content: center;
+        gap: 8px;
+        margin-top: 16px;
+      }
+      
+      .touch-slider__dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: #d1d5db;
+        cursor: pointer;
+        transition: background 0.2s ease;
+      }
+      
+      .touch-slider__dot--active {
+        background: var(--color-primary-500);
+      }
+      
+      .touch-slider__nav {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        background: rgba(255, 255, 255, 0.9);
+        border: none;
+        border-radius: 50%;
+        width: 40px;
+        height: 40px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: background 0.2s ease;
+      }
+      
+      .touch-slider__nav:hover {
+        background: rgba(255, 255, 255, 1);
+      }
+      
+      .touch-slider__nav--prev {
+        left: 10px;
+      }
+      
+      .touch-slider__nav--next {
+        right: 10px;
+      }
+      
+      .touch-slider__nav--hidden {
+        display: none;
+      }
+    `;
+  }
+
+  /**
+   * タッチスライダー作成
+   */
+  createTouchSlider(options = {}) {
+    const {
+      slides = [],
+      showDots = true,
+      showNav = true,
+      autoplay = false,
+      autoplayInterval = 3000
+    } = options;
+
+    const slider = document.createElement('div');
+    slider.className = 'touch-slider';
+
+    const track = document.createElement('div');
+    track.className = 'touch-slider__track';
+
+    slides.forEach((slide, index) => {
+      const slideElement = document.createElement('div');
+      slideElement.className = 'touch-slider__slide';
+      slideElement.innerHTML = slide;
+      track.appendChild(slideElement);
+    });
+
+    slider.appendChild(track);
+
+    if (showDots && slides.length > 1) {
+      const dotsContainer = document.createElement('div');
+      dotsContainer.className = 'touch-slider__dots';
+
+      slides.forEach((_, index) => {
+        const dot = document.createElement('button');
+        dot.className = `touch-slider__dot ${index === 0 ? 'touch-slider__dot--active' : ''}`;
+        dotsContainer.appendChild(dot);
+      });
+
+      slider.appendChild(dotsContainer);
+    }
+
+    if (showNav && slides.length > 1) {
+      const prevBtn = document.createElement('button');
+      prevBtn.className = 'touch-slider__nav touch-slider__nav--prev';
+      prevBtn.innerHTML = '‹';
+
+      const nextBtn = document.createElement('button');
+      nextBtn.className = 'touch-slider__nav touch-slider__nav--next';
+      nextBtn.innerHTML = '›';
+
+      slider.appendChild(prevBtn);
+      slider.appendChild(nextBtn);
+    }
+
+    return slider;
+  }
+
+  /**
+   * ActionSheetスタイル
+   */
+  getActionSheetStyles() {
+    return `
+      .action-sheet {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background: white;
+        border-radius: 12px 12px 0 0;
+        box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.15);
+        transform: translateY(100%);
+        transition: transform 0.3s ease;
+        z-index: 1000;
+        max-height: 80vh;
+        overflow-y: auto;
+      }
+      
+      .action-sheet--visible {
+        transform: translateY(0);
+      }
+      
+      .action-sheet__header {
+        padding: 16px;
+        border-bottom: 1px solid #e5e7eb;
+        text-align: center;
+        position: relative;
+      }
+      
+      .action-sheet__title {
+        font-size: 18px;
+        font-weight: 600;
+        margin: 0;
+      }
+      
+      .action-sheet__close {
+        position: absolute;
+        top: 16px;
+        right: 16px;
+        background: none;
+        border: none;
+        font-size: 24px;
+        cursor: pointer;
+        color: #6b7280;
+      }
+      
+      .action-sheet__content {
+        padding: 16px;
+      }
+      
+      .action-sheet__actions {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+      }
+      
+      .action-sheet__action {
+        padding: 16px;
+        border: none;
+        background: none;
+        text-align: left;
+        cursor: pointer;
+        border-radius: 8px;
+        transition: background 0.2s ease;
+      }
+      
+      .action-sheet__action:hover {
+        background: #f3f4f6;
+      }
+      
+      .action-sheet__action--destructive {
+        color: #dc2626;
+      }
+    `;
+  }
+
+  /**
+   * ActionSheetインタラクション設定
+   */
+  setupActionSheetInteractions(element) {
+    const actionSheet = element;
+    const closeBtn = actionSheet.querySelector('.action-sheet__close');
+    const backdrop = document.createElement('div');
+    backdrop.className = 'action-sheet-backdrop';
+    backdrop.style.cssText = `
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.5);
+      z-index: 999;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    `;
+
+    document.body.appendChild(backdrop);
+
+    // アニメーション
+    setTimeout(() => {
+      actionSheet.classList.add('action-sheet--visible');
+      backdrop.style.opacity = '1';
+    }, 10);
+
+    // 閉じるボタン
+    if (closeBtn) {
+      closeBtn.addEventListener('click', () => {
+        this.closeActionSheet(actionSheet, backdrop);
+      });
+    }
+
+    // バックドロップクリック
+    backdrop.addEventListener('click', () => {
+      this.closeActionSheet(actionSheet, backdrop);
+    });
+
+    // アクションクリック
+    const actions = actionSheet.querySelectorAll('.action-sheet__action');
+    actions.forEach(action => {
+      action.addEventListener('click', () => {
+        this.closeActionSheet(actionSheet, backdrop);
+      });
+    });
+  }
+
   /**
    * ユーティリティメソッド
    */
-  closeMobileModal(modal) {
-    modal.classList.add('mobile-modal--closing');
-    setTimeout(() => {
-      modal.remove();
-    }, 300);
-  }
-
-  closeActionSheet(actionSheet) {
-    actionSheet.classList.add('action-sheet--closing');
+  closeActionSheet(actionSheet, backdrop) {
+    actionSheet.classList.remove('action-sheet--visible');
+    if (backdrop) {
+      backdrop.style.opacity = '0';
+    }
     setTimeout(() => {
       actionSheet.remove();
+      if (backdrop) {
+        backdrop.remove();
+      }
     }, 300);
   }
 
@@ -933,6 +1306,140 @@ class MobileComponentSystem {
     }
 
     return element;
+  }
+
+  /**
+   * モバイルモーダルのインタラクション設定
+   */
+  setupMobileModalInteractions(element) {
+    const modal = element;
+    const closeBtn = modal.querySelector('.mobile-modal__close');
+    const backdrop = modal.querySelector('.mobile-modal');
+
+    // 閉じるボタンのクリック
+    if (closeBtn) {
+      closeBtn.addEventListener('click', () => {
+        this.closeMobileModal(modal);
+      });
+    }
+
+    // バックドロップのクリック
+    if (backdrop) {
+      backdrop.addEventListener('click', e => {
+        if (e.target === backdrop) {
+          this.closeMobileModal(modal);
+        }
+      });
+    }
+
+    // ESCキーでの閉じる
+    document.addEventListener('keydown', e => {
+      if (e.key === 'Escape' && modal.classList.contains('mobile-modal--visible')) {
+        this.closeMobileModal(modal);
+      }
+    });
+  }
+
+  /**
+   * モバイルモーダルを閉じる
+   */
+  closeMobileModal(modal) {
+    modal.classList.remove('mobile-modal--visible');
+    setTimeout(() => {
+      modal.remove();
+    }, 300);
+  }
+
+  /**
+   * タッチスライダーのインタラクション設定
+   */
+  setupTouchSliderInteractions(element) {
+    const slider = element;
+    const track = slider.querySelector('.touch-slider__track');
+    const dots = slider.querySelectorAll('.touch-slider__dot');
+    const prevBtn = slider.querySelector('.touch-slider__nav--prev');
+    const nextBtn = slider.querySelector('.touch-slider__nav--next');
+
+    let currentIndex = 0;
+    let startX = 0;
+    let isMoving = false;
+
+    // タッチイベント
+    track.addEventListener('touchstart', e => {
+      startX = e.touches[0].clientX;
+      isMoving = false;
+    });
+
+    track.addEventListener('touchmove', e => {
+      if (!isMoving) return;
+      e.preventDefault();
+      const moveX = e.touches[0].clientX - startX;
+      track.style.transform = `translateX(${-currentIndex * 100 + (moveX / slider.offsetWidth) * 100}%)`;
+    });
+
+    track.addEventListener('touchend', e => {
+      const endX = e.changedTouches[0].clientX;
+      const diffX = startX - endX;
+
+      if (Math.abs(diffX) > 50) {
+        if (diffX > 0 && currentIndex < dots.length - 1) {
+          currentIndex++;
+        } else if (diffX < 0 && currentIndex > 0) {
+          currentIndex--;
+        }
+      }
+
+      this.updateSliderPosition(slider, currentIndex);
+      this.updateSliderDots(slider, currentIndex);
+    });
+
+    // ドットクリック
+    dots.forEach((dot, index) => {
+      dot.addEventListener('click', () => {
+        currentIndex = index;
+        this.updateSliderPosition(slider, currentIndex);
+        this.updateSliderDots(slider, currentIndex);
+      });
+    });
+
+    // ナビゲーションボタン
+    if (prevBtn) {
+      prevBtn.addEventListener('click', () => {
+        if (currentIndex > 0) {
+          currentIndex--;
+          this.updateSliderPosition(slider, currentIndex);
+          this.updateSliderDots(slider, currentIndex);
+        }
+      });
+    }
+
+    if (nextBtn) {
+      nextBtn.addEventListener('click', () => {
+        if (currentIndex < dots.length - 1) {
+          currentIndex++;
+          this.updateSliderPosition(slider, currentIndex);
+          this.updateSliderDots(slider, currentIndex);
+        }
+      });
+    }
+  }
+
+  /**
+   * スライダーの位置を更新
+   */
+  updateSliderPosition(slider, index) {
+    const track = slider.querySelector('.touch-slider__track');
+    track.style.transform = `translateX(-${index * 100}%)`;
+  }
+
+  /**
+   * スライダーのドットを更新
+   */
+  updateSliderDots(slider, index) {
+    const dots = slider.querySelectorAll('.touch-slider__dot');
+    dots.forEach((dot, i) => {
+      dot.classList.toggle('touch-slider__dot--active', i === index);
+    });
   }
 
   /**

@@ -1853,7 +1853,17 @@ class LightningTalkApp {
     }
 
     // API Gateway WebSocketを使用
-    const wsUrl = 'wss://YOUR_WEBSOCKET_API_ID.execute-api.ap-northeast-1.amazonaws.com/prod/';
+    const wsUrl =
+      window.APP_CONFIG?.environment === 'development'
+        ? 'wss://cqqhjkqzcj.execute-api.ap-northeast-1.amazonaws.com/prod'
+        : 'wss://YOUR_PRODUCTION_WEBSOCKET_API.execute-api.ap-northeast-1.amazonaws.com/prod';
+
+    // WebSocketが無効な場合は、直接ポーリングモードに移行
+    if (!wsUrl) {
+      Logger.info('WebSocket disabled - using polling mode');
+      this.fallbackToPolling();
+      return;
+    }
 
     // Initialize reconnection state
     this.reconnectAttempts = 0;
@@ -2085,7 +2095,7 @@ class LightningTalkApp {
 
         // APIから最新の投票データを取得
         const response = await fetch(
-          `https://9qyaz7n47j.execute-api.ap-northeast-1.amazonaws.com/prod/api/voting/participation/${eventId}`
+          `${window.APP_CONFIG?.apiEndpoint || '/api'}/voting/participation/${eventId}`
         );
         if (response.ok) {
           const data = await response.json();
@@ -2149,7 +2159,7 @@ class LightningTalkApp {
     }
 
     // Also send via API
-    fetch('https://9qyaz7n47j.execute-api.ap-northeast-1.amazonaws.com/prod/api/voting', {
+    fetch(`${window.APP_CONFIG?.apiEndpoint || '/api'}/voting`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'

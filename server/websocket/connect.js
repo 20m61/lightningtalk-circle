@@ -1,6 +1,8 @@
-const AWS = require('aws-sdk');
+const { DynamoDBClient } = require('@aws-sdk/client-dynamodb');
+const { DynamoDBDocumentClient, PutCommand } = require('@aws-sdk/lib-dynamodb');
 
-const dynamodb = new AWS.DynamoDB.DocumentClient();
+const client = new DynamoDBClient({});
+const dynamodb = DynamoDBDocumentClient.from(client);
 
 exports.handler = async event => {
   const { connectionId } = event.requestContext;
@@ -8,15 +10,15 @@ exports.handler = async event => {
 
   try {
     // 接続情報を保存
-    await dynamodb
-      .put({
+    await dynamodb.send(
+      new PutCommand({
         TableName: connectionsTable,
         Item: {
           connectionId,
           connectedAt: new Date().toISOString()
         }
       })
-      .promise();
+    );
 
     console.log(`WebSocket connected: ${connectionId}`);
 

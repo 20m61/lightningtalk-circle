@@ -21,7 +21,7 @@
     "diff:dev": "cdk diff --context stage=dev",
     "diff:prod": "cdk diff --context stage=prod",
     "deploy": "cdk deploy",
-    "deploy:dev": "CDK_STAGE=dev cdk deploy --context stage=dev --require-approval never",
+    "deploy:dev": "CDK_STAGE=dev cdk deploy --all --context stage=dev --require-approval never",
     "deploy:prod": "CDK_STAGE=prod cdk deploy --context stage=prod --require-approval broadening",
     "destroy": "cdk destroy",
     "destroy:dev": "CDK_STAGE=dev cdk destroy --context stage=dev",
@@ -46,18 +46,7 @@
     "aws-cdk-lib": "2.173.0",
     "constructs": "^10.4.2"
   },
-  "keywords": [
-    "aws",
-    "cdk",
-    "infrastructure",
-    "lightning-talk",
-    "ecs",
-    "fargate",
-    "cloudfront",
-    "s3",
-    "rds",
-    "redis"
-  ],
+  "keywords": ["aws", "cdk", "infrastructure", "lightning-talk", "ecs", "fargate", "cloudfront", "s3", "rds", "redis"],
   "author": "Lightning Talk Circle",
   "license": "MIT"
 }

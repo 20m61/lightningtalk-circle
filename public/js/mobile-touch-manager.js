@@ -351,6 +351,14 @@ class MobileTouchManager {
     }
   }
 
+  handleMousePenMove(event) {
+    // マウス/ペンの移動処理
+    if (this.isActive) {
+      this.updateTouchPosition(event);
+      this.handleMousePenInput(event);
+    }
+  }
+
   handlePointerUp(event) {
     if (event.pointerType !== 'touch') {
       this.handleMousePenEnd(event);

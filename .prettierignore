@@ -89,6 +89,9 @@ wordpress/lightningtalk-child/**/*.php
 # TypeScript definition files
 *.d.ts
 
+# Python files
+*.py
+
 # Image and media files
 *.jpg
 *.jpeg

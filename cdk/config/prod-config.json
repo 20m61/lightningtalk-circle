@@ -1,0 +1,107 @@
+{
+  "environment": "production",
+  "region": "ap-northeast-1",
+  "accountId": "822063948773",
+  "stackPrefix": "LightningTalk",
+  "domain": {
+    "domainName": "xn--6wym69a.com",
+    "displayName": "発表.com",
+    "zoneName": "xn--6wym69a.com",
+    "hostedZoneId": "Z036564723AZHFOSIARRI",
+    "certificateArn": "arn:aws:acm:us-east-1:822063948773:certificate/42ab57fd-bb00-47c8-b218-fc23216e0f63",
+    "alternativeNames": ["www.xn--6wym69a.com"],
+    "redirectWww": true,
+    "enableIPv6": true
+  },
+  "cognito": {
+    "userPoolName": "lightningtalk-circle-prod-users",
+    "identityPoolName": "lightningtalk-circle-prod-identity",
+    "googleOAuthSecretName": "lightningtalk-google-oauth-prod",
+    "domainPrefix": "lightningtalk-circle-prod-auth",
+    "callbackUrls": ["https://xn--6wym69a.com/callback", "https://www.xn--6wym69a.com/callback"],
+    "logoutUrls": ["https://xn--6wym69a.com", "https://www.xn--6wym69a.com"]
+  },
+  "dynamodb": {
+    "billingMode": "PAY_PER_REQUEST",
+    "pointInTimeRecovery": true,
+    "encryption": "AWS_MANAGED",
+    "contributorInsights": true,
+    "tags": {
+      "Environment": "production",
+      "Application": "lightningtalk-circle"
+    }
+  },
+  "s3": {
+    "staticBucketName": "lightningtalk-prod-static",
+    "uploadsBucketName": "lightningtalk-prod-uploads",
+    "encryption": "AES256",
+    "versioning": true,
+    "lifecycleRules": {
+      "transitionToIA": 90,
+      "transitionToGlacier": 365
+    }
+  },
+  "cloudfront": {
+    "priceClass": "PriceClass_200",
+    "geoRestriction": {
+      "restrictionType": "none",
+      "locations": []
+    },
+    "cacheSettings": {
+      "defaultTtl": 86400,
+      "maxTtl": 31536000,
+      "minTtl": 0
+    },
+    "compression": true,
+    "httpVersion": "http2and3"
+  },
+  "ecs": {
+    "cluster": "lightningtalk-prod-cluster",
+    "desiredCount": 2,
+    "maxCapacity": 10,
+    "cpu": 512,
+    "memory": 1024,
+    "autoscaling": {
+      "targetCpuUtilization": 70,
+      "targetMemoryUtilization": 80,
+      "scaleUpCooldown": 300,
+      "scaleDownCooldown": 300
+    }
+  },
+  "monitoring": {
+    "logRetentionDays": 365,
+    "alertEmail": "alerts@xn--6wym69a.com",
+    "enableDetailedMonitoring": true,
+    "enableXRay": true,
+    "cloudwatchDashboard": true
+  },
+  "security": {
+    "enableWaf": true,
+    "wafRules": {
+      "rateLimitRule": {
+        "limit": 2000,
+        "window": 300
+      },
+      "geoMatchRule": {
+        "allowedCountries": ["JP", "US"]
+      }
+    },
+    "secretsManager": {
+      "databaseCredentials": "lightningtalk-prod/database/credentials",
+      "appSecrets": "lightningtalk-prod/app/secrets",
+      "googleOAuth": "lightningtalk-google-oauth-prod"
+    }
+  },
+  "budget": {
+    "monthlyLimit": 300,
+    "alertThresholds": [50, 80, 100],
+    "notificationEmail": "billing-alerts@xn--6wym69a.com"
+  },
+  "tags": {
+    "Project": "LightningTalkCircle",
+    "Environment": "production",
+    "ManagedBy": "CDK",
+    "Owner": "20m61",
+    "CostCenter": "Engineering"
+  }
+}

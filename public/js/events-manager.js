@@ -39,7 +39,8 @@ class EventsManager {
   async loadEvents() {
     try {
       // APIからイベントを取得
-      const response = await fetch('/api/events');
+      const apiEndpoint = window.APP_CONFIG?.apiEndpoint || '/api';
+      const response = await fetch(`${apiEndpoint}/events`);
       const data = await response.json();
 
       // モックデータを使用（開発時）
@@ -368,7 +369,7 @@ class EventsManager {
             <div class="event-capacity">👥 ${event.registeredCount}/${event.capacity}名</div>
           </div>
           <div class="event-tags">
-            ${event.tags.map(tag => `<span class="tag">${tag}</span>`).join('')}
+            ${event.tags ? event.tags.map(tag => `<span class="tag">${tag}</span>`).join('') : ''}
           </div>
           <div class="event-actions">
             <button class="btn btn-primary" data-action="view-detail" data-event-id="${event.id}">
@@ -530,13 +531,17 @@ class EventsManager {
 
 // Initialize Events Manager when DOM is loaded
 document.addEventListener('DOMContentLoaded', () => {
+  // Logger フォールバック処理
   if (typeof Logger === 'undefined') {
     window.Logger = {
-      info: console.log,
-      error: console.error,
-      warn: console.warn
+      info: (...args) => console.log('[EventsManager]', ...args),
+      error: (...args) => console.error('[EventsManager]', ...args),
+      warn: (...args) => console.warn('[EventsManager]', ...args)
     };
   }
 
-  window.eventsManager = new EventsManager();
+  // EventsManager の初期化を少し遅らせる
+  setTimeout(() => {
+    window.eventsManager = new EventsManager();
+  }, 100);
 });

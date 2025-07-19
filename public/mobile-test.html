@@ -1,0 +1,299 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>モバイル最適化テスト - Lightning Talk Circle</title>
+    <link rel="stylesheet" href="css/style.css" />
+    <link rel="stylesheet" href="css/mobile-optimizations.css" />
+    <style>
+      .test-section {
+        margin: 20px;
+        padding: 20px;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+      }
+
+      .test-result {
+        margin: 10px 0;
+        padding: 10px;
+        background: #f5f5f5;
+        border-radius: 4px;
+        font-family: monospace;
+        font-size: 12px;
+      }
+
+      .touch-test-area {
+        height: 200px;
+        background: #e3f2fd;
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 18px;
+        touch-action: none;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .touch-indicator {
+        position: absolute;
+        width: 50px;
+        height: 50px;
+        background: rgba(33, 150, 243, 0.5);
+        border-radius: 50%;
+        transform: translate(-50%, -50%);
+        pointer-events: none;
+        transition: opacity 0.3s;
+      }
+
+      .performance-meter {
+        display: flex;
+        gap: 20px;
+        margin: 20px 0;
+      }
+
+      .meter {
+        flex: 1;
+        text-align: center;
+      }
+
+      .meter-value {
+        font-size: 24px;
+        font-weight: bold;
+        color: #22c55e;
+      }
+
+      .meter-label {
+        font-size: 14px;
+        color: #666;
+      }
+
+      .mobile-button {
+        display: inline-block;
+        padding: 15px 30px;
+        background: #22c55e;
+        color: white;
+        border-radius: 8px;
+        text-decoration: none;
+        font-size: 16px;
+        touch-action: manipulation;
+        -webkit-tap-highlight-color: transparent;
+        transition: transform 0.1s;
+      }
+
+      .mobile-button:active {
+        transform: scale(0.95);
+      }
+
+      @media (max-width: 768px) {
+        .test-section {
+          margin: 10px;
+          padding: 15px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>モバイル最適化テスト</h1>
+
+      <!-- デバイス情報 -->
+      <div class="test-section">
+        <h2>デバイス情報</h2>
+        <div id="device-info" class="test-result">検出中...</div>
+      </div>
+
+      <!-- タッチイベントテスト -->
+      <div class="test-section">
+        <h2>タッチイベントテスト</h2>
+        <div class="touch-test-area" id="touch-area">タッチしてください</div>
+        <div id="touch-info" class="test-result">タッチイベント待機中...</div>
+      </div>
+
+      <!-- パフォーマンステスト -->
+      <div class="test-section">
+        <h2>パフォーマンス測定</h2>
+        <div class="performance-meter">
+          <div class="meter">
+            <div class="meter-value" id="fps-value">--</div>
+            <div class="meter-label">FPS</div>
+          </div>
+          <div class="meter">
+            <div class="meter-value" id="memory-value">--</div>
+            <div class="meter-label">メモリ (MB)</div>
+          </div>
+          <div class="meter">
+            <div class="meter-value" id="load-time">--</div>
+            <div class="meter-label">読み込み時間 (ms)</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- コンポーネントテスト -->
+      <div class="test-section">
+        <h2>モバイルコンポーネント</h2>
+        <p>以下のボタンをタップしてレスポンスを確認してください：</p>
+        <button class="mobile-button" onclick="testButtonClick()">タップテスト</button>
+        <div id="component-result" class="test-result">コンポーネント状態: 待機中</div>
+      </div>
+
+      <!-- モジュール読み込み状態 -->
+      <div class="test-section">
+        <h2>モジュール読み込み状態</h2>
+        <div id="module-status" class="test-result">確認中...</div>
+      </div>
+    </div>
+
+    <!-- スクリプト読み込み -->
+    <script src="js/mobile-touch-manager.js"></script>
+    <script src="js/mobile-components.js"></script>
+    <script src="js/mobile-performance-optimizer.js"></script>
+
+    <script>
+      // デバイス情報の表示
+      function updateDeviceInfo() {
+        const info = {
+          userAgent: navigator.userAgent,
+          viewport: `${window.innerWidth} x ${window.innerHeight}`,
+          devicePixelRatio: window.devicePixelRatio,
+          touchSupport: 'ontouchstart' in window,
+          orientation: screen.orientation ? screen.orientation.type : 'unknown',
+          connection: navigator.connection
+            ? `${navigator.connection.effectiveType} (${navigator.connection.downlink}Mbps)`
+            : 'unknown'
+        };
+
+        document.getElementById('device-info').innerHTML = Object.entries(info)
+          .map(([key, value]) => `<strong>${key}:</strong> ${value}`)
+          .join('<br>');
+      }
+
+      // タッチイベントの追跡
+      const touchArea = document.getElementById('touch-area');
+      const touchInfo = document.getElementById('touch-info');
+      let touchIndicator = null;
+
+      function handleTouch(e) {
+        e.preventDefault();
+        const touch = e.touches[0] || e.changedTouches[0];
+        const rect = touchArea.getBoundingClientRect();
+        const x = touch.clientX - rect.left;
+        const y = touch.clientY - rect.top;
+
+        // インジケーター表示
+        if (!touchIndicator) {
+          touchIndicator = document.createElement('div');
+          touchIndicator.className = 'touch-indicator';
+          touchArea.appendChild(touchIndicator);
+        }
+
+        touchIndicator.style.left = x + 'px';
+        touchIndicator.style.top = y + 'px';
+        touchIndicator.style.opacity = '1';
+
+        // 情報更新
+        touchInfo.innerHTML = `
+        <strong>イベント:</strong> ${e.type}<br>
+        <strong>座標:</strong> x: ${Math.round(x)}, y: ${Math.round(y)}<br>
+        <strong>タッチ数:</strong> ${e.touches ? e.touches.length : 0}<br>
+        <strong>タイムスタンプ:</strong> ${new Date().toLocaleTimeString()}
+      `;
+
+        if (e.type === 'touchend') {
+          setTimeout(() => {
+            touchIndicator.style.opacity = '0';
+          }, 300);
+        }
+      }
+
+      touchArea.addEventListener('touchstart', handleTouch);
+      touchArea.addEventListener('touchmove', handleTouch);
+      touchArea.addEventListener('touchend', handleTouch);
+
+      // パフォーマンス測定
+      let lastTime = performance.now();
+      let frames = 0;
+
+      function measureFPS() {
+        frames++;
+        const currentTime = performance.now();
+
+        if (currentTime >= lastTime + 1000) {
+          const fps = Math.round((frames * 1000) / (currentTime - lastTime));
+          document.getElementById('fps-value').textContent = fps;
+          frames = 0;
+          lastTime = currentTime;
+        }
+
+        requestAnimationFrame(measureFPS);
+      }
+
+      // メモリ使用量
+      function updateMemory() {
+        if (performance.memory) {
+          const used = Math.round(performance.memory.usedJSHeapSize / 1048576);
+          document.getElementById('memory-value').textContent = used;
+        } else {
+          document.getElementById('memory-value').textContent = 'N/A';
+        }
+      }
+
+      // ページ読み込み時間
+      window.addEventListener('load', () => {
+        const loadTime = Math.round(performance.timing.loadEventEnd - performance.timing.navigationStart);
+        document.getElementById('load-time').textContent = loadTime;
+      });
+
+      // ボタンクリックテスト
+      function testButtonClick() {
+        const result = document.getElementById('component-result');
+        const startTime = performance.now();
+
+        // 振動フィードバック（対応デバイスのみ）
+        if (navigator.vibrate) {
+          navigator.vibrate(50);
+        }
+
+        const responseTime = Math.round(performance.now() - startTime);
+        result.innerHTML = `
+        <strong>クリック検出:</strong> 成功<br>
+        <strong>レスポンス時間:</strong> ${responseTime}ms<br>
+        <strong>タイムスタンプ:</strong> ${new Date().toLocaleTimeString()}<br>
+        <strong>振動フィードバック:</strong> ${navigator.vibrate ? 'サポート' : '非サポート'}
+      `;
+      }
+
+      // モジュール状態確認
+      function checkModules() {
+        const modules = {
+          MobileTouchManager: typeof window.MobileTouchManager !== 'undefined',
+          MobileComponentSystem: typeof window.MobileComponentSystem !== 'undefined',
+          MobilePerformanceOptimizer: typeof window.MobilePerformanceOptimizer !== 'undefined'
+        };
+
+        const status = document.getElementById('module-status');
+        status.innerHTML = Object.entries(modules)
+          .map(
+            ([name, loaded]) => `
+          <strong>${name}:</strong> 
+          <span style="color: ${loaded ? '#22c55e' : '#ef4444'}">
+            ${loaded ? '✓ 読み込み完了' : '✗ 読み込み失敗'}
+          </span>
+        `
+          )
+          .join('<br>');
+      }
+
+      // 初期化
+      updateDeviceInfo();
+      measureFPS();
+      setInterval(updateMemory, 1000);
+      checkModules();
+
+      // オリエンテーション変更の検出
+      window.addEventListener('orientationchange', updateDeviceInfo);
+      window.addEventListener('resize', updateDeviceInfo);
+    </script>
+  </body>
+</html>
