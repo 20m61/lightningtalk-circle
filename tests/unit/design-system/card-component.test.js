@@ -603,7 +603,9 @@ describe('Card Component System', () => {
       const keyHandler = jest.fn();
       card.addEventListener('keydown', keyHandler);
 
-      const event = new KeyboardEvent('keydown', { key: 'Enter' });
+      const event = document.createEvent('KeyboardEvent');
+      event.initEvent('keydown', true, true);
+      Object.defineProperty(event, 'key', { value: 'Enter', enumerable: true });
       card.dispatchEvent(event);
       expect(keyHandler).toHaveBeenCalledTimes(1);
     });
@@ -620,8 +622,13 @@ describe('Card Component System', () => {
       card.addEventListener('mouseenter', mouseEnterHandler);
       card.addEventListener('mouseleave', mouseLeaveHandler);
 
-      card.dispatchEvent(new MouseEvent('mouseenter'));
-      card.dispatchEvent(new MouseEvent('mouseleave'));
+      const enterEvent = document.createEvent('MouseEvent');
+      enterEvent.initEvent('mouseenter', true, true);
+      card.dispatchEvent(enterEvent);
+
+      const leaveEvent = document.createEvent('MouseEvent');
+      leaveEvent.initEvent('mouseleave', true, true);
+      card.dispatchEvent(leaveEvent);
 
       expect(mouseEnterHandler).toHaveBeenCalledTimes(1);
       expect(mouseLeaveHandler).toHaveBeenCalledTimes(1);

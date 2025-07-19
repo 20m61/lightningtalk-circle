@@ -27,9 +27,27 @@ global.document = {
   })
 };
 
+// Mock window
+global.window = {
+  clearInterval: jest.fn()
+};
+
+// Mock global timer functions
+global.setInterval = jest.fn(fn => {
+  // Return a mock timer ID
+  return 123;
+});
+global.clearInterval = jest.fn();
+
 // Mock Date for consistent testing
 const MOCK_NOW = new Date('2025-07-10T12:00:00+09:00').getTime();
 const MOCK_EVENT_DATE = new Date('2025-07-15T19:00:00+09:00');
+
+// Store original Date
+const OriginalDate = global.Date;
+
+// Mock Date.now
+global.Date.now = jest.fn(() => MOCK_NOW);
 
 // Mock LightningTalkApp with countdown functionality
 class MockLightningTalkApp {
