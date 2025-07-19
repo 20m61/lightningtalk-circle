@@ -1,0 +1,10 @@
+{
+  "name": "lightningtalk-websocket-handlers",
+  "version": "1.0.0",
+  "description": "WebSocket handlers for Lightning Talk Circle",
+  "dependencies": {
+    "@aws-sdk/client-dynamodb": "^3.540.0",
+    "@aws-sdk/lib-dynamodb": "^3.540.0",
+    "@aws-sdk/client-apigatewaymanagementapi": "^3.540.0"
+  }
+}

@@ -1853,8 +1853,10 @@ class LightningTalkApp {
     }
 
     // API Gateway WebSocketを使用
-    // WebSocketは開発環境では無効化
-    const wsUrl = null; // 'wss://YOUR_WEBSOCKET_API_ID.execute-api.ap-northeast-1.amazonaws.com/prod/';
+    const wsUrl =
+      window.APP_CONFIG?.environment === 'development'
+        ? 'wss://cqqhjkqzcj.execute-api.ap-northeast-1.amazonaws.com/prod'
+        : 'wss://YOUR_PRODUCTION_WEBSOCKET_API.execute-api.ap-northeast-1.amazonaws.com/prod';
 
     // WebSocketが無効な場合は、直接ポーリングモードに移行
     if (!wsUrl) {

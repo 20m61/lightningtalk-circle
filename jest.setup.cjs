@@ -9,6 +9,86 @@ const { TextEncoder, TextDecoder } = require('util');
 global.TextEncoder = TextEncoder;
 global.TextDecoder = TextDecoder;
 
+// Mock DOM APIs
+const mockComputedStyle = {
+  getPropertyValue: jest.fn(prop => {
+    // Mock common CSS properties used in tests
+    const mockValues = {
+      'background-color': '#22c55e',
+      'min-height': '44px',
+      '--color-primary-500': '#22c55e',
+      '--spacing-md': '16px',
+      '--font-size-lg': '1.125rem',
+      display: 'block',
+      position: 'relative',
+      opacity: '1',
+      transform: 'none'
+    };
+    return mockValues[prop] || '';
+  }),
+  // Mock other CSS style properties that might be accessed directly
+  backgroundColor: '#22c55e',
+  minHeight: '44px',
+  display: 'block',
+  position: 'relative',
+  opacity: '1',
+  transform: 'none'
+};
+
+// Override getComputedStyle in jsdom environment
+Object.defineProperty(window, 'getComputedStyle', {
+  value: jest.fn(() => mockComputedStyle),
+  writable: true,
+  configurable: true
+});
+
+// Also set global version for direct imports
+global.getComputedStyle = window.getComputedStyle;
+
+// Mock DOM methods commonly used in tests
+if (typeof document !== 'undefined') {
+  document.createRange = jest.fn(() => ({
+    setStart: jest.fn(),
+    setEnd: jest.fn(),
+    commonAncestorContainer: document.createElement('div')
+  }));
+}
+
+// Mock window.getSelection
+if (typeof window !== 'undefined') {
+  window.getSelection = jest.fn(() => ({
+    removeAllRanges: jest.fn(),
+    addRange: jest.fn()
+  }));
+}
+
+// Mock WebSocket
+global.WebSocket = jest.fn(() => ({
+  readyState: 1, // OPEN
+  send: jest.fn(),
+  close: jest.fn(),
+  addEventListener: jest.fn(),
+  removeEventListener: jest.fn(),
+  CONNECTING: 0,
+  OPEN: 1,
+  CLOSING: 2,
+  CLOSED: 3
+}));
+
+// Mock IntersectionObserver
+global.IntersectionObserver = jest.fn(() => ({
+  observe: jest.fn(),
+  unobserve: jest.fn(),
+  disconnect: jest.fn()
+}));
+
+// Mock ResizeObserver
+global.ResizeObserver = jest.fn(() => ({
+  observe: jest.fn(),
+  unobserve: jest.fn(),
+  disconnect: jest.fn()
+}));
+
 // Setup environment variables for tests
 process.env.NODE_ENV = 'test';
 process.env.JWT_SECRET = 'test-secret';

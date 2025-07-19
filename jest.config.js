@@ -4,7 +4,7 @@
  */
 
 export default {
-  testEnvironment: 'node',
+  testEnvironment: 'jsdom',
   transform: {},
   setupFilesAfterEnv: ['<rootDir>/jest.setup.cjs'],
   testMatch: [

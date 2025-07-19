@@ -1,6 +1,8 @@
-const AWS = require('aws-sdk');
+const { DynamoDBClient } = require('@aws-sdk/client-dynamodb');
+const { DynamoDBDocumentClient, DeleteCommand } = require('@aws-sdk/lib-dynamodb');
 
-const dynamodb = new AWS.DynamoDB.DocumentClient();
+const client = new DynamoDBClient({});
+const dynamodb = DynamoDBDocumentClient.from(client);
 
 exports.handler = async event => {
   const { connectionId } = event.requestContext;
@@ -8,12 +10,12 @@ exports.handler = async event => {
 
   try {
     // 接続情報を削除
-    await dynamodb
-      .delete({
+    await dynamodb.send(
+      new DeleteCommand({
         TableName: connectionsTable,
         Key: { connectionId }
       })
-      .promise();
+    );
 
     console.log(`WebSocket disconnected: ${connectionId}`);
 
