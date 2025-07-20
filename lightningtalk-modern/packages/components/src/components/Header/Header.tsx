@@ -194,7 +194,7 @@ const Header = forwardRef<HTMLElement, HeaderProps>(
                   variant="primary"
                   size="sm"
                   onClick={handleLogin}
-                  className={styles.loginButton || undefined}
+                  {...(styles.loginButton && { className: styles.loginButton })}
                 >
                   ログイン
                 </Button>

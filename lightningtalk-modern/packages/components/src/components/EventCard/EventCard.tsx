@@ -130,7 +130,7 @@ const EventCard = forwardRef<HTMLDivElement, EventCardProps>(
         )}
         variant={variant === 'featured' ? 'highlighted' : 'default'}
         interactive={!!onViewDetails}
-        onClick={onViewDetails ? handleViewDetails : undefined}
+        {...(onViewDetails && { onClick: handleViewDetails })}
         {...props}
       >
         {/* Event Image */}
@@ -219,8 +219,8 @@ const EventCard = forwardRef<HTMLDivElement, EventCardProps>(
                 variant={isFullyBooked ? 'outline' : 'primary'}
                 size={variant === 'compact' ? 'sm' : 'md'}
                 onClick={handleParticipate}
-                disabled={isFullyBooked || undefined}
-                className={styles.participateButton || undefined}
+                {...(isFullyBooked && { disabled: true })}
+                {...(styles.participateButton && { className: styles.participateButton })}
               >
                 {isFullyBooked ? '満員' : '参加する'}
               </Button>
@@ -230,7 +230,7 @@ const EventCard = forwardRef<HTMLDivElement, EventCardProps>(
                 variant="ghost"
                 size={variant === 'compact' ? 'sm' : 'md'}
                 onClick={handleViewDetails}
-                className={styles.detailsButton || undefined}
+                {...(styles.detailsButton && { className: styles.detailsButton })}
               >
                 詳細を見る
               </Button>
