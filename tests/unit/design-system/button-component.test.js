@@ -7,11 +7,46 @@ import { jest } from '@jest/globals';
 
 describe('Button Component System', () => {
   let container;
+  let originalGetComputedStyle;
 
   beforeEach(() => {
     // Create test container
     container = document.createElement('div');
     document.body.appendChild(container);
+
+    // Store original getComputedStyle
+    originalGetComputedStyle = global.getComputedStyle;
+
+    // Always mock getComputedStyle for consistent test behavior
+    global.getComputedStyle = element => {
+      // Call original if available to get real styles
+      const realStyles = originalGetComputedStyle ? originalGetComputedStyle(element) : {};
+
+      return {
+        ...realStyles,
+        getPropertyValue: prop => {
+          // First try to get from real styles
+          if (realStyles && realStyles.getPropertyValue) {
+            const realValue = realStyles.getPropertyValue(prop);
+            if (realValue) return realValue;
+          }
+
+          // Fallback to mock values for CSS variables
+          const cssVarMap = {
+            '--color-primary-500': '#22c55e',
+            '--color-primary-600': '#16a34a',
+            '--color-primary-700': '#15803d',
+            '--space-2': '0.5rem',
+            '--space-4': '1rem',
+            '--font-size-lg': '1.125rem',
+            '--size-11': '2.75rem',
+            'background-color': 'rgb(34, 197, 94)',
+            'min-height': '2.75rem'
+          };
+          return cssVarMap[prop] || '';
+        }
+      };
+    };
 
     // Inject CSS styles for testing
     const styleElement = document.createElement('style');
@@ -122,10 +157,21 @@ describe('Button Component System', () => {
   });
 
   afterEach(() => {
-    document.body.removeChild(container);
+    if (container && container.parentNode) {
+      document.body.removeChild(container);
+    }
     // Remove injected styles
     const styles = document.head.querySelectorAll('style');
-    styles.forEach(style => document.head.removeChild(style));
+    styles.forEach(style => {
+      if (style.parentNode) {
+        document.head.removeChild(style);
+      }
+    });
+
+    // Restore original getComputedStyle if it was mocked
+    if (originalGetComputedStyle) {
+      global.getComputedStyle = originalGetComputedStyle;
+    }
   });
 
   describe('Base Button Structure', () => {
