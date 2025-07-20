@@ -58,11 +58,20 @@ class MockIO extends EventEmitter {
 }
 
 // Create mock factory
-const createMockIO = () => new MockIO();
+const createMockIO = () => {
+  const io = new MockIO();
+  // Ensure the mock is properly initialized
+  io.on = jest.fn();
+  return io;
+};
 const createMockSocket = id => new MockSocket(id);
 
 jest.unstable_mockModule('socket.io', () => ({
-  Server: jest.fn(() => createMockIO())
+  Server: jest.fn().mockImplementation((server, options) => {
+    const io = createMockIO();
+    io.options = options;
+    return io;
+  })
 }));
 
 jest.unstable_mockModule('../../../server/utils/logger.js', () => ({
@@ -134,12 +143,16 @@ describe('WebSocketService', () => {
       const next = jest.fn();
 
       // Mock JWT verification
-      websocketService.verifyToken = jest.fn().mockResolvedValue({ userId: 'user123' });
+      websocketService.verifyToken = jest
+        .fn()
+        .mockReturnValue({ id: 'user123', role: 'user', email: 'test@example.com' });
 
       await middleware(mockSocket, next);
 
       expect(next).toHaveBeenCalledWith();
-      expect(mockSocket.data.user).toEqual({ userId: 'user123' });
+      expect(mockSocket.userId).toBe('user123');
+      expect(mockSocket.userRole).toBe('user');
+      expect(mockSocket.authenticated).toBe(true);
     });
 
     it('should reject invalid token', async () => {

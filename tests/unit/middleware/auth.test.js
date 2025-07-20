@@ -9,6 +9,7 @@ jest.unstable_mockModule('jsonwebtoken', () => ({
   default: {
     sign: jest.fn((payload, secret, options) => 'mock-token'),
     verify: jest.fn((token, secret, callback) => {
+      // Execute callback synchronously
       if (token === 'valid-token') {
         callback(null, { id: 'user-123', email: 'test@example.com', role: 'user' });
       } else if (token === 'expired-token') {

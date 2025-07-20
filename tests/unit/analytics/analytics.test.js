@@ -51,21 +51,60 @@ describe('Analytics Module', () => {
       })
     );
 
-    // Mock performance API
-    global.performance = {
+    // Mock performance API with proper timing values
+    const performanceMock = {
       timing: {
         loadEventEnd: 1000,
-        fetchStart: 0
+        fetchStart: 0,
+        navigationStart: 0,
+        domContentLoadedEventEnd: 800,
+        domContentLoadedEventStart: 700,
+        domComplete: 900,
+        domInteractive: 600,
+        connectEnd: 50,
+        connectStart: 40,
+        responseEnd: 200,
+        responseStart: 100,
+        requestStart: 80,
+        domainLookupEnd: 30,
+        domainLookupStart: 20,
+        redirectEnd: 10,
+        redirectStart: 0
       },
-      getEntriesByType: jest.fn(() => []),
-      now: jest.fn(() => Date.now())
+      getEntriesByType: jest.fn(type => {
+        if (type === 'navigation') {
+          return [
+            {
+              name: 'https://example.com',
+              entryType: 'navigation',
+              startTime: 0,
+              duration: 1000,
+              domInteractive: 600,
+              domContentLoadedEventEnd: 800,
+              domComplete: 900,
+              loadEventEnd: 1000
+            }
+          ];
+        }
+        return [];
+      }),
+      now: jest.fn(() => Date.now()),
+      getEntriesByName: jest.fn(() => []),
+      mark: jest.fn(),
+      measure: jest.fn()
     };
+
+    global.performance = performanceMock;
+    // window.performance is read-only in JSDOM, so we can't set it directly
 
     // Mock PerformanceObserver
     global.PerformanceObserver = jest.fn(() => ({
       observe: jest.fn(),
       disconnect: jest.fn()
     }));
+
+    // Mock Math.random for consistent ID generation
+    global.Math.random = jest.fn(() => 0.5);
 
     // Mock sendBeacon
     window.navigator.sendBeacon = jest.fn();
@@ -78,6 +117,8 @@ describe('Analytics Module', () => {
     // Clean up
     dom.window.close();
     jest.clearAllMocks();
+    jest.resetModules();
+    delete window.LTCAnalytics;
   });
 
   describe('Initialization', () => {
