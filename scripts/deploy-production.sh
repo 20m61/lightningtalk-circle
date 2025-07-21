@@ -169,10 +169,26 @@ deploy_cdk() {
         npx cdk diff LightningTalkProd-prod || true
     fi
     
-    # Deploy CDK stack with manual approval
-    npm run deploy:prod -- --require-approval broadening || {
-        echo -e "${RED}❌ CDK deployment failed${NC}"
-        exit 1
+    # Deploy CDK stack with timeout and progress monitoring
+    echo "🚀 Starting production CDK deployment (this may take 10-15 minutes)..."
+    echo "💡 Production deployment includes additional security, monitoring, and scaling resources"
+    
+    timeout 1800 npm run deploy:prod -- --require-approval broadening --progress events || {
+        EXIT_CODE=$?
+        if [ $EXIT_CODE -eq 124 ]; then
+            echo -e "${YELLOW}⚠️ CDK deployment timed out (30 minutes)${NC}"
+            echo "Checking deployment status..."
+            STACK_STATUS=$(aws cloudformation describe-stacks --stack-name LightningTalkProd-prod --query 'Stacks[0].StackStatus' --output text 2>/dev/null || echo "NOT_FOUND")
+            if [[ "$STACK_STATUS" =~ ^(CREATE_COMPLETE|UPDATE_COMPLETE)$ ]]; then
+                echo -e "${GREEN}✅ Deployment completed successfully despite timeout${NC}"
+            else
+                echo -e "${RED}❌ Production deployment failed due to timeout${NC}"
+                exit 1
+            fi
+        else
+            echo -e "${RED}❌ CDK deployment failed${NC}"
+            exit 1
+        fi
     }
     
     cd ..

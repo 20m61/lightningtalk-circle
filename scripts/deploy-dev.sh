@@ -16,7 +16,7 @@ NC='\033[0m' # No Color
 # Configuration
 ENV_FILE=".env.development"
 S3_BUCKET="lightningtalk-dev-static-822063948773"
-CLOUDFRONT_DISTRIBUTION_ID="E3U9O7A93IDYO4"
+CLOUDFRONT_DISTRIBUTION_ID="ESY18KIDPJK68"
 AWS_REGION="ap-northeast-1"
 CDK_ENV="dev"
 
@@ -86,25 +86,64 @@ build_application() {
     echo -e "${GREEN}✅ Build completed${NC}"
 }
 
-# Function to deploy CDK stack
+# Function to deploy CDK stack with optimizations
 deploy_cdk() {
     echo "☁️ Deploying CDK stack to development..."
     
     cd cdk
     
-    # Install CDK dependencies
-    npm ci
+    # Install CDK dependencies (with cache)
+    echo "📦 Installing CDK dependencies..."
+    if [ -d node_modules ] && [ -f package-lock.json ]; then
+        echo "Checking for dependency changes..."
+        npm ci --prefer-offline --no-audit || npm ci
+    else
+        npm ci --no-audit
+    fi
     
-    # Synthesize CDK
+    # Check for changes before deployment
+    echo "🔍 Checking for stack changes..."
+    if npm run | grep -q "diff:dev"; then
+        npm run diff:dev || true
+    else
+        npx cdk diff LightningTalkCircle-dev --context stage=dev || true
+    fi
+    
+    # Synthesize CDK with progress output
+    echo "🏗️ Synthesizing CDK stack..."
     npm run synth:dev || {
         echo -e "${RED}❌ CDK synthesis failed${NC}"
         exit 1
     }
     
-    # Deploy CDK stack
-    npm run deploy:dev -- --require-approval never || {
-        echo -e "${RED}❌ CDK deployment failed${NC}"
-        exit 1
+    # Deploy CDK stack with progress monitoring
+    echo "🚀 Starting CDK deployment (this may take 5-10 minutes)..."
+    echo "💡 Tip: CDK deployment includes Lambda functions, DynamoDB, S3, CloudFront setup"
+    
+    # Run deployment with timeout handling
+    timeout 1200 npm run deploy:dev -- --require-approval never --progress events || {
+        EXIT_CODE=$?
+        if [ $EXIT_CODE -eq 124 ]; then
+            echo -e "${YELLOW}⚠️ CDK deployment timed out (20 minutes)${NC}"
+            echo "Checking deployment status..."
+            STACK_STATUS=$(aws cloudformation describe-stacks --stack-name LightningTalkCircle-dev --query 'Stacks[0].StackStatus' --output text 2>/dev/null || echo "NOT_FOUND")
+            echo "Current stack status: $STACK_STATUS"
+            
+            if [[ "$STACK_STATUS" == "CREATE_COMPLETE" || "$STACK_STATUS" == "UPDATE_COMPLETE" ]]; then
+                echo -e "${GREEN}✅ Stack deployment completed successfully despite timeout${NC}"
+                echo "Continuing with asset synchronization..."
+            elif [[ "$STACK_STATUS" == "CREATE_IN_PROGRESS" || "$STACK_STATUS" == "UPDATE_IN_PROGRESS" ]]; then
+                echo -e "${YELLOW}⏳ Stack is still updating. You may need to wait longer or check AWS Console.${NC}"
+                echo "Skipping asset sync to avoid conflicts."
+                exit 1
+            else
+                echo -e "${RED}❌ Stack deployment failed or in unexpected state: $STACK_STATUS${NC}"
+                exit 1
+            fi
+        else
+            echo -e "${RED}❌ CDK deployment failed${NC}"
+            exit 1
+        fi
     }
     
     cd ..
@@ -116,8 +155,8 @@ deploy_cdk() {
 sync_static_assets() {
     echo "📦 Syncing static assets to S3..."
     
-    # Sync public directory to S3
-    aws s3 sync ./public s3://${S3_BUCKET}/ \
+    # Sync dist directory to S3 (Vite build output)
+    aws s3 sync ./dist s3://${S3_BUCKET}/ \
         --delete \
         --exclude "*.map" \
         --exclude ".DS_Store" \
@@ -126,10 +165,13 @@ sync_static_assets() {
         exit 1
     }
     
-    # Update index.html with shorter cache
-    aws s3 cp ./public/index.html s3://${S3_BUCKET}/index.html \
-        --cache-control "public, max-age=300" || {
-        echo -e "${RED}❌ Failed to update index.html${NC}"
+    # Update HTML files with shorter cache
+    aws s3 cp ./dist/ s3://${S3_BUCKET}/ \
+        --recursive \
+        --exclude "*" \
+        --include "*.html" \
+        --cache-control "public, max-age=300, must-revalidate" || {
+        echo -e "${RED}❌ Failed to update HTML files${NC}"
         exit 1
     }
     

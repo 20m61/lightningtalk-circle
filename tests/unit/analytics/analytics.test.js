@@ -43,6 +43,45 @@ describe('Analytics Module', () => {
       clear: jest.fn()
     };
 
+    // Mock performance API
+    global.performance = {
+      timing: {
+        loadEventEnd: 1500,
+        fetchStart: 100,
+        domContentLoadedEventStart: 800,
+        domContentLoadedEventEnd: 850,
+        loadEventStart: 1450
+      },
+      now: jest.fn(() => Date.now()),
+      mark: jest.fn(),
+      measure: jest.fn(),
+      getEntriesByType: jest.fn(type => {
+        if (type === 'navigation') {
+          return [
+            {
+              type: 'navigation',
+              name: 'http://localhost:3000',
+              startTime: 0,
+              duration: 1400,
+              loadEventStart: 1450,
+              loadEventEnd: 1500,
+              domContentLoadedEventStart: 800,
+              domContentLoadedEventEnd: 850,
+              fetchStart: 100,
+              connectStart: 120,
+              connectEnd: 200,
+              requestStart: 200,
+              responseStart: 300,
+              responseEnd: 600,
+              domInteractive: 650
+            }
+          ];
+        }
+        return [];
+      }),
+      getEntriesByName: jest.fn(() => [])
+    };
+
     // Mock fetch
     global.fetch = jest.fn(() =>
       Promise.resolve({

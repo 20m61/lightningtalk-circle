@@ -115,6 +115,7 @@ jobs:
     if: needs.determine-environment.outputs.environment == 'development' && needs.determine-environment.outputs.deploy == 'true'
     runs-on: ubuntu-latest
     environment: development
+    timeout-minutes: 30
     steps:
       - uses: actions/checkout@v4
 
@@ -131,10 +132,10 @@ jobs:
           node-version: ${{ env.NODE_VERSION }}
           cache: 'npm'
 
-      - name: Install dependencies
+      - name: Install dependencies with cache
         run: |
-          npm ci
-          cd cdk && npm ci
+          npm ci --prefer-offline --no-audit
+          cd cdk && npm ci --prefer-offline --no-audit
 
       - name: Download build artifacts
         uses: actions/download-artifact@v4
@@ -143,20 +144,43 @@ jobs:
 
       - name: Deploy to development
         run: |
-          # Deploy CDK stack
+          # Check stack status before deployment
+          STACK_STATUS=$(aws cloudformation describe-stacks --stack-name LightningTalkCircle-dev --query 'Stacks[0].StackStatus' --output text 2>/dev/null || echo "NOT_FOUND")
+          echo "Current stack status: $STACK_STATUS"
+
+          # Skip deployment if already in progress
+          if [[ "$STACK_STATUS" == "CREATE_IN_PROGRESS" || "$STACK_STATUS" == "UPDATE_IN_PROGRESS" ]]; then
+            echo "⏳ Stack is already being updated. Waiting for completion..."
+            aws cloudformation wait stack-update-complete --stack-name LightningTalkCircle-dev
+            STACK_STATUS=$(aws cloudformation describe-stacks --stack-name LightningTalkCircle-dev --query 'Stacks[0].StackStatus' --output text)
+            echo "Final stack status: $STACK_STATUS"
+          fi
+
+          # Deploy CDK stack with optimizations
           cd cdk
-          npm run deploy:dev -- --require-approval never
+          echo "🏗️ Starting CDK deployment..."
+          npm run deploy:dev -- --require-approval never --progress events
           cd ..
 
-          # Sync static assets
-          aws s3 sync ./public s3://lightningtalk-dev-static-822063948773/ \
+          # Sync static assets (using dist instead of public)
+          echo "📦 Syncing static assets..."
+          aws s3 sync ./dist s3://lightningtalk-dev-static-822063948773/ \
             --delete \
             --exclude "*.map" \
+            --exclude ".DS_Store" \
             --cache-control "public, max-age=31536000"
 
-          # Invalidate CloudFront
+          # Update HTML files with shorter cache
+          aws s3 cp ./dist/ s3://lightningtalk-dev-static-822063948773/ \
+            --recursive \
+            --exclude "*" \
+            --include "*.html" \
+            --cache-control "public, max-age=300, must-revalidate"
+
+          # Invalidate CloudFront (correct distribution ID)
+          echo "🔄 Invalidating CloudFront cache..."
           aws cloudfront create-invalidation \
-            --distribution-id E3U9O7A93IDYO4 \
+            --distribution-id ESY18KIDPJK68 \
             --paths "/*"
 
       - name: Run smoke tests

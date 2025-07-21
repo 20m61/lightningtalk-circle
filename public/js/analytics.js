@@ -49,6 +49,12 @@
     }
 
     collectNavigationTiming() {
+      // Defensive check for performance API availability
+      if (!performance || !performance.getEntriesByType) {
+        console.warn('[Analytics] Navigation timing API not available');
+        return;
+      }
+
       const navigation = performance.getEntriesByType('navigation')[0];
       if (!navigation) {
         return;
@@ -381,7 +387,10 @@
         title: document.title,
         referrer: document.referrer,
         timestamp: Date.now(),
-        loadTime: performance.timing.loadEventEnd - performance.timing.fetchStart,
+        loadTime:
+          performance.timing?.loadEventEnd && performance.timing?.fetchStart
+            ? performance.timing.loadEventEnd - performance.timing.fetchStart
+            : 0,
         // Page metadata
         meta: {
           description: document.querySelector('meta[name="description"]')?.content,
