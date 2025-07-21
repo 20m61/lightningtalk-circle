@@ -1,0 +1,105 @@
+# Lightning Talk Circle - DevContainer Docker Compose
+# This file is specifically for VS Code DevContainer
+
+version: '3.8'
+
+services:
+  # PostgreSQL Database
+  postgres:
+    image: postgres:15-alpine
+    container_name: lightningtalk-postgres-devcontainer
+    environment:
+      POSTGRES_DB: lightningtalk
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_INITDB_ARGS: '--encoding=UTF-8 --locale=C'
+    ports:
+      - '5432:5432'
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    restart: unless-stopped
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U postgres']
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # Redis for session storage and caching
+  redis:
+    image: redis:7-alpine
+    container_name: lightningtalk-redis-devcontainer
+    ports:
+      - '6379:6379'
+    volumes:
+      - redis_data:/data
+    restart: unless-stopped
+    healthcheck:
+      test: ['CMD', 'redis-cli', 'ping']
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # Lightning Talk Application for DevContainer
+  app:
+    build:
+      context: ..
+      dockerfile: Dockerfile.dev
+      args:
+        UID: ${UID:-1001}
+        GID: ${GID:-1001}
+    container_name: lightningtalk-app-devcontainer
+    environment:
+      NODE_ENV: development
+      DATABASE_URL: postgresql://postgres:postgres@postgres:5432/lightningtalk
+      REDIS_URL: redis://redis:6379
+      PORT: 3000
+      SHELL: /bin/bash
+      EDITOR: code
+    ports:
+      # Port 3003 is chosen to avoid conflicts with the main development server running on port 3000
+      # This allows developers to run both the devcontainer and local development environments simultaneously
+      - '3003:3000'
+    volumes:
+      - ..:/app:cached
+      - /app/node_modules
+      - lightningtalk-bashhistory:/commandhistory
+      # VS Code extensions volume for the nodeuser (not node user)
+      - lightningtalk-vscode-extensions:/home/nodeuser/.vscode-server/extensions
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    restart: unless-stopped
+    command: sleep infinity
+    init: true
+
+  # pgAdmin for database management
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    container_name: lightningtalk-pgadmin-devcontainer
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@lightningtalk.local
+      PGADMIN_DEFAULT_PASSWORD: admin
+      PGADMIN_CONFIG_SERVER_MODE: 'False'
+    ports:
+      - '8080:80'
+    volumes:
+      - pgadmin_data:/var/lib/pgadmin
+    depends_on:
+      - postgres
+    restart: unless-stopped
+
+volumes:
+  postgres_data:
+    driver: local
+  redis_data:
+    driver: local
+  pgadmin_data:
+    driver: local
+  lightningtalk-bashhistory:
+  lightningtalk-vscode-extensions:
+
+networks:
+  default:
+    name: lightningtalk-devcontainer-network

@@ -2,13 +2,27 @@ FROM node:20-alpine
 
 # 開発に必要なツールをインストール
 RUN apk add --no-cache \
+    # Basic development tools
     git \
     bash \
     curl \
     vim \
-    tzdata \
     jq \
-    ca-certificates
+    # System utilities
+    tzdata \
+    ca-certificates \
+    # Python for node-gyp
+    python3 \
+    py3-pip \
+    # Build tools for native modules
+    make \
+    g++ \
+    # Canvas/image processing dependencies
+    cairo-dev \
+    jpeg-dev \
+    pango-dev \
+    giflib-dev \
+    pixman-dev
 
 # タイムゾーンを設定
 ENV TZ=Asia/Tokyo
@@ -18,6 +32,10 @@ ARG UID=1001
 ARG GID=1001
 RUN addgroup -g ${GID} -S nodejs && \
     adduser -S nodeuser -u ${UID} -G nodejs
+
+# Create home directory structure for VS Code extensions
+RUN mkdir -p /home/nodeuser/.vscode-server/extensions && \
+    chown -R ${UID}:${GID} /home/nodeuser
 
 # 作業ディレクトリを設定
 WORKDIR /app
