@@ -75,6 +75,9 @@ LICENSE
 # Shell scripts
 *.sh
 
+# Docker files
+Dockerfile*
+
 # Static theme directory - contains various file types
 theme/deploy.sh
 theme/robots.txt

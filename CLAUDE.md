@@ -69,6 +69,30 @@ npm run auto-workflow        # 自動化された開発ワークフロー
 ./scripts/docker-dev.sh clean  # コンテナとボリュームのクリーンアップ
 ```
 
+### VS Code DevContainer開発
+
+VS Code DevContainerを使用した開発環境のセットアップ：
+
+```bash
+# DevContainerの使用方法
+1. VS Codeで「Remote-Containers」拡張機能をインストール
+2. プロジェクトを開き、「Reopen in Container」を選択
+3. 初回は環境構築に数分かかります
+
+# DevContainerの特徴
+- ポート3003でアプリケーションにアクセス（メイン開発環境との競合を避けるため）
+- PostgreSQLとRedisが自動的に起動
+- VS Code拡張機能はコンテナ内に保存される
+- nodeuser（UID: 1001）として実行される
+- 必要な開発ツールがすべてプリインストール済み
+
+# DevContainerでのコマンド実行
+- ターミナルはコンテナ内で実行されます
+- npm run dev でアプリケーションを起動
+- データベースは postgres:5432 で利用可能
+- pgAdminは http://localhost:8080 でアクセス可能
+```
+
 ### WordPress開発
 
 ```bash
@@ -208,6 +232,9 @@ npm run security:setup       # 本番環境用のセキュア設定生成
 開発環境には以下が含まれます：
 
 - **app**: Node.jsアプリケーションコンテナ
+  - 通常開発: ポート3000
+  - DevContainer: ポート3003（競合回避のため）
+  - ユーザー: nodeuser (UID: 1001)
 - **postgres**: PostgreSQLデータベース（開発のみ）
 - **redis**: セッション/レート制限用Redisキャッシュ
 - **pgadmin**: データベース管理UI

@@ -56,12 +56,15 @@ services:
       SHELL: /bin/bash
       EDITOR: code
     ports:
+      # Port 3003 is chosen to avoid conflicts with the main development server running on port 3000
+      # This allows developers to run both the devcontainer and local development environments simultaneously
       - '3003:3000'
     volumes:
       - ..:/app:cached
       - /app/node_modules
       - lightningtalk-bashhistory:/commandhistory
-      - lightningtalk-vscode-extensions:/home/node/.vscode-server/extensions
+      # VS Code extensions volume for the nodeuser (not node user)
+      - lightningtalk-vscode-extensions:/home/nodeuser/.vscode-server/extensions
     depends_on:
       postgres:
         condition: service_healthy
