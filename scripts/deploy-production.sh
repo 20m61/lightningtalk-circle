@@ -140,8 +140,8 @@ build_application() {
         exit 1
     }
     
-    # Generate source maps for error tracking
-    npm run build:sourcemaps || true
+    # Generate source maps for error tracking (placeholder)
+    echo "Source maps generation would be handled by build process"
     
     echo -e "${GREEN}✅ Production build completed${NC}"
 }
@@ -161,9 +161,13 @@ deploy_cdk() {
         exit 1
     }
     
-    # Show diff
+    # Show diff (if available)
     echo -e "${BLUE}📊 CDK Diff:${NC}"
-    npm run diff:prod || true
+    if npm run | grep -q "diff:prod"; then
+        npm run diff:prod || true
+    else
+        npx cdk diff LightningTalkProd-prod || true
+    fi
     
     # Deploy CDK stack with manual approval
     npm run deploy:prod -- --require-approval broadening || {

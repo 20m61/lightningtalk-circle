@@ -138,13 +138,13 @@ aws logs tail /aws/lambda/lightningtalk-circle-prod --follow
 ### ロールバック手順
 
 ```bash
-# 開発環境のロールバック
-cd cdk
+# 開発環境のロールバック（手動プロセス）
 npm run rollback:dev
+echo "Follow manual rollback procedures in documentation"
 
-# 本番環境のロールバック（承認必要）
-cd cdk
-npm run rollback:prod
+# 本番環境のロールバック（承認必要・慎重に実施）
+npm run rollback:prod  
+echo "Contact operations team for production rollback"
 ```
 
 ## セキュリティ考慮事項

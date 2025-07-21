@@ -56,13 +56,13 @@ run_tests() {
     echo "🧪 Running tests..."
     
     # Run unit tests
-    npm test:unit || {
+    npm run test:unit || {
         echo -e "${RED}❌ Unit tests failed${NC}"
         exit 1
     }
     
     # Run integration tests
-    npm test:integration || {
+    npm run test:integration || {
         echo -e "${RED}❌ Integration tests failed${NC}"
         exit 1
     }
