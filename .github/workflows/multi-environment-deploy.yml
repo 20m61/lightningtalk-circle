@@ -1,0 +1,306 @@
+name: Multi-Environment Deployment
+
+on:
+  push:
+    branches:
+      - main
+      - develop
+      - 'feature/**'
+  pull_request:
+    branches:
+      - main
+      - develop
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Deployment environment'
+        required: true
+        type: choice
+        options:
+          - development
+          - production
+        default: development
+
+env:
+  NODE_VERSION: '20'
+  AWS_REGION: 'ap-northeast-1'
+
+jobs:
+  # Determine deployment environment
+  determine-environment:
+    runs-on: ubuntu-latest
+    outputs:
+      environment: ${{ steps.determine.outputs.environment }}
+      deploy: ${{ steps.determine.outputs.deploy }}
+    steps:
+      - name: Determine environment
+        id: determine
+        run: |
+          if [[ "${{ github.event_name }}" == "workflow_dispatch" ]]; then
+            echo "environment=${{ github.event.inputs.environment }}" >> $GITHUB_OUTPUT
+            echo "deploy=true" >> $GITHUB_OUTPUT
+          elif [[ "${{ github.ref }}" == "refs/heads/main" ]]; then
+            echo "environment=production" >> $GITHUB_OUTPUT
+            echo "deploy=true" >> $GITHUB_OUTPUT
+          elif [[ "${{ github.ref }}" == "refs/heads/develop" ]] || [[ "${{ github.ref }}" =~ ^refs/heads/feature/.* ]]; then
+            echo "environment=development" >> $GITHUB_OUTPUT
+            echo "deploy=true" >> $GITHUB_OUTPUT
+          else
+            echo "environment=none" >> $GITHUB_OUTPUT
+            echo "deploy=false" >> $GITHUB_OUTPUT
+          fi
+
+  # Run tests for all pushes and PRs
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run linting
+        run: npm run lint
+
+      - name: Run tests
+        run: npm test
+
+      - name: Upload coverage
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-report
+          path: coverage/
+
+  # Build application
+  build:
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build application
+        run: |
+          if [[ "${{ needs.determine-environment.outputs.environment }}" == "production" ]]; then
+            npm run build
+          else
+            npm run build:dev
+          fi
+
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-artifacts
+          path: |
+            dist/
+            public/
+
+  # Deploy to dev.発表.com
+  deploy-development:
+    needs: [determine-environment, test, build]
+    if: needs.determine-environment.outputs.environment == 'development' && needs.determine-environment.outputs.deploy == 'true'
+    runs-on: ubuntu-latest
+    environment: development
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: |
+          npm ci
+          cd cdk && npm ci
+
+      - name: Download build artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: build-artifacts
+
+      - name: Deploy to development
+        run: |
+          # Deploy CDK stack
+          cd cdk
+          npm run deploy:dev -- --require-approval never
+          cd ..
+
+          # Sync static assets
+          aws s3 sync ./public s3://lightningtalk-dev-static-822063948773/ \
+            --delete \
+            --exclude "*.map" \
+            --cache-control "public, max-age=31536000"
+
+          # Invalidate CloudFront
+          aws cloudfront create-invalidation \
+            --distribution-id E3U9O7A93IDYO4 \
+            --paths "/*"
+
+      - name: Run smoke tests
+        run: |
+          sleep 30
+          curl -f https://dev.xn--6wym69a.com || exit 1
+          curl -f https://4mz5i3x23c.execute-api.ap-northeast-1.amazonaws.com/prod/api/health || exit 1
+
+      - name: Notify deployment
+        run: |
+          echo "✅ Successfully deployed to dev.発表.com"
+          echo "URL: https://dev.xn--6wym69a.com"
+          echo "Commit: ${{ github.sha }}"
+
+  # Deploy to 発表.com (requires approval)
+  deploy-production:
+    needs: [determine-environment, test, build]
+    if: needs.determine-environment.outputs.environment == 'production' && needs.determine-environment.outputs.deploy == 'true' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    environment: production
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: |
+          npm ci
+          cd cdk && npm ci
+
+      - name: Download build artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: build-artifacts
+
+      - name: Create backup
+        run: |
+          BACKUP_DIR="backups/$(date +%Y%m%d_%H%M%S)"
+          mkdir -p "$BACKUP_DIR"
+          aws s3 cp s3://lightningtalk-circle-static-prod/deployment-info.json "$BACKUP_DIR/" || true
+
+      - name: Deploy to production
+        run: |
+          # Deploy CDK stack
+          cd cdk
+          npm run deploy:prod -- --require-approval broadening
+          cd ..
+
+          # Create deployment info
+          cat > public/deployment-info.json <<EOF
+          {
+            "version": "${{ github.ref_name }}",
+            "commit": "${{ github.sha }}",
+            "timestamp": "$(date -u +"%Y-%m-%dT%H:%M:%SZ")",
+            "environment": "production"
+          }
+          EOF
+
+          # Sync static assets
+          aws s3 sync ./public s3://lightningtalk-circle-static-prod/ \
+            --delete \
+            --exclude "*.map" \
+            --exclude ".DS_Store" \
+            --cache-control "public, max-age=31536000, immutable"
+
+          # Update HTML files with shorter cache
+          aws s3 cp ./public/ s3://lightningtalk-circle-static-prod/ \
+            --recursive \
+            --exclude "*" \
+            --include "*.html" \
+            --cache-control "public, max-age=300, must-revalidate"
+
+          # Invalidate CloudFront
+          aws cloudfront create-invalidation \
+            --distribution-id d1kpcrcfnixxa7 \
+            --paths "/*"
+
+      - name: Run production smoke tests
+        run: |
+          sleep 60
+          curl -f https://xn--6wym69a.com || exit 1
+          curl -f https://4ujhkvx000.execute-api.ap-northeast-1.amazonaws.com/prod/api/health || exit 1
+
+      - name: Monitor deployment
+        run: |
+          # Check CloudWatch alarms
+          ALARMS=$(aws cloudwatch describe-alarms \
+            --alarm-name-prefix "lightningtalk-prod-" \
+            --state-value ALARM \
+            --query 'MetricAlarms[?StateValue==`ALARM`].AlarmName' \
+            --output text)
+
+          if [ -n "$ALARMS" ]; then
+            echo "❌ CloudWatch alarms triggered: $ALARMS"
+            exit 1
+          fi
+
+          echo "✅ No alarms triggered"
+
+      - name: Create release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: release-${{ github.run_number }}
+          release_name: Production Release ${{ github.run_number }}
+          body: |
+            ## Production Deployment
+
+            - **Environment**: 発表.com
+            - **Commit**: ${{ github.sha }}
+            - **Deployed at**: $(date -u +"%Y-%m-%d %H:%M:%S UTC")
+
+            ### Changes
+            ${{ github.event.head_commit.message }}
+          draft: false
+          prerelease: false
+
+      - name: Notify deployment
+        run: |
+          echo "✅ Successfully deployed to 発表.com"
+          echo "URL: https://xn--6wym69a.com"
+          echo "Release: release-${{ github.run_number }}"
+
+  # Cleanup old artifacts
+  cleanup:
+    needs: [deploy-development, deploy-production]
+    if: always()
+    runs-on: ubuntu-latest
+    steps:
+      - name: Delete artifacts
+        uses: geekyeggo/delete-artifact@v2
+        with:
+          name: |
+            build-artifacts
+            coverage-report

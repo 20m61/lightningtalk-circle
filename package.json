@@ -100,7 +100,12 @@
     "monitoring:test": "node scripts/initialize-monitoring.js && curl -s http://localhost:3000/api/monitoring/health | jq '.'",
     "monitoring:setup": "./scripts/monitoring-setup.sh",
     "monitoring:dashboard": "open http://localhost:3000/api/monitoring/dashboard",
-    "security:setup": "node scripts/secure-setup.js"
+    "security:setup": "node scripts/secure-setup.js",
+    "deploy:dev": "./scripts/deploy-dev.sh",
+    "deploy:production": "./scripts/deploy-production.sh",
+    "env:local": "./scripts/environment-manager.sh switch local",
+    "env:dev": "./scripts/environment-manager.sh switch development",
+    "env:prod": "./scripts/environment-manager.sh switch production"
   },
   "dependencies": {
     "@aws-sdk/client-bedrock-runtime": "^3.844.0",

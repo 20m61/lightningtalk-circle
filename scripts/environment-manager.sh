@@ -52,9 +52,10 @@ COMMANDS:
     list                List available environments
 
 ENVIRONMENTS:
-    development         Local Docker development environment
+    local               Local Docker development environment
+    development         dev.発表.com (AWS development environment)
     staging             AWS staging environment  
-    production          AWS production environment
+    production          発表.com (AWS production environment)
 
 EXAMPLES:
     ./scripts/environment-manager.sh switch development
@@ -107,7 +108,7 @@ switch_environment() {
     # Validate target environment
     if [[ ! -f "$source_file" ]]; then
         error "Environment file not found: $source_file"
-        error "Available environments: development, staging, production"
+        error "Available environments: local, development, staging, production"
         return 1
     fi
     
@@ -146,12 +147,20 @@ show_environment_status() {
     echo ""
     
     # Detect environment type
-    if [[ "$node_env" == "development" ]]; then
-        info "🐳 Docker Development Environment"
+    if [[ "$node_env" == "local" ]]; then
+        info "🐳 Local Docker Development Environment"
         echo "  - Use: docker-compose up -d"
         echo "  - Database: File-based storage"
         echo "  - Email: Console/mock output"
         echo "  - Hot reload: Enabled"
+        echo "  - URL: http://localhost:3000"
+    elif [[ "$node_env" == "development" ]]; then
+        info "🌐 AWS Development Environment (dev.発表.com)"
+        echo "  - Use: npm run deploy:dev"
+        echo "  - Database: DynamoDB (dev tables)"
+        echo "  - Email: SES (sandbox mode)"
+        echo "  - Monitoring: CloudWatch"
+        echo "  - URL: https://dev.発表.com"
     elif [[ "$node_env" == "staging" ]]; then
         info "☁️  AWS Staging Environment"
         echo "  - Use: npx cdk deploy --context env=staging"
@@ -159,11 +168,12 @@ show_environment_status() {
         echo "  - Email: SES"
         echo "  - Monitoring: CloudWatch"
     elif [[ "$node_env" == "production" ]]; then
-        info "🚀 AWS Production Environment"
-        echo "  - Use: npx cdk deploy --context env=production"
-        echo "  - Database: DynamoDB"
-        echo "  - Email: SES"
-        echo "  - Monitoring: CloudWatch"
+        info "🚀 AWS Production Environment (発表.com)"
+        echo "  - Use: npm run deploy:production"
+        echo "  - Database: DynamoDB (prod tables)"
+        echo "  - Email: SES (production)"
+        echo "  - Monitoring: CloudWatch + Alarms"
+        echo "  - URL: https://発表.com"
     else
         warning "Unknown environment type: $node_env"
     fi
