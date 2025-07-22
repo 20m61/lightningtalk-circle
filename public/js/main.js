@@ -48,6 +48,9 @@ class LightningTalkApp {
     this.currentVoteType = null;
     this.currentEventId = null;
 
+    // Event modal reference
+    this.eventModal = null;
+
     // Cache frequently used DOM elements
     this.elements = {
       modal: null,
@@ -86,6 +89,7 @@ class LightningTalkApp {
     this.setupFloatingEffects();
     this.setupModalHandlers();
     this.setupTopicInteractions();
+    this.initEventModal();
     this.setupMobileMenu();
     this.updateSurveyCounters();
     this.setupChatWidget();
@@ -1353,6 +1357,36 @@ class LightningTalkApp {
       "'": '&#039;'
     };
     return text.replace(/[&<>"']/g, m => map[m]);
+  }
+
+  // Event Modal Integration
+  initEventModal() {
+    // Set up event modal integration
+    if (window.eventModal) {
+      this.eventModal = window.eventModal;
+
+      // Listen for registration events from modal
+      window.addEventListener('openRegistration', e => {
+        this.handleModalRegistration(e.detail.event);
+      });
+
+      // Listen for survey events from modal
+      window.addEventListener('openSurvey', e => {
+        this.handleModalSurvey(e.detail.event);
+      });
+    }
+  }
+
+  handleModalRegistration(event) {
+    // Convert modal registration to existing registration system
+    const registrationType = event.format === 'online' ? 'listener' : 'speaker';
+    this.handleAction(`register-${registrationType}`, null);
+  }
+
+  handleModalSurvey(event) {
+    // Convert modal survey to existing vote system
+    this.currentEventId = event.id;
+    this.openVoteModal('online'); // Default to online, user can change in modal
   }
 
   // Mobile Optimization Methods

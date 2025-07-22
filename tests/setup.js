@@ -6,6 +6,15 @@ import { jest } from '@jest/globals';
 import fs from 'fs/promises';
 import path from 'path';
 
+// setImmediateポリフィル
+global.setImmediate =
+  global.setImmediate ||
+  ((fn, ...args) => {
+    return setTimeout(fn, 0, ...args);
+  });
+
+global.clearImmediate = global.clearImmediate || clearTimeout;
+
 // テスト環境変数の設定
 process.env.NODE_ENV = 'test';
 process.env.PORT = '3001';

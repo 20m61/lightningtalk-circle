@@ -5,6 +5,8 @@
 
 import compression from 'compression';
 import { createLogger } from '../utils/logger.js';
+import { promises as fs, existsSync } from 'fs';
+import { join } from 'path';
 
 const logger = createLogger('performance');
 
@@ -219,12 +221,10 @@ const imageOptimization = (req, res, next) => {
   // Try to serve WebP if supported
   if (supportsWebP && req.path.match(/\.(jpg|jpeg|png)$/i)) {
     const webpPath = req.path.replace(/\.(jpg|jpeg|png)$/i, '.webp');
-    const fs = require('fs');
-    const path = require('path');
 
-    const fullWebpPath = path.join(process.cwd(), 'public', webpPath);
+    const fullWebpPath = join(process.cwd(), 'public', webpPath);
 
-    if (fs.existsSync(fullWebpPath)) {
+    if (existsSync(fullWebpPath)) {
       req.url = webpPath;
       res.setHeader('Vary', 'Accept');
     }
@@ -336,10 +336,7 @@ const criticalCssInlining = async(req, res, next) => {
 
   res.send = function(html) {
     if (typeof html === 'string' && html.includes('</head>')) {
-      const fs = require('fs').promises;
-      const path = require('path');
-
-      const criticalCssPath = path.join(process.cwd(), 'public/css/critical.css');
+      const criticalCssPath = join(process.cwd(), 'public/css/critical.css');
 
       fs.readFile(criticalCssPath, 'utf8')
         .then(criticalCss => {
