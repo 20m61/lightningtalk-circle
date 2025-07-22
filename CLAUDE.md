@@ -162,6 +162,15 @@ npm run analyze              # 実装用の指示を分析
 npm run quality              # 品質ゲートスクリプトの実行
 npm run env:switch           # 環境間をインタラクティブに切り替え
 npm run env:backup           # 現在の環境設定をバックアップ
+
+# UI自動化テスト
+npm run ui:screenshot         # UIスクリーンショット撮影
+npm run ui:test              # 自動UIテスト実行
+npm run ui:test:ci           # CI/CD用UIテスト
+npm run ui:test:setup        # テスト環境セットアップ
+npm run ui:test:baseline     # ベースライン画像更新
+npm run ui:test:report       # テストレポート生成
+npm run ui:test:full         # サーバー付きフルテスト
 ```
 
 ### 監視とセキュリティ
