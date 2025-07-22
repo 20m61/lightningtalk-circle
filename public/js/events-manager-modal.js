@@ -9,13 +9,13 @@ if (typeof EventsManager !== 'undefined') {
   const originalRenderEventCard = EventsManager.prototype.renderEventCard;
 
   // Override init to add modal integration
-  EventsManager.prototype.init = async function() {
+  EventsManager.prototype.init = async function () {
     await originalInit.call(this);
     this.initModalIntegration();
   };
 
   // Add modal integration method
-  EventsManager.prototype.initModalIntegration = function() {
+  EventsManager.prototype.initModalIntegration = function () {
     // Ensure modal is available
     if (!window.eventModal) {
       console.warn('EventModal not initialized');
@@ -23,7 +23,7 @@ if (typeof EventsManager !== 'undefined') {
     }
 
     // Add click handler delegation for event cards
-    document.addEventListener('click', (e) => {
+    document.addEventListener('click', e => {
       const eventCard = e.target.closest('.event-card[data-event-id]');
       if (eventCard && !e.target.closest('.btn, button')) {
         e.preventDefault();
@@ -33,7 +33,7 @@ if (typeof EventsManager !== 'undefined') {
     });
 
     // Add keyboard handler for event cards
-    document.addEventListener('keydown', (e) => {
+    document.addEventListener('keydown', e => {
       if (e.key === 'Enter' || e.key === ' ') {
         const eventCard = e.target.closest('.event-card[data-event-id]');
         if (eventCard && !e.target.closest('.btn, button')) {
@@ -46,20 +46,31 @@ if (typeof EventsManager !== 'undefined') {
   };
 
   // Add method to open event modal
-  EventsManager.prototype.openEventModal = function(eventId) {
+  EventsManager.prototype.openEventModal = function (eventId) {
     const event = this.events.find(e => e.id === eventId);
     if (event && window.eventModal) {
+      // Get current voting data from localStorage
+      const voteData = JSON.parse(localStorage.getItem(`vote_${event.id}`) || '{}');
+
       // Prepare event data for modal
       const modalData = {
         ...event,
         participants: {
           total: event.registeredCount || 0,
-          online: event.onlineParticipants || Math.floor((event.registeredCount || 0) * 0.6),
-          onsite: event.onsiteParticipants || Math.floor((event.registeredCount || 0) * 0.4)
+          online:
+            event.onlineParticipants ||
+            voteData.online ||
+            Math.floor((event.registeredCount || 0) * 0.6),
+          onsite:
+            event.onsiteParticipants ||
+            voteData.onsite ||
+            Math.floor((event.registeredCount || 0) * 0.4)
         },
         schedule: event.schedule || this.generateDefaultSchedule(event),
         notes: event.notes || this.getDefaultNotes(event.format),
-        contact: event.contact || '<a href="mailto:info@lightningtalk.example.com">info@lightningtalk.example.com</a>'
+        contact:
+          event.contact ||
+          '<a href="mailto:info@lightningtalk.example.com">info@lightningtalk.example.com</a>'
       };
 
       window.eventModal.open(modalData);
@@ -67,30 +78,30 @@ if (typeof EventsManager !== 'undefined') {
   };
 
   // Override renderEventCard to add modal attributes
-  EventsManager.prototype.renderEventCard = function(event) {
+  EventsManager.prototype.renderEventCard = function (event) {
     const card = originalRenderEventCard.call(this, event);
-    
+
     // Add data attributes and accessibility
     const cardElement = document.createElement('div');
     cardElement.innerHTML = card;
     const eventCard = cardElement.firstElementChild;
-    
+
     if (eventCard) {
       eventCard.setAttribute('data-event-id', event.id);
       eventCard.setAttribute('tabindex', '0');
       eventCard.setAttribute('role', 'button');
       eventCard.setAttribute('aria-label', `${event.title}の詳細を表示`);
       eventCard.style.cursor = 'pointer';
-      
+
       // Add hover effect class
       eventCard.classList.add('event-card-interactive');
     }
-    
+
     return cardElement.innerHTML;
   };
 
   // Helper methods
-  EventsManager.prototype.generateDefaultSchedule = function(event) {
+  EventsManager.prototype.generateDefaultSchedule = function (event) {
     const startTime = new Date(event.date);
     const schedule = [
       {
@@ -118,11 +129,11 @@ if (typeof EventsManager !== 'undefined') {
         content: '懇親会・ネットワーキング'
       }
     ];
-    
+
     return schedule;
   };
 
-  EventsManager.prototype.getDefaultNotes = function(format) {
+  EventsManager.prototype.getDefaultNotes = function (format) {
     const notes = {
       hybrid: `
         <ul>
@@ -149,15 +160,15 @@ if (typeof EventsManager !== 'undefined') {
         </ul>
       `
     };
-    
+
     return notes[format] || notes.hybrid;
   };
 
-  EventsManager.prototype.formatTime = function(date) {
-    return date.toLocaleTimeString('ja-JP', { 
-      hour: '2-digit', 
+  EventsManager.prototype.formatTime = function (date) {
+    return date.toLocaleTimeString('ja-JP', {
+      hour: '2-digit',
       minute: '2-digit',
-      hour12: false 
+      hour12: false
     });
   };
 }
