@@ -132,7 +132,7 @@ class LightningTalkApp {
   throttle(func, delay) {
     let timeoutId;
     let lastExecTime = 0;
-    return function(...args) {
+    return function (...args) {
       const currentTime = Date.now();
 
       if (currentTime - lastExecTime > delay) {
@@ -153,7 +153,7 @@ class LightningTalkApp {
 
   debounce(func, delay) {
     let timeoutId;
-    return function(...args) {
+    return function (...args) {
       clearTimeout(timeoutId);
       timeoutId = setTimeout(() => func.apply(this, args), delay);
     };
@@ -274,48 +274,67 @@ class LightningTalkApp {
   }
 
   handleAction(action, element) {
-    switch (action) {
-    case 'register':
-      this.openRegistrationModal('general');
-      break;
-    case 'register-listener':
-      this.openRegistrationModal('listener');
-      break;
-    case 'register-speaker':
-      this.openRegistrationModal('speaker');
-      break;
-    case 'feedback':
-      this.openFeedbackForm();
-      break;
-    case 'walkin-info':
-      this.showWalkinInfo();
-      break;
-    case 'survey-online':
-      this.incrementSurveyCounter('online');
-      break;
-    case 'survey-offline':
-      this.incrementSurveyCounter('offline');
-      break;
-    case 'view-detail':
-      this.openEventDetailModal(element.dataset.eventId);
-      break;
-    case 'toggle-participants':
-      this.toggleParticipantsList();
-      break;
-    case 'toggle-settings':
-      this.toggleChatSettings();
-      break;
-    case 'minimize':
-      this.minimizeChat();
-      break;
-    case 'attach-file':
-      this.openFileAttachment();
-      break;
-    case 'emoji':
-      this.toggleEmojiPicker();
-      break;
-    default:
-      this.logger.warn('Unknown action:', { action });
+    // ローディング状態の表示
+    if (element && element.classList) {
+      element.classList.add('loading');
+      element.disabled = true;
+    }
+
+    try {
+      switch (action) {
+        case 'register':
+          this.openRegistrationModal('general');
+          break;
+        case 'register-listener':
+          this.openRegistrationModal('listener');
+          break;
+        case 'register-speaker':
+          this.openRegistrationModal('speaker');
+          break;
+        case 'feedback':
+          this.openFeedbackForm();
+          break;
+        case 'walkin-info':
+          this.showWalkinInfo();
+          break;
+        case 'survey-online':
+          this.incrementSurveyCounter('online');
+          break;
+        case 'survey-offline':
+          this.incrementSurveyCounter('offline');
+          break;
+        case 'view-detail':
+          this.openEventDetailModal(element.dataset.eventId);
+          break;
+        case 'toggle-participants':
+          this.toggleParticipantsList();
+          break;
+        case 'toggle-settings':
+          this.toggleChatSettings();
+          break;
+        case 'minimize':
+          this.minimizeChat();
+          break;
+        case 'attach-file':
+          this.openFileAttachment();
+          break;
+        case 'emoji':
+          this.toggleEmojiPicker();
+          break;
+        default:
+          this.logger.warn('Unknown action:', { action });
+      }
+    } catch (error) {
+      this.logger.error('Action execution failed:', { action, error: error.message });
+      this.showNotification('アクション実行中にエラーが発生しました', 'error');
+    } finally {
+      // ローディング状態の解除
+      if (element && element.classList) {
+        setTimeout(() => {
+          element.classList.remove('loading');
+          element.disabled = false;
+        }, 500);
+      }
     }
   }
 
@@ -394,8 +413,8 @@ class LightningTalkApp {
                 </div>
                 
                 ${
-  showSpeakerFields
-    ? `
+                  showSpeakerFields
+                    ? `
                 <div class="form-group">
                     <label for="talkTitle">発表タイトル *</label>
                     <input type="text" id="talkTitle" name="talkTitle" required maxlength="200" placeholder="例: 猫の写真で学ぶマシンラーニング">
@@ -430,8 +449,8 @@ class LightningTalkApp {
                     </select>
                 </div>
                 `
-    : ''
-}
+                    : ''
+                }
                 
                 <div class="form-group">
                     <label for="message">メッセージ・質問など</label>
@@ -1458,7 +1477,7 @@ class LightningTalkApp {
     if (window.EventsManager && window.EventsManager.events) {
       return window.EventsManager.events.find(event => event.id === eventId);
     }
-    
+
     // フォールバック: ローカルデータから取得
     const fallbackEvents = [
       {
@@ -1477,7 +1496,7 @@ class LightningTalkApp {
     const participantsList = document.getElementById('chat-participants-list');
     if (participantsList) {
       participantsList.classList.toggle('hidden');
-      
+
       // アイコン状態の更新
       const toggleBtn = document.querySelector('[data-action="toggle-participants"]');
       if (toggleBtn) {
@@ -1485,8 +1504,10 @@ class LightningTalkApp {
         toggleBtn.classList.toggle('active', isVisible);
         toggleBtn.setAttribute('aria-pressed', isVisible.toString());
       }
-      
-      this.logger.info('Participants list toggled', { visible: !participantsList.classList.contains('hidden') });
+
+      this.logger.info('Participants list toggled', {
+        visible: !participantsList.classList.contains('hidden')
+      });
     }
   }
 
@@ -1494,7 +1515,7 @@ class LightningTalkApp {
     const settingsPanel = document.getElementById('chat-settings-panel');
     if (settingsPanel) {
       settingsPanel.classList.toggle('hidden');
-      
+
       // 設定ボタン状態の更新
       const settingsBtn = document.querySelector('[data-action="toggle-settings"]');
       if (settingsBtn) {
@@ -1502,8 +1523,10 @@ class LightningTalkApp {
         settingsBtn.classList.toggle('active', isVisible);
         settingsBtn.setAttribute('aria-pressed', isVisible.toString());
       }
-      
-      this.logger.info('Chat settings toggled', { visible: !settingsPanel.classList.contains('hidden') });
+
+      this.logger.info('Chat settings toggled', {
+        visible: !settingsPanel.classList.contains('hidden')
+      });
     }
   }
 
@@ -1511,7 +1534,7 @@ class LightningTalkApp {
     const chatWidget = document.getElementById('chat-widget');
     if (chatWidget) {
       chatWidget.classList.toggle('minimized');
-      
+
       // 最小化ボタンのアイコン変更
       const minimizeBtn = document.querySelector('[data-action="minimize"]');
       if (minimizeBtn) {
@@ -1519,8 +1542,10 @@ class LightningTalkApp {
         minimizeBtn.innerHTML = isMinimized ? '🔼' : '🔽';
         minimizeBtn.title = isMinimized ? '最大化' : '最小化';
       }
-      
-      this.logger.info('Chat minimized/maximized', { minimized: chatWidget.classList.contains('minimized') });
+
+      this.logger.info('Chat minimized/maximized', {
+        minimized: chatWidget.classList.contains('minimized')
+      });
     }
   }
 
@@ -1530,22 +1555,25 @@ class LightningTalkApp {
     fileInput.type = 'file';
     fileInput.multiple = true;
     fileInput.accept = 'image/*,video/*,audio/*,.pdf,.doc,.docx,.txt';
-    
-    fileInput.onchange = (e) => {
+
+    fileInput.onchange = e => {
       const files = Array.from(e.target.files);
       if (files.length > 0) {
         this.handleFileSelection(files);
       }
     };
-    
+
     fileInput.click();
     this.logger.info('File attachment dialog opened');
   }
 
   handleFileSelection(files) {
     // ファイル添付処理（実装要）
-    this.logger.info('Files selected for attachment', { count: files.length, files: files.map(f => f.name) });
-    
+    this.logger.info('Files selected for attachment', {
+      count: files.length,
+      files: files.map(f => f.name)
+    });
+
     // チャットシステムにファイル情報を渡す
     if (window.ChatSystem && window.ChatSystem.attachFiles) {
       window.ChatSystem.attachFiles(files);
@@ -1557,47 +1585,49 @@ class LightningTalkApp {
 
   toggleEmojiPicker() {
     let emojiPicker = document.getElementById('emoji-picker');
-    
+
     if (!emojiPicker) {
       emojiPicker = this.createEmojiPicker();
     }
-    
+
     emojiPicker.classList.toggle('hidden');
-    
+
     // 絵文字ボタンの状態更新
     const emojiBtn = document.querySelector('[data-action="emoji"]');
     if (emojiBtn) {
       const isVisible = !emojiPicker.classList.contains('hidden');
       emojiBtn.classList.toggle('active', isVisible);
     }
-    
-    this.logger.info('Emoji picker toggled', { visible: !emojiPicker.classList.contains('hidden') });
+
+    this.logger.info('Emoji picker toggled', {
+      visible: !emojiPicker.classList.contains('hidden')
+    });
   }
 
   createEmojiPicker() {
     const picker = document.createElement('div');
     picker.id = 'emoji-picker';
     picker.className = 'emoji-picker hidden';
-    
+
     const commonEmojis = ['😀', '😂', '😍', '🤔', '👍', '👎', '❤️', '🎉', '💪', '🔥', '✨', '💡'];
-    
+
     picker.innerHTML = `
       <div class="emoji-grid">
-        ${commonEmojis.map(emoji => 
-          `<button class="emoji-btn" data-emoji="${emoji}">${emoji}</button>`
-        ).join('')}
+        ${commonEmojis
+          .map(emoji => `<button class="emoji-btn" data-emoji="${emoji}">${emoji}</button>`)
+          .join('')}
       </div>
     `;
-    
+
     // 絵文字選択イベント
-    picker.addEventListener('click', (e) => {
+    picker.addEventListener('click', e => {
       if (e.target.classList.contains('emoji-btn')) {
         const emoji = e.target.dataset.emoji;
         this.insertEmoji(emoji);
         picker.classList.add('hidden');
       }
     });
-    
+
     // チャット入力エリアの近くに配置
     const chatInput = document.querySelector('.chat-input-container');
     if (chatInput) {
@@ -1605,54 +1635,24 @@ class LightningTalkApp {
     } else {
       document.body.appendChild(picker);
     }
-    
+
     return picker;
   }
 
   insertEmoji(emoji) {
-    const chatInput = document.getElementById('chat-message-input') || document.querySelector('.chat-input');
+    const chatInput =
+      document.getElementById('chat-message-input') || document.querySelector('.chat-input');
     if (chatInput) {
       const currentValue = chatInput.value;
       const cursorPos = chatInput.selectionStart;
       const newValue = currentValue.slice(0, cursorPos) + emoji + currentValue.slice(cursorPos);
-      
+
       chatInput.value = newValue;
       chatInput.focus();
       chatInput.setSelectionRange(cursorPos + emoji.length, cursorPos + emoji.length);
-      
+
       this.logger.info('Emoji inserted', { emoji });
     }
-  }
-
-  showNotification(message, type = 'info') {
-    // 簡易通知システム
-    const notification = document.createElement('div');
-    notification.className = `notification notification-${type}`;
-    notification.textContent = message;
-    
-    Object.assign(notification.style, {
-      position: 'fixed',
-      top: '20px',
-      right: '20px',
-      padding: '12px 20px',
-      backgroundColor: type === 'error' ? '#ef4444' : type === 'success' ? '#22c55e' : '#3b82f6',
-      color: 'white',
-      borderRadius: '8px',
-      boxShadow: '0 4px 12px rgba(0,0,0,0.15)',
-      zIndex: '10000',
-      animation: 'slideInRight 0.3s ease-out'
-    });
-    
-    document.body.appendChild(notification);
-    
-    setTimeout(() => {
-      notification.style.animation = 'slideOutRight 0.3s ease-in';
-      setTimeout(() => {
-        if (notification.parentNode) {
-          notification.parentNode.removeChild(notification);
-        }
-      }, 300);
-    }, 3000);
   }
 
   // Mobile Optimization Methods
@@ -2207,14 +2207,14 @@ class LightningTalkApp {
 
       // Handle different message types efficiently
       switch (data.type) {
-      case 'voteUpdate':
-        this.handleVoteUpdate(data);
-        break;
-      case 'pong':
-        // Keep-alive response, no action needed
-        break;
-      default:
-        this.logger.warn('Unknown WebSocket message type', { type: data.type, data });
+        case 'voteUpdate':
+          this.handleVoteUpdate(data);
+          break;
+        case 'pong':
+          // Keep-alive response, no action needed
+          break;
+        default:
+          this.logger.warn('Unknown WebSocket message type', { type: data.type, data });
       }
     } catch (error) {
       this.logger.error('Error parsing WebSocket message', {
@@ -3098,7 +3098,7 @@ document.addEventListener('DOMContentLoaded', () => {
   };
 
   // Admin login processing
-  window.processAdminLogin = async() => {
+  window.processAdminLogin = async () => {
     const email = document.getElementById('adminEmail').value;
     const password = document.getElementById('adminPassword').value;
     const errorDiv = document.getElementById('loginError');
