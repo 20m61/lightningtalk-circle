@@ -1,0 +1,478 @@
+{
+  "scanDate": "2025-07-22T04:38:43.002Z",
+  "repository": "/home/ec2-user/workspace/lightningtalk-circle",
+  "summary": {
+    "totalCommits": 100,
+    "scannedCommits": 100,
+    "totalFindings": 5382,
+    "categories": {
+      "apiKeys": 4728,
+      "database": 6,
+      "personalInfo": 433,
+      "infrastructure": 139,
+      "session": 41,
+      "environment": 35
+    }
+  },
+  "findings": [
+    {
+      "category": "apiKeys",
+      "pattern": "/\\b[A-Za-z0-9+/]{40}\\b/g",
+      "match": "/DC67qa//0qvqrJzL1xc8WQWX7/yc7fwudjPHPhA",
+      "commitHash": "7b0459f018ab020b6819e90d8befe6254486932a",
+      "filePath": "cdk/lambda/presigned-url/package-lock.json",
+      "commitMessage": "feat: PR Screenshot Attachment System with S3 and Signed URLs (#116)",
+      "line": 60
+    },
+    {
+      "category": "apiKeys",
+      "pattern": "/\\b[A-Za-z0-9+/]{40}\\b/g",
+      "match": "/DC67qa//0qvqrJzL1xc8WQWX7/yc7fwudjPHPhA",
+      "commitHash": "7b0459f018ab020b6819e90d8befe6254486932a",
+      "filePath": "cdk/lambda/presigned-url/package-lock.json",
+      "commitMessage": "feat: PR Screenshot Attachment System with S3 and Signed URLs (#116)",
+      "line": 60
+    },
+    {
+      "category": "apiKeys",
+      "pattern": "/\\b[A-Za-z0-9+/]{40}\\b/g",
+      "match": "FFQQyu7edu4ufvIZ+OadFpHHOt+eSTBaYaki44c+",
+      "commitHash": "7b0459f018ab020b6819e90d8befe6254486932a",
+      "filePath": "cdk/lambda/presigned-url/package-lock.json",
+      "commitMessage": "feat: PR Screenshot Attachment System with S3 and Signed URLs (#116)",
+      "line": 151
+    },
+    {
+      "category": "apiKeys",
+      "pattern": "/\\b[A-Za-z0-9+/]{40}\\b/g",
+      "match": "/DC67qa//0qvqrJzL1xc8WQWX7/yc7fwudjPHPhA",
+      "commitHash": "7b0459f018ab020b6819e90d8befe6254486932a",
+      "filePath": "cdk/lambda/presigned-url/package-lock.json",
+      "commitMessage": "feat: PR Screenshot Attachment System with S3 and Signed URLs (#116)",
+      "line": 60
+    },
+    {
+      "category": "apiKeys",
+      "pattern": "/\\b[A-Za-z0-9+/]{40}\\b/g",
+      "match": "mD+gOwoeZQvbecVLGoCmY6pS7kg02BHesbtIxUj+",
+      "commitHash": "7b0459f018ab020b6819e90d8befe6254486932a",
+      "filePath": "cdk/lambda/presigned-url/package-lock.json",
+      "commitMessage": "feat: PR Screenshot Attachment System with S3 and Signed URLs (#116)",
+      "line": 292
+    },
+    {
+      "category": "apiKeys",
+      "pattern": "/\\b[A-Za-z0-9+/]{40}\\b/g",
+      "match": "PXrG8dLQ3rdPRB3vgp5tc56KMqLwm/EXKRzAOSuw",
+      "commitHash": "7b0459f018ab020b6819e90d8befe6254486932a",
+      "filePath": "cdk/lambda/presigned-url/package-lock.json",
+      "commitMessage": "feat: PR Screenshot Attachment System with S3 and Signed URLs (#116)",
+      "line": 404
+    },
+    {
+      "category": "apiKeys",
+      "pattern": "/\\b[A-Za-z0-9+/]{40}\\b/g",
+      "match": "mEpwDYarJSH+CIXnnHN0QOe0MXI+HuPStD6gsv3z",
+      "commitHash": "7b0459f018ab020b6819e90d8befe6254486932a",
+      "filePath": "cdk/lambda/presigned-url/package-lock.json",
+      "commitMessage": "feat: PR Screenshot Attachment System with S3 and Signed URLs (#116)",
+      "line": 451
+    },
+    {
+      "category": "apiKeys",
+      "pattern": "/\\b[A-Za-z0-9+/]{40}\\b/g",
+      "match": "iJg2r6FKsKKvdiU4oCOuCf7Ro/YE0Q2BT/QyEZN3",
+      "commitHash": "7b0459f018ab020b6819e90d8befe6254486932a",
+      "filePath": "cdk/lambda/presigned-url/package-lock.json",
+      "commitMessage": "feat: PR Screenshot Attachment System with S3 and Signed URLs (#116)",
+      "line": 522
+    },
+    {
+      "category": "apiKeys",
+      "pattern": "/\\b[A-Za-z0-9+/]{40}\\b/g",
+      "match": "ZMfIMxUljqZzPJGOcraC6erwq/z1puNMU35cO1a/",
+      "commitHash": "7b0459f018ab020b6819e90d8befe6254486932a",
+      "filePath": "cdk/lambda/presigned-url/package-lock.json",
+      "commitMessage": "feat: PR Screenshot Attachment System with S3 and Signed URLs (#116)",
+      "line": 761
+    },
+    {
+      "category": "apiKeys",
+      "pattern": "/\\b[A-Za-z0-9+/]{40}\\b/g",
+      "match": "NuFFCq/78liHvRyFKr+aqq1aA/uuVSANjzr5Ym8c",
+      "commitHash": "7b0459f018ab020b6819e90d8befe6254486932a",
+      "filePath": "cdk/lambda/presigned-url/package-lock.json",
+      "commitMessage": "feat: PR Screenshot Attachment System with S3 and Signed URLs (#116)",
+      "line": 821
+    },
+    {
+      "category": "apiKeys",
+      "pattern": "/\\b[A-Za-z0-9+/]{40}\\b/g",
+      "match": "+9Z3HRPE9OrExAHoMrZ6zC8tHerQwlsXYYH5XZ7H",
+      "commitHash": "7b0459f018ab020b6819e90d8befe6254486932a",
+      "filePath": "cdk/lambda/presigned-url/package-lock.json",
+      "commitMessage": "feat: PR Screenshot Attachment System with S3 and Signed URLs (#116)",
+      "line": 821
+    },
+    {
+      "category": "apiKeys",
+      "pattern": "/\\b[A-Za-z0-9+/]{40}\\b/g",
+      "match": "+w5+Jo6d0UDAtbj3AEd79pjcCaP4OA9NTVzItUdw",
+      "commitHash": "7b0459f018ab020b6819e90d8befe6254486932a",
+      "filePath": "cdk/lambda/presigned-url/package-lock.json",
+      "commitMessage": "feat: PR Screenshot Attachment System with S3 and Signed URLs (#116)",
+      "line": 876
+    },
+    {
+      "category": "apiKeys",
+      "pattern": "/\\b[A-Za-z0-9+/]{40}\\b/g",
+      "match": "+rDddxHOH0oNcwemL+SwnzcG65sBF2yXRO7aeXIn",
+      "commitHash": "7b0459f018ab020b6819e90d8befe6254486932a",
+      "filePath": "cdk/lambda/presigned-url/package-lock.json",
+      "commitMessage": "feat: PR Screenshot Attachment System with S3 and Signed URLs (#116)",
+      "line": 951
+    },
+    {
+      "category": "apiKeys",
+      "pattern": "/\\b[A-Za-z0-9+/]{40}\\b/g",
+      "match": "/xTlq2pX7JLVbkBnVLowHLg4/OL4+jBmv9hVrVGS",
+      "commitHash": "7b0459f018ab020b6819e90d8befe6254486932a",
+      "filePath": "cdk/lambda/presigned-url/package-lock.json",
+      "commitMessage": "feat: PR Screenshot Attachment System with S3 and Signed URLs (#116)",
+      "line": 951
+    },
+    {
+      "category": "apiKeys",
+      "pattern": "/\\b[A-Za-z0-9+/]{40}\\b/g",
+      "match": "/rAU4VSi0mWnO2vu9/ltS6JZ5ZSZv0eovLVfDfu0",
+      "commitHash": "7b0459f018ab020b6819e90d8befe6254486932a",
+      "filePath": "cdk/lambda/presigned-url/package-lock.json",
+      "commitMessage": "feat: PR Screenshot Attachment System with S3 and Signed URLs (#116)",
+      "line": 1003
+    },
+    {
+      "category": "apiKeys",
+      "pattern": "/\\b[A-Za-z0-9+/]{40}\\b/g",
+      "match": "kagK5ggDrBUCCzI93ft6DjteNSfY8Ulr83UtySog",
+      "commitHash": "7b0459f018ab020b6819e90d8befe6254486932a",
+      "filePath": "cdk/lambda/presigned-url/package-lock.json",
+      "commitMessage": "feat: PR Screenshot Attachment System with S3 and Signed URLs (#116)",
+      "line": 1239
+    },
+    {
+      "category": "apiKeys",
+      "pattern": "/\\b[A-Za-z0-9+/]{40}\\b/g",
+      "match": "qHJ2sSgu4FqF4U/5UUp4DhXNmdTrgmoAai6oQiM+",
+      "commitHash": "7b0459f018ab020b6819e90d8befe6254486932a",
+      "filePath": "cdk/lambda/presigned-url/package-lock.json",
+      "commitMessage": "feat: PR Screenshot Attachment System with S3 and Signed URLs (#116)",
+      "line": 1283
+    },
+    {
+      "category": "apiKeys",
+      "pattern": "/\\b[A-Za-z0-9+/]{40}\\b/g",
+      "match": "+J8OXEBaMc2kDxtyRHu8BhSg9ADEx0gFHvpJgU8w",
+      "commitHash": "7b0459f018ab020b6819e90d8befe6254486932a",
+      "filePath": "cdk/lambda/presigned-url/package-lock.json",
+      "commitMessage": "feat: PR Screenshot Attachment System with S3 and Signed URLs (#116)",
+      "line": 1309
+    },
+    {
+      "category": "apiKeys",
+      "pattern": "/\\b[A-Za-z0-9+/]{40}\\b/g",
+      "match": "KxH0DdXMDHjesA9MeZje/853ifkSY0x4m5S+dfDZ",
+      "commitHash": "7b0459f018ab020b6819e90d8befe6254486932a",
+      "filePath": "cdk/lambda/presigned-url/package-lock.json",
+      "commitMessage": "feat: PR Screenshot Attachment System with S3 and Signed URLs (#116)",
+      "line": 1323
+    },
+    {
+      "category": "apiKeys",
+      "pattern": "/\\b[A-Za-z0-9+/]{40}\\b/g",
+      "match": "//7xi4tn5FrN2NzH17jbgmnKidUqd4KvquT0954/",
+      "commitHash": "7b0459f018ab020b6819e90d8befe6254486932a",
+      "filePath": "cdk/lambda/presigned-url/package-lock.json",
+      "commitMessage": "feat: PR Screenshot Attachment System with S3 and Signed URLs (#116)",
+      "line": 1336
+    },
+    {
+      "category": "apiKeys",
+      "pattern": "/\\b[A-Za-z0-9+/]{40}\\b/g",
+      "match": "i6CXXkh1884jBiunq24g9cGtPBEXlU40W6EpNOOg",
+      "commitHash": "7b0459f018ab020b6819e90d8befe6254486932a",
+      "filePath": "cdk/lambda/presigned-url/package-lock.json",
+      "commitMessage": "feat: PR Screenshot Attachment System with S3 and Signed URLs (#116)",
+      "line": 1336
+    },
+    {
+      "category": "apiKeys",
+      "pattern": "/\\b[A-Za-z0-9+/]{40}\\b/g",
+      "match": "qIvcoCY6D1JY3hnAdCuhCZODC+GAeaxj0p6Jroz4",
+      "commitHash": "7b0459f018ab020b6819e90d8befe6254486932a",
+      "filePath": "cdk/lambda/presigned-url/package-lock.json",
+      "commitMessage": "feat: PR Screenshot Attachment System with S3 and Signed URLs (#116)",
+      "line": 1410
+    },
+    {
+      "category": "apiKeys",
+      "pattern": "/\\b[A-Za-z0-9+/]{40}\\b/g",
+      "match": "+m3CDdG6V7WKWHdAiBBMUN8S3hK3aMPhwnPik2A/",
+      "commitHash": "7b0459f018ab020b6819e90d8befe6254486932a",
+      "filePath": "cdk/lambda/presigned-url/package-lock.json",
+      "commitMessage": "feat: PR Screenshot Attachment System with S3 and Signed URLs (#116)",
+      "line": 1438
+    },
+    {
+      "category": "apiKeys",
+      "pattern": "/\\b[A-Za-z0-9+/]{40}\\b/g",
+      "match": "jg+97EGIcY9AGHJJRaaPVgetKDsrTgbRjQ5Msgjh",
+      "commitHash": "7b0459f018ab020b6819e90d8befe6254486932a",
+      "filePath": "cdk/lambda/presigned-url/package-lock.json",
+      "commitMessage": "feat: PR Screenshot Attachment System with S3 and Signed URLs (#116)",
+      "line": 1632
+    },
+    {
+      "category": "apiKeys",
+      "pattern": "/\\b[A-Za-z0-9+/]{40}\\b/g",
+      "match": "+xBX006BY5u8N3mGLHa5Lgppa7L/HfwgwLgZ6NYs",
+      "commitHash": "7b0459f018ab020b6819e90d8befe6254486932a",
+      "filePath": "cdk/lambda/presigned-url/package-lock.json",
+      "commitMessage": "feat: PR Screenshot Attachment System with S3 and Signed URLs (#116)",
+      "line": 1638
+    },
+    {
+      "category": "personalInfo",
+      "pattern": "/\\b[0-9]{7,10}\\b/g",
+      "match": "10485760",
+      "commitHash": "7b0459f018ab020b6819e90d8befe6254486932a",
+      "filePath": "cdk/lambda/presigned-url/presigned-url.js",
+      "commitMessage": "feat: PR Screenshot Attachment System with S3 and Signed URLs (#116)",
+      "line": 12
+    },
+    {
+      "category": "personalInfo",
+      "pattern": "/\\b[0-9]{7,10}\\b/g",
+      "match": "31536000",
+      "commitHash": "7b0459f018ab020b6819e90d8befe6254486932a",
+      "filePath": "cdk/lambda/presigned-url/presigned-url.js",
+      "commitMessage": "feat: PR Screenshot Attachment System with S3 and Signed URLs (#116)",
+      "line": 73
+    },
+    {
+      "category": "apiKeys",
+      "pattern": "/\\b[A-Za-z0-9+/]{40}\\b/g",
+      "match": "modern/packages/components/coverage/lcov",
+      "commitHash": "ce9dc476c72740ffc51b7176f7c2c12ff6a6f558",
+      "filePath": ".github/workflows/storybook-deploy.yml",
+      "commitMessage": "🚀 Complete Lightning Talk Circle Storybook CI/CD Pipeline (#113)",
+      "line": 101
+    },
+    {
+      "category": "personalInfo",
+      "pattern": "/\\b[0-9]{7,10}\\b/g",
+      "match": "31536000",
+      "commitHash": "ce9dc476c72740ffc51b7176f7c2c12ff6a6f558",
+      "filePath": ".github/workflows/storybook-deploy.yml",
+      "commitMessage": "🚀 Complete Lightning Talk Circle Storybook CI/CD Pipeline (#113)",
+      "line": 267
+    },
+    {
+      "category": "personalInfo",
+      "pattern": "/\\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Z|a-z]{2,}\\b/g",
+      "match": "admin@lightningtalk.com",
+      "commitHash": "ce9dc476c72740ffc51b7176f7c2c12ff6a6f558",
+      "filePath": "cdk/bin/cdk.js",
+      "commitMessage": "🚀 Complete Lightning Talk Circle Storybook CI/CD Pipeline (#113)",
+      "line": 65
+    },
+    {
+      "category": "personalInfo",
+      "pattern": "/\\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Z|a-z]{2,}\\b/g",
+      "match": "dev@lightningtalk.com",
+      "commitHash": "ce9dc476c72740ffc51b7176f7c2c12ff6a6f558",
+      "filePath": "cdk/lib/config/environment.js",
+      "commitMessage": "🚀 Complete Lightning Talk Circle Storybook CI/CD Pipeline (#113)",
+      "line": 42
+    },
+    {
+      "category": "personalInfo",
+      "pattern": "/\\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Z|a-z]{2,}\\b/g",
+      "match": "staging@lightningtalk.com",
+      "commitHash": "ce9dc476c72740ffc51b7176f7c2c12ff6a6f558",
+      "filePath": "cdk/lib/config/environment.js",
+      "commitMessage": "🚀 Complete Lightning Talk Circle Storybook CI/CD Pipeline (#113)",
+      "line": 71
+    },
+    {
+      "category": "personalInfo",
+      "pattern": "/\\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Z|a-z]{2,}\\b/g",
+      "match": "admin@lightningtalk.com",
+      "commitHash": "ce9dc476c72740ffc51b7176f7c2c12ff6a6f558",
+      "filePath": "cdk/lib/config/environment.js",
+      "commitMessage": "🚀 Complete Lightning Talk Circle Storybook CI/CD Pipeline (#113)",
+      "line": 101
+    },
+    {
+      "category": "personalInfo",
+      "pattern": "/\\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Z|a-z]{2,}\\b/g",
+      "match": "admin@lightningtalk.com",
+      "commitHash": "ce9dc476c72740ffc51b7176f7c2c12ff6a6f558",
+      "filePath": "cdk/lib/prod-environment-stack.js",
+      "commitMessage": "🚀 Complete Lightning Talk Circle Storybook CI/CD Pipeline (#113)",
+      "line": 59
+    },
+    {
+      "category": "personalInfo",
+      "pattern": "/\\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Z|a-z]{2,}\\b/g",
+      "match": "storybook@lightningtalk.local",
+      "commitHash": "ce9dc476c72740ffc51b7176f7c2c12ff6a6f558",
+      "filePath": "lightningtalk-modern/packages/components/.storybook/mocks/wordpress-globals.ts",
+      "commitMessage": "🚀 Complete Lightning Talk Circle Storybook CI/CD Pipeline (#113)",
+      "line": 18
+    },
+    {
+      "category": "personalInfo",
+      "pattern": "/\\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Z|a-z]{2,}\\b/g",
+      "match": "admin@lightningtalk.local",
+      "commitHash": "ce9dc476c72740ffc51b7176f7c2c12ff6a6f558",
+      "filePath": "lightningtalk-modern/packages/components/.storybook/mocks/wordpress-globals.ts",
+      "commitMessage": "🚀 Complete Lightning Talk Circle Storybook CI/CD Pipeline (#113)",
+      "line": 30
+    },
+    {
+      "category": "infrastructure",
+      "pattern": "/\\b[a-zA-Z0-9.-]+\\.local\\b/g",
+      "match": "lightningtalk.local",
+      "commitHash": "ce9dc476c72740ffc51b7176f7c2c12ff6a6f558",
+      "filePath": "lightningtalk-modern/packages/components/.storybook/mocks/wordpress-globals.ts",
+      "commitMessage": "🚀 Complete Lightning Talk Circle Storybook CI/CD Pipeline (#113)",
+      "line": 18
+    },
+    {
+      "category": "infrastructure",
+      "pattern": "/\\b[a-zA-Z0-9.-]+\\.local\\b/g",
+      "match": "lightningtalk.local",
+      "commitHash": "ce9dc476c72740ffc51b7176f7c2c12ff6a6f558",
+      "filePath": "lightningtalk-modern/packages/components/.storybook/mocks/wordpress-globals.ts",
+      "commitMessage": "🚀 Complete Lightning Talk Circle Storybook CI/CD Pipeline (#113)",
+      "line": 18
+    },
+    {
+      "category": "personalInfo",
+      "pattern": "/\\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Z|a-z]{2,}\\b/g",
+      "match": "storybook@lightningtalk.local",
+      "commitHash": "ce9dc476c72740ffc51b7176f7c2c12ff6a6f558",
+      "filePath": "lightningtalk-modern/packages/components/.storybook/mocks/wp-api-fetch.ts",
+      "commitMessage": "🚀 Complete Lightning Talk Circle Storybook CI/CD Pipeline (#113)",
+      "line": 246
+    },
+    {
+      "category": "infrastructure",
+      "pattern": "/\\b[a-zA-Z0-9.-]+\\.local\\b/g",
+      "match": "lightningtalk.local",
+      "commitHash": "ce9dc476c72740ffc51b7176f7c2c12ff6a6f558",
+      "filePath": "lightningtalk-modern/packages/components/.storybook/mocks/wp-api-fetch.ts",
+      "commitMessage": "🚀 Complete Lightning Talk Circle Storybook CI/CD Pipeline (#113)",
+      "line": 246
+    },
+    {
+      "category": "personalInfo",
+      "pattern": "/\\b[0-9]{7,10}\\b/g",
+      "match": "31536000",
+      "commitHash": "f47ea0203ac5363b921499e16bd57bf02b48690d",
+      "filePath": ".github/workflows/multi-environment-deploy.yml",
+      "commitMessage": "fix: デプロイメント実践課題の包括的解決 (#112)",
+      "line": 171
+    },
+    {
+      "category": "personalInfo",
+      "pattern": "/\\b[0-9]{7,10}\\b/g",
+      "match": "31536000",
+      "commitHash": "f47ea0203ac5363b921499e16bd57bf02b48690d",
+      "filePath": ".github/workflows/multi-environment-deploy.yml",
+      "commitMessage": "fix: デプロイメント実践課題の包括的解決 (#112)",
+      "line": 171
+    },
+    {
+      "category": "infrastructure",
+      "pattern": "/https?:\\/\\/[a-zA-Z0-9.-]+\\.amazonaws\\.com[^\\s]*/g",
+      "match": "https://4mz5i3x23c.execute-api.ap-northeast-1.amazonaws.com/prod/api/health",
+      "commitHash": "f47ea0203ac5363b921499e16bd57bf02b48690d",
+      "filePath": ".github/workflows/multi-environment-deploy.yml",
+      "commitMessage": "fix: デプロイメント実践課題の包括的解決 (#112)",
+      "line": 190
+    },
+    {
+      "category": "infrastructure",
+      "pattern": "/https?:\\/\\/[a-zA-Z0-9.-]+\\.amazonaws\\.com[^\\s]*/g",
+      "match": "https://4ujhkvx000.execute-api.ap-northeast-1.amazonaws.com/prod/api/health",
+      "commitHash": "f47ea0203ac5363b921499e16bd57bf02b48690d",
+      "filePath": ".github/workflows/multi-environment-deploy.yml",
+      "commitMessage": "fix: デプロイメント実践課題の包括的解決 (#112)",
+      "line": 276
+    },
+    {
+      "category": "apiKeys",
+      "pattern": "/\\b[A-Za-z0-9+/]{40}\\b/g",
+      "match": "+4RKfnnJiO1LG+uxkZfANZG3RMHhE+qQxxwkyQ9/",
+      "commitHash": "f47ea0203ac5363b921499e16bd57bf02b48690d",
+      "filePath": "cdk/package-lock.json",
+      "commitMessage": "fix: デプロイメント実践課題の包括的解決 (#112)",
+      "line": 56
+    },
+    {
+      "category": "apiKeys",
+      "pattern": "/\\b[A-Za-z0-9+/]{40}\\b/g",
+      "match": "+aFXYk4whgQccYEGYxK2H3ZAIA8nuPkQ0HaUo3qg",
+      "commitHash": "f47ea0203ac5363b921499e16bd57bf02b48690d",
+      "filePath": "cdk/package-lock.json",
+      "commitMessage": "fix: デプロイメント実践課題の包括的解決 (#112)",
+      "line": 206
+    },
+    {
+      "category": "apiKeys",
+      "pattern": "/\\b[A-Za-z0-9+/]{40}\\b/g",
+      "match": "1gn1Up5YXka3YYAHGKpbideQ5Yjf1tDa9qYcgysz",
+      "commitHash": "f47ea0203ac5363b921499e16bd57bf02b48690d",
+      "filePath": "cdk/package-lock.json",
+      "commitMessage": "fix: デプロイメント実践課題の包括的解決 (#112)",
+      "line": 224
+    },
+    {
+      "category": "apiKeys",
+      "pattern": "/\\b[A-Za-z0-9+/]{40}\\b/g",
+      "match": "//CdWDCbnlY1yvBPo07njuVOCNGCSp/GTt12lIug",
+      "commitHash": "f47ea0203ac5363b921499e16bd57bf02b48690d",
+      "filePath": "cdk/package-lock.json",
+      "commitMessage": "fix: デプロイメント実践課題の包括的解決 (#112)",
+      "line": 264
+    },
+    {
+      "category": "apiKeys",
+      "pattern": "/\\b[A-Za-z0-9+/]{40}\\b/g",
+      "match": "/mDkt1qv2YJJSeUAec2ma4WLUnUPeKjyrfntVwe/",
+      "commitHash": "f47ea0203ac5363b921499e16bd57bf02b48690d",
+      "filePath": "cdk/package-lock.json",
+      "commitMessage": "fix: デプロイメント実践課題の包括的解決 (#112)",
+      "line": 307
+    },
+    {
+      "category": "apiKeys",
+      "pattern": "/\\b[A-Za-z0-9+/]{40}\\b/g",
+      "match": "+hIWDLg3VyKmUHfLoLHlyxY4C7DGtmHuJgn+IGww",
+      "commitHash": "f47ea0203ac5363b921499e16bd57bf02b48690d",
+      "filePath": "cdk/package-lock.json",
+      "commitMessage": "fix: デプロイメント実践課題の包括的解決 (#112)",
+      "line": 349
+    }
+  ],
+  "recommendations": [
+    "🔑 API keys detected. Use environment variables and AWS Secrets Manager.",
+    "🗄️ Database credentials detected. Use connection pooling and credential rotation.",
+    "👤 Personal information detected. Implement data anonymization and GDPR compliance.",
+    "🏗️ Infrastructure details exposed. Review network security and access controls.",
+    "🧹 Consider using git-filter-branch or BFG Repo-Cleaner to remove sensitive data from history.",
+    "🔒 Implement pre-commit hooks to prevent future commits of sensitive data.",
+    "🔄 Rotate any compromised credentials immediately."
+  ]
+}

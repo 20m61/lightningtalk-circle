@@ -1,0 +1,683 @@
+{
+  "scanDate": "2025-07-22T05:48:45.347Z",
+  "repository": "/home/ec2-user/workspace/lightningtalk-circle",
+  "scanType": "PRECISE_FILTERED",
+  "summary": {
+    "totalCommits": 50,
+    "scannedCommits": 50,
+    "totalFindings": 73,
+    "categories": {
+      "realApiKeys": 0,
+      "databaseCredentials": 0,
+      "personalInfo": 35,
+      "infrastructureInfo": 38,
+      "sensitiveEnvVars": 0
+    },
+    "falsePositivesFiltered": true
+  },
+  "findings": [
+    {
+      "category": "personalInfo",
+      "pattern": "/[a-zA-Z0-9._%+-]+@(?!example|test|noreply|mock)[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}/g",
+      "match": "admin@lightningtalk.com",
+      "commitHash": "ce9dc476c72740ffc51b7176f7c2c12ff6a6f558",
+      "filePath": "cdk/bin/cdk.js",
+      "commitMessage": "🚀 Complete Lightning Talk Circle Storybook CI/CD Pipeline (#113)",
+      "context": "    enableCostMonitoring: true,\n    alertEmail: config.alertEmail || '\n>>> admin@lightningtalk.com <<<\n',\n    tags: {"
+    },
+    {
+      "category": "personalInfo",
+      "pattern": "/[a-zA-Z0-9._%+-]+@(?!example|test|noreply|mock)[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}/g",
+      "match": "dev@lightningtalk.com",
+      "commitHash": "ce9dc476c72740ffc51b7176f7c2c12ff6a6f558",
+      "filePath": "cdk/lib/config/environment.js",
+      "commitMessage": "🚀 Complete Lightning Talk Circle Storybook CI/CD Pipeline (#113)",
+      "context": "      },\n      alertEmail: process.env.DEV_ALERT_EMAIL || '\n>>> dev@lightningtalk.com <<<\n',\n    },"
+    },
+    {
+      "category": "personalInfo",
+      "pattern": "/[a-zA-Z0-9._%+-]+@(?!example|test|noreply|mock)[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}/g",
+      "match": "staging@lightningtalk.com",
+      "commitHash": "ce9dc476c72740ffc51b7176f7c2c12ff6a6f558",
+      "filePath": "cdk/lib/config/environment.js",
+      "commitMessage": "🚀 Complete Lightning Talk Circle Storybook CI/CD Pipeline (#113)",
+      "context": "      },\n      alertEmail: process.env.STAGING_ALERT_EMAIL || '\n>>> staging@lightningtalk.com <<<\n',\n    },"
+    },
+    {
+      "category": "personalInfo",
+      "pattern": "/[a-zA-Z0-9._%+-]+@(?!example|test|noreply|mock)[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}/g",
+      "match": "admin@lightningtalk.com",
+      "commitHash": "ce9dc476c72740ffc51b7176f7c2c12ff6a6f558",
+      "filePath": "cdk/lib/config/environment.js",
+      "commitMessage": "🚀 Complete Lightning Talk Circle Storybook CI/CD Pipeline (#113)",
+      "context": "      },\n      alertEmail: process.env.PROD_ALERT_EMAIL || '\n>>> admin@lightningtalk.com <<<\n',\n      hostedZoneId: process.env.HOSTED_ZONE_ID || 'Z036564723AZHFOSIARRI',"
+    },
+    {
+      "category": "personalInfo",
+      "pattern": "/[a-zA-Z0-9._%+-]+@(?!example|test|noreply|mock)[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}/g",
+      "match": "admin@lightningtalk.com",
+      "commitHash": "ce9dc476c72740ffc51b7176f7c2c12ff6a6f558",
+      "filePath": "cdk/lib/prod-environment-stack.js",
+      "commitMessage": "🚀 Complete Lightning Talk Circle Storybook CI/CD Pipeline (#113)",
+      "context": "      enableCostMonitoring = true,\n      alertEmail = '\n>>> admin@lightningtalk.com <<<\n'\n    } = props;"
+    },
+    {
+      "category": "infrastructureInfo",
+      "pattern": "/https?:\\/\\/(?!localhost|127\\.0\\.0\\.1|example)[a-zA-Z0-9.-]+\\.amazonaws\\.com[^\\s]*/g",
+      "match": "https://4mz5i3x23c.execute-api.ap-northeast-1.amazonaws.com/prod/api/health",
+      "commitHash": "f47ea0203ac5363b921499e16bd57bf02b48690d",
+      "filePath": ".github/workflows/multi-environment-deploy.yml",
+      "commitMessage": "fix: デプロイメント実践課題の包括的解決 (#112)",
+      "context": "          curl -f https://dev.xn--6wym69a.com || exit 1\n          curl -f \n>>> https://4mz5i3x23c.execute-api.ap-northeast-1.amazonaws.com/prod/api/health <<<\n || exit 1\n"
+    },
+    {
+      "category": "infrastructureInfo",
+      "pattern": "/https?:\\/\\/(?!localhost|127\\.0\\.0\\.1|example)[a-zA-Z0-9.-]+\\.amazonaws\\.com[^\\s]*/g",
+      "match": "https://4ujhkvx000.execute-api.ap-northeast-1.amazonaws.com/prod/api/health",
+      "commitHash": "f47ea0203ac5363b921499e16bd57bf02b48690d",
+      "filePath": ".github/workflows/multi-environment-deploy.yml",
+      "commitMessage": "fix: デプロイメント実践課題の包括的解決 (#112)",
+      "context": "          curl -f https://xn--6wym69a.com || exit 1\n          curl -f \n>>> https://4ujhkvx000.execute-api.ap-northeast-1.amazonaws.com/prod/api/health <<<\n || exit 1\n"
+    },
+    {
+      "category": "infrastructureInfo",
+      "pattern": "/https?:\\/\\/(?!localhost|127\\.0\\.0\\.1|example)[a-zA-Z0-9.-]+\\.amazonaws\\.com[^\\s]*/g",
+      "match": "https://4mz5i3x23c.execute-api.ap-northeast-1.amazonaws.com/prod/api/health",
+      "commitHash": "07871c51d51de64871dc5166befecfe19919a055",
+      "filePath": ".github/workflows/multi-environment-deploy.yml",
+      "commitMessage": "fix: レビュー指摘事項の修正",
+      "context": "          curl -f https://dev.xn--6wym69a.com || exit 1\n          curl -f \n>>> https://4mz5i3x23c.execute-api.ap-northeast-1.amazonaws.com/prod/api/health <<<\n || exit 1\n"
+    },
+    {
+      "category": "infrastructureInfo",
+      "pattern": "/https?:\\/\\/(?!localhost|127\\.0\\.0\\.1|example)[a-zA-Z0-9.-]+\\.amazonaws\\.com[^\\s]*/g",
+      "match": "https://4ujhkvx000.execute-api.ap-northeast-1.amazonaws.com/prod/api/health",
+      "commitHash": "07871c51d51de64871dc5166befecfe19919a055",
+      "filePath": ".github/workflows/multi-environment-deploy.yml",
+      "commitMessage": "fix: レビュー指摘事項の修正",
+      "context": "          curl -f https://xn--6wym69a.com || exit 1\n          curl -f \n>>> https://4ujhkvx000.execute-api.ap-northeast-1.amazonaws.com/prod/api/health <<<\n || exit 1\n"
+    },
+    {
+      "category": "infrastructureInfo",
+      "pattern": "/https?:\\/\\/(?!localhost|127\\.0\\.0\\.1|example)[a-zA-Z0-9.-]+\\.amazonaws\\.com[^\\s]*/g",
+      "match": "https://4mz5i3x23c.execute-api.ap-northeast-1.amazonaws.com/prod/api/health",
+      "commitHash": "1063550c50ce3b12ec8d8727b2eb5da80e2d0368",
+      "filePath": ".github/workflows/multi-environment-deploy.yml",
+      "commitMessage": "feat: 発表.com/dev.発表.comを使った開発フローの整備",
+      "context": "          curl -f https://dev.xn--6wym69a.com || exit 1\n          curl -f \n>>> https://4mz5i3x23c.execute-api.ap-northeast-1.amazonaws.com/prod/api/health <<<\n || exit 1\n"
+    },
+    {
+      "category": "infrastructureInfo",
+      "pattern": "/https?:\\/\\/(?!localhost|127\\.0\\.0\\.1|example)[a-zA-Z0-9.-]+\\.amazonaws\\.com[^\\s]*/g",
+      "match": "https://4ujhkvx000.execute-api.ap-northeast-1.amazonaws.com/prod/api/health",
+      "commitHash": "1063550c50ce3b12ec8d8727b2eb5da80e2d0368",
+      "filePath": ".github/workflows/multi-environment-deploy.yml",
+      "commitMessage": "feat: 発表.com/dev.発表.comを使った開発フローの整備",
+      "context": "          curl -f https://xn--6wym69a.com || exit 1\n          curl -f \n>>> https://4ujhkvx000.execute-api.ap-northeast-1.amazonaws.com/prod/api/health <<<\n || exit 1\n"
+    },
+    {
+      "category": "personalInfo",
+      "pattern": "/[a-zA-Z0-9._%+-]+@(?!example|test|noreply|mock)[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}/g",
+      "match": "admin@lightningtalk.local",
+      "commitHash": "85b585ef6c00f4653f6ee93cd75763ef3c013329",
+      "filePath": ".devcontainer/docker-compose.yml",
+      "commitMessage": "fix: Address PR #109 review feedback for devcontainer setup",
+      "context": "    environment:\n      PGADMIN_DEFAULT_EMAIL: \n>>> admin@lightningtalk.local <<<\n\n      PGADMIN_DEFAULT_PASSWORD: admin"
+    },
+    {
+      "category": "personalInfo",
+      "pattern": "/[a-zA-Z0-9._%+-]+@(?!example|test|noreply|mock)[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}/g",
+      "match": "admin@lightningtalk.local",
+      "commitHash": "aee12c9e3e78fea9c34f7a8ad26902faff74a735",
+      "filePath": ".devcontainer/docker-compose.yml",
+      "commitMessage": "fix: Fix devcontainer setup and canvas dependency issues",
+      "context": "    environment:\n      PGADMIN_DEFAULT_EMAIL: \n>>> admin@lightningtalk.local <<<\n\n      PGADMIN_DEFAULT_PASSWORD: admin"
+    },
+    {
+      "category": "personalInfo",
+      "pattern": "/[a-zA-Z0-9._%+-]+@(?!example|test|noreply|mock)[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}/g",
+      "match": "dev-alerts@xn--6wym69a.com",
+      "commitHash": "24afe52d9140746103dba5011910213f993e34d1",
+      "filePath": "cdk/config/dev-config.json",
+      "commitMessage": "feat: Complete Lighthouse performance analysis and mobile optimizations",
+      "context": "    \"logRetentionDays\": 30,\n    \"alertEmail\": \"\n>>> dev-alerts@xn--6wym69a.com <<<\n\",\n    \"enableDetailedMonitoring\": false,"
+    },
+    {
+      "category": "personalInfo",
+      "pattern": "/[a-zA-Z0-9._%+-]+@(?!example|test|noreply|mock)[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}/g",
+      "match": "dev-billing@xn--6wym69a.com",
+      "commitHash": "24afe52d9140746103dba5011910213f993e34d1",
+      "filePath": "cdk/config/dev-config.json",
+      "commitMessage": "feat: Complete Lighthouse performance analysis and mobile optimizations",
+      "context": "    \"alertThresholds\": [80, 100],\n    \"notificationEmail\": \"\n>>> dev-billing@xn--6wym69a.com <<<\n\"\n  },"
+    },
+    {
+      "category": "personalInfo",
+      "pattern": "/[a-zA-Z0-9._%+-]+@(?!example|test|noreply|mock)[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}/g",
+      "match": "alerts@xn--6wym69a.com",
+      "commitHash": "24afe52d9140746103dba5011910213f993e34d1",
+      "filePath": "cdk/config/prod-config.json",
+      "commitMessage": "feat: Complete Lighthouse performance analysis and mobile optimizations",
+      "context": "    \"logRetentionDays\": 365,\n    \"alertEmail\": \"\n>>> alerts@xn--6wym69a.com <<<\n\",\n    \"enableDetailedMonitoring\": true,"
+    },
+    {
+      "category": "personalInfo",
+      "pattern": "/[a-zA-Z0-9._%+-]+@(?!example|test|noreply|mock)[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}/g",
+      "match": "billing-alerts@xn--6wym69a.com",
+      "commitHash": "24afe52d9140746103dba5011910213f993e34d1",
+      "filePath": "cdk/config/prod-config.json",
+      "commitMessage": "feat: Complete Lighthouse performance analysis and mobile optimizations",
+      "context": "    \"alertThresholds\": [50, 80, 100],\n    \"notificationEmail\": \"\n>>> billing-alerts@xn--6wym69a.com <<<\n\"\n  },"
+    },
+    {
+      "category": "personalInfo",
+      "pattern": "/[a-zA-Z0-9._%+-]+@(?!example|test|noreply|mock)[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}/g",
+      "match": "example@email.com",
+      "commitHash": "24afe52d9140746103dba5011910213f993e34d1",
+      "filePath": "lighthouse-mobile-report.json",
+      "commitMessage": "feat: Complete Lighthouse performance analysis and mobile optimizations",
+      "context": "            \"index\": \"529\",\n            \"line\": \"            <input type=\\\"email\\\" id=\\\"voteEmail\\\" name=\\\"email\\\" placeholder=\\\"\n>>> example@email.com <<<\n\\\" maxlength=\\\"100\\\" />\",\n            \"message\": \"Syntax not understood\""
+    },
+    {
+      "category": "personalInfo",
+      "pattern": "/[a-zA-Z0-9._%+-]+@(?!example|test|noreply|mock)[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}/g",
+      "match": "admin@lightningtalk.com",
+      "commitHash": "24afe52d9140746103dba5011910213f993e34d1",
+      "filePath": "lighthouse-mobile-report.json",
+      "commitMessage": "feat: Complete Lighthouse performance analysis and mobile optimizations",
+      "context": "            \"index\": \"587\",\n            \"line\": \"            <p>パスワードをお忘れの場合は<a href=\\\"mailto:\n>>> admin@lightningtalk.com <<<\n\\\">管理者</a>までご連絡ください</p>\",\n            \"message\": \"Unknown directive\""
+    },
+    {
+      "category": "personalInfo",
+      "pattern": "/\\b0[789]0-\\d{4}-\\d{4}\\b/g",
+      "match": "080-4540-7479",
+      "commitHash": "24afe52d9140746103dba5011910213f993e34d1",
+      "filePath": "lighthouse-mobile-report.json",
+      "commitMessage": "feat: Complete Lighthouse performance analysis and mobile optimizations",
+      "context": "            \"index\": \"291\",\n            \"line\": \"              <a href=\\\"tel:\n>>> 080-4540-7479 <<<\n\\\" class=\\\"phone-link\\\">\",\n            \"message\": \"Unknown directive\""
+    },
+    {
+      "category": "personalInfo",
+      "pattern": "/\\b0[789]0-\\d{4}-\\d{4}\\b/g",
+      "match": "080-4540-7479",
+      "commitHash": "24afe52d9140746103dba5011910213f993e34d1",
+      "filePath": "lighthouse-mobile-report.json",
+      "commitMessage": "feat: Complete Lighthouse performance analysis and mobile optimizations",
+      "context": "            \"index\": \"291\",\n            \"line\": \"              <a href=\\\"tel:\n>>> 080-4540-7479 <<<\n\\\" class=\\\"phone-link\\\">\",\n            \"message\": \"Unknown directive\""
+    },
+    {
+      "category": "personalInfo",
+      "pattern": "/\\b\\d{3}-\\d{4}-\\d{4}\\b/g",
+      "match": "080-4540-7479",
+      "commitHash": "24afe52d9140746103dba5011910213f993e34d1",
+      "filePath": "lighthouse-mobile-report.json",
+      "commitMessage": "feat: Complete Lighthouse performance analysis and mobile optimizations",
+      "context": "            \"index\": \"291\",\n            \"line\": \"              <a href=\\\"tel:\n>>> 080-4540-7479 <<<\n\\\" class=\\\"phone-link\\\">\",\n            \"message\": \"Unknown directive\""
+    },
+    {
+      "category": "personalInfo",
+      "pattern": "/\\b\\d{3}-\\d{4}-\\d{4}\\b/g",
+      "match": "080-4540-7479",
+      "commitHash": "24afe52d9140746103dba5011910213f993e34d1",
+      "filePath": "lighthouse-mobile-report.json",
+      "commitMessage": "feat: Complete Lighthouse performance analysis and mobile optimizations",
+      "context": "            \"index\": \"291\",\n            \"line\": \"              <a href=\\\"tel:\n>>> 080-4540-7479 <<<\n\\\" class=\\\"phone-link\\\">\",\n            \"message\": \"Unknown directive\""
+    },
+    {
+      "category": "infrastructureInfo",
+      "pattern": "/https?:\\/\\/(?!localhost|127\\.0\\.0\\.1|example)[a-zA-Z0-9.-]+\\.amazonaws\\.com[^\\s]*/g",
+      "match": "https://wf6gf7eisk.execute-api.ap-northeast-1.amazonaws.com/dev/api',\",",
+      "commitHash": "24afe52d9140746103dba5011910213f993e34d1",
+      "filePath": "lighthouse-mobile-report.json",
+      "commitMessage": "feat: Complete Lighthouse performance analysis and mobile optimizations",
+      "context": "            \"index\": \"92\",\n            \"line\": \"        apiEndpoint: '\n>>> https://wf6gf7eisk.execute-api.ap-northeast-1.amazonaws.com/dev/api',\", <<<\n\n            \"message\": \"Unknown directive\""
+    },
+    {
+      "category": "infrastructureInfo",
+      "pattern": "/\\b(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\b/g",
+      "match": "138.0.0.0",
+      "commitHash": "24afe52d9140746103dba5011910213f993e34d1",
+      "filePath": "lighthouse-mobile-report.json",
+      "commitMessage": "feat: Complete Lighthouse performance analysis and mobile optimizations",
+      "context": "  \"runWarnings\": [],\n  \"userAgent\": \"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/\n>>> 138.0.0.0 <<<\n Safari/537.36\",\n  \"environment\": {"
+    },
+    {
+      "category": "infrastructureInfo",
+      "pattern": "/\\b(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\b/g",
+      "match": "136.0.0.0",
+      "commitHash": "24afe52d9140746103dba5011910213f993e34d1",
+      "filePath": "lighthouse-mobile-report.json",
+      "commitMessage": "feat: Complete Lighthouse performance analysis and mobile optimizations",
+      "context": "  \"environment\": {\n    \"networkUserAgent\": \"Mozilla/5.0 (Linux; Android 11; moto g power (2022)) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/\n>>> 136.0.0.0 <<<\n Mobile Safari/537.36\",\n    \"hostUserAgent\": \"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/138.0.0.0 Safari/537.36\","
+    },
+    {
+      "category": "infrastructureInfo",
+      "pattern": "/\\b(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\b/g",
+      "match": "138.0.0.0",
+      "commitHash": "24afe52d9140746103dba5011910213f993e34d1",
+      "filePath": "lighthouse-mobile-report.json",
+      "commitMessage": "feat: Complete Lighthouse performance analysis and mobile optimizations",
+      "context": "  \"runWarnings\": [],\n  \"userAgent\": \"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/\n>>> 138.0.0.0 <<<\n Safari/537.36\",\n  \"environment\": {"
+    },
+    {
+      "category": "infrastructureInfo",
+      "pattern": "/\\b(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\b/g",
+      "match": "9.1.4.3",
+      "commitHash": "24afe52d9140746103dba5011910213f993e34d1",
+      "filePath": "lighthouse-mobile-report.json",
+      "commitMessage": "feat: Complete Lighthouse performance analysis and mobile optimizations",
+      "context": "            \"EN-301-549\",\n            \"EN-\n>>> 9.1.4.3 <<<\n\",\n            \"ACT\""
+    },
+    {
+      "category": "infrastructureInfo",
+      "pattern": "/\\b(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\b/g",
+      "match": "9.1.4.4",
+      "commitHash": "24afe52d9140746103dba5011910213f993e34d1",
+      "filePath": "lighthouse-mobile-report.json",
+      "commitMessage": "feat: Complete Lighthouse performance analysis and mobile optimizations",
+      "context": "            \"EN-301-549\",\n            \"EN-\n>>> 9.1.4.4 <<<\n\",\n            \"ACT\""
+    },
+    {
+      "category": "infrastructureInfo",
+      "pattern": "/\\b(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\b/g",
+      "match": "136.0.0.0",
+      "commitHash": "24afe52d9140746103dba5011910213f993e34d1",
+      "filePath": "lighthouse-mobile-report.json",
+      "commitMessage": "feat: Complete Lighthouse performance analysis and mobile optimizations",
+      "context": "  \"environment\": {\n    \"networkUserAgent\": \"Mozilla/5.0 (Linux; Android 11; moto g power (2022)) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/\n>>> 136.0.0.0 <<<\n Mobile Safari/537.36\",\n    \"hostUserAgent\": \"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/138.0.0.0 Safari/537.36\","
+    },
+    {
+      "category": "personalInfo",
+      "pattern": "/[a-zA-Z0-9._%+-]+@(?!example|test|noreply|mock)[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}/g",
+      "match": "example@email.com",
+      "commitHash": "24afe52d9140746103dba5011910213f993e34d1",
+      "filePath": "lighthouse-report.json",
+      "commitMessage": "feat: Complete Lighthouse performance analysis and mobile optimizations",
+      "context": "            \"index\": \"529\",\n            \"line\": \"            <input type=\\\"email\\\" id=\\\"voteEmail\\\" name=\\\"email\\\" placeholder=\\\"\n>>> example@email.com <<<\n\\\" maxlength=\\\"100\\\" />\",\n            \"message\": \"Syntax not understood\""
+    },
+    {
+      "category": "personalInfo",
+      "pattern": "/[a-zA-Z0-9._%+-]+@(?!example|test|noreply|mock)[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}/g",
+      "match": "admin@lightningtalk.com",
+      "commitHash": "24afe52d9140746103dba5011910213f993e34d1",
+      "filePath": "lighthouse-report.json",
+      "commitMessage": "feat: Complete Lighthouse performance analysis and mobile optimizations",
+      "context": "            \"index\": \"587\",\n            \"line\": \"            <p>パスワードをお忘れの場合は<a href=\\\"mailto:\n>>> admin@lightningtalk.com <<<\n\\\">管理者</a>までご連絡ください</p>\",\n            \"message\": \"Unknown directive\""
+    },
+    {
+      "category": "personalInfo",
+      "pattern": "/\\b0[789]0-\\d{4}-\\d{4}\\b/g",
+      "match": "080-4540-7479",
+      "commitHash": "24afe52d9140746103dba5011910213f993e34d1",
+      "filePath": "lighthouse-report.json",
+      "commitMessage": "feat: Complete Lighthouse performance analysis and mobile optimizations",
+      "context": "              },\n              \"snippet\": \"<a href=\\\"tel:\n>>> 080-4540-7479 <<<\n\\\" class=\\\"phone-link\\\">\",\n              \"nodeLabel\": \"☎️\\n080-4540-7479\""
+    },
+    {
+      "category": "personalInfo",
+      "pattern": "/\\b0[789]0-\\d{4}-\\d{4}\\b/g",
+      "match": "080-4540-7479",
+      "commitHash": "24afe52d9140746103dba5011910213f993e34d1",
+      "filePath": "lighthouse-report.json",
+      "commitMessage": "feat: Complete Lighthouse performance analysis and mobile optimizations",
+      "context": "              },\n              \"snippet\": \"<a href=\\\"tel:\n>>> 080-4540-7479 <<<\n\\\" class=\\\"phone-link\\\">\",\n              \"nodeLabel\": \"☎️\\n080-4540-7479\""
+    },
+    {
+      "category": "personalInfo",
+      "pattern": "/\\b0[789]0-\\d{4}-\\d{4}\\b/g",
+      "match": "080-4540-7479",
+      "commitHash": "24afe52d9140746103dba5011910213f993e34d1",
+      "filePath": "lighthouse-report.json",
+      "commitMessage": "feat: Complete Lighthouse performance analysis and mobile optimizations",
+      "context": "              },\n              \"snippet\": \"<a href=\\\"tel:\n>>> 080-4540-7479 <<<\n\\\" class=\\\"phone-link\\\">\",\n              \"nodeLabel\": \"☎️\\n080-4540-7479\""
+    },
+    {
+      "category": "personalInfo",
+      "pattern": "/\\b\\d{3}-\\d{4}-\\d{4}\\b/g",
+      "match": "080-4540-7479",
+      "commitHash": "24afe52d9140746103dba5011910213f993e34d1",
+      "filePath": "lighthouse-report.json",
+      "commitMessage": "feat: Complete Lighthouse performance analysis and mobile optimizations",
+      "context": "              },\n              \"snippet\": \"<a href=\\\"tel:\n>>> 080-4540-7479 <<<\n\\\" class=\\\"phone-link\\\">\",\n              \"nodeLabel\": \"☎️\\n080-4540-7479\""
+    },
+    {
+      "category": "personalInfo",
+      "pattern": "/\\b\\d{3}-\\d{4}-\\d{4}\\b/g",
+      "match": "080-4540-7479",
+      "commitHash": "24afe52d9140746103dba5011910213f993e34d1",
+      "filePath": "lighthouse-report.json",
+      "commitMessage": "feat: Complete Lighthouse performance analysis and mobile optimizations",
+      "context": "              },\n              \"snippet\": \"<a href=\\\"tel:\n>>> 080-4540-7479 <<<\n\\\" class=\\\"phone-link\\\">\",\n              \"nodeLabel\": \"☎️\\n080-4540-7479\""
+    },
+    {
+      "category": "personalInfo",
+      "pattern": "/\\b\\d{3}-\\d{4}-\\d{4}\\b/g",
+      "match": "080-4540-7479",
+      "commitHash": "24afe52d9140746103dba5011910213f993e34d1",
+      "filePath": "lighthouse-report.json",
+      "commitMessage": "feat: Complete Lighthouse performance analysis and mobile optimizations",
+      "context": "              },\n              \"snippet\": \"<a href=\\\"tel:\n>>> 080-4540-7479 <<<\n\\\" class=\\\"phone-link\\\">\",\n              \"nodeLabel\": \"☎️\\n080-4540-7479\""
+    },
+    {
+      "category": "infrastructureInfo",
+      "pattern": "/https?:\\/\\/(?!localhost|127\\.0\\.0\\.1|example)[a-zA-Z0-9.-]+\\.amazonaws\\.com[^\\s]*/g",
+      "match": "https://wf6gf7eisk.execute-api.ap-northeast-1.amazonaws.com/dev/api/events\",",
+      "commitHash": "24afe52d9140746103dba5011910213f993e34d1",
+      "filePath": "lighthouse-report.json",
+      "commitMessage": "feat: Complete Lighthouse performance analysis and mobile optimizations",
+      "context": "          {\n            \"url\": \"\n>>> https://wf6gf7eisk.execute-api.ap-northeast-1.amazonaws.com/dev/api/events\", <<<\n\n            \"sessionTargetType\": \"page\","
+    },
+    {
+      "category": "infrastructureInfo",
+      "pattern": "/https?:\\/\\/(?!localhost|127\\.0\\.0\\.1|example)[a-zA-Z0-9.-]+\\.amazonaws\\.com[^\\s]*/g",
+      "match": "https://wf6gf7eisk.execute-api.ap-northeast-1.amazonaws.com\",",
+      "commitHash": "24afe52d9140746103dba5011910213f993e34d1",
+      "filePath": "lighthouse-report.json",
+      "commitMessage": "feat: Complete Lighthouse performance analysis and mobile optimizations",
+      "context": "          {\n            \"origin\": \"\n>>> https://wf6gf7eisk.execute-api.ap-northeast-1.amazonaws.com\", <<<\n\n            \"rtt\": 0.29499999999999993"
+    },
+    {
+      "category": "infrastructureInfo",
+      "pattern": "/https?:\\/\\/(?!localhost|127\\.0\\.0\\.1|example)[a-zA-Z0-9.-]+\\.amazonaws\\.com[^\\s]*/g",
+      "match": "https://wf6gf7eisk.execute-api.ap-northeast-1.amazonaws.com\",",
+      "commitHash": "24afe52d9140746103dba5011910213f993e34d1",
+      "filePath": "lighthouse-report.json",
+      "commitMessage": "feat: Complete Lighthouse performance analysis and mobile optimizations",
+      "context": "          {\n            \"origin\": \"\n>>> https://wf6gf7eisk.execute-api.ap-northeast-1.amazonaws.com\", <<<\n\n            \"rtt\": 0.29499999999999993"
+    },
+    {
+      "category": "infrastructureInfo",
+      "pattern": "/https?:\\/\\/(?!localhost|127\\.0\\.0\\.1|example)[a-zA-Z0-9.-]+\\.amazonaws\\.com[^\\s]*/g",
+      "match": "https://wf6gf7eisk.execute-api.ap-northeast-1.amazonaws.com/dev/api/events\",",
+      "commitHash": "24afe52d9140746103dba5011910213f993e34d1",
+      "filePath": "lighthouse-report.json",
+      "commitMessage": "feat: Complete Lighthouse performance analysis and mobile optimizations",
+      "context": "          {\n            \"url\": \"\n>>> https://wf6gf7eisk.execute-api.ap-northeast-1.amazonaws.com/dev/api/events\", <<<\n\n            \"sessionTargetType\": \"page\","
+    },
+    {
+      "category": "infrastructureInfo",
+      "pattern": "/https?:\\/\\/(?!localhost|127\\.0\\.0\\.1|example)[a-zA-Z0-9.-]+\\.amazonaws\\.com[^\\s]*/g",
+      "match": "https://wf6gf7eisk.execute-api.ap-northeast-1.amazonaws.com/dev/api',\",",
+      "commitHash": "24afe52d9140746103dba5011910213f993e34d1",
+      "filePath": "lighthouse-report.json",
+      "commitMessage": "feat: Complete Lighthouse performance analysis and mobile optimizations",
+      "context": "            \"index\": \"92\",\n            \"line\": \"        apiEndpoint: '\n>>> https://wf6gf7eisk.execute-api.ap-northeast-1.amazonaws.com/dev/api',\", <<<\n\n            \"message\": \"Unknown directive\""
+    },
+    {
+      "category": "infrastructureInfo",
+      "pattern": "/https?:\\/\\/(?!localhost|127\\.0\\.0\\.1|example)[a-zA-Z0-9.-]+\\.amazonaws\\.com[^\\s]*/g",
+      "match": "https://wf6gf7eisk.execute-api.ap-northeast-1.amazonaws.com/dev/api/events\",",
+      "commitHash": "24afe52d9140746103dba5011910213f993e34d1",
+      "filePath": "lighthouse-report.json",
+      "commitMessage": "feat: Complete Lighthouse performance analysis and mobile optimizations",
+      "context": "          {\n            \"url\": \"\n>>> https://wf6gf7eisk.execute-api.ap-northeast-1.amazonaws.com/dev/api/events\", <<<\n\n            \"sessionTargetType\": \"page\","
+    },
+    {
+      "category": "infrastructureInfo",
+      "pattern": "/https?:\\/\\/(?!localhost|127\\.0\\.0\\.1|example)[a-zA-Z0-9.-]+\\.amazonaws\\.com[^\\s]*/g",
+      "match": "https://wf6gf7eisk.execute-api.ap-northeast-1.amazonaws.com\",",
+      "commitHash": "24afe52d9140746103dba5011910213f993e34d1",
+      "filePath": "lighthouse-report.json",
+      "commitMessage": "feat: Complete Lighthouse performance analysis and mobile optimizations",
+      "context": "          {\n            \"origin\": \"\n>>> https://wf6gf7eisk.execute-api.ap-northeast-1.amazonaws.com\", <<<\n\n            \"rtt\": 0.29499999999999993"
+    },
+    {
+      "category": "infrastructureInfo",
+      "pattern": "/https?:\\/\\/(?!localhost|127\\.0\\.0\\.1|example)[a-zA-Z0-9.-]+\\.amazonaws\\.com[^\\s]*/g",
+      "match": "https://wf6gf7eisk.execute-api.ap-northeast-1.amazonaws.com/dev/api/events\",",
+      "commitHash": "24afe52d9140746103dba5011910213f993e34d1",
+      "filePath": "lighthouse-report.json",
+      "commitMessage": "feat: Complete Lighthouse performance analysis and mobile optimizations",
+      "context": "          {\n            \"url\": \"\n>>> https://wf6gf7eisk.execute-api.ap-northeast-1.amazonaws.com/dev/api/events\", <<<\n\n            \"sessionTargetType\": \"page\","
+    },
+    {
+      "category": "infrastructureInfo",
+      "pattern": "/https?:\\/\\/(?!localhost|127\\.0\\.0\\.1|example)[a-zA-Z0-9.-]+\\.amazonaws\\.com[^\\s]*/g",
+      "match": "https://wf6gf7eisk.execute-api.ap-northeast-1.amazonaws.com\"],",
+      "commitHash": "24afe52d9140746103dba5011910213f993e34d1",
+      "filePath": "lighthouse-report.json",
+      "commitMessage": "feat: Complete Lighthouse performance analysis and mobile optimizations",
+      "context": "      \"homepage\": \"https://aws.amazon.com/s3/\",\n      \"origins\": [\"\n>>> https://wf6gf7eisk.execute-api.ap-northeast-1.amazonaws.com\"], <<<\n\n      \"category\": \"other\""
+    },
+    {
+      "category": "infrastructureInfo",
+      "pattern": "/\\b(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\b/g",
+      "match": "138.0.0.0",
+      "commitHash": "24afe52d9140746103dba5011910213f993e34d1",
+      "filePath": "lighthouse-report.json",
+      "commitMessage": "feat: Complete Lighthouse performance analysis and mobile optimizations",
+      "context": "  \"runWarnings\": [],\n  \"userAgent\": \"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/\n>>> 138.0.0.0 <<<\n Safari/537.36\",\n  \"environment\": {"
+    },
+    {
+      "category": "infrastructureInfo",
+      "pattern": "/\\b(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\b/g",
+      "match": "136.0.0.0",
+      "commitHash": "24afe52d9140746103dba5011910213f993e34d1",
+      "filePath": "lighthouse-report.json",
+      "commitMessage": "feat: Complete Lighthouse performance analysis and mobile optimizations",
+      "context": "  \"environment\": {\n    \"networkUserAgent\": \"Mozilla/5.0 (Linux; Android 11; moto g power (2022)) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/\n>>> 136.0.0.0 <<<\n Mobile Safari/537.36\",\n    \"hostUserAgent\": \"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/138.0.0.0 Safari/537.36\","
+    },
+    {
+      "category": "infrastructureInfo",
+      "pattern": "/\\b(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\b/g",
+      "match": "138.0.0.0",
+      "commitHash": "24afe52d9140746103dba5011910213f993e34d1",
+      "filePath": "lighthouse-report.json",
+      "commitMessage": "feat: Complete Lighthouse performance analysis and mobile optimizations",
+      "context": "  \"runWarnings\": [],\n  \"userAgent\": \"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/\n>>> 138.0.0.0 <<<\n Safari/537.36\",\n  \"environment\": {"
+    },
+    {
+      "category": "infrastructureInfo",
+      "pattern": "/\\b(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\b/g",
+      "match": "9.1.4.3",
+      "commitHash": "24afe52d9140746103dba5011910213f993e34d1",
+      "filePath": "lighthouse-report.json",
+      "commitMessage": "feat: Complete Lighthouse performance analysis and mobile optimizations",
+      "context": "            \"EN-301-549\",\n            \"EN-\n>>> 9.1.4.3 <<<\n\",\n            \"ACT\""
+    },
+    {
+      "category": "infrastructureInfo",
+      "pattern": "/\\b(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\b/g",
+      "match": "9.4.1.2",
+      "commitHash": "24afe52d9140746103dba5011910213f993e34d1",
+      "filePath": "lighthouse-report.json",
+      "commitMessage": "feat: Complete Lighthouse performance analysis and mobile optimizations",
+      "context": "            \"EN-301-549\",\n            \"EN-\n>>> 9.4.1.2 <<<\n\",\n            \"ACT\""
+    },
+    {
+      "category": "infrastructureInfo",
+      "pattern": "/\\b(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\b/g",
+      "match": "136.0.0.0",
+      "commitHash": "24afe52d9140746103dba5011910213f993e34d1",
+      "filePath": "lighthouse-report.json",
+      "commitMessage": "feat: Complete Lighthouse performance analysis and mobile optimizations",
+      "context": "  \"environment\": {\n    \"networkUserAgent\": \"Mozilla/5.0 (Linux; Android 11; moto g power (2022)) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/\n>>> 136.0.0.0 <<<\n Mobile Safari/537.36\",\n    \"hostUserAgent\": \"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/138.0.0.0 Safari/537.36\","
+    },
+    {
+      "category": "personalInfo",
+      "pattern": "/[a-zA-Z0-9._%+-]+@(?!example|test|noreply|mock)[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}/g",
+      "match": "example@email.com",
+      "commitHash": "24afe52d9140746103dba5011910213f993e34d1",
+      "filePath": "public/js/main.js",
+      "commitMessage": "feat: Complete Lighthouse performance analysis and mobile optimizations",
+      "context": "                    <input type=\"email\" id=\"email\" name=\"email\" required>\n                    <span class=\"field-hint\">例: \n>>> example@email.com <<<\n</span>\n                    <span class=\"field-error\" id=\"email-error\"></span>"
+    },
+    {
+      "category": "personalInfo",
+      "pattern": "/[a-zA-Z0-9._%+-]+@(?!example|test|noreply|mock)[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}/g",
+      "match": "example@email.com",
+      "commitHash": "2ff201dbd53cb0976e68f8b790c55ba1d053e017",
+      "filePath": "public/js/main.js",
+      "commitMessage": "fix: 主要なJavaScriptコンソールエラーを修正",
+      "context": "                    <input type=\"email\" id=\"email\" name=\"email\" required>\n                    <span class=\"field-hint\">例: \n>>> example@email.com <<<\n</span>\n                    <span class=\"field-error\" id=\"email-error\"></span>"
+    },
+    {
+      "category": "infrastructureInfo",
+      "pattern": "/https?:\\/\\/(?!localhost|127\\.0\\.0\\.1|example)[a-zA-Z0-9.-]+\\.amazonaws\\.com[^\\s]*/g",
+      "match": "https://wf6gf7eisk.execute-api.ap-northeast-1.amazonaws.com/dev/api'",
+      "commitHash": "132a6247916c9908a0d11092ba3579156d96298d",
+      "filePath": "public/js/auth.js",
+      "commitMessage": "feat: Implement comprehensive code quality improvements with ESLint, Prettier, and unified design sy",
+      "context": "  redirectUri: `${window.location.origin}/callback`,\n  apiEndpoint: '\n>>> https://wf6gf7eisk.execute-api.ap-northeast-1.amazonaws.com/dev/api' <<<\n\n};"
+    },
+    {
+      "category": "personalInfo",
+      "pattern": "/[a-zA-Z0-9._%+-]+@(?!example|test|noreply|mock)[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}/g",
+      "match": "example@email.com",
+      "commitHash": "132a6247916c9908a0d11092ba3579156d96298d",
+      "filePath": "public/js/main.js",
+      "commitMessage": "feat: Implement comprehensive code quality improvements with ESLint, Prettier, and unified design sy",
+      "context": "                    <input type=\"email\" id=\"email\" name=\"email\" required>\n                    <span class=\"field-hint\">例: \n>>> example@email.com <<<\n</span>\n                    <span class=\"field-error\" id=\"email-error\"></span>"
+    },
+    {
+      "category": "infrastructureInfo",
+      "pattern": "/https?:\\/\\/(?!localhost|127\\.0\\.0\\.1|example)[a-zA-Z0-9.-]+\\.amazonaws\\.com[^\\s]*/g",
+      "match": "https://9qyaz7n47j.execute-api.ap-northeast-1.amazonaws.com/prod/api/voting/participation/${eventId}",
+      "commitHash": "132a6247916c9908a0d11092ba3579156d96298d",
+      "filePath": "public/js/main.js",
+      "commitMessage": "feat: Implement comprehensive code quality improvements with ESLint, Prettier, and unified design sy",
+      "context": "        const response = await fetch(\n          `\n>>> https://9qyaz7n47j.execute-api.ap-northeast-1.amazonaws.com/prod/api/voting/participation/${eventId}` <<<\n\n        );"
+    },
+    {
+      "category": "infrastructureInfo",
+      "pattern": "/https?:\\/\\/(?!localhost|127\\.0\\.0\\.1|example)[a-zA-Z0-9.-]+\\.amazonaws\\.com[^\\s]*/g",
+      "match": "https://9qyaz7n47j.execute-api.ap-northeast-1.amazonaws.com/prod/api/voting',",
+      "commitHash": "132a6247916c9908a0d11092ba3579156d96298d",
+      "filePath": "public/js/main.js",
+      "commitMessage": "feat: Implement comprehensive code quality improvements with ESLint, Prettier, and unified design sy",
+      "context": "    // Also send via API\n    fetch('\n>>> https://9qyaz7n47j.execute-api.ap-northeast-1.amazonaws.com/prod/api/voting', <<<\n {\n      method: 'POST',"
+    },
+    {
+      "category": "personalInfo",
+      "pattern": "/\\b0[789]0-\\d{4}-\\d{4}\\b/g",
+      "match": "080-4540-7479",
+      "commitHash": "132a6247916c9908a0d11092ba3579156d96298d",
+      "filePath": "scripts/create-sample-event.js",
+      "commitMessage": "feat: Implement comprehensive code quality improvements with ESLint, Prettier, and unified design sy",
+      "context": "        map_url: process.env.LT_MAP_URL || 'https://maps.app.goo.gl/51TFv825jmuBsjbq5?g_st=ic',\n        emergency_phone: process.env.LT_EMERGENCY_PHONE || '\n>>> 080-4540-7479 <<<\n',\n        online_url: process.env.LT_MEET_URL || 'https://meet.google.com/ycp-sdec-xsr',"
+    },
+    {
+      "category": "personalInfo",
+      "pattern": "/\\b\\d{3}-\\d{4}-\\d{4}\\b/g",
+      "match": "080-4540-7479",
+      "commitHash": "132a6247916c9908a0d11092ba3579156d96298d",
+      "filePath": "scripts/create-sample-event.js",
+      "commitMessage": "feat: Implement comprehensive code quality improvements with ESLint, Prettier, and unified design sy",
+      "context": "        map_url: process.env.LT_MAP_URL || 'https://maps.app.goo.gl/51TFv825jmuBsjbq5?g_st=ic',\n        emergency_phone: process.env.LT_EMERGENCY_PHONE || '\n>>> 080-4540-7479 <<<\n',\n        online_url: process.env.LT_MEET_URL || 'https://meet.google.com/ycp-sdec-xsr',"
+    },
+    {
+      "category": "personalInfo",
+      "pattern": "/[a-zA-Z0-9._%+-]+@(?!example|test|noreply|mock)[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}/g",
+      "match": "example@email.com",
+      "commitHash": "e617153032c4a2a38fad3069f3162691b91cddca",
+      "filePath": "public/js/main.js",
+      "commitMessage": "feat: Implement comprehensive frontend structured logging system",
+      "context": "                    <input type=\"email\" id=\"email\" name=\"email\" required>\n                    <span class=\"field-hint\">例: \n>>> example@email.com <<<\n</span>\n                    <span class=\"field-error\" id=\"email-error\"></span>"
+    },
+    {
+      "category": "infrastructureInfo",
+      "pattern": "/https?:\\/\\/(?!localhost|127\\.0\\.0\\.1|example)[a-zA-Z0-9.-]+\\.amazonaws\\.com[^\\s]*/g",
+      "match": "https://9qyaz7n47j.execute-api.ap-northeast-1.amazonaws.com/prod/api/voting/participation/${eventId}",
+      "commitHash": "e617153032c4a2a38fad3069f3162691b91cddca",
+      "filePath": "public/js/main.js",
+      "commitMessage": "feat: Implement comprehensive frontend structured logging system",
+      "context": "        const response = await fetch(\n          `\n>>> https://9qyaz7n47j.execute-api.ap-northeast-1.amazonaws.com/prod/api/voting/participation/${eventId}` <<<\n\n        );"
+    },
+    {
+      "category": "infrastructureInfo",
+      "pattern": "/https?:\\/\\/(?!localhost|127\\.0\\.0\\.1|example)[a-zA-Z0-9.-]+\\.amazonaws\\.com[^\\s]*/g",
+      "match": "https://9qyaz7n47j.execute-api.ap-northeast-1.amazonaws.com/prod/api/voting',",
+      "commitHash": "e617153032c4a2a38fad3069f3162691b91cddca",
+      "filePath": "public/js/main.js",
+      "commitMessage": "feat: Implement comprehensive frontend structured logging system",
+      "context": "    // Also send via API\n    fetch('\n>>> https://9qyaz7n47j.execute-api.ap-northeast-1.amazonaws.com/prod/api/voting', <<<\n {\n      method: 'POST',"
+    },
+    {
+      "category": "personalInfo",
+      "pattern": "/[a-zA-Z0-9._%+-]+@(?!example|test|noreply|mock)[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}/g",
+      "match": "example@email.com",
+      "commitHash": "83b1ddee6c0e78100e51274d063ac2ad5a97c2ed",
+      "filePath": "public/js/main.js",
+      "commitMessage": "feat: Implement comprehensive mobile optimization system v1",
+      "context": "                    <input type=\"email\" id=\"email\" name=\"email\" required>\n                    <span class=\"field-hint\">例: \n>>> example@email.com <<<\n</span>\n                    <span class=\"field-error\" id=\"email-error\"></span>"
+    },
+    {
+      "category": "infrastructureInfo",
+      "pattern": "/https?:\\/\\/(?!localhost|127\\.0\\.0\\.1|example)[a-zA-Z0-9.-]+\\.amazonaws\\.com[^\\s]*/g",
+      "match": "https://9qyaz7n47j.execute-api.ap-northeast-1.amazonaws.com/prod/api/voting/participation/${eventId}",
+      "commitHash": "83b1ddee6c0e78100e51274d063ac2ad5a97c2ed",
+      "filePath": "public/js/main.js",
+      "commitMessage": "feat: Implement comprehensive mobile optimization system v1",
+      "context": "        const response = await fetch(\n          `\n>>> https://9qyaz7n47j.execute-api.ap-northeast-1.amazonaws.com/prod/api/voting/participation/${eventId}` <<<\n\n        );"
+    },
+    {
+      "category": "infrastructureInfo",
+      "pattern": "/https?:\\/\\/(?!localhost|127\\.0\\.0\\.1|example)[a-zA-Z0-9.-]+\\.amazonaws\\.com[^\\s]*/g",
+      "match": "https://9qyaz7n47j.execute-api.ap-northeast-1.amazonaws.com/prod/api/voting',",
+      "commitHash": "83b1ddee6c0e78100e51274d063ac2ad5a97c2ed",
+      "filePath": "public/js/main.js",
+      "commitMessage": "feat: Implement comprehensive mobile optimization system v1",
+      "context": "    // Also send via API\n    fetch('\n>>> https://9qyaz7n47j.execute-api.ap-northeast-1.amazonaws.com/prod/api/voting', <<<\n {\n      method: 'POST',"
+    },
+    {
+      "category": "personalInfo",
+      "pattern": "/[a-zA-Z0-9._%+-]+@(?!example|test|noreply|mock)[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}/g",
+      "match": "noreply@lightningtalk.local",
+      "commitHash": "WORKSPACE",
+      "filePath": ".env",
+      "commitMessage": "Current workspace",
+      "context": "EMAIL_SERVICE=mock\nEMAIL_FROM=\"\n>>> noreply@lightningtalk.local <<<\n\"\n"
+    },
+    {
+      "category": "infrastructureInfo",
+      "pattern": "/https?:\\/\\/(?!localhost|127\\.0\\.0\\.1|example)[a-zA-Z0-9.-]+\\.amazonaws\\.com[^\\s]*/g",
+      "match": "https://4mz5i3x23c.execute-api.ap-northeast-1.amazonaws.com/prod/api",
+      "commitHash": "WORKSPACE",
+      "filePath": ".env",
+      "commitMessage": "Current workspace",
+      "context": "# API Configuration\nAPI_ENDPOINT=\n>>> https://4mz5i3x23c.execute-api.ap-northeast-1.amazonaws.com/prod/api <<<\n\n"
+    },
+    {
+      "category": "personalInfo",
+      "pattern": "/[a-zA-Z0-9._%+-]+@(?!example|test|noreply|mock)[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}/g",
+      "match": "noreply@lightningtalk-circle.com",
+      "commitHash": "WORKSPACE",
+      "filePath": ".env.production",
+      "commitMessage": "Current workspace",
+      "context": "EMAIL_PROVIDER=ses\nEMAIL_FROM=\n>>> noreply@lightningtalk-circle.com <<<\n\nAWS_SES_REGION=ap-northeast-1"
+    },
+    {
+      "category": "infrastructureInfo",
+      "pattern": "/https?:\\/\\/(?!localhost|127\\.0\\.0\\.1|example)[a-zA-Z0-9.-]+\\.amazonaws\\.com[^\\s]*/g",
+      "match": "https://4ujhkvx000.execute-api.ap-northeast-1.amazonaws.com/prod/api",
+      "commitHash": "WORKSPACE",
+      "filePath": ".env.production",
+      "commitMessage": "Current workspace",
+      "context": "# Production URLs\nAPI_BASE_URL=\n>>> https://4ujhkvx000.execute-api.ap-northeast-1.amazonaws.com/prod/api <<<\n\nFRONTEND_URL=https://xn--6wym69a.com"
+    },
+    {
+      "category": "personalInfo",
+      "pattern": "/[a-zA-Z0-9._%+-]+@(?!example|test|noreply|mock)[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}/g",
+      "match": "noreply@lightningtalk.local",
+      "commitHash": "WORKSPACE",
+      "filePath": ".env.development",
+      "commitMessage": "Current workspace",
+      "context": "EMAIL_SERVICE=mock\nEMAIL_FROM=\"\n>>> noreply@lightningtalk.local <<<\n\"\n"
+    },
+    {
+      "category": "infrastructureInfo",
+      "pattern": "/https?:\\/\\/(?!localhost|127\\.0\\.0\\.1|example)[a-zA-Z0-9.-]+\\.amazonaws\\.com[^\\s]*/g",
+      "match": "https://4mz5i3x23c.execute-api.ap-northeast-1.amazonaws.com/prod/api",
+      "commitHash": "WORKSPACE",
+      "filePath": ".env.development",
+      "commitMessage": "Current workspace",
+      "context": "# API Configuration\nAPI_ENDPOINT=\n>>> https://4mz5i3x23c.execute-api.ap-northeast-1.amazonaws.com/prod/api <<<\n\n"
+    }
+  ],
+  "recommendations": [
+    "👤 Personal information detected. Review data handling policies.",
+    "🏗️ Infrastructure details exposed. Review access controls.",
+    "🔧 Implement pre-commit hooks with security scanning.",
+    "📊 Schedule regular automated security audits."
+  ]
+}
