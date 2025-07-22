@@ -1,0 +1,127 @@
+{
+  "summary": {
+    "timestamp": "2025-07-22T14:19:42.711Z",
+    "duration": "18s",
+    "totalTests": 11,
+    "totalPassed": 0,
+    "totalFailed": 11,
+    "successRate": "0%"
+  },
+  "environment": {
+    "baseUrl": "http://localhost:3000",
+    "viewports": {
+      "desktop": {
+        "width": 1920,
+        "height": 1080
+      },
+      "tablet": {
+        "width": 768,
+        "height": 1024
+      },
+      "mobile": {
+        "width": 375,
+        "height": 812
+      }
+    },
+    "screenshotDir": "./screenshots-automated-ui-tests"
+  },
+  "testSuites": [
+    {
+      "name": "basic-pages",
+      "tests": [
+        {
+          "name": "homepage-load",
+          "success": false,
+          "error": "this.page.waitForTimeout is not a function"
+        },
+        {
+          "name": "homepage-scroll",
+          "success": false,
+          "error": "this.page.waitForTimeout is not a function"
+        }
+      ],
+      "passed": 0,
+      "failed": 2
+    },
+    {
+      "name": "modal-interactions",
+      "tests": [
+        {
+          "name": "registration-modal-open",
+          "success": false,
+          "error": "this.page.waitForTimeout is not a function"
+        },
+        {
+          "name": "modal-focus-trap",
+          "success": false,
+          "error": "this.page.waitForTimeout is not a function"
+        }
+      ],
+      "passed": 0,
+      "failed": 2
+    },
+    {
+      "name": "responsive-layouts",
+      "tests": [
+        {
+          "name": "mobile-navigation",
+          "success": false,
+          "error": "this.page.waitForTimeout is not a function"
+        },
+        {
+          "name": "tablet-layout",
+          "success": false,
+          "error": "this.page.waitForTimeout is not a function"
+        }
+      ],
+      "passed": 0,
+      "failed": 2
+    },
+    {
+      "name": "accessibility-features",
+      "tests": [
+        {
+          "name": "keyboard-navigation",
+          "success": false,
+          "error": "this.page.waitForTimeout is not a function"
+        },
+        {
+          "name": "high-contrast-simulation",
+          "success": false,
+          "error": "this.page.waitForTimeout is not a function"
+        }
+      ],
+      "passed": 0,
+      "failed": 2
+    },
+    {
+      "name": "form-interactions",
+      "tests": [
+        {
+          "name": "form-validation",
+          "success": false,
+          "error": "this.page.waitForTimeout is not a function"
+        }
+      ],
+      "passed": 0,
+      "failed": 1
+    },
+    {
+      "name": "animation-states",
+      "tests": [
+        {
+          "name": "button-hover-states",
+          "success": false,
+          "error": "this.page.waitForTimeout is not a function"
+        },
+        {
+          "name": "loading-states",
+          "success": false,
+          "error": "this.page.waitForTimeout is not a function"
+        }
+      ],
+      "passed": 0,
+      "failed": 2
+    }
+  ]
+}

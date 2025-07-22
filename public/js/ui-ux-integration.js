@@ -299,7 +299,7 @@ function enhanceMobileNavigation() {
 
   if (mobileMenuToggle && navLinks) {
     // スワイプジェスチャーでメニューを閉じる
-    if (window.microInteractions) {
+    if (window.microInteractions && typeof SwipeHandler !== 'undefined') {
       const swipeHandler = new SwipeHandler(navLinks, {
         onSwipeLeft: () => {
           if (navLinks.classList.contains('nav-links--open')) {
