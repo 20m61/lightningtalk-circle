@@ -1,0 +1,20 @@
+{
+  "name": "lightningtalk-circle-lambda-layer",
+  "version": "1.0.0",
+  "description": "Common dependencies for Lightning Talk Circle Lambda functions",
+  "main": "index.js",
+  "dependencies": {
+    "aws-sdk": "^2.1400.0",
+    "@aws-sdk/client-dynamodb": "^3.400.0",
+    "@aws-sdk/lib-dynamodb": "^3.400.0",
+    "@aws-sdk/client-s3": "^3.400.0",
+    "@aws-sdk/client-cognito-identity-provider": "^3.400.0",
+    "@aws-sdk/client-secrets-manager": "^3.400.0",
+    "jsonwebtoken": "^9.0.2",
+    "axios": "^1.5.0",
+    "uuid": "^9.0.0",
+    "lodash": "^4.17.21",
+    "moment": "^2.29.4",
+    "joi": "^17.10.0"
+  }
+}

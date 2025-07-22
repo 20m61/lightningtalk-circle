@@ -32,7 +32,12 @@
     "ls": "cdk ls",
     "docs": "cdk docs",
     "hotswap:dev": "CDK_STAGE=dev cdk deploy --context stage=dev --hotswap",
-    "validate": "npm run synth:dev && npm run synth:prod"
+    "validate": "npm run synth:dev && npm run synth:prod",
+    "synth:optimized": "cdk synth --app 'node bin/cdk-optimized.js' -c env=${CDK_STAGE:-dev}",
+    "deploy:optimized": "cdk deploy --all --app 'node bin/cdk-optimized.js' -c env=${CDK_STAGE:-dev} --require-approval never",
+    "deploy:optimized:prod": "CDK_STAGE=prod cdk deploy --all --app 'node bin/cdk-optimized.js' -c env=prod --require-approval broadening",
+    "diff:optimized": "cdk diff --app 'node bin/cdk-optimized.js' -c env=${CDK_STAGE:-dev}",
+    "destroy:optimized": "cdk destroy --all --app 'node bin/cdk-optimized.js' -c env=${CDK_STAGE:-dev}"
   },
   "devDependencies": {
     "@types/jest": "^29.5.5",
