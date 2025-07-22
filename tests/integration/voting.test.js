@@ -3,6 +3,12 @@ import request from 'supertest';
 import { EventEmitter } from 'events';
 import express from 'express';
 
+// setImmediate polyfill for Jest
+global.setImmediate = global.setImmediate || ((fn, ...args) => {
+  return setTimeout(fn, 0, ...args);
+});
+global.clearImmediate = global.clearImmediate || clearTimeout;
+
 /**
  * Voting API Integration Tests
  * 投票APIの統合テスト
