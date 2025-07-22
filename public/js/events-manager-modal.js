@@ -91,6 +91,7 @@ if (typeof EventsManager !== 'undefined') {
       eventCard.setAttribute('tabindex', '0');
       eventCard.setAttribute('role', 'button');
       eventCard.setAttribute('aria-label', `${event.title}の詳細を表示`);
+      eventCard.setAttribute('aria-describedby', `event-${event.id}-description`);
       eventCard.style.cursor = 'pointer';
 
       // Add hover effect class

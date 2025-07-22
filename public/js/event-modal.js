@@ -309,6 +309,9 @@ class EventModal {
     // Adjust layout
     this.adjustModalLayout();
     
+    // Set ARIA attributes
+    this.updateARIAAttributes(eventData);
+    
     // Show modal
     this.modal.classList.add('is-open');
     document.body.style.overflow = 'hidden';
@@ -635,6 +638,63 @@ class EventModal {
     
     document.body.appendChild(announcement);
     setTimeout(() => announcement.remove(), 1000);
+  }
+
+  updateARIAAttributes(eventData) {
+    // Set descriptive attributes
+    this.modal.setAttribute('aria-describedby', 'modal-description');
+    
+    // Add description element if not exists
+    if (!this.modal.querySelector('#modal-description')) {
+      const description = document.createElement('div');
+      description.id = 'modal-description';
+      description.className = 'sr-only';
+      this.modal.appendChild(description);
+    }
+    
+    const descElement = this.modal.querySelector('#modal-description');
+    descElement.textContent = `${eventData.title}の詳細情報。${this.getFormatLabel(eventData.format)}で開催。`;
+    
+    // Update modal title
+    const title = this.modal.querySelector('#modal-title');
+    if (title) {
+      title.setAttribute('aria-level', '1');
+    }
+    
+    // Hide non-active sections from screen readers
+    this.modal.querySelectorAll('.modal-section').forEach((section, index) => {
+      const isActive = section.classList.contains('active');
+      section.setAttribute('aria-hidden', !isActive);
+      
+      if (isActive) {
+        section.setAttribute('tabindex', '0');
+      } else {
+        section.removeAttribute('tabindex');
+      }
+    });
+    
+    // Update tab attributes
+    this.modal.querySelectorAll('.tab-button').forEach((tab, index) => {
+      const isSelected = tab.classList.contains('active');
+      tab.setAttribute('aria-selected', isSelected);
+      tab.setAttribute('aria-controls', `${tab.dataset.tab}-section`);
+    });
+  }
+
+  handleTimeoutWarning(timeoutMs) {
+    // Add timeout indicator if long-running operations
+    if (timeoutMs > 5000) {
+      const indicator = document.createElement('div');
+      indicator.className = 'modal-timeout-indicator';
+      indicator.setAttribute('aria-label', `処理中 - 約${Math.round(timeoutMs/1000)}秒`);
+      this.modal.appendChild(indicator);
+      
+      setTimeout(() => {
+        if (indicator.parentNode) {
+          indicator.remove();
+        }
+      }, timeoutMs);
+    }
   }
 
   dispatchEvent(eventName, detail) {
