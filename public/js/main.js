@@ -296,6 +296,24 @@ class LightningTalkApp {
     case 'survey-offline':
       this.incrementSurveyCounter('offline');
       break;
+    case 'view-detail':
+      this.openEventDetailModal(element.dataset.eventId);
+      break;
+    case 'toggle-participants':
+      this.toggleParticipantsList();
+      break;
+    case 'toggle-settings':
+      this.toggleChatSettings();
+      break;
+    case 'minimize':
+      this.minimizeChat();
+      break;
+    case 'attach-file':
+      this.openFileAttachment();
+      break;
+    case 'emoji':
+      this.toggleEmojiPicker();
+      break;
     default:
       this.logger.warn('Unknown action:', { action });
     }
@@ -1387,6 +1405,254 @@ class LightningTalkApp {
     // Convert modal survey to existing vote system
     this.currentEventId = event.id;
     this.openVoteModal('online'); // Default to online, user can change in modal
+  }
+
+  // ===== 新規追加アクションメソッド =====
+
+  openEventDetailModal(eventId) {
+    if (!eventId) {
+      this.logger.warn('Event ID not provided for detail modal');
+      return;
+    }
+
+    // イベントデータ取得（EventsManagerから）
+    const event = this.getEventById(eventId);
+    if (!event) {
+      this.logger.error('Event not found:', eventId);
+      return;
+    }
+
+    // Event Modal システムを使用（既存の event-modal.js との統合）
+    if (window.EventModal) {
+      window.EventModal.open(event);
+    } else {
+      // フォールバック実装
+      this.showEventDetailFallback(event);
+    }
+  }
+
+  showEventDetailFallback(event) {
+    // 簡易イベント詳細表示のフォールバック
+    const modalBody = document.getElementById('modalBody');
+    if (modalBody) {
+      modalBody.innerHTML = `
+        <h2>${event.title || 'イベント詳細'}</h2>
+        <p><strong>日時:</strong> ${event.date || '未定'}</p>
+        <p><strong>形式:</strong> ${event.format || '未定'}</p>
+        <p><strong>説明:</strong> ${event.description || '詳細情報なし'}</p>
+        <div class="modal-actions">
+          <button class="btn btn-primary" data-action="register" data-event-id="${event.id}">
+            参加登録
+          </button>
+          <button class="btn btn-secondary" onclick="this.closest('.modal').style.display='none'">
+            閉じる
+          </button>
+        </div>
+      `;
+      document.getElementById('registerModal').style.display = 'block';
+    }
+  }
+
+  getEventById(eventId) {
+    // EventsManager経由でイベント取得
+    if (window.EventsManager && window.EventsManager.events) {
+      return window.EventsManager.events.find(event => event.id === eventId);
+    }
+    
+    // フォールバック: ローカルデータから取得
+    const fallbackEvents = [
+      {
+        id: '1',
+        title: 'なんでもライトニングトーク',
+        date: '2025-07-15T19:00:00+09:00',
+        format: 'ハイブリッド',
+        description: '5分で伝える、みんなのアイデア'
+      }
+    ];
+    return fallbackEvents.find(event => event.id === eventId) || fallbackEvents[0];
+  }
+
+  // チャット関連アクションメソッド
+  toggleParticipantsList() {
+    const participantsList = document.getElementById('chat-participants-list');
+    if (participantsList) {
+      participantsList.classList.toggle('hidden');
+      
+      // アイコン状態の更新
+      const toggleBtn = document.querySelector('[data-action="toggle-participants"]');
+      if (toggleBtn) {
+        const isVisible = !participantsList.classList.contains('hidden');
+        toggleBtn.classList.toggle('active', isVisible);
+        toggleBtn.setAttribute('aria-pressed', isVisible.toString());
+      }
+      
+      this.logger.info('Participants list toggled', { visible: !participantsList.classList.contains('hidden') });
+    }
+  }
+
+  toggleChatSettings() {
+    const settingsPanel = document.getElementById('chat-settings-panel');
+    if (settingsPanel) {
+      settingsPanel.classList.toggle('hidden');
+      
+      // 設定ボタン状態の更新
+      const settingsBtn = document.querySelector('[data-action="toggle-settings"]');
+      if (settingsBtn) {
+        const isVisible = !settingsPanel.classList.contains('hidden');
+        settingsBtn.classList.toggle('active', isVisible);
+        settingsBtn.setAttribute('aria-pressed', isVisible.toString());
+      }
+      
+      this.logger.info('Chat settings toggled', { visible: !settingsPanel.classList.contains('hidden') });
+    }
+  }
+
+  minimizeChat() {
+    const chatWidget = document.getElementById('chat-widget');
+    if (chatWidget) {
+      chatWidget.classList.toggle('minimized');
+      
+      // 最小化ボタンのアイコン変更
+      const minimizeBtn = document.querySelector('[data-action="minimize"]');
+      if (minimizeBtn) {
+        const isMinimized = chatWidget.classList.contains('minimized');
+        minimizeBtn.innerHTML = isMinimized ? '🔼' : '🔽';
+        minimizeBtn.title = isMinimized ? '最大化' : '最小化';
+      }
+      
+      this.logger.info('Chat minimized/maximized', { minimized: chatWidget.classList.contains('minimized') });
+    }
+  }
+
+  openFileAttachment() {
+    // ファイル選択ダイアログの作成
+    const fileInput = document.createElement('input');
+    fileInput.type = 'file';
+    fileInput.multiple = true;
+    fileInput.accept = 'image/*,video/*,audio/*,.pdf,.doc,.docx,.txt';
+    
+    fileInput.onchange = (e) => {
+      const files = Array.from(e.target.files);
+      if (files.length > 0) {
+        this.handleFileSelection(files);
+      }
+    };
+    
+    fileInput.click();
+    this.logger.info('File attachment dialog opened');
+  }
+
+  handleFileSelection(files) {
+    // ファイル添付処理（実装要）
+    this.logger.info('Files selected for attachment', { count: files.length, files: files.map(f => f.name) });
+    
+    // チャットシステムにファイル情報を渡す
+    if (window.ChatSystem && window.ChatSystem.attachFiles) {
+      window.ChatSystem.attachFiles(files);
+    } else {
+      // 簡易フィードバック
+      this.showNotification(`${files.length}個のファイルが選択されました`, 'info');
+    }
+  }
+
+  toggleEmojiPicker() {
+    let emojiPicker = document.getElementById('emoji-picker');
+    
+    if (!emojiPicker) {
+      emojiPicker = this.createEmojiPicker();
+    }
+    
+    emojiPicker.classList.toggle('hidden');
+    
+    // 絵文字ボタンの状態更新
+    const emojiBtn = document.querySelector('[data-action="emoji"]');
+    if (emojiBtn) {
+      const isVisible = !emojiPicker.classList.contains('hidden');
+      emojiBtn.classList.toggle('active', isVisible);
+    }
+    
+    this.logger.info('Emoji picker toggled', { visible: !emojiPicker.classList.contains('hidden') });
+  }
+
+  createEmojiPicker() {
+    const picker = document.createElement('div');
+    picker.id = 'emoji-picker';
+    picker.className = 'emoji-picker hidden';
+    
+    const commonEmojis = ['😀', '😂', '😍', '🤔', '👍', '👎', '❤️', '🎉', '💪', '🔥', '✨', '💡'];
+    
+    picker.innerHTML = `
+      <div class="emoji-grid">
+        ${commonEmojis.map(emoji => 
+          `<button class="emoji-btn" data-emoji="${emoji}">${emoji}</button>`
+        ).join('')}
+      </div>
+    `;
+    
+    // 絵文字選択イベント
+    picker.addEventListener('click', (e) => {
+      if (e.target.classList.contains('emoji-btn')) {
+        const emoji = e.target.dataset.emoji;
+        this.insertEmoji(emoji);
+        picker.classList.add('hidden');
+      }
+    });
+    
+    // チャット入力エリアの近くに配置
+    const chatInput = document.querySelector('.chat-input-container');
+    if (chatInput) {
+      chatInput.appendChild(picker);
+    } else {
+      document.body.appendChild(picker);
+    }
+    
+    return picker;
+  }
+
+  insertEmoji(emoji) {
+    const chatInput = document.getElementById('chat-message-input') || document.querySelector('.chat-input');
+    if (chatInput) {
+      const currentValue = chatInput.value;
+      const cursorPos = chatInput.selectionStart;
+      const newValue = currentValue.slice(0, cursorPos) + emoji + currentValue.slice(cursorPos);
+      
+      chatInput.value = newValue;
+      chatInput.focus();
+      chatInput.setSelectionRange(cursorPos + emoji.length, cursorPos + emoji.length);
+      
+      this.logger.info('Emoji inserted', { emoji });
+    }
+  }
+
+  showNotification(message, type = 'info') {
+    // 簡易通知システム
+    const notification = document.createElement('div');
+    notification.className = `notification notification-${type}`;
+    notification.textContent = message;
+    
+    Object.assign(notification.style, {
+      position: 'fixed',
+      top: '20px',
+      right: '20px',
+      padding: '12px 20px',
+      backgroundColor: type === 'error' ? '#ef4444' : type === 'success' ? '#22c55e' : '#3b82f6',
+      color: 'white',
+      borderRadius: '8px',
+      boxShadow: '0 4px 12px rgba(0,0,0,0.15)',
+      zIndex: '10000',
+      animation: 'slideInRight 0.3s ease-out'
+    });
+    
+    document.body.appendChild(notification);
+    
+    setTimeout(() => {
+      notification.style.animation = 'slideOutRight 0.3s ease-in';
+      setTimeout(() => {
+        if (notification.parentNode) {
+          notification.parentNode.removeChild(notification);
+        }
+      }, 300);
+    }, 3000);
   }
 
   // Mobile Optimization Methods
