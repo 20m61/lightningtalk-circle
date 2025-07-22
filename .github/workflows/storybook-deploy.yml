@@ -1,0 +1,355 @@
+# Lightning Talk Circle - Storybook Deployment Workflow
+# 統合デザインシステムのStorybook自動デプロイ
+
+name: 📚 Deploy Storybook
+
+on:
+  push:
+    branches: [main, develop, feature/design-system-*]
+    paths:
+      - 'lightningtalk-modern/packages/components/**'
+      - '.storybook/**'
+      - 'package.json'
+      - 'package-lock.json'
+  pull_request:
+    branches: [main]
+    paths:
+      - 'lightningtalk-modern/packages/components/**'
+      - '.storybook/**'
+
+  # Manual trigger
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Deployment environment'
+        required: true
+        default: 'staging'
+        type: choice
+        options:
+          - staging
+          - production
+
+env:
+  NODE_VERSION: '18'
+  STORYBOOK_BUILD_DIR: 'lightningtalk-modern/packages/components/storybook-static'
+
+jobs:
+  # Storybook Build & Test Job
+  build-and-test:
+    name: 🔨 Build & Test Storybook
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 📥 Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: 📦 Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+          cache-dependency-path: |
+            package-lock.json
+            lightningtalk-modern/package-lock.json
+
+      - name: 📥 Install dependencies
+        run: |
+          npm ci
+          cd lightningtalk-modern && npm ci
+
+      - name: 🔍 Lint & Type Check
+        run: |
+          cd lightningtalk-modern/packages/components
+          npm run lint
+          npm run type-check
+
+      - name: 🧪 Run Tests
+        run: |
+          cd lightningtalk-modern/packages/components
+          npm test -- --coverage --watchAll=false
+
+      - name: 📸 Build Storybook
+        run: |
+          cd lightningtalk-modern/packages/components
+          npm run build-storybook
+        env:
+          NODE_OPTIONS: '--max-old-space-size=4096'
+
+      - name: 🔍 Storybook Build Verification
+        run: |
+          if [ ! -d "${{ env.STORYBOOK_BUILD_DIR }}" ]; then
+            echo "❌ Storybook build directory not found"
+            exit 1
+          fi
+
+          if [ ! -f "${{ env.STORYBOOK_BUILD_DIR }}/index.html" ]; then
+            echo "❌ Storybook index.html not found"
+            exit 1
+          fi
+
+          echo "✅ Storybook build verification passed"
+
+          # Check build size
+          BUILD_SIZE=$(du -sh ${{ env.STORYBOOK_BUILD_DIR }} | cut -f1)
+          echo "📦 Storybook build size: $BUILD_SIZE"
+
+      - name: 📊 Upload Coverage Reports
+        uses: codecov/codecov-action@v4
+        with:
+          file: lightningtalk-modern/packages/components/coverage/lcov.info
+          fail_ci_if_error: false
+
+      - name: 💾 Cache Storybook Build
+        uses: actions/cache@v4
+        with:
+          path: ${{ env.STORYBOOK_BUILD_DIR }}
+          key: storybook-${{ github.sha }}
+
+      - name: 📤 Upload Storybook Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: storybook-build-${{ github.sha }}
+          path: ${{ env.STORYBOOK_BUILD_DIR }}
+          retention-days: 30
+
+  # Storybook Visual Testing Job
+  visual-testing:
+    name: 👀 Visual Regression Testing
+    needs: build-and-test
+    runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request'
+
+    steps:
+      - name: 📥 Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: 📦 Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+
+      - name: 📥 Download Storybook Build
+        uses: actions/download-artifact@v4
+        with:
+          name: storybook-build-${{ github.sha }}
+          path: ${{ env.STORYBOOK_BUILD_DIR }}
+
+      - name: 🖼️ Run Visual Tests with Chromatic
+        uses: chromaui/action@v1
+        if: env.CHROMATIC_PROJECT_TOKEN != ''
+        with:
+          projectToken: ${{ secrets.CHROMATIC_PROJECT_TOKEN }}
+          storybookBuildDir: ${{ env.STORYBOOK_BUILD_DIR }}
+          exitZeroOnChanges: true
+        env:
+          CHROMATIC_PROJECT_TOKEN: ${{ secrets.CHROMATIC_PROJECT_TOKEN }}
+
+      - name: 🔍 Accessibility Testing
+        run: |
+          cd lightningtalk-modern/packages/components
+          npx serve -s storybook-static -p 6006 &
+          sleep 10
+          npx @axe-core/cli http://localhost:6006 --exit
+
+  # Deploy to Staging
+  deploy-staging:
+    name: 🚀 Deploy to Staging
+    needs: [build-and-test, visual-testing]
+    runs-on: ubuntu-latest
+    if: |
+      (github.ref == 'refs/heads/develop' || 
+       startsWith(github.ref, 'refs/heads/feature/design-system') ||
+       github.event.inputs.environment == 'staging') &&
+      github.event_name != 'pull_request'
+
+    environment:
+      name: staging
+      url: https://storybook-staging.xn--6wym69a.com
+
+    steps:
+      - name: 📥 Download Storybook Build
+        uses: actions/download-artifact@v4
+        with:
+          name: storybook-build-${{ github.sha }}
+          path: ${{ env.STORYBOOK_BUILD_DIR }}
+
+      - name: ☁️ Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ap-northeast-1
+
+      - name: 🚀 Deploy to S3 Staging
+        run: |
+          aws s3 sync ${{ env.STORYBOOK_BUILD_DIR }} s3://lightning-talk-storybook-staging/ \
+            --delete \
+            --cache-control max-age=86400 \
+            --metadata-directive REPLACE
+
+      - name: ♻️ Invalidate CloudFront Cache
+        run: |
+          DISTRIBUTION_ID="${{ secrets.CLOUDFRONT_STAGING_DISTRIBUTION_ID }}"
+          if [ -z "$DISTRIBUTION_ID" ]; then
+            echo "❌ CLOUDFRONT_STAGING_DISTRIBUTION_ID secret not set"
+            exit 1
+          fi
+          aws cloudfront create-invalidation \
+            --distribution-id $DISTRIBUTION_ID \
+            --paths "/*" \
+            --query 'Invalidation.Id' \
+            --output text
+
+      - name: 💬 Comment on PR
+        if: github.event_name == 'pull_request'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: `## 🚀 Storybook Preview Deployed
+              
+              ⚡ **Lightning Talk Circle Design System** has been deployed to staging!
+              
+              🔗 **Storybook URL**: https://storybook-staging.xn--6wym69a.com
+              
+              ### 📊 Build Info
+              - **Commit**: ${context.sha.substring(0, 7)}
+              - **Branch**: ${context.ref.replace('refs/heads/', '')}
+              - **Environment**: Staging
+              
+              ### 🧪 Testing
+              - ✅ Build completed successfully
+              - ✅ Visual regression testing passed
+              - ✅ Accessibility checks completed
+              
+              Please review the design system changes in the deployed Storybook.`
+            })
+
+  # Deploy to Production
+  deploy-production:
+    name: 🎯 Deploy to Production
+    needs: [build-and-test]
+    runs-on: ubuntu-latest
+    if: |
+      github.ref == 'refs/heads/main' ||
+      github.event.inputs.environment == 'production'
+
+    environment:
+      name: production
+      url: https://storybook.xn--6wym69a.com
+
+    steps:
+      - name: 📥 Download Storybook Build
+        uses: actions/download-artifact@v4
+        with:
+          name: storybook-build-${{ github.sha }}
+          path: ${{ env.STORYBOOK_BUILD_DIR }}
+
+      - name: ☁️ Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ap-northeast-1
+
+      - name: 🚀 Deploy to S3 Production
+        run: |
+          aws s3 sync ${{ env.STORYBOOK_BUILD_DIR }} s3://lightning-talk-storybook-production/ \
+            --delete \
+            --cache-control max-age=31536000 \
+            --exclude "*.html" \
+            --exclude "*.json"
+
+          # HTML files with shorter cache
+          aws s3 sync ${{ env.STORYBOOK_BUILD_DIR }} s3://lightning-talk-storybook-production/ \
+            --delete \
+            --cache-control max-age=3600 \
+            --include "*.html" \
+            --include "*.json" \
+            --metadata-directive REPLACE
+
+      - name: ♻️ Invalidate CloudFront Cache
+        run: |
+          DISTRIBUTION_ID="${{ secrets.CLOUDFRONT_PRODUCTION_DISTRIBUTION_ID }}"
+          if [ -z "$DISTRIBUTION_ID" ]; then
+            echo "❌ CLOUDFRONT_PRODUCTION_DISTRIBUTION_ID secret not set"
+            exit 1
+          fi
+          INVALIDATION_ID=$(aws cloudfront create-invalidation \
+            --distribution-id $DISTRIBUTION_ID \
+            --paths "/*" \
+            --query 'Invalidation.Id' \
+            --output text)
+
+          echo "Invalidation created: $INVALIDATION_ID"
+
+          # Wait for invalidation to complete
+          aws cloudfront wait invalidation-completed \
+            --distribution-id $DISTRIBUTION_ID \
+            --id $INVALIDATION_ID
+
+          echo "✅ Cache invalidation completed"
+
+      - name: 📢 Send Slack Notification
+        if: env.SLACK_WEBHOOK_URL != ''
+        run: |
+          curl -X POST -H 'Content-type: application/json' \
+            --data '{
+              "text": "⚡ Lightning Talk Circle Design System deployed!",
+              "blocks": [
+                {
+                  "type": "section",
+                  "text": {
+                    "type": "mrkdwn",
+                    "text": "🎯 *Lightning Talk Circle Design System* has been deployed to production!\n\n📚 *Storybook*: https://storybook.xn--6wym69a.com\n📊 *Commit*: '"${GITHUB_SHA:0:7}"'\n🌐 *Environment*: Production"
+                  }
+                }
+              ]
+            }' \
+            ${{ secrets.SLACK_WEBHOOK_URL }}
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+
+      - name: 📊 Update Deployment Status
+        run: |
+          echo "🎉 Lightning Talk Circle Design System deployed successfully!"
+          echo "📚 Storybook URL: https://storybook.xn--6wym69a.com"
+          echo "🔍 Build SHA: ${{ github.sha }}"
+          echo "📅 Deployment time: $(date -u)"
+
+  # Cleanup Job
+  cleanup:
+    name: 🧹 Cleanup
+    needs: [deploy-staging, deploy-production]
+    runs-on: ubuntu-latest
+    if: always()
+
+    steps:
+      - name: 🗑️ Delete Artifacts
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const artifacts = await github.rest.actions.listWorkflowRunArtifacts({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              run_id: context.runId,
+            });
+
+            for (const artifact of artifacts.data.artifacts) {
+              if (artifact.name.startsWith('storybook-build-')) {
+                await github.rest.actions.deleteArtifact({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  artifact_id: artifact.id,
+                });
+                console.log(`Deleted artifact: ${artifact.name}`);
+              }
+            }

@@ -1,0 +1,330 @@
+/**
+ * Lightning Talk Circle - Button Component Styles
+ * 統合デザイントークンシステム対応
+ */
+
+.button {
+  /* Base Styles */
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-2);
+
+  /* Typography */
+  font-family: var(--font-family-primary);
+  font-weight: var(--font-weight-medium);
+  text-decoration: none;
+  white-space: nowrap;
+
+  /* Layout */
+  border: 1px solid transparent;
+  border-radius: var(--border-radius-lg);
+  cursor: pointer;
+  user-select: none;
+
+  /* Transitions */
+  transition: var(--transition-normal);
+
+  /* Focus Management */
+  outline: none;
+
+  /* Performance */
+  transform: translateZ(0);
+  will-change: transform, box-shadow;
+}
+
+.button:focus-visible {
+  outline: 2px solid var(--color-secondary-500);
+  outline-offset: 2px;
+}
+
+/* Variant Styles */
+.variant-primary {
+  background: var(--color-primary-500);
+  color: white;
+  border-color: var(--color-primary-600);
+}
+
+.variant-primary:hover:not(:disabled) {
+  background: var(--color-primary-600);
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-lg);
+}
+
+.variant-primary:active {
+  background: var(--color-primary-700);
+  transform: translateY(0);
+  box-shadow: var(--shadow-md);
+}
+
+.variant-secondary {
+  background: var(--color-secondary-500);
+  color: white;
+  border-color: var(--color-secondary-600);
+}
+
+.variant-secondary:hover:not(:disabled) {
+  background: var(--color-secondary-600);
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-lg);
+}
+
+.variant-secondary:active {
+  background: var(--color-secondary-700);
+  transform: translateY(0);
+  box-shadow: var(--shadow-md);
+}
+
+.variant-outline {
+  background: transparent;
+  color: var(--color-primary-600);
+  border-color: var(--color-primary-500);
+}
+
+.variant-outline:hover:not(:disabled) {
+  background: var(--color-primary-50);
+  color: var(--color-primary-700);
+  border-color: var(--color-primary-600);
+}
+
+.variant-outline:active {
+  background: var(--color-primary-100);
+}
+
+.variant-ghost {
+  background: transparent;
+  color: var(--color-neutral-700);
+  border-color: transparent;
+}
+
+.variant-ghost:hover:not(:disabled) {
+  background: var(--color-neutral-100);
+  color: var(--color-neutral-900);
+}
+
+.variant-ghost:active {
+  background: var(--color-neutral-200);
+}
+
+.variant-lightning {
+  background: linear-gradient(135deg, var(--color-primary-500), var(--color-secondary-500));
+  color: white;
+  border: none;
+  position: relative;
+  overflow: hidden;
+}
+
+.variant-lightning:hover:not(:disabled) {
+  transform: translateY(-2px) scale(1.02);
+  box-shadow: var(--shadow-xl), var(--shadow-lightning-glow);
+}
+
+.variant-lightning:active {
+  animation: var(--animation-lightning-spark);
+}
+
+/* Size Variants */
+.size-xs {
+  height: 28px;
+  padding: 0 var(--spacing-3);
+  font-size: var(--font-size-xs);
+}
+
+.size-sm {
+  height: 32px;
+  padding: 0 var(--spacing-4);
+  font-size: var(--font-size-sm);
+}
+
+.size-md {
+  height: 40px;
+  padding: 0 var(--spacing-5);
+  font-size: var(--font-size-base);
+}
+
+.size-lg {
+  height: 48px;
+  padding: 0 var(--spacing-6);
+  font-size: var(--font-size-lg);
+}
+
+.size-xl {
+  height: 56px;
+  padding: 0 var(--spacing-8);
+  font-size: var(--font-size-xl);
+}
+
+/* State Variants */
+.state-disabled,
+.button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+.state-loading {
+  cursor: progress;
+  pointer-events: none;
+}
+
+/* Full Width */
+.fullWidth {
+  width: 100%;
+}
+
+/* Lightning Effect Styles */
+.lightningEffect {
+  overflow: hidden;
+}
+
+.lightningGlow {
+  position: absolute;
+  inset: -2px;
+  border-radius: inherit;
+  background: conic-gradient(
+    from 90deg,
+    var(--color-primary-500),
+    var(--color-secondary-500),
+    var(--color-lightning-spark),
+    var(--color-primary-500)
+  );
+  z-index: -1;
+  animation: var(--animation-lightning-glow);
+}
+
+.lightningSpark {
+  position: absolute;
+  inset: 1px;
+  border-radius: inherit;
+  background: linear-gradient(135deg, var(--color-primary-500), var(--color-secondary-500));
+  z-index: -1;
+}
+
+/* Loading Spinner */
+.loadingSpinner {
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-radius: 50%;
+  border-top-color: white;
+  animation: spin 1s ease-in-out infinite;
+  margin-right: var(--spacing-2);
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Button Content Layout */
+.buttonContent {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-2);
+}
+
+.buttonText {
+  line-height: 1;
+}
+
+.iconLeft,
+.iconRight {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.iconLeft {
+  margin-left: calc(-1 * var(--spacing-1));
+}
+
+.iconRight {
+  margin-right: calc(-1 * var(--spacing-1));
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+  .size-lg {
+    height: 44px;
+    padding: 0 var(--spacing-5);
+  }
+
+  .size-xl {
+    height: 48px;
+    padding: 0 var(--spacing-6);
+  }
+}
+
+/* Touch Device Optimizations */
+@media (hover: none) and (pointer: coarse) {
+  .button {
+    min-height: 44px; /* iOS Guidelines */
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .size-xs {
+    height: 44px;
+  }
+
+  .size-sm {
+    height: 44px;
+  }
+}
+
+/* High Contrast Mode */
+@media (prefers-contrast: high) {
+  .button {
+    border-width: 2px;
+  }
+
+  .variant-primary {
+    background: #ff4500;
+    border-color: #dc2626;
+  }
+
+  .variant-secondary {
+    background: #0891b2;
+    border-color: #0e7490;
+  }
+}
+
+/* Reduced Motion */
+@media (prefers-reduced-motion: reduce) {
+  .button,
+  .lightningGlow,
+  .lightningSpark,
+  .loadingSpinner {
+    animation: none;
+    transition: none;
+  }
+
+  .button:hover:not(:disabled) {
+    transform: none;
+  }
+}
+
+/* Dark Mode Support */
+@media (prefers-color-scheme: dark) {
+  .variant-ghost {
+    color: var(--color-neutral-300);
+  }
+
+  .variant-ghost:hover:not(:disabled) {
+    background: var(--color-neutral-800);
+    color: var(--color-neutral-100);
+  }
+
+  .variant-outline {
+    color: var(--color-primary-400);
+    border-color: var(--color-primary-400);
+  }
+
+  .variant-outline:hover:not(:disabled) {
+    background: var(--color-primary-900);
+    color: var(--color-primary-300);
+  }
+}

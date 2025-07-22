@@ -2,7 +2,7 @@
  * WordPress API Fetch Mock for Storybook
  */
 
-import { mockEvents, mockTalks, mockParticipants } from './wordpress-globals';
+// Mock data - wordpress-globalsから分離
 
 interface ApiResponse {
   success: boolean;
@@ -20,6 +20,42 @@ interface RequestOptions {
 }
 
 // Mock API データベース
+const mockEvents = [
+  {
+    id: 1,
+    title: 'Lightning Talk Circle #42',
+    description: '技術から趣味まで、様々なテーマのライトニングトークイベント',
+    date: '2025-08-15T19:00:00',
+    location: 'オンライン（Zoom）',
+    maxParticipants: 20,
+    participantCount: 12,
+    status: 'published'
+  }
+];
+
+const mockTalks = [
+  {
+    id: 1,
+    eventId: 1,
+    title: '5分で理解するReactフック',
+    description: 'React Hooksの基本的な使い方を分かりやすく解説',
+    speaker: '田中 雷太',
+    duration: 5,
+    status: 'approved'
+  }
+];
+
+const mockParticipants = [
+  {
+    id: 1,
+    eventId: 1,
+    name: 'テスト参加者',
+    email: 'test@example.com',
+    registrationDate: '2025-08-01T10:00:00',
+    attendance: 'registered'
+  }
+];
+
 const mockDatabase = {
   events: [...mockEvents],
   talks: [...mockTalks],

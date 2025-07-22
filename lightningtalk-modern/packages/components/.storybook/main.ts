@@ -1,13 +1,18 @@
 import type { StorybookConfig } from '@storybook/react-vite';
 
 const config: StorybookConfig = {
-  stories: ['../src/**/*.stories.@(js|jsx|ts|tsx|mdx)'],
+  stories: [
+    '../src/**/*.stories.@(js|jsx|ts|tsx|mdx)'
+  ],
 
   addons: [
     '@storybook/addon-links',
     '@storybook/addon-essentials',
     '@storybook/addon-interactions',
     '@storybook/addon-a11y',
+    // '@storybook/addon-design-tokens',  // デザイントークン表示 - 未インストール
+    '@storybook/addon-viewport',          // レスポンシブテスト
+    '@storybook/addon-backgrounds',       // 背景テスト
     {
       name: '@storybook/addon-docs',
       options: {

@@ -2,6 +2,8 @@
  * WordPress グローバル変数とAPI のMock
  */
 
+import React from 'react';
+
 export const createWordPressMocks = () => ({
   // WordPress APIエンドポイント
   wp: {

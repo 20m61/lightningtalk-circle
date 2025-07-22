@@ -4,6 +4,8 @@ const { DevEnvironmentStack } = require('../lib/dev-environment-stack');
 const { ProdEnvironmentStack } = require('../lib/prod-environment-stack');
 const { CognitoStack } = require('../lib/cognito-stack');
 const { WebSocketStack } = require('../lib/websocket-stack');
+const { StorybookStack } = require('../lib/storybook-stack');
+const { CertificateStack } = require('../lib/certificate-stack');
 const { getEnvironmentConfig, validateEnvironment } = require('../lib/config/environment');
 
 const app = new cdk.App();
@@ -23,6 +25,29 @@ console.log(`📍 Domain: 発表.com (xn--6wym69a.com)`);
 console.log(`🏢 AWS Account: ${env.account}`);
 console.log(`🌍 AWS Region: ${env.region}`);
 console.log(`📦 Environment: ${stage}`);
+
+// Create certificate stack for production
+let certificateStack;
+if (stage === 'prod') {
+  certificateStack = new CertificateStack(app, `LightningTalkCertificate-${stage}`, {
+    env: {
+      ...env,
+      region: 'us-east-1', // Certificates for CloudFront must be in us-east-1
+    },
+    description: `Lightning Talk Circle - ACM Certificate for all domains (${stage})`,
+    domainName: config.domainName,
+    hostedZoneId: config.hostedZoneId,
+    environment: stage,
+    tags: {
+      Project: config.projectName,
+      Environment: stage,
+      ManagedBy: 'cdk',
+    },
+  });
+  
+  // Update the certificate ARN in config to use the new certificate
+  config.certificateArn = certificateStack.certificate.certificateArn;
+}
 
 // Create main environment stack based on stage
 if (stage === 'prod') {
@@ -85,5 +110,40 @@ new WebSocketStack(app, `LightningTalkWebSocket-${stage}`, {
     ManagedBy: 'cdk',
   },
 });
+
+// Create Storybook stacks for staging and production
+if (stage === 'prod') {
+  // Production Storybook
+  new StorybookStack(app, `LightningTalkStorybook-prod`, {
+    env: env,
+    description: `Lightning Talk Circle - Storybook Production`,
+    domainName: config.domainName,
+    environment: 'production',
+    certificateArn: config.certificateArn,
+    hostedZoneId: config.hostedZoneId,
+    tags: {
+      Project: config.projectName,
+      Environment: 'production',
+      Component: 'Storybook',
+      ManagedBy: 'cdk',
+    },
+  });
+  
+  // Staging Storybook  
+  new StorybookStack(app, `LightningTalkStorybook-staging`, {
+    env: env,
+    description: `Lightning Talk Circle - Storybook Staging`,
+    domainName: config.domainName,
+    environment: 'staging',
+    certificateArn: config.certificateArn,
+    hostedZoneId: config.hostedZoneId,
+    tags: {
+      Project: config.projectName,
+      Environment: 'staging',
+      Component: 'Storybook',
+      ManagedBy: 'cdk',
+    },
+  });
+}
 
 app.synth();
