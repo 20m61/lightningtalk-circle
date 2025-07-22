@@ -54,10 +54,10 @@ describe('Health Check Functions', () => {
 
       const memoryStats = {
         system: {
-          total: Math.round(totalMem / 1024 / 1024), // MB
-          free: Math.round(freeMem / 1024 / 1024), // MB
-          used: Math.round(usedMem / 1024 / 1024), // MB
-          percentUsed: Math.round((usedMem / totalMem) * 100)
+          total: totalMem ? Math.round(totalMem / 1024 / 1024) : 0, // MB
+          free: freeMem ? Math.round(freeMem / 1024 / 1024) : 0, // MB
+          used: usedMem ? Math.round(usedMem / 1024 / 1024) : 0, // MB
+          percentUsed: totalMem > 0 ? Math.round((usedMem / totalMem) * 100) : 0
         }
       };
 
@@ -100,14 +100,16 @@ describe('Health Check Functions', () => {
       let totalIdle = 0;
       let totalTick = 0;
 
-      cpus.forEach(cpu => {
-        for (const type in cpu.times) {
-          totalTick += cpu.times[type];
-        }
-        totalIdle += cpu.times.idle;
-      });
+      if (cpus && Array.isArray(cpus)) {
+        cpus.forEach(cpu => {
+          for (const type in cpu.times) {
+            totalTick += cpu.times[type];
+          }
+          totalIdle += cpu.times.idle;
+        });
+      }
 
-      const avgCPUUsage = 100 - Math.round((totalIdle / totalTick) * 100);
+      const avgCPUUsage = totalTick > 0 ? 100 - Math.round((totalIdle / totalTick) * 100) : 0;
 
       expect(avgCPUUsage).toBe(15); // 15% usage (85% idle)
     });
@@ -117,12 +119,12 @@ describe('Health Check Functions', () => {
       const loadAvg = os.loadavg();
 
       const cpuStats = {
-        count: cpus.length,
-        model: cpus[0]?.model || 'Unknown',
+        count: cpus?.length || 0,
+        model: cpus?.[0]?.model || 'Unknown',
         loadAverage: {
-          '1min': loadAvg[0],
-          '5min': loadAvg[1],
-          '15min': loadAvg[2]
+          '1min': loadAvg?.[0] || 0,
+          '5min': loadAvg?.[1] || 0,
+          '15min': loadAvg?.[2] || 0
         }
       };
 
