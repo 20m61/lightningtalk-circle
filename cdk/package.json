@@ -48,7 +48,7 @@
     "typescript": "^5.0.0"
   },
   "dependencies": {
-    "aws-cdk-lib": "2.173.0",
+    "aws-cdk-lib": "^2.206.0",
     "constructs": "^10.4.2"
   },
   "keywords": ["aws", "cdk", "infrastructure", "lightning-talk", "ecs", "fargate", "cloudfront", "s3", "rds", "redis"],
