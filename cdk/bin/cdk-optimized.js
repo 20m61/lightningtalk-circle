@@ -10,6 +10,7 @@ const { SharedResourcesStack } = require('../lib/shared-resources-stack');
 const { ApplicationStack } = require('../lib/application-stack');
 const { OperationsStack } = require('../lib/operations-stack');
 const { WebSocketStack } = require('../lib/websocket-stack');
+const { ScreenshotStorageStack } = require('../lib/screenshot-storage-stack');
 const { getEnvironmentConfig, validateEnvironment } = require('../lib/config/environment');
 
 const app = new cdk.App();
@@ -67,7 +68,16 @@ const applicationStack = new ApplicationStack(app, `LTC-Application-${environmen
 // Add explicit dependency
 applicationStack.addDependency(sharedResourcesStack);
 
-// 4. WebSocket Stack (Optional - can be deployed separately)
+// 4. Screenshot Storage Stack
+const screenshotStorageStack = new ScreenshotStorageStack(app, `LTC-ScreenshotStorage-${environment}`, {
+  env: config.env,
+  config: config,
+  environment: environment,
+  description: `Lightning Talk Circle - Screenshot Storage (${environment})`,
+  terminationProtection: environment === 'prod',
+});
+
+// 5. WebSocket Stack (Optional - can be deployed separately)
 if (config.features?.enableWebSocket !== false) {
   const webSocketStack = new WebSocketStack(app, `LTC-WebSocket-${environment}`, {
     env: config.env,
@@ -80,7 +90,7 @@ if (config.features?.enableWebSocket !== false) {
   webSocketStack.addDependency(sharedResourcesStack);
 }
 
-// 5. Operations Stack (Monitoring, Alerts, Cost Management)
+// 6. Operations Stack (Monitoring, Alerts, Cost Management)
 if (environment === 'prod' || config.monitoring?.enableCloudWatch) {
   const operationsStack = new OperationsStack(app, `LTC-Operations-${environment}`, {
     env: config.env,
@@ -114,8 +124,9 @@ console.log(`
 1. Base Infrastructure (us-east-1) ${environment === 'prod' ? '✓' : '○ (prod only)'}
 2. Shared Resources ✓
 3. Application Stack ✓
-4. WebSocket Stack ${config.features?.enableWebSocket !== false ? '✓' : '○ (disabled)'}
-5. Operations Stack ${environment === 'prod' || config.monitoring?.enableCloudWatch ? '✓' : '○'}
+4. Screenshot Storage ✓
+5. WebSocket Stack ${config.features?.enableWebSocket !== false ? '✓' : '○ (disabled)'}
+6. Operations Stack ${environment === 'prod' || config.monitoring?.enableCloudWatch ? '✓' : '○'}
 
 🎯 Deployment Commands:
   All stacks:     cdk deploy --all --app "node bin/cdk-optimized.js" -c env=${environment}

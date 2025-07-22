@@ -28,6 +28,7 @@ import mediaRouter from './routes/media.js';
 import speakersRouter from './routes/speakers.js';
 import aiImagesRouter from './routes/ai-images.js';
 import frontendLogsRouter from './routes/frontend-logs.js';
+import screenshotsRouter from './routes/screenshots.js';
 
 // Middleware
 import { errorHandler, notFoundHandler } from './middleware/errorHandler.js';
@@ -265,6 +266,7 @@ class LightningTalkServer {
     this.app.use('/api/speakers', validateCSRF(), speakersRouter);
     this.app.use('/api/ai-images', aiImagesRouter);
     this.app.use('/api/logs', frontendLogsRouter);
+    this.app.use('/api/screenshots', screenshotsRouter);
     this.app.use('/api/admin', authenticateToken, requireAdmin, adminRouter);
     this.app.use('/api/health', healthRouter);
 
