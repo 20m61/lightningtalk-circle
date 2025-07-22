@@ -1,0 +1,819 @@
+/**
+ * UI/UX Enhancements CSS
+ * 包括的なUI/UX改善のためのスタイルシート
+ */
+
+/* =============================================
+   1. Progressive Image Loading
+   ============================================= */
+
+.progressive-image {
+  position: relative;
+  overflow: hidden;
+  background: var(--color-gray-100);
+}
+
+.progressive-image::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 0.3) 50%, transparent 100%);
+  animation: shimmer 2s infinite;
+  transform: translateX(-100%);
+}
+
+@keyframes shimmer {
+  to {
+    transform: translateX(100%);
+  }
+}
+
+.progressive-image.image-loaded::before {
+  display: none;
+}
+
+/* =============================================
+   2. Micro Interactions
+   ============================================= */
+
+/* Ripple Effect */
+[data-ripple] {
+  position: relative;
+  overflow: hidden;
+}
+
+[data-ripple] span.ripple {
+  position: absolute;
+  border-radius: 50%;
+  background: currentColor;
+  opacity: 0.3;
+  transform: scale(0);
+  animation: ripple-animation 0.6s ease-out;
+  pointer-events: none;
+}
+
+@keyframes ripple-animation {
+  to {
+    transform: scale(4);
+    opacity: 0;
+  }
+}
+
+/* Magnetic Effect */
+[data-magnetic] {
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  will-change: transform;
+}
+
+/* 3D Card Effect */
+[data-3d-card] {
+  transform-style: preserve-3d;
+  transition: transform 0.3s ease-out;
+  will-change: transform;
+}
+
+[data-3d-card]:hover {
+  transform: perspective(1000px) rotateX(var(--rotate-x, 0deg)) rotateY(var(--rotate-y, 0deg)) scale3d(1.05, 1.05, 1.05);
+}
+
+.card-gloss {
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: linear-gradient(45deg, transparent 30%, rgba(255, 255, 255, 0.1) 50%, transparent 70%);
+  transform: rotate(45deg);
+  opacity: 0;
+  transition:
+    opacity 0.3s ease,
+    transform 0.3s ease;
+  pointer-events: none;
+  z-index: 1;
+}
+
+[data-3d-card]:hover .card-gloss {
+  opacity: 0.4;
+}
+
+/* Typewriter Effect */
+[data-typewriter] {
+  border-right: 2px solid currentColor;
+  white-space: nowrap;
+  overflow: hidden;
+  animation: blink 1s step-end infinite;
+}
+
+@keyframes blink {
+  0%,
+  50% {
+    border-color: currentColor;
+  }
+  51%,
+  100% {
+    border-color: transparent;
+  }
+}
+
+/* Particle Effect */
+.particle {
+  position: absolute;
+  border-radius: 50%;
+  pointer-events: none;
+  opacity: 0.6;
+  animation: float 20s linear infinite;
+}
+
+@keyframes float {
+  0% {
+    transform: translate(0, 0) rotate(0deg);
+  }
+  33% {
+    transform: translate(30px, -30px) rotate(120deg);
+  }
+  66% {
+    transform: translate(-20px, 20px) rotate(240deg);
+  }
+  100% {
+    transform: translate(0, 0) rotate(360deg);
+  }
+}
+
+/* Success/Error Animations */
+.success-animation {
+  animation: success-pulse 0.5s ease-out;
+}
+
+@keyframes success-pulse {
+  0% {
+    transform: scale(1);
+    box-shadow: 0 0 0 0 rgba(40, 167, 69, 0.4);
+  }
+  50% {
+    transform: scale(1.05);
+    box-shadow: 0 0 0 10px rgba(40, 167, 69, 0);
+  }
+  100% {
+    transform: scale(1);
+    box-shadow: 0 0 0 0 rgba(40, 167, 69, 0);
+  }
+}
+
+.error-shake {
+  animation: error-shake 0.5s ease-out;
+}
+
+@keyframes error-shake {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  10%,
+  30%,
+  50%,
+  70%,
+  90% {
+    transform: translateX(-10px);
+  }
+  20%,
+  40%,
+  60%,
+  80% {
+    transform: translateX(10px);
+  }
+}
+
+/* =============================================
+   3. Enhanced Forms
+   ============================================= */
+
+/* Form Field States */
+.form-field {
+  position: relative;
+  margin-bottom: 1.5rem;
+}
+
+.form-field input,
+.form-field textarea,
+.form-field select {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  padding-right: 2.5rem;
+  font-size: 1rem;
+  line-height: 1.5;
+  color: var(--color-text);
+  background: var(--color-surface);
+  border: 2px solid var(--color-gray-300);
+  border-radius: var(--border-radius-md);
+  transition: all 0.2s ease;
+}
+
+.form-field input:focus,
+.form-field textarea:focus,
+.form-field select:focus {
+  outline: none;
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px var(--color-primary-alpha-20);
+}
+
+/* Validation States */
+.form-field input.is-valid,
+.form-field textarea.is-valid,
+.form-field select.is-valid {
+  border-color: var(--color-success, #28a745);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='%2328a745'%3E%3Cpath fill-rule='evenodd' d='M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z' clip-rule='evenodd'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 0.75rem center;
+  background-size: 1.25rem;
+}
+
+.form-field input.is-invalid,
+.form-field textarea.is-invalid,
+.form-field select.is-invalid {
+  border-color: var(--color-error, #dc3545);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='%23dc3545'%3E%3Cpath fill-rule='evenodd' d='M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z' clip-rule='evenodd'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 0.75rem center;
+  background-size: 1.25rem;
+}
+
+/* Validation Icon */
+.validation-icon {
+  position: absolute;
+  right: 0.75rem;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 1.25rem;
+  height: 1.25rem;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+input.is-valid ~ .validation-icon,
+input.is-invalid ~ .validation-icon {
+  opacity: 1;
+}
+
+.validation-icon.success {
+  color: var(--color-success, #28a745);
+}
+
+.validation-icon.error {
+  color: var(--color-error, #dc3545);
+}
+
+/* Error Messages */
+.field-error {
+  margin-top: 0.25rem;
+  font-size: 0.875rem;
+  color: var(--color-error, #dc3545);
+  opacity: 0;
+  transform: translateY(-0.5rem);
+  transition: all 0.2s ease;
+}
+
+.field-error:not(:empty) {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.error-message {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  margin-top: 0.125rem;
+}
+
+.error-message::before {
+  content: "•";
+  font-weight: bold;
+}
+
+/* Character Counter */
+.character-counter {
+  position: absolute;
+  right: 0;
+  bottom: -1.25rem;
+  font-size: 0.75rem;
+  color: var(--color-text-muted);
+  transition: color 0.2s ease;
+}
+
+.character-counter.warning {
+  color: var(--color-warning, #ffc107);
+}
+
+.character-counter.danger {
+  color: var(--color-error, #dc3545);
+}
+
+/* Progress Bar */
+.form-progress {
+  margin-bottom: 2rem;
+}
+
+.progress-bar {
+  height: 0.5rem;
+  background: var(--color-gray-200);
+  border-radius: 0.25rem;
+  overflow: hidden;
+  margin-bottom: 0.5rem;
+}
+
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--color-primary) 0%, var(--color-secondary) 100%);
+  width: 0;
+  transition: width 0.3s ease;
+  border-radius: inherit;
+}
+
+.progress-text {
+  font-size: 0.875rem;
+  color: var(--color-text-muted);
+  text-align: right;
+}
+
+/* Password Strength Meter */
+.password-strength-meter {
+  margin-top: 0.5rem;
+}
+
+.strength-bar {
+  height: 0.25rem;
+  background: var(--color-gray-200);
+  border-radius: 0.125rem;
+  overflow: hidden;
+  margin-bottom: 0.25rem;
+}
+
+.strength-fill {
+  height: 100%;
+  width: 0;
+  transition: all 0.3s ease;
+  border-radius: inherit;
+}
+
+.strength-text {
+  font-size: 0.75rem;
+  text-align: right;
+  font-weight: 500;
+}
+
+/* Auto-save Indicator */
+.autosave-indicator {
+  position: fixed;
+  top: 1rem;
+  right: 1rem;
+  background: var(--color-success, #28a745);
+  color: white;
+  padding: 0.5rem 1rem;
+  border-radius: var(--border-radius-full);
+  font-size: 0.875rem;
+  font-weight: 500;
+  opacity: 0;
+  transform: translateY(-1rem);
+  transition: all 0.3s ease;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.autosave-indicator::before {
+  content: "✓";
+  font-size: 1rem;
+}
+
+.autosave-indicator.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.autosave-indicator.saving {
+  background: var(--color-warning, #ffc107);
+}
+
+.autosave-indicator.saving::before {
+  content: "⟳";
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Auto-save Prompt */
+.autosave-prompt {
+  background: var(--color-info-bg, #d1ecf1);
+  border: 1px solid var(--color-info-border, #bee5eb);
+  border-radius: var(--border-radius-md);
+  padding: 1rem;
+  margin-bottom: 1rem;
+  animation: slideDown 0.3s ease-out;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-1rem);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.prompt-content p {
+  margin: 0 0 0.75rem;
+  color: var(--color-info-text, #0c5460);
+}
+
+.prompt-actions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.prompt-actions button {
+  padding: 0.375rem 0.75rem;
+  font-size: 0.875rem;
+  border: none;
+  border-radius: var(--border-radius-sm);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-restore {
+  background: var(--color-primary);
+  color: white;
+}
+
+.btn-restore:hover {
+  background: var(--color-primary-dark);
+}
+
+.btn-discard {
+  background: var(--color-gray-200);
+  color: var(--color-text);
+}
+
+.btn-discard:hover {
+  background: var(--color-gray-300);
+}
+
+/* Required Field Mark */
+.required-mark {
+  color: var(--color-error, #dc3545);
+  margin-left: 0.25rem;
+  font-weight: normal;
+}
+
+/* Error Summary */
+.error-summary {
+  background: var(--color-error-bg, #f8d7da);
+  border: 1px solid var(--color-error-border, #f5c6cb);
+  border-radius: var(--border-radius-md);
+  color: var(--color-error-text, #721c24);
+  padding: 1rem;
+  margin-bottom: 1rem;
+  animation: slideDown 0.3s ease-out;
+}
+
+.error-summary h3 {
+  margin: 0 0 0.5rem;
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.error-summary ul {
+  margin: 0;
+  padding-left: 1.5rem;
+  list-style: none;
+}
+
+.error-summary li {
+  position: relative;
+  padding-left: 1rem;
+  margin-bottom: 0.25rem;
+}
+
+.error-summary li::before {
+  content: "⚠";
+  position: absolute;
+  left: 0;
+}
+
+.error-summary a {
+  color: inherit;
+  text-decoration: underline;
+  font-weight: 500;
+}
+
+.error-summary a:hover {
+  text-decoration: none;
+}
+
+/* Success Message */
+.form-success-message {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(0.9);
+  background: white;
+  border-radius: var(--border-radius-lg);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+  padding: 2rem;
+  text-align: center;
+  opacity: 0;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  z-index: 1001;
+  min-width: 300px;
+}
+
+.form-success-message.visible {
+  opacity: 1;
+  transform: translate(-50%, -50%) scale(1);
+}
+
+.success-icon {
+  width: 4rem;
+  height: 4rem;
+  margin: 0 auto 1rem;
+  color: var(--color-success, #28a745);
+  animation: success-bounce 0.5s ease-out;
+}
+
+@keyframes success-bounce {
+  0% {
+    transform: scale(0);
+  }
+  50% {
+    transform: scale(1.2);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+.form-success-message p {
+  margin: 0;
+  font-size: 1.125rem;
+  font-weight: 500;
+  color: var(--color-text);
+}
+
+/* =============================================
+   4. Dark Mode Enhancements
+   ============================================= */
+
+.dark-mode-toggle {
+  position: fixed;
+  bottom: 2rem;
+  right: 2rem;
+  width: 3rem;
+  height: 3rem;
+  border: none;
+  background: var(--color-surface);
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  transition: all 0.3s ease;
+  z-index: 100;
+}
+
+.dark-mode-toggle:hover {
+  transform: scale(1.1);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
+}
+
+.dark-mode-toggle:active {
+  transform: scale(0.95);
+}
+
+.dark-mode-toggle svg {
+  width: 1.5rem;
+  height: 1.5rem;
+  transition: all 0.3s ease;
+}
+
+.dark-mode-toggle .icon-light {
+  display: block;
+  color: var(--color-primary);
+}
+
+.dark-mode-toggle .icon-dark {
+  display: none;
+  color: var(--color-secondary);
+}
+
+[data-theme="dark"] .dark-mode-toggle .icon-light {
+  display: none;
+}
+
+[data-theme="dark"] .dark-mode-toggle .icon-dark {
+  display: block;
+}
+
+/* Theme Transition */
+.theme-transition,
+.theme-transition *,
+.theme-transition *::before,
+.theme-transition *::after {
+  transition:
+    background-color 0.3s ease,
+    color 0.3s ease,
+    border-color 0.3s ease,
+    box-shadow 0.3s ease !important;
+}
+
+/* =============================================
+   5. Enhanced Navigation
+   ============================================= */
+
+.nav-link {
+  position: relative;
+  color: var(--color-text);
+  text-decoration: none;
+  padding: 0.5rem 1rem;
+  transition: color 0.2s ease;
+  font-weight: 500;
+}
+
+.nav-link::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  width: 0;
+  height: 2px;
+  background: var(--color-primary);
+  transform: translateX(-50%);
+  transition: width 0.3s ease;
+}
+
+.nav-link:hover,
+.nav-link.active {
+  color: var(--color-primary);
+}
+
+.nav-link:hover::after,
+.nav-link.active::after {
+  width: 80%;
+}
+
+/* =============================================
+   6. Skeleton Screens
+   ============================================= */
+
+.skeleton {
+  position: relative;
+  overflow: hidden;
+  background: var(--color-gray-200);
+  border-radius: var(--border-radius-sm);
+}
+
+.skeleton::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 0.4) 50%, transparent 100%);
+  animation: skeleton-wave 1.5s infinite;
+  transform: translateX(-100%);
+}
+
+@keyframes skeleton-wave {
+  to {
+    transform: translateX(100%);
+  }
+}
+
+.skeleton-text {
+  height: 1rem;
+  margin-bottom: 0.5rem;
+  border-radius: var(--border-radius-sm);
+}
+
+.skeleton-title {
+  height: 1.5rem;
+  width: 60%;
+  margin-bottom: 1rem;
+}
+
+.skeleton-image {
+  aspect-ratio: 16/9;
+  border-radius: var(--border-radius-md);
+}
+
+.skeleton-button {
+  height: 2.5rem;
+  width: 120px;
+  border-radius: var(--border-radius-full);
+}
+
+/* =============================================
+   7. Enhanced Cards
+   ============================================= */
+
+.event-card,
+.participation-card {
+  position: relative;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  transform-style: preserve-3d;
+  will-change: transform;
+}
+
+.event-card:hover,
+.participation-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15);
+}
+
+/* Sibling dimming effect */
+.event-cards-grid:hover .event-card:not(:hover),
+.participation-grid:hover .participation-card:not(:hover) {
+  opacity: 0.7;
+  transform: scale(0.98);
+}
+
+/* =============================================
+   8. Mobile Optimizations
+   ============================================= */
+
+@media (max-width: 768px) {
+  /* Touch-friendly tap targets */
+  button,
+  a,
+  input,
+  textarea,
+  select {
+    min-height: 44px;
+    min-width: 44px;
+  }
+
+  /* Improved mobile navigation */
+  .nav-links {
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    width: 80%;
+    max-width: 300px;
+    background: var(--color-surface);
+    transform: translateX(100%);
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    z-index: 1000;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .nav-links--open {
+    transform: translateX(0);
+    box-shadow: -4px 0 12px rgba(0, 0, 0, 0.15);
+  }
+
+  /* Mobile form improvements */
+  .form-field input,
+  .form-field textarea,
+  .form-field select {
+    font-size: 16px; /* Prevents zoom on iOS */
+  }
+
+  /* Mobile-specific animations */
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+}
+
+/* =============================================
+   9. Print Styles
+   ============================================= */
+
+@media print {
+  .dark-mode-toggle,
+  .autosave-indicator,
+  .chat-widget,
+  .mobile-menu-toggle {
+    display: none !important;
+  }
+
+  .progressive-image {
+    filter: none !important;
+  }
+
+  * {
+    animation: none !important;
+    transition: none !important;
+  }
+}
