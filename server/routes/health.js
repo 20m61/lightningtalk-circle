@@ -120,7 +120,7 @@ function getCPUStats() {
  * GET /api/health
  * Basic health check endpoint
  */
-router.get('/', async (req, res) => {
+router.get('/', async(req, res) => {
   const { database } = req.app.locals;
 
   // Quick health check
@@ -140,14 +140,14 @@ router.get('/', async (req, res) => {
  * GET /api/health/detailed
  * Detailed health check with all system information
  */
-router.get('/detailed', async (req, res) => {
+router.get('/detailed', async(req, res) => {
   const { database, emailService } = req.app.locals;
   const startTime = performance.now();
 
   // Perform all health checks
   const [dbHealth, emailHealth] = await Promise.all([
     checkDatabase(database),
-    checkExternalService('Email Service', async () => {
+    checkExternalService('Email Service', async() => {
       if (!emailService.isConfigured()) {
         throw new Error('Email service not configured');
       }
@@ -220,7 +220,7 @@ router.get('/live', (req, res) => {
  * GET /api/health/ready
  * Kubernetes readiness probe endpoint
  */
-router.get('/ready', async (req, res) => {
+router.get('/ready', async(req, res) => {
   const { database } = req.app.locals;
 
   // Check if all required services are ready
@@ -240,7 +240,7 @@ router.get('/ready', async (req, res) => {
  * GET /api/health/metrics
  * Prometheus-compatible metrics endpoint
  */
-router.get('/metrics', async (req, res) => {
+router.get('/metrics', async(req, res) => {
   const { database } = req.app.locals;
 
   // Collect metrics
@@ -322,7 +322,7 @@ lightning_talk_talks_total ${talkCount}
  * GET /api/health/database
  * Database-specific health check
  */
-router.get('/database', async (req, res) => {
+router.get('/database', async(req, res) => {
   const { database } = req.app.locals;
   const startTime = performance.now();
 
@@ -364,7 +364,7 @@ router.get('/database', async (req, res) => {
  * GET /api/health/dependencies
  * Check all external dependencies
  */
-router.get('/dependencies', async (req, res) => {
+router.get('/dependencies', async(req, res) => {
   const { emailService } = req.app.locals;
   const startTime = performance.now();
 

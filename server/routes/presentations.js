@@ -12,7 +12,7 @@ const router = express.Router();
 
 // Configure multer for file uploads
 const storage = multer.diskStorage({
-  destination: async (req, file, cb) => {
+  destination: async(req, file, cb) => {
     const uploadDir = path.join(__dirname, '../uploads/presentations');
     try {
       await fs.mkdir(uploadDir, { recursive: true });
@@ -56,7 +56,7 @@ const upload = multer({
 });
 
 // GET /api/presentations - List all presentations with filtering
-router.get('/', async (req, res) => {
+router.get('/', async(req, res) => {
   try {
     const { database } = req.app.locals;
     const {
@@ -111,18 +111,18 @@ router.get('/', async (req, res) => {
 
     // Apply sorting
     switch (sort) {
-      case 'date_desc':
-        presentations.sort((a, b) => new Date(b.presentationDate) - new Date(a.presentationDate));
-        break;
-      case 'date_asc':
-        presentations.sort((a, b) => new Date(a.presentationDate) - new Date(b.presentationDate));
-        break;
-      case 'title':
-        presentations.sort((a, b) => a.title.localeCompare(b.title));
-        break;
-      case 'popularity':
-        presentations.sort((a, b) => (b.views || 0) - (a.views || 0));
-        break;
+    case 'date_desc':
+      presentations.sort((a, b) => new Date(b.presentationDate) - new Date(a.presentationDate));
+      break;
+    case 'date_asc':
+      presentations.sort((a, b) => new Date(a.presentationDate) - new Date(b.presentationDate));
+      break;
+    case 'title':
+      presentations.sort((a, b) => a.title.localeCompare(b.title));
+      break;
+    case 'popularity':
+      presentations.sort((a, b) => (b.views || 0) - (a.views || 0));
+      break;
     }
 
     // Apply pagination
@@ -157,7 +157,7 @@ router.get('/', async (req, res) => {
 });
 
 // GET /api/presentations/:id - Get specific presentation
-router.get('/:id', async (req, res) => {
+router.get('/:id', async(req, res) => {
   try {
     const { database } = req.app.locals;
     const { id } = req.params;
@@ -202,7 +202,7 @@ router.get('/:id', async (req, res) => {
 });
 
 // POST /api/presentations - Create new presentation
-router.post('/', upload.array('materials', 5), async (req, res) => {
+router.post('/', upload.array('materials', 5), async(req, res) => {
   try {
     const { database } = req.app.locals;
     const {
@@ -229,13 +229,13 @@ router.post('/', upload.array('materials', 5), async (req, res) => {
     // Process uploaded files
     const materials = req.files
       ? req.files.map(file => ({
-          originalName: file.originalname,
-          filename: file.filename,
-          path: file.path,
-          size: file.size,
-          mimetype: file.mimetype,
-          uploadedAt: new Date().toISOString()
-        }))
+        originalName: file.originalname,
+        filename: file.filename,
+        path: file.path,
+        size: file.size,
+        mimetype: file.mimetype,
+        uploadedAt: new Date().toISOString()
+      }))
       : [];
 
     // Create presentation object
@@ -282,7 +282,7 @@ router.post('/', upload.array('materials', 5), async (req, res) => {
 });
 
 // PATCH /api/presentations/:id - Update presentation
-router.patch('/:id', upload.array('materials', 5), async (req, res) => {
+router.patch('/:id', upload.array('materials', 5), async(req, res) => {
   try {
     const { database } = req.app.locals;
     const { id } = req.params;
@@ -337,7 +337,7 @@ router.patch('/:id', upload.array('materials', 5), async (req, res) => {
 });
 
 // GET /api/presentations/:id/materials/:filename - Download material
-router.get('/:id/materials/:filename', async (req, res) => {
+router.get('/:id/materials/:filename', async(req, res) => {
   try {
     const { database } = req.app.locals;
     const { id, filename } = req.params;
@@ -400,7 +400,7 @@ router.get('/:id/materials/:filename', async (req, res) => {
 });
 
 // GET /api/presentations/related/:id - Get related presentations
-router.get('/related/:id', async (req, res) => {
+router.get('/related/:id', async(req, res) => {
   try {
     const { database } = req.app.locals;
     const { id } = req.params;

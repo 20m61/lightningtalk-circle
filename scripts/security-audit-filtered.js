@@ -34,7 +34,7 @@ const SENSITIVE_PATTERNS = {
     /\bxoxb-[0-9]{11}-[0-9]{11}-[a-zA-Z0-9]{24}/g, // Slack Bot Token (precise)
     /\bxoxp-[0-9]{11}-[0-9]{11}-[a-zA-Z0-9]{24}/g, // Slack User Token (precise)
     /\bAIza[0-9A-Za-z\-_]{35}\b/g,              // Google API Key
-    /[0-9]{12}-[0-9A-Za-z_]{32}\.apps\.googleusercontent\.com/g, // Google OAuth Client ID
+    /[0-9]{12}-[0-9A-Za-z_]{32}\.apps\.googleusercontent\.com/g // Google OAuth Client ID
   ],
 
   // データベース認証情報
@@ -44,7 +44,7 @@ const SENSITIVE_PATTERNS = {
     /mysql:\/\/[a-zA-Z0-9_]+:[^@\s]+@[^\/\s]+/g,    // MySQL URI with credentials
     /password\s*[:=]\s*["'][^"']{8,}["']/gi,        // Strong passwords (8+ chars)
     /DATABASE_PASSWORD\s*[:=]\s*["'][^"']+["']/gi,  // Database password env vars
-    /DB_PASS\s*[:=]\s*["'][^"']+["']/gi,            // Database password env vars
+    /DB_PASS\s*[:=]\s*["'][^"']+["']/gi            // Database password env vars
   ],
 
   // 実際の個人情報（日本の形式）
@@ -54,7 +54,7 @@ const SENSITIVE_PATTERNS = {
     /\b\d{3}-\d{4}-\d{4}\b/g,                     // Japanese phone numbers
     /\b\d{4}-\d{4}-\d{4}-\d{4}\b/g,              // Credit card numbers
     /〒\d{3}-\d{4}/g,                              // Japanese postal codes
-    /\b[0-9]{6}-[0-9]{6}\b/g,                     // Japanese ID patterns
+    /\b[0-9]{6}-[0-9]{6}\b/g                     // Japanese ID patterns
   ],
 
   // 実際のサーバー・インフラ情報
@@ -62,7 +62,7 @@ const SENSITIVE_PATTERNS = {
     /https?:\/\/(?!localhost|127\.0\.0\.1|example)[a-zA-Z0-9.-]+\.amazonaws\.com[^\s]*/g, // Real AWS URLs
     /\b(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\b/g, // Real IP addresses (excluding common test IPs)
     /-----BEGIN (RSA )?PRIVATE KEY-----[\s\S]*?-----END (RSA )?PRIVATE KEY-----/g, // Private keys
-    /ssh-rsa AAAA[0-9A-Za-z+/]+[=]{0,3}( [^@]+@[^@]+)?/g, // SSH public keys
+    /ssh-rsa AAAA[0-9A-Za-z+/]+[=]{0,3}( [^@]+@[^@]+)?/g // SSH public keys
   ],
 
   // 実際の機密環境変数
@@ -71,7 +71,7 @@ const SENSITIVE_PATTERNS = {
     /SESSION_SECRET\s*[:=]\s*["'][^"']{16,}["']/gi, // Session secrets (16+ chars)
     /ENCRYPTION_KEY\s*[:=]\s*["'][^"']{16,}["']/gi, // Encryption keys
     /PRIVATE_KEY\s*[:=]\s*["'][^"']{16,}["']/gi,   // Private keys
-    /API_SECRET\s*[:=]\s*["'][^"']{16,}["']/gi,    // API secrets
+    /API_SECRET\s*[:=]\s*["'][^"']{16,}["']/gi    // API secrets
   ]
 };
 
@@ -82,22 +82,22 @@ const ENHANCED_WHITELIST = [
   'admin@example.com', 'user@example.com', 'demo@demo.com',
   'localhost', '127.0.0.1', '0.0.0.0', '192.168.', '10.0.0.',
   'example.com', 'test.com', 'demo.com', 'localhost.com',
-  
+
   // プレースホルダー
   'your_token_here', 'your_secret_here', 'your_key_here',
   'changeme', 'replace_with_actual', 'placeholder',
   'dummy', 'sample', 'mock', 'fake', 'test',
-  
+
   // 開発環境の値
   'development_secret', 'test_secret', 'local_secret',
   'dev_token', 'test_token', 'mock_token',
-  
+
   // 特定の安全な値
   'noreply@anthropic.com', 'lightningtalk.example.com',
   'なんでもライトニングトーク',
-  
+
   // package-lock.json のハッシュパターンを除外
-  'integrity', 'resolved', 'version',
+  'integrity', 'resolved', 'version'
 ];
 
 const auditResults = {
@@ -126,9 +126,9 @@ function shouldExcludeFile(filePath) {
     /build\//,                    // build output
     /coverage\//,                 // test coverage
     /\.log$/,                     // log files
-    /\.(png|jpg|jpeg|gif|ico|svg|webp|pdf|zip|tar|gz)$/i, // binary files
+    /\.(png|jpg|jpeg|gif|ico|svg|webp|pdf|zip|tar|gz)$/i // binary files
   ];
-  
+
   return excludePatterns.some(pattern => pattern.test(filePath));
 }
 
@@ -137,20 +137,20 @@ function shouldExcludeFile(filePath) {
  */
 function isWhitelistedEnhanced(value, filePath, context) {
   const cleanValue = value.toLowerCase().trim();
-  
+
   // package-lock.json のハッシュ値を除外
   if (filePath.includes('package-lock.json') && /^[A-Za-z0-9+/=]{20,}$/.test(value)) {
     return true;
   }
-  
+
   // テストファイル内の値を除外
   if (filePath.includes('test') || filePath.includes('spec') || filePath.includes('mock')) {
     return true;
   }
-  
+
   // ホワイトリストの値をチェック
-  return ENHANCED_WHITELIST.some(whiteItem => 
-    cleanValue.includes(whiteItem.toLowerCase()) || 
+  return ENHANCED_WHITELIST.some(whiteItem =>
+    cleanValue.includes(whiteItem.toLowerCase()) ||
     whiteItem.toLowerCase().includes(cleanValue) ||
     value.includes(whiteItem)
   );
@@ -161,7 +161,7 @@ function isWhitelistedEnhanced(value, filePath, context) {
  */
 function scanContentEnhanced(content, commitHash, filePath, commitMessage) {
   const findings = [];
-  
+
   // 除外ファイルはスキャンしない
   if (shouldExcludeFile(filePath)) {
     return findings;
@@ -198,14 +198,14 @@ function scanContentEnhanced(content, commitHash, filePath, commitMessage) {
  */
 function getContextAroundMatch(content, match, linesAround = 2) {
   const matchIndex = content.indexOf(match);
-  if (matchIndex === -1) return '';
-  
+  if (matchIndex === -1) {return '';}
+
   const beforeContent = content.substring(0, matchIndex);
   const afterContent = content.substring(matchIndex + match.length);
-  
+
   const beforeLines = beforeContent.split('\n').slice(-linesAround);
   const afterLines = afterContent.split('\n').slice(0, linesAround);
-  
+
   return [...beforeLines, `>>> ${match} <<<`, ...afterLines].join('\n');
 }
 
@@ -214,14 +214,14 @@ function getContextAroundMatch(content, match, linesAround = 2) {
  */
 function scanWorkspaceDetailed() {
   log('📂 Detailed workspace scan...', 'blue');
-  
+
   const sensitiveFiles = [
     '.env', '.env.local', '.env.production', '.env.development',
     'config.json', 'config.js', 'config.ts',
     '.aws/credentials', '.ssh/config',
     'secrets.json', 'private.key', 'id_rsa'
   ];
-  
+
   sensitiveFiles.forEach(file => {
     if (existsSync(file)) {
       try {
@@ -241,27 +241,27 @@ function scanWorkspaceDetailed() {
  */
 async function scanGitHistoryPrecise() {
   log('🔍 Precise Git history scan (recent 50 commits)...', 'blue');
-  
-  const commitHashes = execSync('git rev-list --all -n 50', { 
-    encoding: 'utf8' 
+
+  const commitHashes = execSync('git rev-list --all -n 50', {
+    encoding: 'utf8'
   }).trim().split('\n');
 
   auditResults.totalCommits = commitHashes.length;
-  
+
   for (let i = 0; i < commitHashes.length; i++) {
     const commitHash = commitHashes[i];
-    
+
     if (i % 10 === 0) {
       log(`📈 Progress: ${i}/${commitHashes.length}`, 'yellow');
     }
 
     try {
-      const commitInfo = execSync(`git show --pretty=format:"%s" -s ${commitHash}`, { 
-        encoding: 'utf8' 
+      const commitInfo = execSync(`git show --pretty=format:"%s" -s ${commitHash}`, {
+        encoding: 'utf8'
       }).trim();
 
       const changedFiles = getChangedFiles(commitHash);
-      
+
       for (const filePath of changedFiles) {
         // 機密情報を含む可能性のあるファイルのみスキャン
         if (isSensitiveFile(filePath) && !shouldExcludeFile(filePath)) {
@@ -285,8 +285,8 @@ async function scanGitHistoryPrecise() {
  */
 function getChangedFiles(commitHash) {
   try {
-    const result = execSync(`git show --pretty="" --name-only ${commitHash}`, { 
-      encoding: 'utf8', stdio: 'pipe' 
+    const result = execSync(`git show --pretty="" --name-only ${commitHash}`, {
+      encoding: 'utf8', stdio: 'pipe'
     });
     return result.trim().split('\n').filter(file => file.length > 0);
   } catch (error) {
@@ -296,8 +296,8 @@ function getChangedFiles(commitHash) {
 
 function getFileContentAtCommit(commitHash, filePath) {
   try {
-    const result = execSync(`git show ${commitHash}:${filePath}`, { 
-      encoding: 'utf8', stdio: 'pipe' 
+    const result = execSync(`git show ${commitHash}:${filePath}`, {
+      encoding: 'utf8', stdio: 'pipe'
     });
     return result;
   } catch (error) {
@@ -334,17 +334,17 @@ function generatePreciseReport() {
 
   // JSONレポート
   writeFileSync('security-audit-precise.json', JSON.stringify(reportData, null, 2));
-  
+
   // 人間が読めるレポート
   const readableReport = generatePreciseMarkdownReport(reportData);
   writeFileSync('security-audit-precise.md', readableReport);
-  
+
   return reportData;
 }
 
 function generatePreciseRecommendations() {
   const recommendations = [];
-  
+
   if (auditResults.findings.length === 0) {
     recommendations.push('✅ No real sensitive data detected in recent commits.');
     recommendations.push('🔒 Continue following security best practices.');
@@ -366,17 +366,17 @@ function generatePreciseRecommendations() {
       recommendations.push('⚙️ Sensitive environment variables found. Use secret management.');
     }
   }
-  
+
   recommendations.push('🔧 Implement pre-commit hooks with security scanning.');
   recommendations.push('📊 Schedule regular automated security audits.');
-  
+
   return recommendations;
 }
 
 function generatePreciseMarkdownReport(data) {
   const statusIcon = data.summary.totalFindings > 0 ? '⚠️' : '✅';
   const statusText = data.summary.totalFindings > 0 ? 'FINDINGS DETECTED' : 'CLEAN';
-  
+
   return `# 🔐 Precise Security Audit Report
 
 ${statusIcon} **Status: ${statusText}**  
@@ -441,17 +441,17 @@ ${data.recommendations.map(rec => `- ${rec}`).join('\n')}
 function displayPreciseResults() {
   log('\n🎯 Precise Security Audit Complete!', 'bright');
   log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━', 'cyan');
-  
+
   log(`📊 Scanned: ${auditResults.scannedCommits} recent commits`, 'blue');
-  log(`🔍 Findings: ${auditResults.findings.length} (false positives filtered)`, 
-      auditResults.findings.length > 0 ? 'red' : 'green');
-  
+  log(`🔍 Findings: ${auditResults.findings.length} (false positives filtered)`,
+    auditResults.findings.length > 0 ? 'red' : 'green');
+
   if (auditResults.findings.length > 0) {
     log('\n⚠️ SECURITY ISSUES DETECTED:', 'red');
     Object.entries(auditResults.summary).forEach(([category, count]) => {
       if (count > 0) {
-        const riskLevel = category === 'realApiKeys' ? 'CRITICAL' : 
-                         category === 'databaseCredentials' ? 'HIGH' : 'MEDIUM';
+        const riskLevel = category === 'realApiKeys' ? 'CRITICAL' :
+          category === 'databaseCredentials' ? 'HIGH' : 'MEDIUM';
         log(`  ${category}: ${count} (${riskLevel})`, 'red');
       }
     });
@@ -459,7 +459,7 @@ function displayPreciseResults() {
     log('\n✅ Repository is SECURE!', 'green');
     log('No real sensitive data found in recent commits.', 'green');
   }
-  
+
   log('\n📄 Detailed reports:', 'cyan');
   log('  - security-audit-precise.json', 'cyan');
   log('  - security-audit-precise.md', 'cyan');
@@ -472,21 +472,21 @@ async function main() {
   try {
     log('🔐 Lightning Talk Circle - Precise Security Audit', 'bright');
     log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━', 'cyan');
-    
+
     // 精密Git履歴スキャン
     await scanGitHistoryPrecise();
-    
+
     // ワークスペース詳細スキャン
     scanWorkspaceDetailed();
-    
+
     // レポート生成
     const report = generatePreciseReport();
-    
+
     // 結果表示
     displayPreciseResults();
-    
+
     return report;
-    
+
   } catch (error) {
     log(`❌ Precise security audit failed: ${error.message}`, 'red');
     process.exit(1);

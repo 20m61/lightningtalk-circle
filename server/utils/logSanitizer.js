@@ -244,10 +244,10 @@ export function sanitizeRequest(req, options = {}) {
     userAgent: req.get ? req.get('user-agent') : undefined,
     user: req.user
       ? {
-          id: req.user.id,
-          email: req.user.email ? maskPII(req.user.email) : undefined,
-          role: req.user.role
-        }
+        id: req.user.id,
+        email: req.user.email ? maskPII(req.user.email) : undefined,
+        role: req.user.role
+      }
       : undefined
   };
 }

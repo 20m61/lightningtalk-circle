@@ -112,7 +112,7 @@ router.use(authenticateToken);
  *       200:
  *         description: Speaker profile retrieved successfully
  */
-router.get('/profile', async (req, res) => {
+router.get('/profile', async(req, res) => {
   try {
     const userId = req.user.id;
 
@@ -209,7 +209,7 @@ router.put(
     body('socialLinks.linkedin').optional().isURL().withMessage('Invalid LinkedIn URL'),
     body('socialLinks.github').optional().isURL().withMessage('Invalid GitHub URL')
   ],
-  async (req, res) => {
+  async(req, res) => {
     try {
       const errors = validationResult(req);
       if (!errors.isEmpty()) {
@@ -292,7 +292,7 @@ router.get(
     query('limit').optional().isInt({ min: 1, max: 100 }).toInt(),
     query('offset').optional().isInt({ min: 0 }).toInt()
   ],
-  async (req, res) => {
+  async(req, res) => {
     try {
       const errors = validationResult(req);
       if (!errors.isEmpty()) {
@@ -424,7 +424,7 @@ router.post(
       .isLength({ max: 30 })
       .withMessage('Each tag must be less than 30 characters')
   ],
-  async (req, res) => {
+  async(req, res) => {
     try {
       const errors = validationResult(req);
       if (!errors.isEmpty()) {
@@ -523,7 +523,7 @@ router.put(
     body('duration').optional().isInt({ min: 5, max: 60 }),
     body('tags').optional().isArray()
   ],
-  async (req, res) => {
+  async(req, res) => {
     try {
       const errors = validationResult(req);
       if (!errors.isEmpty()) {
@@ -617,7 +617,7 @@ router.post(
   '/talks/:talkId/presentation',
   upload.single('presentation'),
   [param('talkId').isString().notEmpty()],
-  async (req, res) => {
+  async(req, res) => {
     try {
       const errors = validationResult(req);
       if (!errors.isEmpty()) {
@@ -693,7 +693,7 @@ router.post(
  *     security:
  *       - bearerAuth: []
  */
-router.get('/analytics', async (req, res) => {
+router.get('/analytics', async(req, res) => {
   try {
     const userId = req.user.id;
 
@@ -789,7 +789,7 @@ router.post(
     body('duration').isInt({ min: 1 }).withMessage('Duration must be a positive integer'),
     body('notes').optional().isString().isLength({ max: 500 })
   ],
-  async (req, res) => {
+  async(req, res) => {
     try {
       const errors = validationResult(req);
       if (!errors.isEmpty()) {
@@ -877,7 +877,7 @@ router.post(
  *         schema:
  *           type: string
  */
-router.get('/feedback/:talkId', [param('talkId').isString().notEmpty()], async (req, res) => {
+router.get('/feedback/:talkId', [param('talkId').isString().notEmpty()], async(req, res) => {
   try {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
@@ -923,11 +923,11 @@ router.get('/feedback/:talkId', [param('talkId').isString().notEmpty()], async (
       comments: [
         ...(feedback
           ? feedback.map(f => ({
-              type: 'feedback',
-              comment: f.comment,
-              ratings: f.ratings,
-              createdAt: f.createdAt
-            }))
+            type: 'feedback',
+            comment: f.comment,
+            ratings: f.ratings,
+            createdAt: f.createdAt
+          }))
           : []),
         ...votesWithComments.map(v => ({
           type: 'vote',

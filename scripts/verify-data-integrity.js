@@ -344,7 +344,7 @@ async function main() {
 }
 
 // Check if AWS SDK is available
-(async () => {
+(async() => {
   try {
     await import('@aws-sdk/client-dynamodb');
     main();

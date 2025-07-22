@@ -10,12 +10,12 @@ class LightningTalkApp {
     // Frontend Logger
     this.logger = window.Logger;
 
-    // Cognito Configuration
+    // Cognito Configuration - SECURE: Retrieved from environment
     this.cognitoConfig = {
-      userPoolId: 'ap-northeast-1_i4IV8ixyg',
-      clientId: '4ovq46vkld3t00o0slmr237s0l',
-      region: 'ap-northeast-1',
-      domain: 'lightningtalk-auth.auth.ap-northeast-1.amazoncognito.com'
+      userPoolId: process.env.VITE_USER_POOL_ID || 'SET_VIA_ENVIRONMENT',
+      clientId: process.env.VITE_USER_POOL_CLIENT_ID || 'SET_VIA_ENVIRONMENT',
+      region: process.env.VITE_AWS_REGION || 'ap-northeast-1',
+      domain: process.env.VITE_COGNITO_DOMAIN || 'SET_VIA_ENVIRONMENT'
     };
 
     // Animation Manager Reference
@@ -128,7 +128,7 @@ class LightningTalkApp {
   throttle(func, delay) {
     let timeoutId;
     let lastExecTime = 0;
-    return function (...args) {
+    return function(...args) {
       const currentTime = Date.now();
 
       if (currentTime - lastExecTime > delay) {
@@ -149,7 +149,7 @@ class LightningTalkApp {
 
   debounce(func, delay) {
     let timeoutId;
-    return function (...args) {
+    return function(...args) {
       clearTimeout(timeoutId);
       timeoutId = setTimeout(() => func.apply(this, args), delay);
     };
@@ -271,29 +271,29 @@ class LightningTalkApp {
 
   handleAction(action, element) {
     switch (action) {
-      case 'register':
-        this.openRegistrationModal('general');
-        break;
-      case 'register-listener':
-        this.openRegistrationModal('listener');
-        break;
-      case 'register-speaker':
-        this.openRegistrationModal('speaker');
-        break;
-      case 'feedback':
-        this.openFeedbackForm();
-        break;
-      case 'walkin-info':
-        this.showWalkinInfo();
-        break;
-      case 'survey-online':
-        this.incrementSurveyCounter('online');
-        break;
-      case 'survey-offline':
-        this.incrementSurveyCounter('offline');
-        break;
-      default:
-        this.logger.warn('Unknown action:', { action });
+    case 'register':
+      this.openRegistrationModal('general');
+      break;
+    case 'register-listener':
+      this.openRegistrationModal('listener');
+      break;
+    case 'register-speaker':
+      this.openRegistrationModal('speaker');
+      break;
+    case 'feedback':
+      this.openFeedbackForm();
+      break;
+    case 'walkin-info':
+      this.showWalkinInfo();
+      break;
+    case 'survey-online':
+      this.incrementSurveyCounter('online');
+      break;
+    case 'survey-offline':
+      this.incrementSurveyCounter('offline');
+      break;
+    default:
+      this.logger.warn('Unknown action:', { action });
     }
   }
 
@@ -372,8 +372,8 @@ class LightningTalkApp {
                 </div>
                 
                 ${
-                  showSpeakerFields
-                    ? `
+  showSpeakerFields
+    ? `
                 <div class="form-group">
                     <label for="talkTitle">発表タイトル *</label>
                     <input type="text" id="talkTitle" name="talkTitle" required maxlength="200" placeholder="例: 猫の写真で学ぶマシンラーニング">
@@ -408,8 +408,8 @@ class LightningTalkApp {
                     </select>
                 </div>
                 `
-                    : ''
-                }
+    : ''
+}
                 
                 <div class="form-group">
                     <label for="message">メッセージ・質問など</label>
@@ -1907,14 +1907,14 @@ class LightningTalkApp {
 
       // Handle different message types efficiently
       switch (data.type) {
-        case 'voteUpdate':
-          this.handleVoteUpdate(data);
-          break;
-        case 'pong':
-          // Keep-alive response, no action needed
-          break;
-        default:
-          this.logger.warn('Unknown WebSocket message type', { type: data.type, data });
+      case 'voteUpdate':
+        this.handleVoteUpdate(data);
+        break;
+      case 'pong':
+        // Keep-alive response, no action needed
+        break;
+      default:
+        this.logger.warn('Unknown WebSocket message type', { type: data.type, data });
       }
     } catch (error) {
       this.logger.error('Error parsing WebSocket message', {
@@ -2798,7 +2798,7 @@ document.addEventListener('DOMContentLoaded', () => {
   };
 
   // Admin login processing
-  window.processAdminLogin = async () => {
+  window.processAdminLogin = async() => {
     const email = document.getElementById('adminEmail').value;
     const password = document.getElementById('adminPassword').value;
     const errorDiv = document.getElementById('loginError');

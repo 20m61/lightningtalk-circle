@@ -13,7 +13,7 @@ const router = express.Router();
  * GET /api/participants
  * Get participants for current event or return error message
  */
-router.get('/', async (req, res) => {
+router.get('/', async(req, res) => {
   try {
     const { database } = req.app.locals;
 
@@ -128,7 +128,7 @@ router.post(
   registrationLimiter,
   validateRegistration,
   handleValidationErrors,
-  async (req, res) => {
+  async(req, res) => {
     try {
       const { database, emailService, eventService } = req.app.locals;
       const {
@@ -255,7 +255,7 @@ router.post(
   registrationLimiter,
   validateSpeakerRegistration,
   handleValidationErrors,
-  async (req, res) => {
+  async(req, res) => {
     try {
       const { database, emailService, eventService } = req.app.locals;
       const {
@@ -404,7 +404,7 @@ router.get(
   '/:eventId',
   param('eventId').isLength({ min: 1 }).withMessage('Event ID is required'),
   handleValidationErrors,
-  async (req, res) => {
+  async(req, res) => {
     try {
       const { database } = req.app.locals;
       const { eventId } = req.params;
@@ -500,7 +500,7 @@ router.put(
   body('status').optional().isIn(['pending', 'confirmed', 'cancelled']),
   body('checkedIn').optional().isBoolean(),
   handleValidationErrors,
-  async (req, res) => {
+  async(req, res) => {
     try {
       const { database, eventService } = req.app.locals;
       const { id } = req.params;
@@ -556,7 +556,7 @@ router.delete(
   '/:id',
   param('id').isLength({ min: 1 }).withMessage('Participant ID is required'),
   handleValidationErrors,
-  async (req, res) => {
+  async(req, res) => {
     try {
       const { database, eventService } = req.app.locals;
       const { id } = req.params;

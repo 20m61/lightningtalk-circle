@@ -1,14 +1,14 @@
 # 🔐 Precise Security Audit Report
 
 ⚠️ **Status: FINDINGS DETECTED**  
-**Scan Date:** 2025-07-22T05:48:45.347Z  
+**Scan Date:** 2025-07-22T06:02:27.488Z  
 **Repository:** /home/ec2-user/workspace/lightningtalk-circle  
 **Scan Type:** Filtered (False positives removed)
 
 ## 📊 Executive Summary
 
 - **Commits Scanned:** 50/50
-- **Total Findings:** 73
+- **Total Findings:** 254
 - **False Positives Filtered:** Yes (package-lock.json hashes, test data, etc.)
 
 ### Findings by Category
@@ -17,14 +17,2958 @@
 |----------|-------|------------|
 | 🚨 Real API Keys | 0 | ✅ Clean |
 | 🗄️ Database Credentials | 0 | ✅ Clean |
-| 👤 Personal Info | 35 | **MEDIUM** |
-| 🏗️ Infrastructure Info | 38 | **MEDIUM** |
+| 👤 Personal Info | 136 | **MEDIUM** |
+| 🏗️ Infrastructure Info | 118 | **MEDIUM** |
 | ⚙️ Sensitive Env Vars | 0 | ✅ Clean |
 
 ## 🔍 Detailed Findings
 
 
 ### Finding 1: personalInfo
+
+- **File:** `security-audit-precise.json`
+- **Commit:** `15cbbc89`
+- **Message:** feat: comprehensive security audit with Git history analysis
+- **Match:** `admin@lightningtalk.com`
+- **Context:**
+```
+      "pattern": "/[a-zA-Z0-9._%+-]+@(?!example|test|noreply|mock)[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}/g",
+      "match": "
+>>> admin@lightningtalk.com <<<
+",
+      "commitHash": "ce9dc476c72740ffc51b7176f7c2c12ff6a6f558",
+```
+
+
+### Finding 2: personalInfo
+
+- **File:** `security-audit-precise.json`
+- **Commit:** `15cbbc89`
+- **Message:** feat: comprehensive security audit with Git history analysis
+- **Match:** `admin@lightningtalk.com`
+- **Context:**
+```
+      "pattern": "/[a-zA-Z0-9._%+-]+@(?!example|test|noreply|mock)[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}/g",
+      "match": "
+>>> admin@lightningtalk.com <<<
+",
+      "commitHash": "ce9dc476c72740ffc51b7176f7c2c12ff6a6f558",
+```
+
+
+### Finding 3: personalInfo
+
+- **File:** `security-audit-precise.json`
+- **Commit:** `15cbbc89`
+- **Message:** feat: comprehensive security audit with Git history analysis
+- **Match:** `dev@lightningtalk.com`
+- **Context:**
+```
+      "pattern": "/[a-zA-Z0-9._%+-]+@(?!example|test|noreply|mock)[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}/g",
+      "match": "
+>>> dev@lightningtalk.com <<<
+",
+      "commitHash": "ce9dc476c72740ffc51b7176f7c2c12ff6a6f558",
+```
+
+
+### Finding 4: personalInfo
+
+- **File:** `security-audit-precise.json`
+- **Commit:** `15cbbc89`
+- **Message:** feat: comprehensive security audit with Git history analysis
+- **Match:** `dev@lightningtalk.com`
+- **Context:**
+```
+      "pattern": "/[a-zA-Z0-9._%+-]+@(?!example|test|noreply|mock)[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}/g",
+      "match": "
+>>> dev@lightningtalk.com <<<
+",
+      "commitHash": "ce9dc476c72740ffc51b7176f7c2c12ff6a6f558",
+```
+
+
+### Finding 5: personalInfo
+
+- **File:** `security-audit-precise.json`
+- **Commit:** `15cbbc89`
+- **Message:** feat: comprehensive security audit with Git history analysis
+- **Match:** `staging@lightningtalk.com`
+- **Context:**
+```
+      "pattern": "/[a-zA-Z0-9._%+-]+@(?!example|test|noreply|mock)[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}/g",
+      "match": "
+>>> staging@lightningtalk.com <<<
+",
+      "commitHash": "ce9dc476c72740ffc51b7176f7c2c12ff6a6f558",
+```
+
+
+### Finding 6: personalInfo
+
+- **File:** `security-audit-precise.json`
+- **Commit:** `15cbbc89`
+- **Message:** feat: comprehensive security audit with Git history analysis
+- **Match:** `staging@lightningtalk.com`
+- **Context:**
+```
+      "pattern": "/[a-zA-Z0-9._%+-]+@(?!example|test|noreply|mock)[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}/g",
+      "match": "
+>>> staging@lightningtalk.com <<<
+",
+      "commitHash": "ce9dc476c72740ffc51b7176f7c2c12ff6a6f558",
+```
+
+
+### Finding 7: personalInfo
+
+- **File:** `security-audit-precise.json`
+- **Commit:** `15cbbc89`
+- **Message:** feat: comprehensive security audit with Git history analysis
+- **Match:** `admin@lightningtalk.com`
+- **Context:**
+```
+      "pattern": "/[a-zA-Z0-9._%+-]+@(?!example|test|noreply|mock)[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}/g",
+      "match": "
+>>> admin@lightningtalk.com <<<
+",
+      "commitHash": "ce9dc476c72740ffc51b7176f7c2c12ff6a6f558",
+```
+
+
+### Finding 8: personalInfo
+
+- **File:** `security-audit-precise.json`
+- **Commit:** `15cbbc89`
+- **Message:** feat: comprehensive security audit with Git history analysis
+- **Match:** `admin@lightningtalk.com`
+- **Context:**
+```
+      "pattern": "/[a-zA-Z0-9._%+-]+@(?!example|test|noreply|mock)[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}/g",
+      "match": "
+>>> admin@lightningtalk.com <<<
+",
+      "commitHash": "ce9dc476c72740ffc51b7176f7c2c12ff6a6f558",
+```
+
+
+### Finding 9: personalInfo
+
+- **File:** `security-audit-precise.json`
+- **Commit:** `15cbbc89`
+- **Message:** feat: comprehensive security audit with Git history analysis
+- **Match:** `admin@lightningtalk.com`
+- **Context:**
+```
+      "pattern": "/[a-zA-Z0-9._%+-]+@(?!example|test|noreply|mock)[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}/g",
+      "match": "
+>>> admin@lightningtalk.com <<<
+",
+      "commitHash": "ce9dc476c72740ffc51b7176f7c2c12ff6a6f558",
+```
+
+
+### Finding 10: personalInfo
+
+- **File:** `security-audit-precise.json`
+- **Commit:** `15cbbc89`
+- **Message:** feat: comprehensive security audit with Git history analysis
+- **Match:** `admin@lightningtalk.com`
+- **Context:**
+```
+      "pattern": "/[a-zA-Z0-9._%+-]+@(?!example|test|noreply|mock)[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}/g",
+      "match": "
+>>> admin@lightningtalk.com <<<
+",
+      "commitHash": "ce9dc476c72740ffc51b7176f7c2c12ff6a6f558",
+```
+
+
+### Finding 11: personalInfo
+
+- **File:** `security-audit-precise.json`
+- **Commit:** `15cbbc89`
+- **Message:** feat: comprehensive security audit with Git history analysis
+- **Match:** `admin@lightningtalk.local`
+- **Context:**
+```
+      "pattern": "/[a-zA-Z0-9._%+-]+@(?!example|test|noreply|mock)[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}/g",
+      "match": "
+>>> admin@lightningtalk.local <<<
+",
+      "commitHash": "85b585ef6c00f4653f6ee93cd75763ef3c013329",
+```
+
+
+### Finding 12: personalInfo
+
+- **File:** `security-audit-precise.json`
+- **Commit:** `15cbbc89`
+- **Message:** feat: comprehensive security audit with Git history analysis
+- **Match:** `admin@lightningtalk.local`
+- **Context:**
+```
+      "pattern": "/[a-zA-Z0-9._%+-]+@(?!example|test|noreply|mock)[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}/g",
+      "match": "
+>>> admin@lightningtalk.local <<<
+",
+      "commitHash": "85b585ef6c00f4653f6ee93cd75763ef3c013329",
+```
+
+
+### Finding 13: personalInfo
+
+- **File:** `security-audit-precise.json`
+- **Commit:** `15cbbc89`
+- **Message:** feat: comprehensive security audit with Git history analysis
+- **Match:** `admin@lightningtalk.local`
+- **Context:**
+```
+      "pattern": "/[a-zA-Z0-9._%+-]+@(?!example|test|noreply|mock)[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}/g",
+      "match": "
+>>> admin@lightningtalk.local <<<
+",
+      "commitHash": "85b585ef6c00f4653f6ee93cd75763ef3c013329",
+```
+
+
+### Finding 14: personalInfo
+
+- **File:** `security-audit-precise.json`
+- **Commit:** `15cbbc89`
+- **Message:** feat: comprehensive security audit with Git history analysis
+- **Match:** `admin@lightningtalk.local`
+- **Context:**
+```
+      "pattern": "/[a-zA-Z0-9._%+-]+@(?!example|test|noreply|mock)[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}/g",
+      "match": "
+>>> admin@lightningtalk.local <<<
+",
+      "commitHash": "85b585ef6c00f4653f6ee93cd75763ef3c013329",
+```
+
+
+### Finding 15: personalInfo
+
+- **File:** `security-audit-precise.json`
+- **Commit:** `15cbbc89`
+- **Message:** feat: comprehensive security audit with Git history analysis
+- **Match:** `dev-alerts@xn--6wym69a.com`
+- **Context:**
+```
+      "pattern": "/[a-zA-Z0-9._%+-]+@(?!example|test|noreply|mock)[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}/g",
+      "match": "
+>>> dev-alerts@xn--6wym69a.com <<<
+",
+      "commitHash": "24afe52d9140746103dba5011910213f993e34d1",
+```
+
+
+### Finding 16: personalInfo
+
+- **File:** `security-audit-precise.json`
+- **Commit:** `15cbbc89`
+- **Message:** feat: comprehensive security audit with Git history analysis
+- **Match:** `dev-alerts@xn--6wym69a.com`
+- **Context:**
+```
+      "pattern": "/[a-zA-Z0-9._%+-]+@(?!example|test|noreply|mock)[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}/g",
+      "match": "
+>>> dev-alerts@xn--6wym69a.com <<<
+",
+      "commitHash": "24afe52d9140746103dba5011910213f993e34d1",
+```
+
+
+### Finding 17: personalInfo
+
+- **File:** `security-audit-precise.json`
+- **Commit:** `15cbbc89`
+- **Message:** feat: comprehensive security audit with Git history analysis
+- **Match:** `dev-billing@xn--6wym69a.com`
+- **Context:**
+```
+      "pattern": "/[a-zA-Z0-9._%+-]+@(?!example|test|noreply|mock)[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}/g",
+      "match": "
+>>> dev-billing@xn--6wym69a.com <<<
+",
+      "commitHash": "24afe52d9140746103dba5011910213f993e34d1",
+```
+
+
+### Finding 18: personalInfo
+
+- **File:** `security-audit-precise.json`
+- **Commit:** `15cbbc89`
+- **Message:** feat: comprehensive security audit with Git history analysis
+- **Match:** `dev-billing@xn--6wym69a.com`
+- **Context:**
+```
+      "pattern": "/[a-zA-Z0-9._%+-]+@(?!example|test|noreply|mock)[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}/g",
+      "match": "
+>>> dev-billing@xn--6wym69a.com <<<
+",
+      "commitHash": "24afe52d9140746103dba5011910213f993e34d1",
+```
+
+
+### Finding 19: personalInfo
+
+- **File:** `security-audit-precise.json`
+- **Commit:** `15cbbc89`
+- **Message:** feat: comprehensive security audit with Git history analysis
+- **Match:** `alerts@xn--6wym69a.com`
+- **Context:**
+```
+      "pattern": "/[a-zA-Z0-9._%+-]+@(?!example|test|noreply|mock)[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}/g",
+      "match": "dev-
+>>> alerts@xn--6wym69a.com <<<
+",
+      "commitHash": "24afe52d9140746103dba5011910213f993e34d1",
+```
+
+
+### Finding 20: personalInfo
+
+- **File:** `security-audit-precise.json`
+- **Commit:** `15cbbc89`
+- **Message:** feat: comprehensive security audit with Git history analysis
+- **Match:** `alerts@xn--6wym69a.com`
+- **Context:**
+```
+      "pattern": "/[a-zA-Z0-9._%+-]+@(?!example|test|noreply|mock)[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}/g",
+      "match": "dev-
+>>> alerts@xn--6wym69a.com <<<
+",
+      "commitHash": "24afe52d9140746103dba5011910213f993e34d1",
+```
+
+
+### Finding 21: personalInfo
+
+- **File:** `security-audit-precise.json`
+- **Commit:** `15cbbc89`
+- **Message:** feat: comprehensive security audit with Git history analysis
+- **Match:** `billing-alerts@xn--6wym69a.com`
+- **Context:**
+```
+      "pattern": "/[a-zA-Z0-9._%+-]+@(?!example|test|noreply|mock)[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}/g",
+      "match": "
+>>> billing-alerts@xn--6wym69a.com <<<
+",
+      "commitHash": "24afe52d9140746103dba5011910213f993e34d1",
+```
+
+
+### Finding 22: personalInfo
+
+- **File:** `security-audit-precise.json`
+- **Commit:** `15cbbc89`
+- **Message:** feat: comprehensive security audit with Git history analysis
+- **Match:** `billing-alerts@xn--6wym69a.com`
+- **Context:**
+```
+      "pattern": "/[a-zA-Z0-9._%+-]+@(?!example|test|noreply|mock)[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}/g",
+      "match": "
+>>> billing-alerts@xn--6wym69a.com <<<
+",
+      "commitHash": "24afe52d9140746103dba5011910213f993e34d1",
+```
+
+
+### Finding 23: personalInfo
+
+- **File:** `security-audit-precise.json`
+- **Commit:** `15cbbc89`
+- **Message:** feat: comprehensive security audit with Git history analysis
+- **Match:** `example@email.com`
+- **Context:**
+```
+      "pattern": "/[a-zA-Z0-9._%+-]+@(?!example|test|noreply|mock)[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}/g",
+      "match": "
+>>> example@email.com <<<
+",
+      "commitHash": "24afe52d9140746103dba5011910213f993e34d1",
+```
+
+
+### Finding 24: personalInfo
+
+- **File:** `security-audit-precise.json`
+- **Commit:** `15cbbc89`
+- **Message:** feat: comprehensive security audit with Git history analysis
+- **Match:** `example@email.com`
+- **Context:**
+```
+      "pattern": "/[a-zA-Z0-9._%+-]+@(?!example|test|noreply|mock)[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}/g",
+      "match": "
+>>> example@email.com <<<
+",
+      "commitHash": "24afe52d9140746103dba5011910213f993e34d1",
+```
+
+
+### Finding 25: personalInfo
+
+- **File:** `security-audit-precise.json`
+- **Commit:** `15cbbc89`
+- **Message:** feat: comprehensive security audit with Git history analysis
+- **Match:** `admin@lightningtalk.com`
+- **Context:**
+```
+      "pattern": "/[a-zA-Z0-9._%+-]+@(?!example|test|noreply|mock)[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}/g",
+      "match": "
+>>> admin@lightningtalk.com <<<
+",
+      "commitHash": "ce9dc476c72740ffc51b7176f7c2c12ff6a6f558",
+```
+
+
+### Finding 26: personalInfo
+
+- **File:** `security-audit-precise.json`
+- **Commit:** `15cbbc89`
+- **Message:** feat: comprehensive security audit with Git history analysis
+- **Match:** `admin@lightningtalk.com`
+- **Context:**
+```
+      "pattern": "/[a-zA-Z0-9._%+-]+@(?!example|test|noreply|mock)[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}/g",
+      "match": "
+>>> admin@lightningtalk.com <<<
+",
+      "commitHash": "ce9dc476c72740ffc51b7176f7c2c12ff6a6f558",
+```
+
+
+### Finding 27: personalInfo
+
+- **File:** `security-audit-precise.json`
+- **Commit:** `15cbbc89`
+- **Message:** feat: comprehensive security audit with Git history analysis
+- **Match:** `example@email.com`
+- **Context:**
+```
+      "pattern": "/[a-zA-Z0-9._%+-]+@(?!example|test|noreply|mock)[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}/g",
+      "match": "
+>>> example@email.com <<<
+",
+      "commitHash": "24afe52d9140746103dba5011910213f993e34d1",
+```
+
+
+### Finding 28: personalInfo
+
+- **File:** `security-audit-precise.json`
+- **Commit:** `15cbbc89`
+- **Message:** feat: comprehensive security audit with Git history analysis
+- **Match:** `example@email.com`
+- **Context:**
+```
+      "pattern": "/[a-zA-Z0-9._%+-]+@(?!example|test|noreply|mock)[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}/g",
+      "match": "
+>>> example@email.com <<<
+",
+      "commitHash": "24afe52d9140746103dba5011910213f993e34d1",
+```
+
+
+### Finding 29: personalInfo
+
+- **File:** `security-audit-precise.json`
+- **Commit:** `15cbbc89`
+- **Message:** feat: comprehensive security audit with Git history analysis
+- **Match:** `admin@lightningtalk.com`
+- **Context:**
+```
+      "pattern": "/[a-zA-Z0-9._%+-]+@(?!example|test|noreply|mock)[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}/g",
+      "match": "
+>>> admin@lightningtalk.com <<<
+",
+      "commitHash": "ce9dc476c72740ffc51b7176f7c2c12ff6a6f558",
+```
+
+
+### Finding 30: personalInfo
+
+- **File:** `security-audit-precise.json`
+- **Commit:** `15cbbc89`
+- **Message:** feat: comprehensive security audit with Git history analysis
+- **Match:** `admin@lightningtalk.com`
+- **Context:**
+```
+      "pattern": "/[a-zA-Z0-9._%+-]+@(?!example|test|noreply|mock)[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}/g",
+      "match": "
+>>> admin@lightningtalk.com <<<
+",
+      "commitHash": "ce9dc476c72740ffc51b7176f7c2c12ff6a6f558",
+```
+
+
+### Finding 31: personalInfo
+
+- **File:** `security-audit-precise.json`
+- **Commit:** `15cbbc89`
+- **Message:** feat: comprehensive security audit with Git history analysis
+- **Match:** `example@email.com`
+- **Context:**
+```
+      "pattern": "/[a-zA-Z0-9._%+-]+@(?!example|test|noreply|mock)[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}/g",
+      "match": "
+>>> example@email.com <<<
+",
+      "commitHash": "24afe52d9140746103dba5011910213f993e34d1",
+```
+
+
+### Finding 32: personalInfo
+
+- **File:** `security-audit-precise.json`
+- **Commit:** `15cbbc89`
+- **Message:** feat: comprehensive security audit with Git history analysis
+- **Match:** `example@email.com`
+- **Context:**
+```
+      "pattern": "/[a-zA-Z0-9._%+-]+@(?!example|test|noreply|mock)[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}/g",
+      "match": "
+>>> example@email.com <<<
+",
+      "commitHash": "24afe52d9140746103dba5011910213f993e34d1",
+```
+
+
+### Finding 33: personalInfo
+
+- **File:** `security-audit-precise.json`
+- **Commit:** `15cbbc89`
+- **Message:** feat: comprehensive security audit with Git history analysis
+- **Match:** `example@email.com`
+- **Context:**
+```
+      "pattern": "/[a-zA-Z0-9._%+-]+@(?!example|test|noreply|mock)[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}/g",
+      "match": "
+>>> example@email.com <<<
+",
+      "commitHash": "24afe52d9140746103dba5011910213f993e34d1",
+```
+
+
+### Finding 34: personalInfo
+
+- **File:** `security-audit-precise.json`
+- **Commit:** `15cbbc89`
+- **Message:** feat: comprehensive security audit with Git history analysis
+- **Match:** `example@email.com`
+- **Context:**
+```
+      "pattern": "/[a-zA-Z0-9._%+-]+@(?!example|test|noreply|mock)[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}/g",
+      "match": "
+>>> example@email.com <<<
+",
+      "commitHash": "24afe52d9140746103dba5011910213f993e34d1",
+```
+
+
+### Finding 35: personalInfo
+
+- **File:** `security-audit-precise.json`
+- **Commit:** `15cbbc89`
+- **Message:** feat: comprehensive security audit with Git history analysis
+- **Match:** `example@email.com`
+- **Context:**
+```
+      "pattern": "/[a-zA-Z0-9._%+-]+@(?!example|test|noreply|mock)[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}/g",
+      "match": "
+>>> example@email.com <<<
+",
+      "commitHash": "24afe52d9140746103dba5011910213f993e34d1",
+```
+
+
+### Finding 36: personalInfo
+
+- **File:** `security-audit-precise.json`
+- **Commit:** `15cbbc89`
+- **Message:** feat: comprehensive security audit with Git history analysis
+- **Match:** `example@email.com`
+- **Context:**
+```
+      "pattern": "/[a-zA-Z0-9._%+-]+@(?!example|test|noreply|mock)[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}/g",
+      "match": "
+>>> example@email.com <<<
+",
+      "commitHash": "24afe52d9140746103dba5011910213f993e34d1",
+```
+
+
+### Finding 37: personalInfo
+
+- **File:** `security-audit-precise.json`
+- **Commit:** `15cbbc89`
+- **Message:** feat: comprehensive security audit with Git history analysis
+- **Match:** `example@email.com`
+- **Context:**
+```
+      "pattern": "/[a-zA-Z0-9._%+-]+@(?!example|test|noreply|mock)[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}/g",
+      "match": "
+>>> example@email.com <<<
+",
+      "commitHash": "24afe52d9140746103dba5011910213f993e34d1",
+```
+
+
+### Finding 38: personalInfo
+
+- **File:** `security-audit-precise.json`
+- **Commit:** `15cbbc89`
+- **Message:** feat: comprehensive security audit with Git history analysis
+- **Match:** `example@email.com`
+- **Context:**
+```
+      "pattern": "/[a-zA-Z0-9._%+-]+@(?!example|test|noreply|mock)[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}/g",
+      "match": "
+>>> example@email.com <<<
+",
+      "commitHash": "24afe52d9140746103dba5011910213f993e34d1",
+```
+
+
+### Finding 39: personalInfo
+
+- **File:** `security-audit-precise.json`
+- **Commit:** `15cbbc89`
+- **Message:** feat: comprehensive security audit with Git history analysis
+- **Match:** `example@email.com`
+- **Context:**
+```
+      "pattern": "/[a-zA-Z0-9._%+-]+@(?!example|test|noreply|mock)[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}/g",
+      "match": "
+>>> example@email.com <<<
+",
+      "commitHash": "24afe52d9140746103dba5011910213f993e34d1",
+```
+
+
+### Finding 40: personalInfo
+
+- **File:** `security-audit-precise.json`
+- **Commit:** `15cbbc89`
+- **Message:** feat: comprehensive security audit with Git history analysis
+- **Match:** `example@email.com`
+- **Context:**
+```
+      "pattern": "/[a-zA-Z0-9._%+-]+@(?!example|test|noreply|mock)[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}/g",
+      "match": "
+>>> example@email.com <<<
+",
+      "commitHash": "24afe52d9140746103dba5011910213f993e34d1",
+```
+
+
+### Finding 41: personalInfo
+
+- **File:** `security-audit-precise.json`
+- **Commit:** `15cbbc89`
+- **Message:** feat: comprehensive security audit with Git history analysis
+- **Match:** `noreply@lightningtalk.local`
+- **Context:**
+```
+      "pattern": "/[a-zA-Z0-9._%+-]+@(?!example|test|noreply|mock)[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}/g",
+      "match": "
+>>> noreply@lightningtalk.local <<<
+",
+      "commitHash": "WORKSPACE",
+```
+
+
+### Finding 42: personalInfo
+
+- **File:** `security-audit-precise.json`
+- **Commit:** `15cbbc89`
+- **Message:** feat: comprehensive security audit with Git history analysis
+- **Match:** `noreply@lightningtalk.local`
+- **Context:**
+```
+      "pattern": "/[a-zA-Z0-9._%+-]+@(?!example|test|noreply|mock)[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}/g",
+      "match": "
+>>> noreply@lightningtalk.local <<<
+",
+      "commitHash": "WORKSPACE",
+```
+
+
+### Finding 43: personalInfo
+
+- **File:** `security-audit-precise.json`
+- **Commit:** `15cbbc89`
+- **Message:** feat: comprehensive security audit with Git history analysis
+- **Match:** `noreply@lightningtalk-circle.com`
+- **Context:**
+```
+      "pattern": "/[a-zA-Z0-9._%+-]+@(?!example|test|noreply|mock)[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}/g",
+      "match": "
+>>> noreply@lightningtalk-circle.com <<<
+",
+      "commitHash": "WORKSPACE",
+```
+
+
+### Finding 44: personalInfo
+
+- **File:** `security-audit-precise.json`
+- **Commit:** `15cbbc89`
+- **Message:** feat: comprehensive security audit with Git history analysis
+- **Match:** `noreply@lightningtalk-circle.com`
+- **Context:**
+```
+      "pattern": "/[a-zA-Z0-9._%+-]+@(?!example|test|noreply|mock)[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}/g",
+      "match": "
+>>> noreply@lightningtalk-circle.com <<<
+",
+      "commitHash": "WORKSPACE",
+```
+
+
+### Finding 45: personalInfo
+
+- **File:** `security-audit-precise.json`
+- **Commit:** `15cbbc89`
+- **Message:** feat: comprehensive security audit with Git history analysis
+- **Match:** `noreply@lightningtalk.local`
+- **Context:**
+```
+      "pattern": "/[a-zA-Z0-9._%+-]+@(?!example|test|noreply|mock)[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}/g",
+      "match": "
+>>> noreply@lightningtalk.local <<<
+",
+      "commitHash": "WORKSPACE",
+```
+
+
+### Finding 46: personalInfo
+
+- **File:** `security-audit-precise.json`
+- **Commit:** `15cbbc89`
+- **Message:** feat: comprehensive security audit with Git history analysis
+- **Match:** `noreply@lightningtalk.local`
+- **Context:**
+```
+      "pattern": "/[a-zA-Z0-9._%+-]+@(?!example|test|noreply|mock)[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}/g",
+      "match": "
+>>> noreply@lightningtalk.local <<<
+",
+      "commitHash": "WORKSPACE",
+```
+
+
+### Finding 47: personalInfo
+
+- **File:** `security-audit-precise.json`
+- **Commit:** `15cbbc89`
+- **Message:** feat: comprehensive security audit with Git history analysis
+- **Match:** `080-4540-7479`
+- **Context:**
+```
+      "pattern": "/\\b0[789]0-\\d{4}-\\d{4}\\b/g",
+      "match": "
+>>> 080-4540-7479 <<<
+",
+      "commitHash": "24afe52d9140746103dba5011910213f993e34d1",
+```
+
+
+### Finding 48: personalInfo
+
+- **File:** `security-audit-precise.json`
+- **Commit:** `15cbbc89`
+- **Message:** feat: comprehensive security audit with Git history analysis
+- **Match:** `080-4540-7479`
+- **Context:**
+```
+      "pattern": "/\\b0[789]0-\\d{4}-\\d{4}\\b/g",
+      "match": "
+>>> 080-4540-7479 <<<
+",
+      "commitHash": "24afe52d9140746103dba5011910213f993e34d1",
+```
+
+
+### Finding 49: personalInfo
+
+- **File:** `security-audit-precise.json`
+- **Commit:** `15cbbc89`
+- **Message:** feat: comprehensive security audit with Git history analysis
+- **Match:** `080-4540-7479`
+- **Context:**
+```
+      "pattern": "/\\b0[789]0-\\d{4}-\\d{4}\\b/g",
+      "match": "
+>>> 080-4540-7479 <<<
+",
+      "commitHash": "24afe52d9140746103dba5011910213f993e34d1",
+```
+
+
+### Finding 50: personalInfo
+
+- **File:** `security-audit-precise.json`
+- **Commit:** `15cbbc89`
+- **Message:** feat: comprehensive security audit with Git history analysis
+- **Match:** `080-4540-7479`
+- **Context:**
+```
+      "pattern": "/\\b0[789]0-\\d{4}-\\d{4}\\b/g",
+      "match": "
+>>> 080-4540-7479 <<<
+",
+      "commitHash": "24afe52d9140746103dba5011910213f993e34d1",
+```
+
+
+### Finding 51: personalInfo
+
+- **File:** `security-audit-precise.json`
+- **Commit:** `15cbbc89`
+- **Message:** feat: comprehensive security audit with Git history analysis
+- **Match:** `080-4540-7479`
+- **Context:**
+```
+      "pattern": "/\\b0[789]0-\\d{4}-\\d{4}\\b/g",
+      "match": "
+>>> 080-4540-7479 <<<
+",
+      "commitHash": "24afe52d9140746103dba5011910213f993e34d1",
+```
+
+
+### Finding 52: personalInfo
+
+- **File:** `security-audit-precise.json`
+- **Commit:** `15cbbc89`
+- **Message:** feat: comprehensive security audit with Git history analysis
+- **Match:** `080-4540-7479`
+- **Context:**
+```
+      "pattern": "/\\b0[789]0-\\d{4}-\\d{4}\\b/g",
+      "match": "
+>>> 080-4540-7479 <<<
+",
+      "commitHash": "24afe52d9140746103dba5011910213f993e34d1",
+```
+
+
+### Finding 53: personalInfo
+
+- **File:** `security-audit-precise.json`
+- **Commit:** `15cbbc89`
+- **Message:** feat: comprehensive security audit with Git history analysis
+- **Match:** `080-4540-7479`
+- **Context:**
+```
+      "pattern": "/\\b0[789]0-\\d{4}-\\d{4}\\b/g",
+      "match": "
+>>> 080-4540-7479 <<<
+",
+      "commitHash": "24afe52d9140746103dba5011910213f993e34d1",
+```
+
+
+### Finding 54: personalInfo
+
+- **File:** `security-audit-precise.json`
+- **Commit:** `15cbbc89`
+- **Message:** feat: comprehensive security audit with Git history analysis
+- **Match:** `080-4540-7479`
+- **Context:**
+```
+      "pattern": "/\\b0[789]0-\\d{4}-\\d{4}\\b/g",
+      "match": "
+>>> 080-4540-7479 <<<
+",
+      "commitHash": "24afe52d9140746103dba5011910213f993e34d1",
+```
+
+
+### Finding 55: personalInfo
+
+- **File:** `security-audit-precise.json`
+- **Commit:** `15cbbc89`
+- **Message:** feat: comprehensive security audit with Git history analysis
+- **Match:** `080-4540-7479`
+- **Context:**
+```
+      "pattern": "/\\b0[789]0-\\d{4}-\\d{4}\\b/g",
+      "match": "
+>>> 080-4540-7479 <<<
+",
+      "commitHash": "24afe52d9140746103dba5011910213f993e34d1",
+```
+
+
+### Finding 56: personalInfo
+
+- **File:** `security-audit-precise.json`
+- **Commit:** `15cbbc89`
+- **Message:** feat: comprehensive security audit with Git history analysis
+- **Match:** `080-4540-7479`
+- **Context:**
+```
+      "pattern": "/\\b0[789]0-\\d{4}-\\d{4}\\b/g",
+      "match": "
+>>> 080-4540-7479 <<<
+",
+      "commitHash": "24afe52d9140746103dba5011910213f993e34d1",
+```
+
+
+### Finding 57: personalInfo
+
+- **File:** `security-audit-precise.json`
+- **Commit:** `15cbbc89`
+- **Message:** feat: comprehensive security audit with Git history analysis
+- **Match:** `080-4540-7479`
+- **Context:**
+```
+      "pattern": "/\\b0[789]0-\\d{4}-\\d{4}\\b/g",
+      "match": "
+>>> 080-4540-7479 <<<
+",
+      "commitHash": "24afe52d9140746103dba5011910213f993e34d1",
+```
+
+
+### Finding 58: personalInfo
+
+- **File:** `security-audit-precise.json`
+- **Commit:** `15cbbc89`
+- **Message:** feat: comprehensive security audit with Git history analysis
+- **Match:** `080-4540-7479`
+- **Context:**
+```
+      "pattern": "/\\b0[789]0-\\d{4}-\\d{4}\\b/g",
+      "match": "
+>>> 080-4540-7479 <<<
+",
+      "commitHash": "24afe52d9140746103dba5011910213f993e34d1",
+```
+
+
+### Finding 59: personalInfo
+
+- **File:** `security-audit-precise.json`
+- **Commit:** `15cbbc89`
+- **Message:** feat: comprehensive security audit with Git history analysis
+- **Match:** `080-4540-7479`
+- **Context:**
+```
+      "pattern": "/\\b0[789]0-\\d{4}-\\d{4}\\b/g",
+      "match": "
+>>> 080-4540-7479 <<<
+",
+      "commitHash": "24afe52d9140746103dba5011910213f993e34d1",
+```
+
+
+### Finding 60: personalInfo
+
+- **File:** `security-audit-precise.json`
+- **Commit:** `15cbbc89`
+- **Message:** feat: comprehensive security audit with Git history analysis
+- **Match:** `080-4540-7479`
+- **Context:**
+```
+      "pattern": "/\\b0[789]0-\\d{4}-\\d{4}\\b/g",
+      "match": "
+>>> 080-4540-7479 <<<
+",
+      "commitHash": "24afe52d9140746103dba5011910213f993e34d1",
+```
+
+
+### Finding 61: personalInfo
+
+- **File:** `security-audit-precise.json`
+- **Commit:** `15cbbc89`
+- **Message:** feat: comprehensive security audit with Git history analysis
+- **Match:** `080-4540-7479`
+- **Context:**
+```
+      "pattern": "/\\b0[789]0-\\d{4}-\\d{4}\\b/g",
+      "match": "
+>>> 080-4540-7479 <<<
+",
+      "commitHash": "24afe52d9140746103dba5011910213f993e34d1",
+```
+
+
+### Finding 62: personalInfo
+
+- **File:** `security-audit-precise.json`
+- **Commit:** `15cbbc89`
+- **Message:** feat: comprehensive security audit with Git history analysis
+- **Match:** `080-4540-7479`
+- **Context:**
+```
+      "pattern": "/\\b0[789]0-\\d{4}-\\d{4}\\b/g",
+      "match": "
+>>> 080-4540-7479 <<<
+",
+      "commitHash": "24afe52d9140746103dba5011910213f993e34d1",
+```
+
+
+### Finding 63: personalInfo
+
+- **File:** `security-audit-precise.json`
+- **Commit:** `15cbbc89`
+- **Message:** feat: comprehensive security audit with Git history analysis
+- **Match:** `080-4540-7479`
+- **Context:**
+```
+      "pattern": "/\\b0[789]0-\\d{4}-\\d{4}\\b/g",
+      "match": "
+>>> 080-4540-7479 <<<
+",
+      "commitHash": "24afe52d9140746103dba5011910213f993e34d1",
+```
+
+
+### Finding 64: personalInfo
+
+- **File:** `security-audit-precise.json`
+- **Commit:** `15cbbc89`
+- **Message:** feat: comprehensive security audit with Git history analysis
+- **Match:** `080-4540-7479`
+- **Context:**
+```
+      "pattern": "/\\b0[789]0-\\d{4}-\\d{4}\\b/g",
+      "match": "
+>>> 080-4540-7479 <<<
+",
+      "commitHash": "24afe52d9140746103dba5011910213f993e34d1",
+```
+
+
+### Finding 65: personalInfo
+
+- **File:** `security-audit-precise.json`
+- **Commit:** `15cbbc89`
+- **Message:** feat: comprehensive security audit with Git history analysis
+- **Match:** `080-4540-7479`
+- **Context:**
+```
+      "pattern": "/\\b0[789]0-\\d{4}-\\d{4}\\b/g",
+      "match": "
+>>> 080-4540-7479 <<<
+",
+      "commitHash": "24afe52d9140746103dba5011910213f993e34d1",
+```
+
+
+### Finding 66: personalInfo
+
+- **File:** `security-audit-precise.json`
+- **Commit:** `15cbbc89`
+- **Message:** feat: comprehensive security audit with Git history analysis
+- **Match:** `080-4540-7479`
+- **Context:**
+```
+      "pattern": "/\\b0[789]0-\\d{4}-\\d{4}\\b/g",
+      "match": "
+>>> 080-4540-7479 <<<
+",
+      "commitHash": "24afe52d9140746103dba5011910213f993e34d1",
+```
+
+
+### Finding 67: personalInfo
+
+- **File:** `security-audit-precise.json`
+- **Commit:** `15cbbc89`
+- **Message:** feat: comprehensive security audit with Git history analysis
+- **Match:** `080-4540-7479`
+- **Context:**
+```
+      "pattern": "/\\b0[789]0-\\d{4}-\\d{4}\\b/g",
+      "match": "
+>>> 080-4540-7479 <<<
+",
+      "commitHash": "24afe52d9140746103dba5011910213f993e34d1",
+```
+
+
+### Finding 68: personalInfo
+
+- **File:** `security-audit-precise.json`
+- **Commit:** `15cbbc89`
+- **Message:** feat: comprehensive security audit with Git history analysis
+- **Match:** `080-4540-7479`
+- **Context:**
+```
+      "pattern": "/\\b0[789]0-\\d{4}-\\d{4}\\b/g",
+      "match": "
+>>> 080-4540-7479 <<<
+",
+      "commitHash": "24afe52d9140746103dba5011910213f993e34d1",
+```
+
+
+### Finding 69: personalInfo
+
+- **File:** `security-audit-precise.json`
+- **Commit:** `15cbbc89`
+- **Message:** feat: comprehensive security audit with Git history analysis
+- **Match:** `080-4540-7479`
+- **Context:**
+```
+      "pattern": "/\\b0[789]0-\\d{4}-\\d{4}\\b/g",
+      "match": "
+>>> 080-4540-7479 <<<
+",
+      "commitHash": "24afe52d9140746103dba5011910213f993e34d1",
+```
+
+
+### Finding 70: personalInfo
+
+- **File:** `security-audit-precise.json`
+- **Commit:** `15cbbc89`
+- **Message:** feat: comprehensive security audit with Git history analysis
+- **Match:** `080-4540-7479`
+- **Context:**
+```
+      "pattern": "/\\b0[789]0-\\d{4}-\\d{4}\\b/g",
+      "match": "
+>>> 080-4540-7479 <<<
+",
+      "commitHash": "24afe52d9140746103dba5011910213f993e34d1",
+```
+
+
+### Finding 71: personalInfo
+
+- **File:** `security-audit-precise.json`
+- **Commit:** `15cbbc89`
+- **Message:** feat: comprehensive security audit with Git history analysis
+- **Match:** `080-4540-7479`
+- **Context:**
+```
+      "pattern": "/\\b0[789]0-\\d{4}-\\d{4}\\b/g",
+      "match": "
+>>> 080-4540-7479 <<<
+",
+      "commitHash": "24afe52d9140746103dba5011910213f993e34d1",
+```
+
+
+### Finding 72: personalInfo
+
+- **File:** `security-audit-precise.json`
+- **Commit:** `15cbbc89`
+- **Message:** feat: comprehensive security audit with Git history analysis
+- **Match:** `080-4540-7479`
+- **Context:**
+```
+      "pattern": "/\\b0[789]0-\\d{4}-\\d{4}\\b/g",
+      "match": "
+>>> 080-4540-7479 <<<
+",
+      "commitHash": "24afe52d9140746103dba5011910213f993e34d1",
+```
+
+
+### Finding 73: personalInfo
+
+- **File:** `security-audit-precise.json`
+- **Commit:** `15cbbc89`
+- **Message:** feat: comprehensive security audit with Git history analysis
+- **Match:** `080-4540-7479`
+- **Context:**
+```
+      "pattern": "/\\b0[789]0-\\d{4}-\\d{4}\\b/g",
+      "match": "
+>>> 080-4540-7479 <<<
+",
+      "commitHash": "24afe52d9140746103dba5011910213f993e34d1",
+```
+
+
+### Finding 74: personalInfo
+
+- **File:** `security-audit-precise.json`
+- **Commit:** `15cbbc89`
+- **Message:** feat: comprehensive security audit with Git history analysis
+- **Match:** `080-4540-7479`
+- **Context:**
+```
+      "pattern": "/\\b0[789]0-\\d{4}-\\d{4}\\b/g",
+      "match": "
+>>> 080-4540-7479 <<<
+",
+      "commitHash": "24afe52d9140746103dba5011910213f993e34d1",
+```
+
+
+### Finding 75: personalInfo
+
+- **File:** `security-audit-precise.json`
+- **Commit:** `15cbbc89`
+- **Message:** feat: comprehensive security audit with Git history analysis
+- **Match:** `080-4540-7479`
+- **Context:**
+```
+      "pattern": "/\\b0[789]0-\\d{4}-\\d{4}\\b/g",
+      "match": "
+>>> 080-4540-7479 <<<
+",
+      "commitHash": "24afe52d9140746103dba5011910213f993e34d1",
+```
+
+
+### Finding 76: personalInfo
+
+- **File:** `security-audit-precise.json`
+- **Commit:** `15cbbc89`
+- **Message:** feat: comprehensive security audit with Git history analysis
+- **Match:** `080-4540-7479`
+- **Context:**
+```
+      "pattern": "/\\b0[789]0-\\d{4}-\\d{4}\\b/g",
+      "match": "
+>>> 080-4540-7479 <<<
+",
+      "commitHash": "24afe52d9140746103dba5011910213f993e34d1",
+```
+
+
+### Finding 77: personalInfo
+
+- **File:** `security-audit-precise.json`
+- **Commit:** `15cbbc89`
+- **Message:** feat: comprehensive security audit with Git history analysis
+- **Match:** `080-4540-7479`
+- **Context:**
+```
+      "pattern": "/\\b0[789]0-\\d{4}-\\d{4}\\b/g",
+      "match": "
+>>> 080-4540-7479 <<<
+",
+      "commitHash": "24afe52d9140746103dba5011910213f993e34d1",
+```
+
+
+### Finding 78: personalInfo
+
+- **File:** `security-audit-precise.json`
+- **Commit:** `15cbbc89`
+- **Message:** feat: comprehensive security audit with Git history analysis
+- **Match:** `080-4540-7479`
+- **Context:**
+```
+      "pattern": "/\\b0[789]0-\\d{4}-\\d{4}\\b/g",
+      "match": "
+>>> 080-4540-7479 <<<
+",
+      "commitHash": "24afe52d9140746103dba5011910213f993e34d1",
+```
+
+
+### Finding 79: personalInfo
+
+- **File:** `security-audit-precise.json`
+- **Commit:** `15cbbc89`
+- **Message:** feat: comprehensive security audit with Git history analysis
+- **Match:** `080-4540-7479`
+- **Context:**
+```
+      "pattern": "/\\b0[789]0-\\d{4}-\\d{4}\\b/g",
+      "match": "
+>>> 080-4540-7479 <<<
+",
+      "commitHash": "24afe52d9140746103dba5011910213f993e34d1",
+```
+
+
+### Finding 80: personalInfo
+
+- **File:** `security-audit-precise.json`
+- **Commit:** `15cbbc89`
+- **Message:** feat: comprehensive security audit with Git history analysis
+- **Match:** `080-4540-7479`
+- **Context:**
+```
+      "pattern": "/\\b0[789]0-\\d{4}-\\d{4}\\b/g",
+      "match": "
+>>> 080-4540-7479 <<<
+",
+      "commitHash": "24afe52d9140746103dba5011910213f993e34d1",
+```
+
+
+### Finding 81: personalInfo
+
+- **File:** `security-audit-precise.json`
+- **Commit:** `15cbbc89`
+- **Message:** feat: comprehensive security audit with Git history analysis
+- **Match:** `080-4540-7479`
+- **Context:**
+```
+      "pattern": "/\\b0[789]0-\\d{4}-\\d{4}\\b/g",
+      "match": "
+>>> 080-4540-7479 <<<
+",
+      "commitHash": "24afe52d9140746103dba5011910213f993e34d1",
+```
+
+
+### Finding 82: personalInfo
+
+- **File:** `security-audit-precise.json`
+- **Commit:** `15cbbc89`
+- **Message:** feat: comprehensive security audit with Git history analysis
+- **Match:** `080-4540-7479`
+- **Context:**
+```
+      "pattern": "/\\b0[789]0-\\d{4}-\\d{4}\\b/g",
+      "match": "
+>>> 080-4540-7479 <<<
+",
+      "commitHash": "24afe52d9140746103dba5011910213f993e34d1",
+```
+
+
+### Finding 83: personalInfo
+
+- **File:** `security-audit-precise.json`
+- **Commit:** `15cbbc89`
+- **Message:** feat: comprehensive security audit with Git history analysis
+- **Match:** `080-4540-7479`
+- **Context:**
+```
+      "pattern": "/\\b0[789]0-\\d{4}-\\d{4}\\b/g",
+      "match": "
+>>> 080-4540-7479 <<<
+",
+      "commitHash": "24afe52d9140746103dba5011910213f993e34d1",
+```
+
+
+### Finding 84: personalInfo
+
+- **File:** `security-audit-precise.json`
+- **Commit:** `15cbbc89`
+- **Message:** feat: comprehensive security audit with Git history analysis
+- **Match:** `080-4540-7479`
+- **Context:**
+```
+      "pattern": "/\\b0[789]0-\\d{4}-\\d{4}\\b/g",
+      "match": "
+>>> 080-4540-7479 <<<
+",
+      "commitHash": "24afe52d9140746103dba5011910213f993e34d1",
+```
+
+
+### Finding 85: personalInfo
+
+- **File:** `security-audit-precise.json`
+- **Commit:** `15cbbc89`
+- **Message:** feat: comprehensive security audit with Git history analysis
+- **Match:** `080-4540-7479`
+- **Context:**
+```
+      "pattern": "/\\b0[789]0-\\d{4}-\\d{4}\\b/g",
+      "match": "
+>>> 080-4540-7479 <<<
+",
+      "commitHash": "24afe52d9140746103dba5011910213f993e34d1",
+```
+
+
+### Finding 86: personalInfo
+
+- **File:** `security-audit-precise.json`
+- **Commit:** `15cbbc89`
+- **Message:** feat: comprehensive security audit with Git history analysis
+- **Match:** `080-4540-7479`
+- **Context:**
+```
+      "pattern": "/\\b0[789]0-\\d{4}-\\d{4}\\b/g",
+      "match": "
+>>> 080-4540-7479 <<<
+",
+      "commitHash": "24afe52d9140746103dba5011910213f993e34d1",
+```
+
+
+### Finding 87: personalInfo
+
+- **File:** `security-audit-precise.json`
+- **Commit:** `15cbbc89`
+- **Message:** feat: comprehensive security audit with Git history analysis
+- **Match:** `080-4540-7479`
+- **Context:**
+```
+      "pattern": "/\\b0[789]0-\\d{4}-\\d{4}\\b/g",
+      "match": "
+>>> 080-4540-7479 <<<
+",
+      "commitHash": "24afe52d9140746103dba5011910213f993e34d1",
+```
+
+
+### Finding 88: personalInfo
+
+- **File:** `security-audit-precise.json`
+- **Commit:** `15cbbc89`
+- **Message:** feat: comprehensive security audit with Git history analysis
+- **Match:** `080-4540-7479`
+- **Context:**
+```
+      "pattern": "/\\b0[789]0-\\d{4}-\\d{4}\\b/g",
+      "match": "
+>>> 080-4540-7479 <<<
+",
+      "commitHash": "24afe52d9140746103dba5011910213f993e34d1",
+```
+
+
+### Finding 89: personalInfo
+
+- **File:** `security-audit-precise.json`
+- **Commit:** `15cbbc89`
+- **Message:** feat: comprehensive security audit with Git history analysis
+- **Match:** `080-4540-7479`
+- **Context:**
+```
+      "pattern": "/\\b0[789]0-\\d{4}-\\d{4}\\b/g",
+      "match": "
+>>> 080-4540-7479 <<<
+",
+      "commitHash": "24afe52d9140746103dba5011910213f993e34d1",
+```
+
+
+### Finding 90: personalInfo
+
+- **File:** `security-audit-precise.json`
+- **Commit:** `15cbbc89`
+- **Message:** feat: comprehensive security audit with Git history analysis
+- **Match:** `080-4540-7479`
+- **Context:**
+```
+      "pattern": "/\\b0[789]0-\\d{4}-\\d{4}\\b/g",
+      "match": "
+>>> 080-4540-7479 <<<
+",
+      "commitHash": "24afe52d9140746103dba5011910213f993e34d1",
+```
+
+
+### Finding 91: personalInfo
+
+- **File:** `security-audit-precise.json`
+- **Commit:** `15cbbc89`
+- **Message:** feat: comprehensive security audit with Git history analysis
+- **Match:** `080-4540-7479`
+- **Context:**
+```
+      "pattern": "/\\b0[789]0-\\d{4}-\\d{4}\\b/g",
+      "match": "
+>>> 080-4540-7479 <<<
+",
+      "commitHash": "24afe52d9140746103dba5011910213f993e34d1",
+```
+
+
+### Finding 92: personalInfo
+
+- **File:** `security-audit-precise.json`
+- **Commit:** `15cbbc89`
+- **Message:** feat: comprehensive security audit with Git history analysis
+- **Match:** `080-4540-7479`
+- **Context:**
+```
+      "pattern": "/\\b0[789]0-\\d{4}-\\d{4}\\b/g",
+      "match": "
+>>> 080-4540-7479 <<<
+",
+      "commitHash": "24afe52d9140746103dba5011910213f993e34d1",
+```
+
+
+### Finding 93: personalInfo
+
+- **File:** `security-audit-precise.json`
+- **Commit:** `15cbbc89`
+- **Message:** feat: comprehensive security audit with Git history analysis
+- **Match:** `080-4540-7479`
+- **Context:**
+```
+      "pattern": "/\\b0[789]0-\\d{4}-\\d{4}\\b/g",
+      "match": "
+>>> 080-4540-7479 <<<
+",
+      "commitHash": "24afe52d9140746103dba5011910213f993e34d1",
+```
+
+
+### Finding 94: personalInfo
+
+- **File:** `security-audit-precise.json`
+- **Commit:** `15cbbc89`
+- **Message:** feat: comprehensive security audit with Git history analysis
+- **Match:** `080-4540-7479`
+- **Context:**
+```
+      "pattern": "/\\b0[789]0-\\d{4}-\\d{4}\\b/g",
+      "match": "
+>>> 080-4540-7479 <<<
+",
+      "commitHash": "24afe52d9140746103dba5011910213f993e34d1",
+```
+
+
+### Finding 95: infrastructureInfo
+
+- **File:** `security-audit-precise.json`
+- **Commit:** `15cbbc89`
+- **Message:** feat: comprehensive security audit with Git history analysis
+- **Match:** `https://4mz5i3x23c.execute-api.ap-northeast-1.amazonaws.com/prod/api/health",`
+- **Context:**
+```
+      "pattern": "/https?:\\/\\/(?!localhost|127\\.0\\.0\\.1|example)[a-zA-Z0-9.-]+\\.amazonaws\\.com[^\\s]*/g",
+      "match": "
+>>> https://4mz5i3x23c.execute-api.ap-northeast-1.amazonaws.com/prod/api/health", <<<
+
+      "commitHash": "f47ea0203ac5363b921499e16bd57bf02b48690d",
+```
+
+
+### Finding 96: infrastructureInfo
+
+- **File:** `security-audit-precise.json`
+- **Commit:** `15cbbc89`
+- **Message:** feat: comprehensive security audit with Git history analysis
+- **Match:** `https://4mz5i3x23c.execute-api.ap-northeast-1.amazonaws.com/prod/api/health`
+- **Context:**
+```
+      "pattern": "/https?:\\/\\/(?!localhost|127\\.0\\.0\\.1|example)[a-zA-Z0-9.-]+\\.amazonaws\\.com[^\\s]*/g",
+      "match": "
+>>> https://4mz5i3x23c.execute-api.ap-northeast-1.amazonaws.com/prod/api/health <<<
+",
+      "commitHash": "f47ea0203ac5363b921499e16bd57bf02b48690d",
+```
+
+
+### Finding 97: infrastructureInfo
+
+- **File:** `security-audit-precise.json`
+- **Commit:** `15cbbc89`
+- **Message:** feat: comprehensive security audit with Git history analysis
+- **Match:** `https://4ujhkvx000.execute-api.ap-northeast-1.amazonaws.com/prod/api/health",`
+- **Context:**
+```
+      "pattern": "/https?:\\/\\/(?!localhost|127\\.0\\.0\\.1|example)[a-zA-Z0-9.-]+\\.amazonaws\\.com[^\\s]*/g",
+      "match": "
+>>> https://4ujhkvx000.execute-api.ap-northeast-1.amazonaws.com/prod/api/health", <<<
+
+      "commitHash": "f47ea0203ac5363b921499e16bd57bf02b48690d",
+```
+
+
+### Finding 98: infrastructureInfo
+
+- **File:** `security-audit-precise.json`
+- **Commit:** `15cbbc89`
+- **Message:** feat: comprehensive security audit with Git history analysis
+- **Match:** `https://4ujhkvx000.execute-api.ap-northeast-1.amazonaws.com/prod/api/health`
+- **Context:**
+```
+      "pattern": "/https?:\\/\\/(?!localhost|127\\.0\\.0\\.1|example)[a-zA-Z0-9.-]+\\.amazonaws\\.com[^\\s]*/g",
+      "match": "
+>>> https://4ujhkvx000.execute-api.ap-northeast-1.amazonaws.com/prod/api/health <<<
+",
+      "commitHash": "f47ea0203ac5363b921499e16bd57bf02b48690d",
+```
+
+
+### Finding 99: infrastructureInfo
+
+- **File:** `security-audit-precise.json`
+- **Commit:** `15cbbc89`
+- **Message:** feat: comprehensive security audit with Git history analysis
+- **Match:** `https://4mz5i3x23c.execute-api.ap-northeast-1.amazonaws.com/prod/api/health",`
+- **Context:**
+```
+      "pattern": "/https?:\\/\\/(?!localhost|127\\.0\\.0\\.1|example)[a-zA-Z0-9.-]+\\.amazonaws\\.com[^\\s]*/g",
+      "match": "
+>>> https://4mz5i3x23c.execute-api.ap-northeast-1.amazonaws.com/prod/api/health", <<<
+
+      "commitHash": "f47ea0203ac5363b921499e16bd57bf02b48690d",
+```
+
+
+### Finding 100: infrastructureInfo
+
+- **File:** `security-audit-precise.json`
+- **Commit:** `15cbbc89`
+- **Message:** feat: comprehensive security audit with Git history analysis
+- **Match:** `https://4mz5i3x23c.execute-api.ap-northeast-1.amazonaws.com/prod/api/health`
+- **Context:**
+```
+      "pattern": "/https?:\\/\\/(?!localhost|127\\.0\\.0\\.1|example)[a-zA-Z0-9.-]+\\.amazonaws\\.com[^\\s]*/g",
+      "match": "
+>>> https://4mz5i3x23c.execute-api.ap-northeast-1.amazonaws.com/prod/api/health <<<
+",
+      "commitHash": "f47ea0203ac5363b921499e16bd57bf02b48690d",
+```
+
+
+### Finding 101: infrastructureInfo
+
+- **File:** `security-audit-precise.json`
+- **Commit:** `15cbbc89`
+- **Message:** feat: comprehensive security audit with Git history analysis
+- **Match:** `https://4ujhkvx000.execute-api.ap-northeast-1.amazonaws.com/prod/api/health",`
+- **Context:**
+```
+      "pattern": "/https?:\\/\\/(?!localhost|127\\.0\\.0\\.1|example)[a-zA-Z0-9.-]+\\.amazonaws\\.com[^\\s]*/g",
+      "match": "
+>>> https://4ujhkvx000.execute-api.ap-northeast-1.amazonaws.com/prod/api/health", <<<
+
+      "commitHash": "f47ea0203ac5363b921499e16bd57bf02b48690d",
+```
+
+
+### Finding 102: infrastructureInfo
+
+- **File:** `security-audit-precise.json`
+- **Commit:** `15cbbc89`
+- **Message:** feat: comprehensive security audit with Git history analysis
+- **Match:** `https://4ujhkvx000.execute-api.ap-northeast-1.amazonaws.com/prod/api/health`
+- **Context:**
+```
+      "pattern": "/https?:\\/\\/(?!localhost|127\\.0\\.0\\.1|example)[a-zA-Z0-9.-]+\\.amazonaws\\.com[^\\s]*/g",
+      "match": "
+>>> https://4ujhkvx000.execute-api.ap-northeast-1.amazonaws.com/prod/api/health <<<
+",
+      "commitHash": "f47ea0203ac5363b921499e16bd57bf02b48690d",
+```
+
+
+### Finding 103: infrastructureInfo
+
+- **File:** `security-audit-precise.json`
+- **Commit:** `15cbbc89`
+- **Message:** feat: comprehensive security audit with Git history analysis
+- **Match:** `https://4mz5i3x23c.execute-api.ap-northeast-1.amazonaws.com/prod/api/health",`
+- **Context:**
+```
+      "pattern": "/https?:\\/\\/(?!localhost|127\\.0\\.0\\.1|example)[a-zA-Z0-9.-]+\\.amazonaws\\.com[^\\s]*/g",
+      "match": "
+>>> https://4mz5i3x23c.execute-api.ap-northeast-1.amazonaws.com/prod/api/health", <<<
+
+      "commitHash": "f47ea0203ac5363b921499e16bd57bf02b48690d",
+```
+
+
+### Finding 104: infrastructureInfo
+
+- **File:** `security-audit-precise.json`
+- **Commit:** `15cbbc89`
+- **Message:** feat: comprehensive security audit with Git history analysis
+- **Match:** `https://4mz5i3x23c.execute-api.ap-northeast-1.amazonaws.com/prod/api/health`
+- **Context:**
+```
+      "pattern": "/https?:\\/\\/(?!localhost|127\\.0\\.0\\.1|example)[a-zA-Z0-9.-]+\\.amazonaws\\.com[^\\s]*/g",
+      "match": "
+>>> https://4mz5i3x23c.execute-api.ap-northeast-1.amazonaws.com/prod/api/health <<<
+",
+      "commitHash": "f47ea0203ac5363b921499e16bd57bf02b48690d",
+```
+
+
+### Finding 105: infrastructureInfo
+
+- **File:** `security-audit-precise.json`
+- **Commit:** `15cbbc89`
+- **Message:** feat: comprehensive security audit with Git history analysis
+- **Match:** `https://4ujhkvx000.execute-api.ap-northeast-1.amazonaws.com/prod/api/health",`
+- **Context:**
+```
+      "pattern": "/https?:\\/\\/(?!localhost|127\\.0\\.0\\.1|example)[a-zA-Z0-9.-]+\\.amazonaws\\.com[^\\s]*/g",
+      "match": "
+>>> https://4ujhkvx000.execute-api.ap-northeast-1.amazonaws.com/prod/api/health", <<<
+
+      "commitHash": "f47ea0203ac5363b921499e16bd57bf02b48690d",
+```
+
+
+### Finding 106: infrastructureInfo
+
+- **File:** `security-audit-precise.json`
+- **Commit:** `15cbbc89`
+- **Message:** feat: comprehensive security audit with Git history analysis
+- **Match:** `https://4ujhkvx000.execute-api.ap-northeast-1.amazonaws.com/prod/api/health`
+- **Context:**
+```
+      "pattern": "/https?:\\/\\/(?!localhost|127\\.0\\.0\\.1|example)[a-zA-Z0-9.-]+\\.amazonaws\\.com[^\\s]*/g",
+      "match": "
+>>> https://4ujhkvx000.execute-api.ap-northeast-1.amazonaws.com/prod/api/health <<<
+",
+      "commitHash": "f47ea0203ac5363b921499e16bd57bf02b48690d",
+```
+
+
+### Finding 107: infrastructureInfo
+
+- **File:** `security-audit-precise.json`
+- **Commit:** `15cbbc89`
+- **Message:** feat: comprehensive security audit with Git history analysis
+- **Match:** `https://wf6gf7eisk.execute-api.ap-northeast-1.amazonaws.com/dev/api',\",",`
+- **Context:**
+```
+      "pattern": "/https?:\\/\\/(?!localhost|127\\.0\\.0\\.1|example)[a-zA-Z0-9.-]+\\.amazonaws\\.com[^\\s]*/g",
+      "match": "
+>>> https://wf6gf7eisk.execute-api.ap-northeast-1.amazonaws.com/dev/api',\",", <<<
+
+      "commitHash": "24afe52d9140746103dba5011910213f993e34d1",
+```
+
+
+### Finding 108: infrastructureInfo
+
+- **File:** `security-audit-precise.json`
+- **Commit:** `15cbbc89`
+- **Message:** feat: comprehensive security audit with Git history analysis
+- **Match:** `https://wf6gf7eisk.execute-api.ap-northeast-1.amazonaws.com/dev/api',\",`
+- **Context:**
+```
+      "pattern": "/https?:\\/\\/(?!localhost|127\\.0\\.0\\.1|example)[a-zA-Z0-9.-]+\\.amazonaws\\.com[^\\s]*/g",
+      "match": "
+>>> https://wf6gf7eisk.execute-api.ap-northeast-1.amazonaws.com/dev/api',\", <<<
+",
+      "commitHash": "24afe52d9140746103dba5011910213f993e34d1",
+```
+
+
+### Finding 109: infrastructureInfo
+
+- **File:** `security-audit-precise.json`
+- **Commit:** `15cbbc89`
+- **Message:** feat: comprehensive security audit with Git history analysis
+- **Match:** `https://wf6gf7eisk.execute-api.ap-northeast-1.amazonaws.com/dev/api/events\",",`
+- **Context:**
+```
+      "pattern": "/https?:\\/\\/(?!localhost|127\\.0\\.0\\.1|example)[a-zA-Z0-9.-]+\\.amazonaws\\.com[^\\s]*/g",
+      "match": "
+>>> https://wf6gf7eisk.execute-api.ap-northeast-1.amazonaws.com/dev/api/events\",", <<<
+
+      "commitHash": "24afe52d9140746103dba5011910213f993e34d1",
+```
+
+
+### Finding 110: infrastructureInfo
+
+- **File:** `security-audit-precise.json`
+- **Commit:** `15cbbc89`
+- **Message:** feat: comprehensive security audit with Git history analysis
+- **Match:** `https://wf6gf7eisk.execute-api.ap-northeast-1.amazonaws.com/dev/api/events\",`
+- **Context:**
+```
+      "pattern": "/https?:\\/\\/(?!localhost|127\\.0\\.0\\.1|example)[a-zA-Z0-9.-]+\\.amazonaws\\.com[^\\s]*/g",
+      "match": "
+>>> https://wf6gf7eisk.execute-api.ap-northeast-1.amazonaws.com/dev/api/events\", <<<
+",
+      "commitHash": "24afe52d9140746103dba5011910213f993e34d1",
+```
+
+
+### Finding 111: infrastructureInfo
+
+- **File:** `security-audit-precise.json`
+- **Commit:** `15cbbc89`
+- **Message:** feat: comprehensive security audit with Git history analysis
+- **Match:** `https://wf6gf7eisk.execute-api.ap-northeast-1.amazonaws.com\",",`
+- **Context:**
+```
+      "pattern": "/https?:\\/\\/(?!localhost|127\\.0\\.0\\.1|example)[a-zA-Z0-9.-]+\\.amazonaws\\.com[^\\s]*/g",
+      "match": "
+>>> https://wf6gf7eisk.execute-api.ap-northeast-1.amazonaws.com\",", <<<
+
+      "commitHash": "24afe52d9140746103dba5011910213f993e34d1",
+```
+
+
+### Finding 112: infrastructureInfo
+
+- **File:** `security-audit-precise.json`
+- **Commit:** `15cbbc89`
+- **Message:** feat: comprehensive security audit with Git history analysis
+- **Match:** `https://wf6gf7eisk.execute-api.ap-northeast-1.amazonaws.com\",`
+- **Context:**
+```
+      "pattern": "/https?:\\/\\/(?!localhost|127\\.0\\.0\\.1|example)[a-zA-Z0-9.-]+\\.amazonaws\\.com[^\\s]*/g",
+      "match": "
+>>> https://wf6gf7eisk.execute-api.ap-northeast-1.amazonaws.com\", <<<
+",
+      "commitHash": "24afe52d9140746103dba5011910213f993e34d1",
+```
+
+
+### Finding 113: infrastructureInfo
+
+- **File:** `security-audit-precise.json`
+- **Commit:** `15cbbc89`
+- **Message:** feat: comprehensive security audit with Git history analysis
+- **Match:** `https://wf6gf7eisk.execute-api.ap-northeast-1.amazonaws.com\",",`
+- **Context:**
+```
+      "pattern": "/https?:\\/\\/(?!localhost|127\\.0\\.0\\.1|example)[a-zA-Z0-9.-]+\\.amazonaws\\.com[^\\s]*/g",
+      "match": "
+>>> https://wf6gf7eisk.execute-api.ap-northeast-1.amazonaws.com\",", <<<
+
+      "commitHash": "24afe52d9140746103dba5011910213f993e34d1",
+```
+
+
+### Finding 114: infrastructureInfo
+
+- **File:** `security-audit-precise.json`
+- **Commit:** `15cbbc89`
+- **Message:** feat: comprehensive security audit with Git history analysis
+- **Match:** `https://wf6gf7eisk.execute-api.ap-northeast-1.amazonaws.com\",`
+- **Context:**
+```
+      "pattern": "/https?:\\/\\/(?!localhost|127\\.0\\.0\\.1|example)[a-zA-Z0-9.-]+\\.amazonaws\\.com[^\\s]*/g",
+      "match": "
+>>> https://wf6gf7eisk.execute-api.ap-northeast-1.amazonaws.com\", <<<
+",
+      "commitHash": "24afe52d9140746103dba5011910213f993e34d1",
+```
+
+
+### Finding 115: infrastructureInfo
+
+- **File:** `security-audit-precise.json`
+- **Commit:** `15cbbc89`
+- **Message:** feat: comprehensive security audit with Git history analysis
+- **Match:** `https://wf6gf7eisk.execute-api.ap-northeast-1.amazonaws.com/dev/api/events\",",`
+- **Context:**
+```
+      "pattern": "/https?:\\/\\/(?!localhost|127\\.0\\.0\\.1|example)[a-zA-Z0-9.-]+\\.amazonaws\\.com[^\\s]*/g",
+      "match": "
+>>> https://wf6gf7eisk.execute-api.ap-northeast-1.amazonaws.com/dev/api/events\",", <<<
+
+      "commitHash": "24afe52d9140746103dba5011910213f993e34d1",
+```
+
+
+### Finding 116: infrastructureInfo
+
+- **File:** `security-audit-precise.json`
+- **Commit:** `15cbbc89`
+- **Message:** feat: comprehensive security audit with Git history analysis
+- **Match:** `https://wf6gf7eisk.execute-api.ap-northeast-1.amazonaws.com/dev/api/events\",`
+- **Context:**
+```
+      "pattern": "/https?:\\/\\/(?!localhost|127\\.0\\.0\\.1|example)[a-zA-Z0-9.-]+\\.amazonaws\\.com[^\\s]*/g",
+      "match": "
+>>> https://wf6gf7eisk.execute-api.ap-northeast-1.amazonaws.com/dev/api/events\", <<<
+",
+      "commitHash": "24afe52d9140746103dba5011910213f993e34d1",
+```
+
+
+### Finding 117: infrastructureInfo
+
+- **File:** `security-audit-precise.json`
+- **Commit:** `15cbbc89`
+- **Message:** feat: comprehensive security audit with Git history analysis
+- **Match:** `https://wf6gf7eisk.execute-api.ap-northeast-1.amazonaws.com/dev/api',\",",`
+- **Context:**
+```
+      "pattern": "/https?:\\/\\/(?!localhost|127\\.0\\.0\\.1|example)[a-zA-Z0-9.-]+\\.amazonaws\\.com[^\\s]*/g",
+      "match": "
+>>> https://wf6gf7eisk.execute-api.ap-northeast-1.amazonaws.com/dev/api',\",", <<<
+
+      "commitHash": "24afe52d9140746103dba5011910213f993e34d1",
+```
+
+
+### Finding 118: infrastructureInfo
+
+- **File:** `security-audit-precise.json`
+- **Commit:** `15cbbc89`
+- **Message:** feat: comprehensive security audit with Git history analysis
+- **Match:** `https://wf6gf7eisk.execute-api.ap-northeast-1.amazonaws.com/dev/api',\",`
+- **Context:**
+```
+      "pattern": "/https?:\\/\\/(?!localhost|127\\.0\\.0\\.1|example)[a-zA-Z0-9.-]+\\.amazonaws\\.com[^\\s]*/g",
+      "match": "
+>>> https://wf6gf7eisk.execute-api.ap-northeast-1.amazonaws.com/dev/api',\", <<<
+",
+      "commitHash": "24afe52d9140746103dba5011910213f993e34d1",
+```
+
+
+### Finding 119: infrastructureInfo
+
+- **File:** `security-audit-precise.json`
+- **Commit:** `15cbbc89`
+- **Message:** feat: comprehensive security audit with Git history analysis
+- **Match:** `https://wf6gf7eisk.execute-api.ap-northeast-1.amazonaws.com/dev/api/events\",",`
+- **Context:**
+```
+      "pattern": "/https?:\\/\\/(?!localhost|127\\.0\\.0\\.1|example)[a-zA-Z0-9.-]+\\.amazonaws\\.com[^\\s]*/g",
+      "match": "
+>>> https://wf6gf7eisk.execute-api.ap-northeast-1.amazonaws.com/dev/api/events\",", <<<
+
+      "commitHash": "24afe52d9140746103dba5011910213f993e34d1",
+```
+
+
+### Finding 120: infrastructureInfo
+
+- **File:** `security-audit-precise.json`
+- **Commit:** `15cbbc89`
+- **Message:** feat: comprehensive security audit with Git history analysis
+- **Match:** `https://wf6gf7eisk.execute-api.ap-northeast-1.amazonaws.com/dev/api/events\",`
+- **Context:**
+```
+      "pattern": "/https?:\\/\\/(?!localhost|127\\.0\\.0\\.1|example)[a-zA-Z0-9.-]+\\.amazonaws\\.com[^\\s]*/g",
+      "match": "
+>>> https://wf6gf7eisk.execute-api.ap-northeast-1.amazonaws.com/dev/api/events\", <<<
+",
+      "commitHash": "24afe52d9140746103dba5011910213f993e34d1",
+```
+
+
+### Finding 121: infrastructureInfo
+
+- **File:** `security-audit-precise.json`
+- **Commit:** `15cbbc89`
+- **Message:** feat: comprehensive security audit with Git history analysis
+- **Match:** `https://wf6gf7eisk.execute-api.ap-northeast-1.amazonaws.com\",",`
+- **Context:**
+```
+      "pattern": "/https?:\\/\\/(?!localhost|127\\.0\\.0\\.1|example)[a-zA-Z0-9.-]+\\.amazonaws\\.com[^\\s]*/g",
+      "match": "
+>>> https://wf6gf7eisk.execute-api.ap-northeast-1.amazonaws.com\",", <<<
+
+      "commitHash": "24afe52d9140746103dba5011910213f993e34d1",
+```
+
+
+### Finding 122: infrastructureInfo
+
+- **File:** `security-audit-precise.json`
+- **Commit:** `15cbbc89`
+- **Message:** feat: comprehensive security audit with Git history analysis
+- **Match:** `https://wf6gf7eisk.execute-api.ap-northeast-1.amazonaws.com\",`
+- **Context:**
+```
+      "pattern": "/https?:\\/\\/(?!localhost|127\\.0\\.0\\.1|example)[a-zA-Z0-9.-]+\\.amazonaws\\.com[^\\s]*/g",
+      "match": "
+>>> https://wf6gf7eisk.execute-api.ap-northeast-1.amazonaws.com\", <<<
+",
+      "commitHash": "24afe52d9140746103dba5011910213f993e34d1",
+```
+
+
+### Finding 123: infrastructureInfo
+
+- **File:** `security-audit-precise.json`
+- **Commit:** `15cbbc89`
+- **Message:** feat: comprehensive security audit with Git history analysis
+- **Match:** `https://wf6gf7eisk.execute-api.ap-northeast-1.amazonaws.com/dev/api/events\",",`
+- **Context:**
+```
+      "pattern": "/https?:\\/\\/(?!localhost|127\\.0\\.0\\.1|example)[a-zA-Z0-9.-]+\\.amazonaws\\.com[^\\s]*/g",
+      "match": "
+>>> https://wf6gf7eisk.execute-api.ap-northeast-1.amazonaws.com/dev/api/events\",", <<<
+
+      "commitHash": "24afe52d9140746103dba5011910213f993e34d1",
+```
+
+
+### Finding 124: infrastructureInfo
+
+- **File:** `security-audit-precise.json`
+- **Commit:** `15cbbc89`
+- **Message:** feat: comprehensive security audit with Git history analysis
+- **Match:** `https://wf6gf7eisk.execute-api.ap-northeast-1.amazonaws.com/dev/api/events\",`
+- **Context:**
+```
+      "pattern": "/https?:\\/\\/(?!localhost|127\\.0\\.0\\.1|example)[a-zA-Z0-9.-]+\\.amazonaws\\.com[^\\s]*/g",
+      "match": "
+>>> https://wf6gf7eisk.execute-api.ap-northeast-1.amazonaws.com/dev/api/events\", <<<
+",
+      "commitHash": "24afe52d9140746103dba5011910213f993e34d1",
+```
+
+
+### Finding 125: infrastructureInfo
+
+- **File:** `security-audit-precise.json`
+- **Commit:** `15cbbc89`
+- **Message:** feat: comprehensive security audit with Git history analysis
+- **Match:** `https://wf6gf7eisk.execute-api.ap-northeast-1.amazonaws.com\"],",`
+- **Context:**
+```
+      "pattern": "/https?:\\/\\/(?!localhost|127\\.0\\.0\\.1|example)[a-zA-Z0-9.-]+\\.amazonaws\\.com[^\\s]*/g",
+      "match": "
+>>> https://wf6gf7eisk.execute-api.ap-northeast-1.amazonaws.com\"],", <<<
+
+      "commitHash": "24afe52d9140746103dba5011910213f993e34d1",
+```
+
+
+### Finding 126: infrastructureInfo
+
+- **File:** `security-audit-precise.json`
+- **Commit:** `15cbbc89`
+- **Message:** feat: comprehensive security audit with Git history analysis
+- **Match:** `https://wf6gf7eisk.execute-api.ap-northeast-1.amazonaws.com\"],`
+- **Context:**
+```
+      "pattern": "/https?:\\/\\/(?!localhost|127\\.0\\.0\\.1|example)[a-zA-Z0-9.-]+\\.amazonaws\\.com[^\\s]*/g",
+      "match": "
+>>> https://wf6gf7eisk.execute-api.ap-northeast-1.amazonaws.com\"], <<<
+",
+      "commitHash": "24afe52d9140746103dba5011910213f993e34d1",
+```
+
+
+### Finding 127: infrastructureInfo
+
+- **File:** `security-audit-precise.json`
+- **Commit:** `15cbbc89`
+- **Message:** feat: comprehensive security audit with Git history analysis
+- **Match:** `https://wf6gf7eisk.execute-api.ap-northeast-1.amazonaws.com/dev/api'",`
+- **Context:**
+```
+      "pattern": "/https?:\\/\\/(?!localhost|127\\.0\\.0\\.1|example)[a-zA-Z0-9.-]+\\.amazonaws\\.com[^\\s]*/g",
+      "match": "
+>>> https://wf6gf7eisk.execute-api.ap-northeast-1.amazonaws.com/dev/api'", <<<
+
+      "commitHash": "132a6247916c9908a0d11092ba3579156d96298d",
+```
+
+
+### Finding 128: infrastructureInfo
+
+- **File:** `security-audit-precise.json`
+- **Commit:** `15cbbc89`
+- **Message:** feat: comprehensive security audit with Git history analysis
+- **Match:** `https://wf6gf7eisk.execute-api.ap-northeast-1.amazonaws.com/dev/api'`
+- **Context:**
+```
+      "pattern": "/https?:\\/\\/(?!localhost|127\\.0\\.0\\.1|example)[a-zA-Z0-9.-]+\\.amazonaws\\.com[^\\s]*/g",
+      "match": "
+>>> https://wf6gf7eisk.execute-api.ap-northeast-1.amazonaws.com/dev/api' <<<
+,\",",
+      "commitHash": "24afe52d9140746103dba5011910213f993e34d1",
+```
+
+
+### Finding 129: infrastructureInfo
+
+- **File:** `security-audit-precise.json`
+- **Commit:** `15cbbc89`
+- **Message:** feat: comprehensive security audit with Git history analysis
+- **Match:** `https://9qyaz7n47j.execute-api.ap-northeast-1.amazonaws.com/prod/api/voting/participation/${eventId}`
+- **Context:**
+```
+      "pattern": "/https?:\\/\\/(?!localhost|127\\.0\\.0\\.1|example)[a-zA-Z0-9.-]+\\.amazonaws\\.com[^\\s]*/g",
+      "match": "
+>>> https://9qyaz7n47j.execute-api.ap-northeast-1.amazonaws.com/prod/api/voting/participation/${eventId}", <<<
+
+      "commitHash": "132a6247916c9908a0d11092ba3579156d96298d",
+```
+
+
+### Finding 130: infrastructureInfo
+
+- **File:** `security-audit-precise.json`
+- **Commit:** `15cbbc89`
+- **Message:** feat: comprehensive security audit with Git history analysis
+- **Match:** `https://9qyaz7n47j.execute-api.ap-northeast-1.amazonaws.com/prod/api/voting/participation/${eventId}`
+- **Context:**
+```
+      "commitMessage": "feat: Implement comprehensive code quality improvements with ESLint, Prettier, and unified design sy",
+      "context": "        const response = await fetch(\n          `\n>>> 
+>>> https://9qyaz7n47j.execute-api.ap-northeast-1.amazonaws.com/prod/api/voting/participation/${eventId}` <<<
+ <<<\n\n        );"
+    },
+```
+
+
+### Finding 131: infrastructureInfo
+
+- **File:** `security-audit-precise.json`
+- **Commit:** `15cbbc89`
+- **Message:** feat: comprehensive security audit with Git history analysis
+- **Match:** `https://9qyaz7n47j.execute-api.ap-northeast-1.amazonaws.com/prod/api/voting',",`
+- **Context:**
+```
+      "pattern": "/https?:\\/\\/(?!localhost|127\\.0\\.0\\.1|example)[a-zA-Z0-9.-]+\\.amazonaws\\.com[^\\s]*/g",
+      "match": "
+>>> https://9qyaz7n47j.execute-api.ap-northeast-1.amazonaws.com/prod/api/voting',", <<<
+
+      "commitHash": "132a6247916c9908a0d11092ba3579156d96298d",
+```
+
+
+### Finding 132: infrastructureInfo
+
+- **File:** `security-audit-precise.json`
+- **Commit:** `15cbbc89`
+- **Message:** feat: comprehensive security audit with Git history analysis
+- **Match:** `https://9qyaz7n47j.execute-api.ap-northeast-1.amazonaws.com/prod/api/voting',`
+- **Context:**
+```
+      "pattern": "/https?:\\/\\/(?!localhost|127\\.0\\.0\\.1|example)[a-zA-Z0-9.-]+\\.amazonaws\\.com[^\\s]*/g",
+      "match": "
+>>> https://9qyaz7n47j.execute-api.ap-northeast-1.amazonaws.com/prod/api/voting', <<<
+",
+      "commitHash": "132a6247916c9908a0d11092ba3579156d96298d",
+```
+
+
+### Finding 133: infrastructureInfo
+
+- **File:** `security-audit-precise.json`
+- **Commit:** `15cbbc89`
+- **Message:** feat: comprehensive security audit with Git history analysis
+- **Match:** `https://9qyaz7n47j.execute-api.ap-northeast-1.amazonaws.com/prod/api/voting/participation/${eventId}`
+- **Context:**
+```
+      "pattern": "/https?:\\/\\/(?!localhost|127\\.0\\.0\\.1|example)[a-zA-Z0-9.-]+\\.amazonaws\\.com[^\\s]*/g",
+      "match": "
+>>> https://9qyaz7n47j.execute-api.ap-northeast-1.amazonaws.com/prod/api/voting/participation/${eventId}", <<<
+
+      "commitHash": "132a6247916c9908a0d11092ba3579156d96298d",
+```
+
+
+### Finding 134: infrastructureInfo
+
+- **File:** `security-audit-precise.json`
+- **Commit:** `15cbbc89`
+- **Message:** feat: comprehensive security audit with Git history analysis
+- **Match:** `https://9qyaz7n47j.execute-api.ap-northeast-1.amazonaws.com/prod/api/voting/participation/${eventId}`
+- **Context:**
+```
+      "commitMessage": "feat: Implement comprehensive code quality improvements with ESLint, Prettier, and unified design sy",
+      "context": "        const response = await fetch(\n          `\n>>> 
+>>> https://9qyaz7n47j.execute-api.ap-northeast-1.amazonaws.com/prod/api/voting/participation/${eventId}` <<<
+ <<<\n\n        );"
+    },
+```
+
+
+### Finding 135: infrastructureInfo
+
+- **File:** `security-audit-precise.json`
+- **Commit:** `15cbbc89`
+- **Message:** feat: comprehensive security audit with Git history analysis
+- **Match:** `https://9qyaz7n47j.execute-api.ap-northeast-1.amazonaws.com/prod/api/voting',",`
+- **Context:**
+```
+      "pattern": "/https?:\\/\\/(?!localhost|127\\.0\\.0\\.1|example)[a-zA-Z0-9.-]+\\.amazonaws\\.com[^\\s]*/g",
+      "match": "
+>>> https://9qyaz7n47j.execute-api.ap-northeast-1.amazonaws.com/prod/api/voting',", <<<
+
+      "commitHash": "132a6247916c9908a0d11092ba3579156d96298d",
+```
+
+
+### Finding 136: infrastructureInfo
+
+- **File:** `security-audit-precise.json`
+- **Commit:** `15cbbc89`
+- **Message:** feat: comprehensive security audit with Git history analysis
+- **Match:** `https://9qyaz7n47j.execute-api.ap-northeast-1.amazonaws.com/prod/api/voting',`
+- **Context:**
+```
+      "pattern": "/https?:\\/\\/(?!localhost|127\\.0\\.0\\.1|example)[a-zA-Z0-9.-]+\\.amazonaws\\.com[^\\s]*/g",
+      "match": "
+>>> https://9qyaz7n47j.execute-api.ap-northeast-1.amazonaws.com/prod/api/voting', <<<
+",
+      "commitHash": "132a6247916c9908a0d11092ba3579156d96298d",
+```
+
+
+### Finding 137: infrastructureInfo
+
+- **File:** `security-audit-precise.json`
+- **Commit:** `15cbbc89`
+- **Message:** feat: comprehensive security audit with Git history analysis
+- **Match:** `https://9qyaz7n47j.execute-api.ap-northeast-1.amazonaws.com/prod/api/voting/participation/${eventId}`
+- **Context:**
+```
+      "pattern": "/https?:\\/\\/(?!localhost|127\\.0\\.0\\.1|example)[a-zA-Z0-9.-]+\\.amazonaws\\.com[^\\s]*/g",
+      "match": "
+>>> https://9qyaz7n47j.execute-api.ap-northeast-1.amazonaws.com/prod/api/voting/participation/${eventId}", <<<
+
+      "commitHash": "132a6247916c9908a0d11092ba3579156d96298d",
+```
+
+
+### Finding 138: infrastructureInfo
+
+- **File:** `security-audit-precise.json`
+- **Commit:** `15cbbc89`
+- **Message:** feat: comprehensive security audit with Git history analysis
+- **Match:** `https://9qyaz7n47j.execute-api.ap-northeast-1.amazonaws.com/prod/api/voting/participation/${eventId}`
+- **Context:**
+```
+      "commitMessage": "feat: Implement comprehensive code quality improvements with ESLint, Prettier, and unified design sy",
+      "context": "        const response = await fetch(\n          `\n>>> 
+>>> https://9qyaz7n47j.execute-api.ap-northeast-1.amazonaws.com/prod/api/voting/participation/${eventId}` <<<
+ <<<\n\n        );"
+    },
+```
+
+
+### Finding 139: infrastructureInfo
+
+- **File:** `security-audit-precise.json`
+- **Commit:** `15cbbc89`
+- **Message:** feat: comprehensive security audit with Git history analysis
+- **Match:** `https://9qyaz7n47j.execute-api.ap-northeast-1.amazonaws.com/prod/api/voting',",`
+- **Context:**
+```
+      "pattern": "/https?:\\/\\/(?!localhost|127\\.0\\.0\\.1|example)[a-zA-Z0-9.-]+\\.amazonaws\\.com[^\\s]*/g",
+      "match": "
+>>> https://9qyaz7n47j.execute-api.ap-northeast-1.amazonaws.com/prod/api/voting',", <<<
+
+      "commitHash": "132a6247916c9908a0d11092ba3579156d96298d",
+```
+
+
+### Finding 140: infrastructureInfo
+
+- **File:** `security-audit-precise.json`
+- **Commit:** `15cbbc89`
+- **Message:** feat: comprehensive security audit with Git history analysis
+- **Match:** `https://9qyaz7n47j.execute-api.ap-northeast-1.amazonaws.com/prod/api/voting',`
+- **Context:**
+```
+      "pattern": "/https?:\\/\\/(?!localhost|127\\.0\\.0\\.1|example)[a-zA-Z0-9.-]+\\.amazonaws\\.com[^\\s]*/g",
+      "match": "
+>>> https://9qyaz7n47j.execute-api.ap-northeast-1.amazonaws.com/prod/api/voting', <<<
+",
+      "commitHash": "132a6247916c9908a0d11092ba3579156d96298d",
+```
+
+
+### Finding 141: infrastructureInfo
+
+- **File:** `security-audit-precise.json`
+- **Commit:** `15cbbc89`
+- **Message:** feat: comprehensive security audit with Git history analysis
+- **Match:** `https://4mz5i3x23c.execute-api.ap-northeast-1.amazonaws.com/prod/api",`
+- **Context:**
+```
+      "pattern": "/https?:\\/\\/(?!localhost|127\\.0\\.0\\.1|example)[a-zA-Z0-9.-]+\\.amazonaws\\.com[^\\s]*/g",
+      "match": "
+>>> https://4mz5i3x23c.execute-api.ap-northeast-1.amazonaws.com/prod/api", <<<
+
+      "commitHash": "WORKSPACE",
+```
+
+
+### Finding 142: infrastructureInfo
+
+- **File:** `security-audit-precise.json`
+- **Commit:** `15cbbc89`
+- **Message:** feat: comprehensive security audit with Git history analysis
+- **Match:** `https://4mz5i3x23c.execute-api.ap-northeast-1.amazonaws.com/prod/api`
+- **Context:**
+```
+      "pattern": "/https?:\\/\\/(?!localhost|127\\.0\\.0\\.1|example)[a-zA-Z0-9.-]+\\.amazonaws\\.com[^\\s]*/g",
+      "match": "
+>>> https://4mz5i3x23c.execute-api.ap-northeast-1.amazonaws.com/prod/api <<<
+/health",
+      "commitHash": "f47ea0203ac5363b921499e16bd57bf02b48690d",
+```
+
+
+### Finding 143: infrastructureInfo
+
+- **File:** `security-audit-precise.json`
+- **Commit:** `15cbbc89`
+- **Message:** feat: comprehensive security audit with Git history analysis
+- **Match:** `https://4ujhkvx000.execute-api.ap-northeast-1.amazonaws.com/prod/api",`
+- **Context:**
+```
+      "pattern": "/https?:\\/\\/(?!localhost|127\\.0\\.0\\.1|example)[a-zA-Z0-9.-]+\\.amazonaws\\.com[^\\s]*/g",
+      "match": "
+>>> https://4ujhkvx000.execute-api.ap-northeast-1.amazonaws.com/prod/api", <<<
+
+      "commitHash": "WORKSPACE",
+```
+
+
+### Finding 144: infrastructureInfo
+
+- **File:** `security-audit-precise.json`
+- **Commit:** `15cbbc89`
+- **Message:** feat: comprehensive security audit with Git history analysis
+- **Match:** `https://4ujhkvx000.execute-api.ap-northeast-1.amazonaws.com/prod/api`
+- **Context:**
+```
+      "pattern": "/https?:\\/\\/(?!localhost|127\\.0\\.0\\.1|example)[a-zA-Z0-9.-]+\\.amazonaws\\.com[^\\s]*/g",
+      "match": "
+>>> https://4ujhkvx000.execute-api.ap-northeast-1.amazonaws.com/prod/api <<<
+/health",
+      "commitHash": "f47ea0203ac5363b921499e16bd57bf02b48690d",
+```
+
+
+### Finding 145: infrastructureInfo
+
+- **File:** `security-audit-precise.json`
+- **Commit:** `15cbbc89`
+- **Message:** feat: comprehensive security audit with Git history analysis
+- **Match:** `https://4mz5i3x23c.execute-api.ap-northeast-1.amazonaws.com/prod/api",`
+- **Context:**
+```
+      "pattern": "/https?:\\/\\/(?!localhost|127\\.0\\.0\\.1|example)[a-zA-Z0-9.-]+\\.amazonaws\\.com[^\\s]*/g",
+      "match": "
+>>> https://4mz5i3x23c.execute-api.ap-northeast-1.amazonaws.com/prod/api", <<<
+
+      "commitHash": "WORKSPACE",
+```
+
+
+### Finding 146: infrastructureInfo
+
+- **File:** `security-audit-precise.json`
+- **Commit:** `15cbbc89`
+- **Message:** feat: comprehensive security audit with Git history analysis
+- **Match:** `https://4mz5i3x23c.execute-api.ap-northeast-1.amazonaws.com/prod/api`
+- **Context:**
+```
+      "pattern": "/https?:\\/\\/(?!localhost|127\\.0\\.0\\.1|example)[a-zA-Z0-9.-]+\\.amazonaws\\.com[^\\s]*/g",
+      "match": "
+>>> https://4mz5i3x23c.execute-api.ap-northeast-1.amazonaws.com/prod/api <<<
+/health",
+      "commitHash": "f47ea0203ac5363b921499e16bd57bf02b48690d",
+```
+
+
+### Finding 147: infrastructureInfo
+
+- **File:** `security-audit-precise.json`
+- **Commit:** `15cbbc89`
+- **Message:** feat: comprehensive security audit with Git history analysis
+- **Match:** `138.0.0.0`
+- **Context:**
+```
+      "pattern": "/\\b(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\b/g",
+      "match": "
+>>> 138.0.0.0 <<<
+",
+      "commitHash": "24afe52d9140746103dba5011910213f993e34d1",
+```
+
+
+### Finding 148: infrastructureInfo
+
+- **File:** `security-audit-precise.json`
+- **Commit:** `15cbbc89`
+- **Message:** feat: comprehensive security audit with Git history analysis
+- **Match:** `138.0.0.0`
+- **Context:**
+```
+      "pattern": "/\\b(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\b/g",
+      "match": "
+>>> 138.0.0.0 <<<
+",
+      "commitHash": "24afe52d9140746103dba5011910213f993e34d1",
+```
+
+
+### Finding 149: infrastructureInfo
+
+- **File:** `security-audit-precise.json`
+- **Commit:** `15cbbc89`
+- **Message:** feat: comprehensive security audit with Git history analysis
+- **Match:** `136.0.0.0`
+- **Context:**
+```
+      "pattern": "/\\b(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\b/g",
+      "match": "
+>>> 136.0.0.0 <<<
+",
+      "commitHash": "24afe52d9140746103dba5011910213f993e34d1",
+```
+
+
+### Finding 150: infrastructureInfo
+
+- **File:** `security-audit-precise.json`
+- **Commit:** `15cbbc89`
+- **Message:** feat: comprehensive security audit with Git history analysis
+- **Match:** `136.0.0.0`
+- **Context:**
+```
+      "pattern": "/\\b(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\b/g",
+      "match": "
+>>> 136.0.0.0 <<<
+",
+      "commitHash": "24afe52d9140746103dba5011910213f993e34d1",
+```
+
+
+### Finding 151: infrastructureInfo
+
+- **File:** `security-audit-precise.json`
+- **Commit:** `15cbbc89`
+- **Message:** feat: comprehensive security audit with Git history analysis
+- **Match:** `138.0.0.0`
+- **Context:**
+```
+      "pattern": "/\\b(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\b/g",
+      "match": "
+>>> 138.0.0.0 <<<
+",
+      "commitHash": "24afe52d9140746103dba5011910213f993e34d1",
+```
+
+
+### Finding 152: infrastructureInfo
+
+- **File:** `security-audit-precise.json`
+- **Commit:** `15cbbc89`
+- **Message:** feat: comprehensive security audit with Git history analysis
+- **Match:** `138.0.0.0`
+- **Context:**
+```
+      "pattern": "/\\b(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\b/g",
+      "match": "
+>>> 138.0.0.0 <<<
+",
+      "commitHash": "24afe52d9140746103dba5011910213f993e34d1",
+```
+
+
+### Finding 153: infrastructureInfo
+
+- **File:** `security-audit-precise.json`
+- **Commit:** `15cbbc89`
+- **Message:** feat: comprehensive security audit with Git history analysis
+- **Match:** `138.0.0.0`
+- **Context:**
+```
+      "pattern": "/\\b(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\b/g",
+      "match": "
+>>> 138.0.0.0 <<<
+",
+      "commitHash": "24afe52d9140746103dba5011910213f993e34d1",
+```
+
+
+### Finding 154: infrastructureInfo
+
+- **File:** `security-audit-precise.json`
+- **Commit:** `15cbbc89`
+- **Message:** feat: comprehensive security audit with Git history analysis
+- **Match:** `9.1.4.3`
+- **Context:**
+```
+      "pattern": "/\\b(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\b/g",
+      "match": "
+>>> 9.1.4.3 <<<
+",
+      "commitHash": "24afe52d9140746103dba5011910213f993e34d1",
+```
+
+
+### Finding 155: infrastructureInfo
+
+- **File:** `security-audit-precise.json`
+- **Commit:** `15cbbc89`
+- **Message:** feat: comprehensive security audit with Git history analysis
+- **Match:** `9.1.4.3`
+- **Context:**
+```
+      "pattern": "/\\b(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\b/g",
+      "match": "
+>>> 9.1.4.3 <<<
+",
+      "commitHash": "24afe52d9140746103dba5011910213f993e34d1",
+```
+
+
+### Finding 156: infrastructureInfo
+
+- **File:** `security-audit-precise.json`
+- **Commit:** `15cbbc89`
+- **Message:** feat: comprehensive security audit with Git history analysis
+- **Match:** `9.1.4.4`
+- **Context:**
+```
+      "pattern": "/\\b(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\b/g",
+      "match": "
+>>> 9.1.4.4 <<<
+",
+      "commitHash": "24afe52d9140746103dba5011910213f993e34d1",
+```
+
+
+### Finding 157: infrastructureInfo
+
+- **File:** `security-audit-precise.json`
+- **Commit:** `15cbbc89`
+- **Message:** feat: comprehensive security audit with Git history analysis
+- **Match:** `9.1.4.4`
+- **Context:**
+```
+      "pattern": "/\\b(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\b/g",
+      "match": "
+>>> 9.1.4.4 <<<
+",
+      "commitHash": "24afe52d9140746103dba5011910213f993e34d1",
+```
+
+
+### Finding 158: infrastructureInfo
+
+- **File:** `security-audit-precise.json`
+- **Commit:** `15cbbc89`
+- **Message:** feat: comprehensive security audit with Git history analysis
+- **Match:** `136.0.0.0`
+- **Context:**
+```
+      "pattern": "/\\b(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\b/g",
+      "match": "
+>>> 136.0.0.0 <<<
+",
+      "commitHash": "24afe52d9140746103dba5011910213f993e34d1",
+```
+
+
+### Finding 159: infrastructureInfo
+
+- **File:** `security-audit-precise.json`
+- **Commit:** `15cbbc89`
+- **Message:** feat: comprehensive security audit with Git history analysis
+- **Match:** `136.0.0.0`
+- **Context:**
+```
+      "pattern": "/\\b(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\b/g",
+      "match": "
+>>> 136.0.0.0 <<<
+",
+      "commitHash": "24afe52d9140746103dba5011910213f993e34d1",
+```
+
+
+### Finding 160: infrastructureInfo
+
+- **File:** `security-audit-precise.json`
+- **Commit:** `15cbbc89`
+- **Message:** feat: comprehensive security audit with Git history analysis
+- **Match:** `138.0.0.0`
+- **Context:**
+```
+      "pattern": "/\\b(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\b/g",
+      "match": "
+>>> 138.0.0.0 <<<
+",
+      "commitHash": "24afe52d9140746103dba5011910213f993e34d1",
+```
+
+
+### Finding 161: infrastructureInfo
+
+- **File:** `security-audit-precise.json`
+- **Commit:** `15cbbc89`
+- **Message:** feat: comprehensive security audit with Git history analysis
+- **Match:** `138.0.0.0`
+- **Context:**
+```
+      "pattern": "/\\b(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\b/g",
+      "match": "
+>>> 138.0.0.0 <<<
+",
+      "commitHash": "24afe52d9140746103dba5011910213f993e34d1",
+```
+
+
+### Finding 162: infrastructureInfo
+
+- **File:** `security-audit-precise.json`
+- **Commit:** `15cbbc89`
+- **Message:** feat: comprehensive security audit with Git history analysis
+- **Match:** `138.0.0.0`
+- **Context:**
+```
+      "pattern": "/\\b(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\b/g",
+      "match": "
+>>> 138.0.0.0 <<<
+",
+      "commitHash": "24afe52d9140746103dba5011910213f993e34d1",
+```
+
+
+### Finding 163: infrastructureInfo
+
+- **File:** `security-audit-precise.json`
+- **Commit:** `15cbbc89`
+- **Message:** feat: comprehensive security audit with Git history analysis
+- **Match:** `136.0.0.0`
+- **Context:**
+```
+      "pattern": "/\\b(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\b/g",
+      "match": "
+>>> 136.0.0.0 <<<
+",
+      "commitHash": "24afe52d9140746103dba5011910213f993e34d1",
+```
+
+
+### Finding 164: infrastructureInfo
+
+- **File:** `security-audit-precise.json`
+- **Commit:** `15cbbc89`
+- **Message:** feat: comprehensive security audit with Git history analysis
+- **Match:** `136.0.0.0`
+- **Context:**
+```
+      "pattern": "/\\b(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\b/g",
+      "match": "
+>>> 136.0.0.0 <<<
+",
+      "commitHash": "24afe52d9140746103dba5011910213f993e34d1",
+```
+
+
+### Finding 165: infrastructureInfo
+
+- **File:** `security-audit-precise.json`
+- **Commit:** `15cbbc89`
+- **Message:** feat: comprehensive security audit with Git history analysis
+- **Match:** `138.0.0.0`
+- **Context:**
+```
+      "pattern": "/\\b(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\b/g",
+      "match": "
+>>> 138.0.0.0 <<<
+",
+      "commitHash": "24afe52d9140746103dba5011910213f993e34d1",
+```
+
+
+### Finding 166: infrastructureInfo
+
+- **File:** `security-audit-precise.json`
+- **Commit:** `15cbbc89`
+- **Message:** feat: comprehensive security audit with Git history analysis
+- **Match:** `138.0.0.0`
+- **Context:**
+```
+      "pattern": "/\\b(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\b/g",
+      "match": "
+>>> 138.0.0.0 <<<
+",
+      "commitHash": "24afe52d9140746103dba5011910213f993e34d1",
+```
+
+
+### Finding 167: infrastructureInfo
+
+- **File:** `security-audit-precise.json`
+- **Commit:** `15cbbc89`
+- **Message:** feat: comprehensive security audit with Git history analysis
+- **Match:** `138.0.0.0`
+- **Context:**
+```
+      "pattern": "/\\b(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\b/g",
+      "match": "
+>>> 138.0.0.0 <<<
+",
+      "commitHash": "24afe52d9140746103dba5011910213f993e34d1",
+```
+
+
+### Finding 168: infrastructureInfo
+
+- **File:** `security-audit-precise.json`
+- **Commit:** `15cbbc89`
+- **Message:** feat: comprehensive security audit with Git history analysis
+- **Match:** `9.1.4.3`
+- **Context:**
+```
+      "pattern": "/\\b(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\b/g",
+      "match": "
+>>> 9.1.4.3 <<<
+",
+      "commitHash": "24afe52d9140746103dba5011910213f993e34d1",
+```
+
+
+### Finding 169: infrastructureInfo
+
+- **File:** `security-audit-precise.json`
+- **Commit:** `15cbbc89`
+- **Message:** feat: comprehensive security audit with Git history analysis
+- **Match:** `9.1.4.3`
+- **Context:**
+```
+      "pattern": "/\\b(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\b/g",
+      "match": "
+>>> 9.1.4.3 <<<
+",
+      "commitHash": "24afe52d9140746103dba5011910213f993e34d1",
+```
+
+
+### Finding 170: infrastructureInfo
+
+- **File:** `security-audit-precise.json`
+- **Commit:** `15cbbc89`
+- **Message:** feat: comprehensive security audit with Git history analysis
+- **Match:** `9.4.1.2`
+- **Context:**
+```
+      "pattern": "/\\b(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\b/g",
+      "match": "
+>>> 9.4.1.2 <<<
+",
+      "commitHash": "24afe52d9140746103dba5011910213f993e34d1",
+```
+
+
+### Finding 171: infrastructureInfo
+
+- **File:** `security-audit-precise.json`
+- **Commit:** `15cbbc89`
+- **Message:** feat: comprehensive security audit with Git history analysis
+- **Match:** `9.4.1.2`
+- **Context:**
+```
+      "pattern": "/\\b(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\b/g",
+      "match": "
+>>> 9.4.1.2 <<<
+",
+      "commitHash": "24afe52d9140746103dba5011910213f993e34d1",
+```
+
+
+### Finding 172: infrastructureInfo
+
+- **File:** `security-audit-precise.json`
+- **Commit:** `15cbbc89`
+- **Message:** feat: comprehensive security audit with Git history analysis
+- **Match:** `136.0.0.0`
+- **Context:**
+```
+      "pattern": "/\\b(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\b/g",
+      "match": "
+>>> 136.0.0.0 <<<
+",
+      "commitHash": "24afe52d9140746103dba5011910213f993e34d1",
+```
+
+
+### Finding 173: infrastructureInfo
+
+- **File:** `security-audit-precise.json`
+- **Commit:** `15cbbc89`
+- **Message:** feat: comprehensive security audit with Git history analysis
+- **Match:** `136.0.0.0`
+- **Context:**
+```
+      "pattern": "/\\b(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\b/g",
+      "match": "
+>>> 136.0.0.0 <<<
+",
+      "commitHash": "24afe52d9140746103dba5011910213f993e34d1",
+```
+
+
+### Finding 174: infrastructureInfo
+
+- **File:** `security-audit-precise.json`
+- **Commit:** `15cbbc89`
+- **Message:** feat: comprehensive security audit with Git history analysis
+- **Match:** `138.0.0.0`
+- **Context:**
+```
+      "pattern": "/\\b(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\b/g",
+      "match": "
+>>> 138.0.0.0 <<<
+",
+      "commitHash": "24afe52d9140746103dba5011910213f993e34d1",
+```
+
+
+### Finding 175: personalInfo
+
+- **File:** `security-audit-report.json`
+- **Commit:** `15cbbc89`
+- **Message:** feat: comprehensive security audit with Git history analysis
+- **Match:** `admin@lightningtalk.com`
+- **Context:**
+```
+      "pattern": "/\\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Z|a-z]{2,}\\b/g",
+      "match": "
+>>> admin@lightningtalk.com <<<
+",
+      "commitHash": "ce9dc476c72740ffc51b7176f7c2c12ff6a6f558",
+```
+
+
+### Finding 176: personalInfo
+
+- **File:** `security-audit-report.json`
+- **Commit:** `15cbbc89`
+- **Message:** feat: comprehensive security audit with Git history analysis
+- **Match:** `dev@lightningtalk.com`
+- **Context:**
+```
+      "pattern": "/\\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Z|a-z]{2,}\\b/g",
+      "match": "
+>>> dev@lightningtalk.com <<<
+",
+      "commitHash": "ce9dc476c72740ffc51b7176f7c2c12ff6a6f558",
+```
+
+
+### Finding 177: personalInfo
+
+- **File:** `security-audit-report.json`
+- **Commit:** `15cbbc89`
+- **Message:** feat: comprehensive security audit with Git history analysis
+- **Match:** `staging@lightningtalk.com`
+- **Context:**
+```
+      "pattern": "/\\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Z|a-z]{2,}\\b/g",
+      "match": "
+>>> staging@lightningtalk.com <<<
+",
+      "commitHash": "ce9dc476c72740ffc51b7176f7c2c12ff6a6f558",
+```
+
+
+### Finding 178: personalInfo
+
+- **File:** `security-audit-report.json`
+- **Commit:** `15cbbc89`
+- **Message:** feat: comprehensive security audit with Git history analysis
+- **Match:** `admin@lightningtalk.com`
+- **Context:**
+```
+      "pattern": "/\\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Z|a-z]{2,}\\b/g",
+      "match": "
+>>> admin@lightningtalk.com <<<
+",
+      "commitHash": "ce9dc476c72740ffc51b7176f7c2c12ff6a6f558",
+```
+
+
+### Finding 179: personalInfo
+
+- **File:** `security-audit-report.json`
+- **Commit:** `15cbbc89`
+- **Message:** feat: comprehensive security audit with Git history analysis
+- **Match:** `admin@lightningtalk.com`
+- **Context:**
+```
+      "pattern": "/\\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Z|a-z]{2,}\\b/g",
+      "match": "
+>>> admin@lightningtalk.com <<<
+",
+      "commitHash": "ce9dc476c72740ffc51b7176f7c2c12ff6a6f558",
+```
+
+
+### Finding 180: personalInfo
+
+- **File:** `security-audit-report.json`
+- **Commit:** `15cbbc89`
+- **Message:** feat: comprehensive security audit with Git history analysis
+- **Match:** `storybook@lightningtalk.local`
+- **Context:**
+```
+      "pattern": "/\\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Z|a-z]{2,}\\b/g",
+      "match": "
+>>> storybook@lightningtalk.local <<<
+",
+      "commitHash": "ce9dc476c72740ffc51b7176f7c2c12ff6a6f558",
+```
+
+
+### Finding 181: personalInfo
+
+- **File:** `security-audit-report.json`
+- **Commit:** `15cbbc89`
+- **Message:** feat: comprehensive security audit with Git history analysis
+- **Match:** `admin@lightningtalk.local`
+- **Context:**
+```
+      "pattern": "/\\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Z|a-z]{2,}\\b/g",
+      "match": "
+>>> admin@lightningtalk.local <<<
+",
+      "commitHash": "ce9dc476c72740ffc51b7176f7c2c12ff6a6f558",
+```
+
+
+### Finding 182: personalInfo
+
+- **File:** `security-audit-report.json`
+- **Commit:** `15cbbc89`
+- **Message:** feat: comprehensive security audit with Git history analysis
+- **Match:** `storybook@lightningtalk.local`
+- **Context:**
+```
+      "pattern": "/\\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Z|a-z]{2,}\\b/g",
+      "match": "
+>>> storybook@lightningtalk.local <<<
+",
+      "commitHash": "ce9dc476c72740ffc51b7176f7c2c12ff6a6f558",
+```
+
+
+### Finding 183: infrastructureInfo
+
+- **File:** `security-audit-report.json`
+- **Commit:** `15cbbc89`
+- **Message:** feat: comprehensive security audit with Git history analysis
+- **Match:** `https://4mz5i3x23c.execute-api.ap-northeast-1.amazonaws.com/prod/api/health",`
+- **Context:**
+```
+      "pattern": "/https?:\\/\\/[a-zA-Z0-9.-]+\\.amazonaws\\.com[^\\s]*/g",
+      "match": "
+>>> https://4mz5i3x23c.execute-api.ap-northeast-1.amazonaws.com/prod/api/health", <<<
+
+      "commitHash": "f47ea0203ac5363b921499e16bd57bf02b48690d",
+```
+
+
+### Finding 184: infrastructureInfo
+
+- **File:** `security-audit-report.json`
+- **Commit:** `15cbbc89`
+- **Message:** feat: comprehensive security audit with Git history analysis
+- **Match:** `https://4ujhkvx000.execute-api.ap-northeast-1.amazonaws.com/prod/api/health",`
+- **Context:**
+```
+      "pattern": "/https?:\\/\\/[a-zA-Z0-9.-]+\\.amazonaws\\.com[^\\s]*/g",
+      "match": "
+>>> https://4ujhkvx000.execute-api.ap-northeast-1.amazonaws.com/prod/api/health", <<<
+
+      "commitHash": "f47ea0203ac5363b921499e16bd57bf02b48690d",
+```
+
+
+### Finding 185: personalInfo
 
 - **File:** `cdk/bin/cdk.js`
 - **Commit:** `ce9dc476`
@@ -40,7 +2984,7 @@
 ```
 
 
-### Finding 2: personalInfo
+### Finding 186: personalInfo
 
 - **File:** `cdk/lib/config/environment.js`
 - **Commit:** `ce9dc476`
@@ -56,7 +3000,7 @@
 ```
 
 
-### Finding 3: personalInfo
+### Finding 187: personalInfo
 
 - **File:** `cdk/lib/config/environment.js`
 - **Commit:** `ce9dc476`
@@ -72,7 +3016,7 @@
 ```
 
 
-### Finding 4: personalInfo
+### Finding 188: personalInfo
 
 - **File:** `cdk/lib/config/environment.js`
 - **Commit:** `ce9dc476`
@@ -88,7 +3032,7 @@
 ```
 
 
-### Finding 5: personalInfo
+### Finding 189: personalInfo
 
 - **File:** `cdk/lib/prod-environment-stack.js`
 - **Commit:** `ce9dc476`
@@ -104,7 +3048,7 @@
 ```
 
 
-### Finding 6: infrastructureInfo
+### Finding 190: infrastructureInfo
 
 - **File:** `.github/workflows/multi-environment-deploy.yml`
 - **Commit:** `f47ea020`
@@ -120,7 +3064,7 @@
 ```
 
 
-### Finding 7: infrastructureInfo
+### Finding 191: infrastructureInfo
 
 - **File:** `.github/workflows/multi-environment-deploy.yml`
 - **Commit:** `f47ea020`
@@ -136,7 +3080,7 @@
 ```
 
 
-### Finding 8: infrastructureInfo
+### Finding 192: infrastructureInfo
 
 - **File:** `.github/workflows/multi-environment-deploy.yml`
 - **Commit:** `07871c51`
@@ -152,7 +3096,7 @@
 ```
 
 
-### Finding 9: infrastructureInfo
+### Finding 193: infrastructureInfo
 
 - **File:** `.github/workflows/multi-environment-deploy.yml`
 - **Commit:** `07871c51`
@@ -168,7 +3112,7 @@
 ```
 
 
-### Finding 10: infrastructureInfo
+### Finding 194: infrastructureInfo
 
 - **File:** `.github/workflows/multi-environment-deploy.yml`
 - **Commit:** `1063550c`
@@ -184,7 +3128,7 @@
 ```
 
 
-### Finding 11: infrastructureInfo
+### Finding 195: infrastructureInfo
 
 - **File:** `.github/workflows/multi-environment-deploy.yml`
 - **Commit:** `1063550c`
@@ -200,7 +3144,7 @@
 ```
 
 
-### Finding 12: personalInfo
+### Finding 196: personalInfo
 
 - **File:** `.devcontainer/docker-compose.yml`
 - **Commit:** `85b585ef`
@@ -216,7 +3160,7 @@
 ```
 
 
-### Finding 13: personalInfo
+### Finding 197: personalInfo
 
 - **File:** `.devcontainer/docker-compose.yml`
 - **Commit:** `aee12c9e`
@@ -232,7 +3176,7 @@
 ```
 
 
-### Finding 14: personalInfo
+### Finding 198: personalInfo
 
 - **File:** `cdk/config/dev-config.json`
 - **Commit:** `24afe52d`
@@ -248,7 +3192,7 @@
 ```
 
 
-### Finding 15: personalInfo
+### Finding 199: personalInfo
 
 - **File:** `cdk/config/dev-config.json`
 - **Commit:** `24afe52d`
@@ -264,7 +3208,7 @@
 ```
 
 
-### Finding 16: personalInfo
+### Finding 200: personalInfo
 
 - **File:** `cdk/config/prod-config.json`
 - **Commit:** `24afe52d`
@@ -280,7 +3224,7 @@
 ```
 
 
-### Finding 17: personalInfo
+### Finding 201: personalInfo
 
 - **File:** `cdk/config/prod-config.json`
 - **Commit:** `24afe52d`
@@ -296,7 +3240,7 @@
 ```
 
 
-### Finding 18: personalInfo
+### Finding 202: personalInfo
 
 - **File:** `lighthouse-mobile-report.json`
 - **Commit:** `24afe52d`
@@ -312,7 +3256,7 @@
 ```
 
 
-### Finding 19: personalInfo
+### Finding 203: personalInfo
 
 - **File:** `lighthouse-mobile-report.json`
 - **Commit:** `24afe52d`
@@ -328,7 +3272,7 @@
 ```
 
 
-### Finding 20: personalInfo
+### Finding 204: personalInfo
 
 - **File:** `lighthouse-mobile-report.json`
 - **Commit:** `24afe52d`
@@ -344,7 +3288,7 @@
 ```
 
 
-### Finding 21: personalInfo
+### Finding 205: personalInfo
 
 - **File:** `lighthouse-mobile-report.json`
 - **Commit:** `24afe52d`
@@ -360,7 +3304,7 @@
 ```
 
 
-### Finding 22: personalInfo
+### Finding 206: personalInfo
 
 - **File:** `lighthouse-mobile-report.json`
 - **Commit:** `24afe52d`
@@ -376,7 +3320,7 @@
 ```
 
 
-### Finding 23: personalInfo
+### Finding 207: personalInfo
 
 - **File:** `lighthouse-mobile-report.json`
 - **Commit:** `24afe52d`
@@ -392,7 +3336,7 @@
 ```
 
 
-### Finding 24: infrastructureInfo
+### Finding 208: infrastructureInfo
 
 - **File:** `lighthouse-mobile-report.json`
 - **Commit:** `24afe52d`
@@ -408,7 +3352,7 @@
 ```
 
 
-### Finding 25: infrastructureInfo
+### Finding 209: infrastructureInfo
 
 - **File:** `lighthouse-mobile-report.json`
 - **Commit:** `24afe52d`
@@ -424,7 +3368,7 @@
 ```
 
 
-### Finding 26: infrastructureInfo
+### Finding 210: infrastructureInfo
 
 - **File:** `lighthouse-mobile-report.json`
 - **Commit:** `24afe52d`
@@ -440,7 +3384,7 @@
 ```
 
 
-### Finding 27: infrastructureInfo
+### Finding 211: infrastructureInfo
 
 - **File:** `lighthouse-mobile-report.json`
 - **Commit:** `24afe52d`
@@ -456,7 +3400,7 @@
 ```
 
 
-### Finding 28: infrastructureInfo
+### Finding 212: infrastructureInfo
 
 - **File:** `lighthouse-mobile-report.json`
 - **Commit:** `24afe52d`
@@ -472,7 +3416,7 @@
 ```
 
 
-### Finding 29: infrastructureInfo
+### Finding 213: infrastructureInfo
 
 - **File:** `lighthouse-mobile-report.json`
 - **Commit:** `24afe52d`
@@ -488,7 +3432,7 @@
 ```
 
 
-### Finding 30: infrastructureInfo
+### Finding 214: infrastructureInfo
 
 - **File:** `lighthouse-mobile-report.json`
 - **Commit:** `24afe52d`
@@ -504,7 +3448,7 @@
 ```
 
 
-### Finding 31: personalInfo
+### Finding 215: personalInfo
 
 - **File:** `lighthouse-report.json`
 - **Commit:** `24afe52d`
@@ -520,7 +3464,7 @@
 ```
 
 
-### Finding 32: personalInfo
+### Finding 216: personalInfo
 
 - **File:** `lighthouse-report.json`
 - **Commit:** `24afe52d`
@@ -536,7 +3480,7 @@
 ```
 
 
-### Finding 33: personalInfo
+### Finding 217: personalInfo
 
 - **File:** `lighthouse-report.json`
 - **Commit:** `24afe52d`
@@ -552,7 +3496,7 @@
 ```
 
 
-### Finding 34: personalInfo
+### Finding 218: personalInfo
 
 - **File:** `lighthouse-report.json`
 - **Commit:** `24afe52d`
@@ -568,7 +3512,7 @@
 ```
 
 
-### Finding 35: personalInfo
+### Finding 219: personalInfo
 
 - **File:** `lighthouse-report.json`
 - **Commit:** `24afe52d`
@@ -584,7 +3528,7 @@
 ```
 
 
-### Finding 36: personalInfo
+### Finding 220: personalInfo
 
 - **File:** `lighthouse-report.json`
 - **Commit:** `24afe52d`
@@ -600,7 +3544,7 @@
 ```
 
 
-### Finding 37: personalInfo
+### Finding 221: personalInfo
 
 - **File:** `lighthouse-report.json`
 - **Commit:** `24afe52d`
@@ -616,7 +3560,7 @@
 ```
 
 
-### Finding 38: personalInfo
+### Finding 222: personalInfo
 
 - **File:** `lighthouse-report.json`
 - **Commit:** `24afe52d`
@@ -632,7 +3576,7 @@
 ```
 
 
-### Finding 39: infrastructureInfo
+### Finding 223: infrastructureInfo
 
 - **File:** `lighthouse-report.json`
 - **Commit:** `24afe52d`
@@ -648,7 +3592,7 @@
 ```
 
 
-### Finding 40: infrastructureInfo
+### Finding 224: infrastructureInfo
 
 - **File:** `lighthouse-report.json`
 - **Commit:** `24afe52d`
@@ -664,7 +3608,7 @@
 ```
 
 
-### Finding 41: infrastructureInfo
+### Finding 225: infrastructureInfo
 
 - **File:** `lighthouse-report.json`
 - **Commit:** `24afe52d`
@@ -680,7 +3624,7 @@
 ```
 
 
-### Finding 42: infrastructureInfo
+### Finding 226: infrastructureInfo
 
 - **File:** `lighthouse-report.json`
 - **Commit:** `24afe52d`
@@ -696,7 +3640,7 @@
 ```
 
 
-### Finding 43: infrastructureInfo
+### Finding 227: infrastructureInfo
 
 - **File:** `lighthouse-report.json`
 - **Commit:** `24afe52d`
@@ -712,7 +3656,7 @@
 ```
 
 
-### Finding 44: infrastructureInfo
+### Finding 228: infrastructureInfo
 
 - **File:** `lighthouse-report.json`
 - **Commit:** `24afe52d`
@@ -728,7 +3672,7 @@
 ```
 
 
-### Finding 45: infrastructureInfo
+### Finding 229: infrastructureInfo
 
 - **File:** `lighthouse-report.json`
 - **Commit:** `24afe52d`
@@ -744,7 +3688,7 @@
 ```
 
 
-### Finding 46: infrastructureInfo
+### Finding 230: infrastructureInfo
 
 - **File:** `lighthouse-report.json`
 - **Commit:** `24afe52d`
@@ -760,7 +3704,7 @@
 ```
 
 
-### Finding 47: infrastructureInfo
+### Finding 231: infrastructureInfo
 
 - **File:** `lighthouse-report.json`
 - **Commit:** `24afe52d`
@@ -776,7 +3720,7 @@
 ```
 
 
-### Finding 48: infrastructureInfo
+### Finding 232: infrastructureInfo
 
 - **File:** `lighthouse-report.json`
 - **Commit:** `24afe52d`
@@ -792,7 +3736,7 @@
 ```
 
 
-### Finding 49: infrastructureInfo
+### Finding 233: infrastructureInfo
 
 - **File:** `lighthouse-report.json`
 - **Commit:** `24afe52d`
@@ -808,7 +3752,7 @@
 ```
 
 
-### Finding 50: infrastructureInfo
+### Finding 234: infrastructureInfo
 
 - **File:** `lighthouse-report.json`
 - **Commit:** `24afe52d`
@@ -824,7 +3768,7 @@
 ```
 
 
-### Finding 51: infrastructureInfo
+### Finding 235: infrastructureInfo
 
 - **File:** `lighthouse-report.json`
 - **Commit:** `24afe52d`
@@ -840,7 +3784,7 @@
 ```
 
 
-### Finding 52: infrastructureInfo
+### Finding 236: infrastructureInfo
 
 - **File:** `lighthouse-report.json`
 - **Commit:** `24afe52d`
@@ -856,7 +3800,7 @@
 ```
 
 
-### Finding 53: infrastructureInfo
+### Finding 237: infrastructureInfo
 
 - **File:** `lighthouse-report.json`
 - **Commit:** `24afe52d`
@@ -872,7 +3816,7 @@
 ```
 
 
-### Finding 54: personalInfo
+### Finding 238: personalInfo
 
 - **File:** `public/js/main.js`
 - **Commit:** `24afe52d`
@@ -888,7 +3832,7 @@
 ```
 
 
-### Finding 55: personalInfo
+### Finding 239: personalInfo
 
 - **File:** `public/js/main.js`
 - **Commit:** `2ff201db`
@@ -904,7 +3848,7 @@
 ```
 
 
-### Finding 56: infrastructureInfo
+### Finding 240: infrastructureInfo
 
 - **File:** `public/js/auth.js`
 - **Commit:** `132a6247`
@@ -920,7 +3864,7 @@
 ```
 
 
-### Finding 57: personalInfo
+### Finding 241: personalInfo
 
 - **File:** `public/js/main.js`
 - **Commit:** `132a6247`
@@ -936,7 +3880,7 @@
 ```
 
 
-### Finding 58: infrastructureInfo
+### Finding 242: infrastructureInfo
 
 - **File:** `public/js/main.js`
 - **Commit:** `132a6247`
@@ -952,7 +3896,7 @@
 ```
 
 
-### Finding 59: infrastructureInfo
+### Finding 243: infrastructureInfo
 
 - **File:** `public/js/main.js`
 - **Commit:** `132a6247`
@@ -968,7 +3912,7 @@
 ```
 
 
-### Finding 60: personalInfo
+### Finding 244: personalInfo
 
 - **File:** `scripts/create-sample-event.js`
 - **Commit:** `132a6247`
@@ -984,7 +3928,7 @@
 ```
 
 
-### Finding 61: personalInfo
+### Finding 245: personalInfo
 
 - **File:** `scripts/create-sample-event.js`
 - **Commit:** `132a6247`
@@ -1000,7 +3944,7 @@
 ```
 
 
-### Finding 62: personalInfo
+### Finding 246: personalInfo
 
 - **File:** `public/js/main.js`
 - **Commit:** `e6171530`
@@ -1016,7 +3960,7 @@
 ```
 
 
-### Finding 63: infrastructureInfo
+### Finding 247: infrastructureInfo
 
 - **File:** `public/js/main.js`
 - **Commit:** `e6171530`
@@ -1032,7 +3976,7 @@
 ```
 
 
-### Finding 64: infrastructureInfo
+### Finding 248: infrastructureInfo
 
 - **File:** `public/js/main.js`
 - **Commit:** `e6171530`
@@ -1048,55 +3992,7 @@
 ```
 
 
-### Finding 65: personalInfo
-
-- **File:** `public/js/main.js`
-- **Commit:** `83b1ddee`
-- **Message:** feat: Implement comprehensive mobile optimization system v1
-- **Match:** `example@email.com`
-- **Context:**
-```
-                    <input type="email" id="email" name="email" required>
-                    <span class="field-hint">例: 
->>> example@email.com <<<
-</span>
-                    <span class="field-error" id="email-error"></span>
-```
-
-
-### Finding 66: infrastructureInfo
-
-- **File:** `public/js/main.js`
-- **Commit:** `83b1ddee`
-- **Message:** feat: Implement comprehensive mobile optimization system v1
-- **Match:** `https://9qyaz7n47j.execute-api.ap-northeast-1.amazonaws.com/prod/api/voting/participation/${eventId}`
-- **Context:**
-```
-        const response = await fetch(
-          `
->>> https://9qyaz7n47j.execute-api.ap-northeast-1.amazonaws.com/prod/api/voting/participation/${eventId}` <<<
-
-        );
-```
-
-
-### Finding 67: infrastructureInfo
-
-- **File:** `public/js/main.js`
-- **Commit:** `83b1ddee`
-- **Message:** feat: Implement comprehensive mobile optimization system v1
-- **Match:** `https://9qyaz7n47j.execute-api.ap-northeast-1.amazonaws.com/prod/api/voting',`
-- **Context:**
-```
-    // Also send via API
-    fetch('
->>> https://9qyaz7n47j.execute-api.ap-northeast-1.amazonaws.com/prod/api/voting', <<<
- {
-      method: 'POST',
-```
-
-
-### Finding 68: personalInfo
+### Finding 249: personalInfo
 
 - **File:** `.env`
 - **Commit:** `WORKSPAC`
@@ -1112,7 +4008,7 @@ EMAIL_FROM="
 ```
 
 
-### Finding 69: infrastructureInfo
+### Finding 250: infrastructureInfo
 
 - **File:** `.env`
 - **Commit:** `WORKSPAC`
@@ -1128,7 +4024,7 @@ API_ENDPOINT=
 ```
 
 
-### Finding 70: personalInfo
+### Finding 251: personalInfo
 
 - **File:** `.env.production`
 - **Commit:** `WORKSPAC`
@@ -1144,7 +4040,7 @@ AWS_SES_REGION=ap-northeast-1
 ```
 
 
-### Finding 71: infrastructureInfo
+### Finding 252: infrastructureInfo
 
 - **File:** `.env.production`
 - **Commit:** `WORKSPAC`
@@ -1160,7 +4056,7 @@ FRONTEND_URL=https://xn--6wym69a.com
 ```
 
 
-### Finding 72: personalInfo
+### Finding 253: personalInfo
 
 - **File:** `.env.development`
 - **Commit:** `WORKSPAC`
@@ -1176,7 +4072,7 @@ EMAIL_FROM="
 ```
 
 
-### Finding 73: infrastructureInfo
+### Finding 254: infrastructureInfo
 
 - **File:** `.env.development`
 - **Commit:** `WORKSPAC`

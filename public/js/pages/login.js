@@ -86,7 +86,7 @@ async function checkAuthStatus() {
 }
 
 // Initialize when DOM is loaded
-document.addEventListener('DOMContentLoaded', async () => {
+document.addEventListener('DOMContentLoaded', async() => {
   // Check if already authenticated
   const isAuthenticated = await checkAuthStatus();
 

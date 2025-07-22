@@ -3,7 +3,7 @@
  * Enhanced UI components for better user experience
  */
 
-(function (global) {
+(function(global) {
   'use strict';
 
   // Component Library namespace
@@ -680,7 +680,7 @@
     return function executedFunction() {
       const context = this;
       const args = arguments;
-      const later = function () {
+      const later = function() {
         timeout = null;
         func.apply(context, args);
       };
@@ -691,7 +691,7 @@
 
   function throttle(func, limit) {
     let inThrottle;
-    return function () {
+    return function() {
       const args = arguments;
       const context = this;
       if (!inThrottle) {

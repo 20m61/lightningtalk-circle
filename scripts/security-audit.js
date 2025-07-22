@@ -38,7 +38,7 @@ const SENSITIVE_PATTERNS = {
     /\bxoxp-[0-9a-zA-Z\-]+/g,                   // Slack User Token
     /\bAIza[0-9A-Za-z\-_]{35}\b/g,              // Google API Key
     /\b[0-9]+-[0-9A-Za-z_]{32}\.apps\.googleusercontent\.com\b/g, // Google OAuth Client ID
-    /\bEAAC[a-zA-Z0-9]+/g,                      // Facebook Access Token
+    /\bEAAC[a-zA-Z0-9]+/g                      // Facebook Access Token
   ],
 
   // データベース接続情報
@@ -48,7 +48,7 @@ const SENSITIVE_PATTERNS = {
     /mysql:\/\/[^\/\s]+:[^\/\s]+@[^\/\s]+/g,    // MySQL URI with credentials
     /redis:\/\/[^\/\s]+:[^\/\s]+@[^\/\s]+/g,    // Redis URI with credentials
     /password\s*[:=]\s*["']([^"']+)["']/gi,     // Password assignments
-    /pwd\s*[:=]\s*["']([^"']+)["']/gi,          // Password assignments (short)
+    /pwd\s*[:=]\s*["']([^"']+)["']/gi          // Password assignments (short)
   ],
 
   // 個人情報
@@ -61,7 +61,7 @@ const SENSITIVE_PATTERNS = {
     /\b[0-9]{7,10}\b/g,                         // ID numbers
     /マイナンバー|個人番号/g,                    // Japanese personal number references
     /住所|〒\d{3}-\d{4}/g,                      // Japanese addresses
-    /生年月日|誕生日/g,                          // Birthday references
+    /生年月日|誕生日/g                          // Birthday references
   ],
 
   // サーバー・インフラ情報
@@ -72,7 +72,7 @@ const SENSITIVE_PATTERNS = {
     /\b[a-zA-Z0-9.-]+\.local\b/g,              // Local domain names
     /\b[a-zA-Z0-9.-]+\.internal\b/g,           // Internal domain names
     /ssh-rsa\s+[A-Za-z0-9+\/=]+/g,            // SSH public keys
-    /-----BEGIN [A-Z ]+-----[\s\S]*?-----END [A-Z ]+-----/g, // Private keys
+    /-----BEGIN [A-Z ]+-----[\s\S]*?-----END [A-Z ]+-----/g // Private keys
   ],
 
   // セッション・認証情報
@@ -81,7 +81,7 @@ const SENSITIVE_PATTERNS = {
     /csrf_token\s*[:=]\s*["']([^"']+)["']/gi,  // CSRF tokens
     /auth_token\s*[:=]\s*["']([^"']+)["']/gi,  // Auth tokens
     /bearer\s+[a-zA-Z0-9._-]+/gi,              // Bearer tokens
-    /jwt\s*[:=]\s*["']([^"']+)["']/gi,         // JWT tokens
+    /jwt\s*[:=]\s*["']([^"']+)["']/gi         // JWT tokens
   ],
 
   // 環境・設定情報
@@ -90,7 +90,7 @@ const SENSITIVE_PATTERNS = {
     /DEBUG\s*[:=]\s*["']?true["']?/gi,         // Debug flags
     /SECRET\s*[:=]\s*["']([^"']+)["']/gi,      // Secret values
     /PRIVATE\s*[:=]\s*["']([^"']+)["']/gi,     // Private values
-    /CONFIDENTIAL\s*[:=]\s*["']([^"']+)["']/gi, // Confidential values
+    /CONFIDENTIAL\s*[:=]\s*["']([^"']+)["']/gi // Confidential values
   ]
 };
 
@@ -143,7 +143,7 @@ const auditResults = {
  */
 function getChangedFiles(commitHash) {
   try {
-    const result = execSync(`git show --pretty="" --name-only ${commitHash}`, { 
+    const result = execSync(`git show --pretty="" --name-only ${commitHash}`, {
       encoding: 'utf8',
       stdio: 'pipe'
     });
@@ -158,7 +158,7 @@ function getChangedFiles(commitHash) {
  */
 function getFileContentAtCommit(commitHash, filePath) {
   try {
-    const result = execSync(`git show ${commitHash}:${filePath}`, { 
+    const result = execSync(`git show ${commitHash}:${filePath}`, {
       encoding: 'utf8',
       stdio: 'pipe'
     });
@@ -173,8 +173,8 @@ function getFileContentAtCommit(commitHash, filePath) {
  */
 function isWhitelisted(value) {
   const cleanValue = value.toLowerCase().trim();
-  return WHITELIST.some(whiteItem => 
-    cleanValue.includes(whiteItem.toLowerCase()) || 
+  return WHITELIST.some(whiteItem =>
+    cleanValue.includes(whiteItem.toLowerCase()) ||
     whiteItem.toLowerCase().includes(cleanValue)
   );
 }
@@ -224,10 +224,10 @@ function getLineNumber(content, match) {
  */
 async function scanGitHistory() {
   log('🔍 Starting comprehensive Git history security audit...', 'blue');
-  
+
   // 最近の100コミットをスキャン（効率化）
-  const commitHashes = execSync('git rev-list --all -n 100', { 
-    encoding: 'utf8' 
+  const commitHashes = execSync('git rev-list --all -n 100', {
+    encoding: 'utf8'
   }).trim().split('\n');
 
   auditResults.totalCommits = commitHashes.length;
@@ -235,15 +235,15 @@ async function scanGitHistory() {
 
   for (let i = 0; i < commitHashes.length; i++) {
     const commitHash = commitHashes[i];
-    
+
     if (i % 10 === 0) {
       log(`📈 Progress: ${i}/${commitHashes.length} commits scanned`, 'yellow');
     }
 
     try {
       // コミット情報を取得
-      const commitInfo = execSync(`git show --pretty=format:"%s" -s ${commitHash}`, { 
-        encoding: 'utf8' 
+      const commitInfo = execSync(`git show --pretty=format:"%s" -s ${commitHash}`, {
+        encoding: 'utf8'
       }).trim();
 
       // 変更されたファイルを取得（.env, config, credential系ファイルのみ）
@@ -296,7 +296,7 @@ function isSensitiveFile(filePath) {
  */
 function scanCurrentWorkspace() {
   log('📂 Scanning current workspace for sensitive files...', 'blue');
-  
+
   const sensitiveFiles = [
     '.env',
     '.env.local',
@@ -343,11 +343,11 @@ function generateReport() {
 
   // JSONレポート
   writeFileSync('security-audit-report.json', JSON.stringify(reportData, null, 2));
-  
+
   // 人間が読めるレポート
   const readableReport = generateReadableReport(reportData);
   writeFileSync('security-audit-report.md', readableReport);
-  
+
   log('📄 Reports generated:', 'green');
   log('  - security-audit-report.json', 'cyan');
   log('  - security-audit-report.md', 'cyan');
@@ -358,19 +358,19 @@ function generateReport() {
  */
 function generateRecommendations() {
   const recommendations = [];
-  
+
   if (auditResults.summary.apiKeys > 0) {
     recommendations.push('🔑 API keys detected. Use environment variables and AWS Secrets Manager.');
   }
-  
+
   if (auditResults.summary.database > 0) {
     recommendations.push('🗄️ Database credentials detected. Use connection pooling and credential rotation.');
   }
-  
+
   if (auditResults.summary.personalInfo > 0) {
     recommendations.push('👤 Personal information detected. Implement data anonymization and GDPR compliance.');
   }
-  
+
   if (auditResults.summary.infrastructure > 0) {
     recommendations.push('🏗️ Infrastructure details exposed. Review network security and access controls.');
   }
@@ -448,10 +448,10 @@ ${data.recommendations.map(rec => `- ${rec}`).join('\n')}
 function displaySummary() {
   log('\n🎯 Security Audit Complete!', 'bright');
   log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━', 'cyan');
-  
+
   log(`📊 Scanned: ${auditResults.scannedCommits} recent commits`, 'blue');
   log(`🔍 Total Findings: ${auditResults.findings.length}`, auditResults.findings.length > 0 ? 'red' : 'green');
-  
+
   if (auditResults.findings.length > 0) {
     log('\n📋 Findings by Category:', 'yellow');
     Object.entries(auditResults.summary).forEach(([category, count]) => {
@@ -459,13 +459,13 @@ function displaySummary() {
         log(`  ${category}: ${count}`, 'red');
       }
     });
-    
+
     log('\n⚠️  SECURITY ALERT: Sensitive data detected!', 'red');
     log('📖 Please review the generated reports for details.', 'yellow');
   } else {
     log('\n✅ No sensitive data detected in recent commits!', 'green');
   }
-  
+
   log('\n📄 Reports saved:', 'cyan');
   log('  - security-audit-report.json (machine-readable)', 'cyan');
   log('  - security-audit-report.md (human-readable)', 'cyan');
@@ -478,19 +478,19 @@ async function main() {
   try {
     log('🔐 Lightning Talk Circle - Security Audit', 'bright');
     log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━', 'cyan');
-    
+
     // Git履歴スキャン
     await scanGitHistory();
-    
+
     // 現在のワークスペーススキャン
     scanCurrentWorkspace();
-    
+
     // レポート生成
     generateReport();
-    
+
     // サマリー表示
     displaySummary();
-    
+
   } catch (error) {
     log(`❌ Security audit failed: ${error.message}`, 'red');
     process.exit(1);

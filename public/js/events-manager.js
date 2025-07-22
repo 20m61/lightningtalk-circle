@@ -23,7 +23,7 @@ class EventsManager {
   async init() {
     await this.loadEvents();
     this.setupEventListeners();
-    
+
     // CSSが完全に読み込まれてからレンダリング
     if (document.readyState === 'complete') {
       this.renderHeroEvents();
@@ -237,14 +237,14 @@ class EventsManager {
     if (filter !== 'all') {
       filteredEvents = this.events.filter(event => {
         switch (filter) {
-          case 'upcoming':
-            return event.status === 'upcoming';
-          case 'planning':
-            return event.status === 'planning';
-          case 'past':
-            return event.status === 'past';
-          default:
-            return true;
+        case 'upcoming':
+          return event.status === 'upcoming';
+        case 'planning':
+          return event.status === 'planning';
+        case 'past':
+          return event.status === 'past';
+        default:
+          return true;
         }
       });
     }

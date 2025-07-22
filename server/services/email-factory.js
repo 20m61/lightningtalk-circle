@@ -83,49 +83,49 @@ export class EmailServiceFactory {
     };
 
     switch (emailProvider) {
-      case 'sendgrid':
-        // Check SendGrid configuration
-        if (!process.env.SENDGRID_API_KEY) {
-          validation.errors.push('SENDGRID_API_KEY is required for SendGrid provider');
-          validation.valid = false;
-        }
-
-        if (!process.env.EMAIL_FROM) {
-          validation.warnings.push('EMAIL_FROM should be set for better deliverability');
-        }
-
-        // Validate API key format
-        if (process.env.SENDGRID_API_KEY && !process.env.SENDGRID_API_KEY.startsWith('SG.')) {
-          validation.warnings.push('SendGrid API key should start with "SG."');
-        }
-        break;
-
-      case 'ses': {
-        // Check AWS SES configuration
-        const requiredAwsVars = ['AWS_ACCESS_KEY_ID', 'AWS_SECRET_ACCESS_KEY'];
-        const missingVars = requiredAwsVars.filter(varName => !process.env[varName]);
-
-        if (missingVars.length > 0) {
-          validation.errors.push(`Missing AWS credentials: ${missingVars.join(', ')}`);
-          validation.valid = false;
-        }
-
-        if (!process.env.AWS_REGION) {
-          validation.warnings.push('AWS_REGION not set, defaulting to us-east-1');
-        }
-        break;
+    case 'sendgrid':
+      // Check SendGrid configuration
+      if (!process.env.SENDGRID_API_KEY) {
+        validation.errors.push('SENDGRID_API_KEY is required for SendGrid provider');
+        validation.valid = false;
       }
 
-      case 'simulation':
-        // Simulation mode warnings
-        if (process.env.NODE_ENV === 'production') {
-          validation.warnings.push('Using simulation mode in production environment');
-        }
-        break;
+      if (!process.env.EMAIL_FROM) {
+        validation.warnings.push('EMAIL_FROM should be set for better deliverability');
+      }
 
-      default:
-        validation.errors.push(`Unsupported email provider: ${emailProvider}`);
+      // Validate API key format
+      if (process.env.SENDGRID_API_KEY && !process.env.SENDGRID_API_KEY.startsWith('SG.')) {
+        validation.warnings.push('SendGrid API key should start with "SG."');
+      }
+      break;
+
+    case 'ses': {
+      // Check AWS SES configuration
+      const requiredAwsVars = ['AWS_ACCESS_KEY_ID', 'AWS_SECRET_ACCESS_KEY'];
+      const missingVars = requiredAwsVars.filter(varName => !process.env[varName]);
+
+      if (missingVars.length > 0) {
+        validation.errors.push(`Missing AWS credentials: ${missingVars.join(', ')}`);
         validation.valid = false;
+      }
+
+      if (!process.env.AWS_REGION) {
+        validation.warnings.push('AWS_REGION not set, defaulting to us-east-1');
+      }
+      break;
+    }
+
+    case 'simulation':
+      // Simulation mode warnings
+      if (process.env.NODE_ENV === 'production') {
+        validation.warnings.push('Using simulation mode in production environment');
+      }
+      break;
+
+    default:
+      validation.errors.push(`Unsupported email provider: ${emailProvider}`);
+      validation.valid = false;
     }
 
     // Check Redis configuration for queue support

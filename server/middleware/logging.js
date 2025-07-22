@@ -25,7 +25,7 @@ function httpLoggingMiddleware() {
 
     // レスポンス完了時のログ
     const originalSend = res.send;
-    res.send = function (body) {
+    res.send = function(body) {
       const duration = Date.now() - startTime;
 
       logger.http(req, res, duration, {
@@ -125,7 +125,7 @@ function authLoggingMiddleware() {
 
     // 認証失敗時のログ（レスポンス後に実行）
     const originalStatus = res.status;
-    res.status = function (code) {
+    res.status = function(code) {
       if (code === 401) {
         logger.security('Authentication failed', {
           url: req.url,

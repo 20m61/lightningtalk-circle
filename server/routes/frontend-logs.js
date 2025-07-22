@@ -29,7 +29,7 @@ const frontendLogRateLimit = rateLimit({
  * フロントエンドログの受信
  * POST /api/logs/frontend
  */
-router.post('/frontend', frontendLogRateLimit, async (req, res) => {
+router.post('/frontend', frontendLogRateLimit, async(req, res) => {
   try {
     const { logs } = req.body;
 
@@ -136,40 +136,40 @@ async function processFrontendLogEntry(logEntry, req) {
   const sanitizedMetadata = sanitizeFrontendMetadata(metadata);
 
   switch (level) {
-    case 'debug':
-      logger.debug(message, sanitizedMetadata);
-      break;
-    case 'info':
-      // ユーザーアクション等の重要な情報はbusinessレベルで記録
-      if (logEntry.category === 'user_action') {
-        logger.business(message, sanitizedMetadata);
-      } else {
-        logger.info(message, sanitizedMetadata);
-      }
-      break;
-    case 'warn':
-      logger.warn(message, sanitizedMetadata);
-      break;
-    case 'error':
-      // フロントエンドエラーは特別扱い
-      logger.error(message, {
-        ...sanitizedMetadata,
-        errorCategory: 'frontend_error'
-      });
-
-      // 重要なエラーの場合はセキュリティログとしても記録
-      if (isCriticalFrontendError(logEntry)) {
-        logger.security(`Critical frontend error: ${logEntry.message}`, {
-          sessionId: logEntry.sessionId,
-          userId: logEntry.userId,
-          url: logEntry.url,
-          userAgent: logEntry.userAgent,
-          stack: logEntry.stack
-        });
-      }
-      break;
-    default:
+  case 'debug':
+    logger.debug(message, sanitizedMetadata);
+    break;
+  case 'info':
+    // ユーザーアクション等の重要な情報はbusinessレベルで記録
+    if (logEntry.category === 'user_action') {
+      logger.business(message, sanitizedMetadata);
+    } else {
       logger.info(message, sanitizedMetadata);
+    }
+    break;
+  case 'warn':
+    logger.warn(message, sanitizedMetadata);
+    break;
+  case 'error':
+    // フロントエンドエラーは特別扱い
+    logger.error(message, {
+      ...sanitizedMetadata,
+      errorCategory: 'frontend_error'
+    });
+
+    // 重要なエラーの場合はセキュリティログとしても記録
+    if (isCriticalFrontendError(logEntry)) {
+      logger.security(`Critical frontend error: ${logEntry.message}`, {
+        sessionId: logEntry.sessionId,
+        userId: logEntry.userId,
+        url: logEntry.url,
+        userAgent: logEntry.userAgent,
+        stack: logEntry.stack
+      });
+    }
+    break;
+  default:
+    logger.info(message, sanitizedMetadata);
   }
 
   // パフォーマンスログの特別処理
@@ -303,7 +303,7 @@ function handleApiLog(logEntry, req) {
  * ログ統計情報の取得
  * GET /api/logs/frontend/stats
  */
-router.get('/stats', async (req, res) => {
+router.get('/stats', async(req, res) => {
   try {
     // 簡単な統計情報を返す（実装は環境により調整）
     const stats = {

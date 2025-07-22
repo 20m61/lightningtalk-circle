@@ -3,7 +3,7 @@
  * パフォーマンス指標の収集と分析
  */
 
-(function () {
+(function() {
   'use strict';
 
   // Analytics configuration

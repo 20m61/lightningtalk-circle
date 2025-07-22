@@ -396,12 +396,12 @@ export function createDatabaseAdapter(config = {}) {
   const type = config.type || process.env.DATABASE_TYPE || 'filesystem';
 
   switch (type.toLowerCase()) {
-    case 'dynamodb':
-      return new DynamoDBAdapter(config);
-    case 'filesystem':
-    case 'file':
-    default:
-      return new FileSystemAdapter(config);
+  case 'dynamodb':
+    return new DynamoDBAdapter(config);
+  case 'filesystem':
+  case 'file':
+  default:
+    return new FileSystemAdapter(config);
   }
 }
 

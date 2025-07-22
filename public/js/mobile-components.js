@@ -1371,7 +1371,7 @@ class MobileComponentSystem {
     });
 
     track.addEventListener('touchmove', e => {
-      if (!isMoving) return;
+      if (!isMoving) {return;}
       e.preventDefault();
       const moveX = e.touches[0].clientX - startX;
       track.style.transform = `translateX(${-currentIndex * 100 + (moveX / slider.offsetWidth) * 100}%)`;

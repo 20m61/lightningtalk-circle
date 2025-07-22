@@ -110,7 +110,7 @@ router.use(authenticateToken);
 router.get(
   '/events/:eventId',
   [param('eventId').isString().notEmpty().withMessage('Event ID is required')],
-  async (req, res) => {
+  async(req, res) => {
     try {
       const errors = validationResult(req);
       if (!errors.isEmpty()) {
@@ -224,7 +224,7 @@ router.post(
       .withMessage('Description must be less than 500 characters'),
     body('verified').optional().isBoolean()
   ],
-  async (req, res) => {
+  async(req, res) => {
     try {
       const errors = validationResult(req);
       if (!errors.isEmpty()) {
@@ -362,7 +362,7 @@ router.put(
       .withMessage('Description must be less than 500 characters'),
     body('verified').optional().isBoolean()
   ],
-  async (req, res) => {
+  async(req, res) => {
     try {
       const errors = validationResult(req);
       if (!errors.isEmpty()) {
@@ -454,7 +454,7 @@ router.put(
 router.delete(
   '/:contactId',
   [param('contactId').isString().notEmpty().withMessage('Contact ID is required')],
-  async (req, res) => {
+  async(req, res) => {
     try {
       const errors = validationResult(req);
       if (!errors.isEmpty()) {
@@ -568,7 +568,7 @@ router.post(
       .isLength({ max: 1000 })
       .withMessage('Details must be less than 1000 characters')
   ],
-  async (req, res) => {
+  async(req, res) => {
     try {
       const errors = validationResult(req);
       if (!errors.isEmpty()) {
@@ -705,7 +705,7 @@ router.post(
     body('timestamp').optional().isISO8601().withMessage('Valid timestamp required'),
     body('eventId').optional().isString()
   ],
-  async (req, res) => {
+  async(req, res) => {
     try {
       const errors = validationResult(req);
       if (!errors.isEmpty()) {
@@ -777,7 +777,7 @@ router.post(
 router.post(
   '/verify/:contactId',
   [param('contactId').isString().notEmpty().withMessage('Contact ID is required')],
-  async (req, res) => {
+  async(req, res) => {
     try {
       const errors = validationResult(req);
       if (!errors.isEmpty()) {

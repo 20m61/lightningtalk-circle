@@ -487,29 +487,29 @@ class MobileMapsOptimizer {
     this.vibrate([50]);
 
     switch (action) {
-      case 'center':
-        if (this.mapsSystem) {
-          this.mapsSystem.centerOnVenue();
-        }
-        break;
+    case 'center':
+      if (this.mapsSystem) {
+        this.mapsSystem.centerOnVenue();
+      }
+      break;
 
-      case 'directions':
-        if (this.mapsSystem) {
-          this.mapsSystem.getDirections();
-        }
-        break;
+    case 'directions':
+      if (this.mapsSystem) {
+        this.mapsSystem.getDirections();
+      }
+      break;
 
-      case 'emergency':
-        if (this.emergencySystem) {
-          this.emergencySystem.showAllContacts();
-        }
-        break;
+    case 'emergency':
+      if (this.emergencySystem) {
+        this.emergencySystem.showAllContacts();
+      }
+      break;
 
-      case 'share':
-        if (this.mapsSystem) {
-          this.mapsSystem.shareLocation();
-        }
-        break;
+    case 'share':
+      if (this.mapsSystem) {
+        this.mapsSystem.shareLocation();
+      }
+      break;
     }
 
     // Close FAB menu

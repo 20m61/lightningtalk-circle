@@ -24,7 +24,7 @@ const handleValidationErrors = (req, res, next) => {
  * GET /api/events
  * Get all events with optional filtering
  */
-router.get('/', async (req, res) => {
+router.get('/', async(req, res) => {
   try {
     const { database } = req.app.locals;
     const {
@@ -106,7 +106,7 @@ router.get('/', async (req, res) => {
  * GET /api/events/search
  * Search and filter events with advanced options
  */
-router.get('/search', async (req, res) => {
+router.get('/search', async(req, res) => {
   try {
     const { database } = req.app.locals;
     const {
@@ -164,14 +164,14 @@ router.get('/search', async (req, res) => {
         const hasOffline = event.venue?.address || event.venue?.name;
 
         switch (venue) {
-          case 'online':
-            return hasOnline && !hasOffline;
-          case 'offline':
-            return !hasOnline && hasOffline;
-          case 'hybrid':
-            return hasOnline && hasOffline;
-          default:
-            return true;
+        case 'online':
+          return hasOnline && !hasOffline;
+        case 'offline':
+          return !hasOnline && hasOffline;
+        case 'hybrid':
+          return hasOnline && hasOffline;
+        default:
+          return true;
         }
       });
     }
@@ -195,17 +195,17 @@ router.get('/search', async (req, res) => {
       let aValue, bValue;
 
       switch (sortBy) {
-        case 'title':
-          aValue = a.title.toLowerCase();
-          bValue = b.title.toLowerCase();
-          break;
-        case 'createdAt':
-          aValue = new Date(a.createdAt);
-          bValue = new Date(b.createdAt);
-          break;
-        default: // 'date'
-          aValue = new Date(a.date);
-          bValue = new Date(b.date);
+      case 'title':
+        aValue = a.title.toLowerCase();
+        bValue = b.title.toLowerCase();
+        break;
+      case 'createdAt':
+        aValue = new Date(a.createdAt);
+        bValue = new Date(b.createdAt);
+        break;
+      default: // 'date'
+        aValue = new Date(a.date);
+        bValue = new Date(b.date);
       }
 
       if (sortOrder === 'desc') {
@@ -286,7 +286,7 @@ router.get('/search', async (req, res) => {
  * GET /api/events/current
  * Get the current/next upcoming event
  */
-router.get('/current', async (req, res) => {
+router.get('/current', async(req, res) => {
   try {
     const { database } = req.app.locals;
 
@@ -332,7 +332,7 @@ router.get('/current', async (req, res) => {
  * GET /api/events/:id
  * Get a specific event by ID
  */
-router.get('/:id', async (req, res) => {
+router.get('/:id', async(req, res) => {
   try {
     const { database } = req.app.locals;
     const { id } = req.params;
@@ -406,7 +406,7 @@ router.get('/:id', async (req, res) => {
  * POST /api/events
  * Create a new event (admin only)
  */
-router.post('/', async (req, res) => {
+router.post('/', async(req, res) => {
   try {
     const { database, eventService } = req.app.locals;
     const eventData = req.body;
@@ -464,7 +464,7 @@ router.post('/', async (req, res) => {
  * PUT /api/events/:id
  * Update an event (admin only)
  */
-router.put('/:id', async (req, res) => {
+router.put('/:id', async(req, res) => {
   try {
     const { database, eventService } = req.app.locals;
     const { id } = req.params;
@@ -525,7 +525,7 @@ router.put('/:id', async (req, res) => {
  * DELETE /api/events/:id
  * Delete an event (admin only)
  */
-router.delete('/:id', async (req, res) => {
+router.delete('/:id', async(req, res) => {
   try {
     const { database, eventService } = req.app.locals;
     const { id } = req.params;
@@ -583,7 +583,7 @@ router.delete('/:id', async (req, res) => {
  * GET /api/events/:id/analytics
  * Get event analytics (admin only)
  */
-router.get('/:id/analytics', async (req, res) => {
+router.get('/:id/analytics', async(req, res) => {
   try {
     const { database } = req.app.locals;
     const { id } = req.params;
@@ -653,7 +653,7 @@ router.get('/:id/analytics', async (req, res) => {
  * POST /api/events/:id/status
  * Update event status with automatic actions
  */
-router.post('/:id/status', async (req, res) => {
+router.post('/:id/status', async(req, res) => {
   try {
     const { database, eventService, emailService } = req.app.locals;
     const { id } = req.params;
@@ -695,50 +695,50 @@ router.post('/:id/status', async (req, res) => {
     const settings = await database.getSettings();
 
     switch (status) {
-      case 'cancelled':
-        // Close registration and talk submission
-        await database.update('events', id, {
-          registrationOpen: false,
-          talkSubmissionOpen: false
-        });
+    case 'cancelled':
+      // Close registration and talk submission
+      await database.update('events', id, {
+        registrationOpen: false,
+        talkSubmissionOpen: false
+      });
 
-        // Notify participants if email is enabled
-        if (settings.emailEnabled) {
-          for (const participant of participants) {
-            try {
-              await emailService.sendEventCancellation(participant, event, reason);
-            } catch (error) {
-              console.error('Failed to send cancellation email:', error);
-            }
+      // Notify participants if email is enabled
+      if (settings.emailEnabled) {
+        for (const participant of participants) {
+          try {
+            await emailService.sendEventCancellation(participant, event, reason);
+          } catch (error) {
+            console.error('Failed to send cancellation email:', error);
           }
         }
-        break;
+      }
+      break;
 
-      case 'ongoing':
-        // Close registration
-        await database.update('events', id, {
-          registrationOpen: false
-        });
-        break;
+    case 'ongoing':
+      // Close registration
+      await database.update('events', id, {
+        registrationOpen: false
+      });
+      break;
 
-      case 'completed':
-        // Close everything and trigger post-event processes
-        await database.update('events', id, {
-          registrationOpen: false,
-          talkSubmissionOpen: false
-        });
+    case 'completed':
+      // Close everything and trigger post-event processes
+      await database.update('events', id, {
+        registrationOpen: false,
+        talkSubmissionOpen: false
+      });
 
-        // Send feedback request emails
-        if (settings.emailEnabled) {
-          for (const participant of participants) {
-            try {
-              await emailService.sendFeedbackRequest(participant, event);
-            } catch (error) {
-              console.error('Failed to send feedback email:', error);
-            }
+      // Send feedback request emails
+      if (settings.emailEnabled) {
+        for (const participant of participants) {
+          try {
+            await emailService.sendFeedbackRequest(participant, event);
+          } catch (error) {
+            console.error('Failed to send feedback email:', error);
           }
         }
-        break;
+      }
+      break;
     }
 
     // Track analytics

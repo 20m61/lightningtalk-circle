@@ -311,22 +311,22 @@ class AccessibilityEnhancer {
         let targetIndex;
 
         switch (e.key) {
-          case 'ArrowRight':
-          case 'ArrowDown':
-            targetIndex = (currentIndex + 1) % tabs.length;
-            break;
-          case 'ArrowLeft':
-          case 'ArrowUp':
-            targetIndex = (currentIndex - 1 + tabs.length) % tabs.length;
-            break;
-          case 'Home':
-            targetIndex = 0;
-            break;
-          case 'End':
-            targetIndex = tabs.length - 1;
-            break;
-          default:
-            return;
+        case 'ArrowRight':
+        case 'ArrowDown':
+          targetIndex = (currentIndex + 1) % tabs.length;
+          break;
+        case 'ArrowLeft':
+        case 'ArrowUp':
+          targetIndex = (currentIndex - 1 + tabs.length) % tabs.length;
+          break;
+        case 'Home':
+          targetIndex = 0;
+          break;
+        case 'End':
+          targetIndex = tabs.length - 1;
+          break;
+        default:
+          return;
         }
 
         e.preventDefault();

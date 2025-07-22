@@ -51,7 +51,7 @@ function enhanceGoogleOAuth(authModule) {
   // Override the Google sign-in handler
   const originalSignInWithGoogle = authModule.signInWithGoogle;
 
-  authModule.signInWithGoogle = async function () {
+  authModule.signInWithGoogle = async function() {
     try {
       // Show loading state
       showGoogleAuthLoading(true);
@@ -74,7 +74,7 @@ function enhanceGoogleOAuth(authModule) {
   if (authModule.onGoogleSignIn) {
     const originalCallback = authModule.onGoogleSignIn;
 
-    authModule.onGoogleSignIn = function (response) {
+    authModule.onGoogleSignIn = function(response) {
       // Add enhanced UI feedback
       if (response.error) {
         handleGoogleAuthError(response.error);
@@ -96,7 +96,7 @@ function integrateAuthForms(authModule) {
 
     // Enhance login handler
     const originalHandleLogin = auth.handleLogin.bind(auth);
-    auth.handleLogin = async function (event) {
+    auth.handleLogin = async function(event) {
       event.preventDefault();
 
       const form = event.target;
@@ -123,7 +123,7 @@ function integrateAuthForms(authModule) {
 
     // Enhance signup handler
     const originalHandleSignup = auth.handleSignup.bind(auth);
-    auth.handleSignup = async function (event) {
+    auth.handleSignup = async function(event) {
       event.preventDefault();
 
       const form = event.target;
@@ -203,14 +203,14 @@ function handleGoogleAuthError(error) {
 function enhanceFormValidation() {
   // Add input formatting
   document.querySelectorAll('input[type="email"]').forEach(input => {
-    input.addEventListener('blur', function () {
+    input.addEventListener('blur', function() {
       this.value = this.value.toLowerCase().trim();
     });
   });
 
   // Add password strength meter animation
   document.querySelectorAll('input[name="password"]').forEach(input => {
-    input.addEventListener('input', function () {
+    input.addEventListener('input', function() {
       const strength = calculatePasswordStrength(this.value);
       updatePasswordStrengthMeter(this, strength);
     });

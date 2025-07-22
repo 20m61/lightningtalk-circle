@@ -30,74 +30,74 @@ export class EmailService {
   setupEmailProvider() {
     try {
       switch (this.provider.toLowerCase()) {
-        case 'gmail':
-          this.transporter = nodemailer.createTransport({
-            service: 'gmail',
-            auth: {
-              user: process.env.EMAIL_USER,
-              pass: process.env.EMAIL_PASSWORD
-            }
-          });
-          logger.info('📧 Email service initialized with Gmail');
-          break;
+      case 'gmail':
+        this.transporter = nodemailer.createTransport({
+          service: 'gmail',
+          auth: {
+            user: process.env.EMAIL_USER,
+            pass: process.env.EMAIL_PASSWORD
+          }
+        });
+        logger.info('📧 Email service initialized with Gmail');
+        break;
 
-        case 'sendgrid':
-          this.transporter = nodemailer.createTransport({
-            host: 'smtp.sendgrid.net',
-            port: 587,
-            secure: false,
-            auth: {
-              user: 'apikey',
-              pass: process.env.SENDGRID_API_KEY
-            }
-          });
-          logger.info('📧 Email service initialized with SendGrid');
-          break;
+      case 'sendgrid':
+        this.transporter = nodemailer.createTransport({
+          host: 'smtp.sendgrid.net',
+          port: 587,
+          secure: false,
+          auth: {
+            user: 'apikey',
+            pass: process.env.SENDGRID_API_KEY
+          }
+        });
+        logger.info('📧 Email service initialized with SendGrid');
+        break;
 
-        case 'aws-ses':
-          this.transporter = nodemailer.createTransport({
-            host: process.env.AWS_SES_REGION
-              ? `email-smtp.${process.env.AWS_SES_REGION}.amazonaws.com`
-              : 'email-smtp.us-east-1.amazonaws.com',
-            port: 587,
-            secure: false,
-            auth: {
-              user: process.env.AWS_SES_USERNAME,
-              pass: process.env.AWS_SES_PASSWORD
-            }
-          });
-          logger.info('📧 Email service initialized with AWS SES');
-          break;
+      case 'aws-ses':
+        this.transporter = nodemailer.createTransport({
+          host: process.env.AWS_SES_REGION
+            ? `email-smtp.${process.env.AWS_SES_REGION}.amazonaws.com`
+            : 'email-smtp.us-east-1.amazonaws.com',
+          port: 587,
+          secure: false,
+          auth: {
+            user: process.env.AWS_SES_USERNAME,
+            pass: process.env.AWS_SES_PASSWORD
+          }
+        });
+        logger.info('📧 Email service initialized with AWS SES');
+        break;
 
-        case 'smtp':
-          this.transporter = nodemailer.createTransport({
-            host: process.env.SMTP_HOST,
-            port: process.env.SMTP_PORT || 587,
-            secure: process.env.SMTP_SECURE === 'true',
-            auth: {
-              user: process.env.SMTP_USER,
-              pass: process.env.SMTP_PASSWORD
-            }
-          });
-          logger.info('📧 Email service initialized with custom SMTP');
-          break;
+      case 'smtp':
+        this.transporter = nodemailer.createTransport({
+          host: process.env.SMTP_HOST,
+          port: process.env.SMTP_PORT || 587,
+          secure: process.env.SMTP_SECURE === 'true',
+          auth: {
+            user: process.env.SMTP_USER,
+            pass: process.env.SMTP_PASSWORD
+          }
+        });
+        logger.info('📧 Email service initialized with custom SMTP');
+        break;
 
-        case 'mailgun':
-          this.transporter = nodemailer.createTransport({
-            host: process.env.MAILGUN_SMTP_HOST || 'smtp.mailgun.org',
-            port: process.env.MAILGUN_SMTP_PORT || 587,
-            secure: false,
-            auth: {
-              user: process.env.MAILGUN_SMTP_USER,
-              pass: process.env.MAILGUN_SMTP_PASSWORD
-            }
-          });
-          logger.info('📧 Email service initialized with Mailgun');
-          break;
+      case 'mailgun':
+        this.transporter = nodemailer.createTransport({
+          host: process.env.MAILGUN_SMTP_HOST || 'smtp.mailgun.org',
+          port: process.env.MAILGUN_SMTP_PORT || 587,
+          secure: false,
+          auth: {
+            user: process.env.MAILGUN_SMTP_USER,
+            pass: process.env.MAILGUN_SMTP_PASSWORD
+          }
+        });
+        logger.info('📧 Email service initialized with Mailgun');
+        break;
 
-        default:
-          logger.warn('📧 Email service in mock mode - no real emails will be sent');
-          this.transporter = null;
+      default:
+        logger.warn('📧 Email service in mock mode - no real emails will be sent');
+        this.transporter = null;
       }
 
       // Verify transporter configuration

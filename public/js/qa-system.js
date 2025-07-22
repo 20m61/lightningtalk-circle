@@ -106,8 +106,8 @@ class QASystem {
       const response = await fetch(`${this.apiEndpoint}/qa/events/${this.currentEventId}`, {
         headers: this.authToken
           ? {
-              Authorization: `Bearer ${this.authToken}`
-            }
+            Authorization: `Bearer ${this.authToken}`
+          }
           : {}
       });
 
@@ -185,16 +185,16 @@ class QASystem {
         ${question.details ? `<p class="question-details">${this.escapeHtml(question.details)}</p>` : ''}
         
         ${
-          question.answer
-            ? `
+  question.answer
+    ? `
           <div class="question-answer">
             <h4>回答</h4>
             <p>${this.escapeHtml(question.answer)}</p>
             ${question.answeredAt ? `<span class="answer-time">回答日時: ${this.formatDateTime(question.answeredAt)}</span>` : ''}
           </div>
         `
-            : ''
-        }
+    : ''
+}
       </div>
       
       <div class="question-footer">
@@ -205,44 +205,44 @@ class QASystem {
         
         <div class="question-actions">
           ${
-            canUpvote
-              ? `
+  canUpvote
+    ? `
             <button class="btn btn-outline upvote-question-btn" data-question-id="${question.id}">
               👍 投票
             </button>
           `
-              : ''
-          }
+    : ''
+}
           
           ${
-            canModerate
-              ? `
+  canModerate
+    ? `
             <button class="btn btn-success approve-question-btn" data-question-id="${question.id}">
               ✅ 承認
             </button>
           `
-              : ''
-          }
+    : ''
+}
           
           ${
-            this.isAdmin && question.status === 'approved' && !question.answer
-              ? `
+  this.isAdmin && question.status === 'approved' && !question.answer
+    ? `
             <button class="btn btn-primary answer-question-btn" data-question-id="${question.id}">
               💬 回答
             </button>
           `
-              : ''
-          }
+    : ''
+}
           
           ${
-            this.isAdmin
-              ? `
+  this.isAdmin
+    ? `
             <button class="btn btn-danger delete-question-btn" data-question-id="${question.id}">
               🗑️ 削除
             </button>
           `
-              : ''
-          }
+    : ''
+}
         </div>
       </div>
     `;
@@ -538,20 +538,20 @@ class QASystem {
     // Filter and re-render questions
     let filteredQuestions;
     switch (filter) {
-      case 'all':
-        filteredQuestions = this.questions;
-        break;
-      case 'pending':
-        filteredQuestions = this.questions.filter(q => q.status === 'pending');
-        break;
-      case 'approved':
-        filteredQuestions = this.questions.filter(q => q.status === 'approved');
-        break;
-      case 'answered':
-        filteredQuestions = this.questions.filter(q => q.answer);
-        break;
-      default:
-        filteredQuestions = this.questions;
+    case 'all':
+      filteredQuestions = this.questions;
+      break;
+    case 'pending':
+      filteredQuestions = this.questions.filter(q => q.status === 'pending');
+      break;
+    case 'approved':
+      filteredQuestions = this.questions.filter(q => q.status === 'approved');
+      break;
+    case 'answered':
+      filteredQuestions = this.questions.filter(q => q.answer);
+      break;
+    default:
+      filteredQuestions = this.questions;
     }
 
     // Temporarily replace questions for rendering

@@ -109,8 +109,8 @@ class InteractivePollsSystem {
         {
           headers: this.authToken
             ? {
-                Authorization: `Bearer ${this.authToken}`
-              }
+              Authorization: `Bearer ${this.authToken}`
+            }
             : {}
         }
       );
@@ -198,18 +198,18 @@ class InteractivePollsSystem {
     }
 
     switch (poll.type) {
-      case 'multiple_choice':
-        return this.renderMultipleChoice(poll);
-      case 'rating_scale':
-        return this.renderRatingScale(poll);
-      case 'text_input':
-        return this.renderTextInput(poll);
-      case 'yes_no':
-        return this.renderYesNo(poll);
-      case 'ranking':
-        return this.renderRanking(poll);
-      default:
-        return '';
+    case 'multiple_choice':
+      return this.renderMultipleChoice(poll);
+    case 'rating_scale':
+      return this.renderRatingScale(poll);
+    case 'text_input':
+      return this.renderTextInput(poll);
+    case 'yes_no':
+      return this.renderYesNo(poll);
+    case 'ranking':
+      return this.renderRanking(poll);
+    default:
+      return '';
     }
   }
 
@@ -221,15 +221,15 @@ class InteractivePollsSystem {
       <div class="poll-interface multiple-choice">
         <div class="poll-options">
           ${poll.options
-            .map(
-              (option, index) => `
+    .map(
+      (option, index) => `
             <label class="poll-option">
               <input type="${inputType}" name="${inputName}" value="${this.escapeHtml(option)}" data-index="${index}">
               <span class="option-text">${this.escapeHtml(option)}</span>
             </label>
           `
-            )
-            .join('')}
+    )
+    .join('')}
         </div>
       </div>
     `;
@@ -240,16 +240,16 @@ class InteractivePollsSystem {
       <div class="poll-interface rating-scale">
         <div class="rating-options">
           ${[1, 2, 3, 4, 5]
-            .map(
-              rating => `
+    .map(
+      rating => `
             <label class="rating-option">
               <input type="radio" name="poll_${poll.id}" value="${rating}">
               <span class="rating-star" data-rating="${rating}">⭐</span>
               <span class="rating-text">${rating}</span>
             </label>
           `
-            )
-            .join('')}
+    )
+    .join('')}
         </div>
       </div>
     `;
@@ -295,16 +295,16 @@ class InteractivePollsSystem {
         </div>
         <div class="ranking-options" data-poll-id="${poll.id}">
           ${poll.options
-            .map(
-              (option, index) => `
+    .map(
+      (option, index) => `
             <div class="ranking-item" draggable="true" data-option="${this.escapeHtml(option)}" data-original-index="${index}">
               <span class="ranking-handle">⋮⋮</span>
               <span class="option-text">${this.escapeHtml(option)}</span>
               <span class="ranking-position">${index + 1}</span>
             </div>
           `
-            )
-            .join('')}
+    )
+    .join('')}
         </div>
       </div>
     `;
@@ -316,17 +316,17 @@ class InteractivePollsSystem {
     }
 
     switch (poll.type) {
-      case 'multiple_choice':
-      case 'yes_no':
-        return this.renderChoiceResults(poll.results);
-      case 'rating_scale':
-        return this.renderRatingResults(poll.results);
-      case 'text_input':
-        return this.renderTextResults(poll.results);
-      case 'ranking':
-        return this.renderRankingResults(poll.results);
-      default:
-        return '';
+    case 'multiple_choice':
+    case 'yes_no':
+      return this.renderChoiceResults(poll.results);
+    case 'rating_scale':
+      return this.renderRatingResults(poll.results);
+    case 'text_input':
+      return this.renderTextResults(poll.results);
+    case 'ranking':
+      return this.renderRankingResults(poll.results);
+    default:
+      return '';
     }
   }
 
@@ -342,8 +342,8 @@ class InteractivePollsSystem {
         <h4>結果</h4>
         <div class="results-chart">
           ${results.analysis
-            .map(
-              item => `
+    .map(
+      item => `
             <div class="result-item">
               <div class="result-label">${this.escapeHtml(item.option)}</div>
               <div class="result-bar">
@@ -355,8 +355,8 @@ class InteractivePollsSystem {
               </div>
             </div>
           `
-            )
-            .join('')}
+    )
+    .join('')}
         </div>
       </div>
     `;
@@ -377,15 +377,15 @@ class InteractivePollsSystem {
           </div>
           <div class="rating-distribution">
             ${results.analysis.distribution
-              .map(
-                item => `
+    .map(
+      item => `
               <div class="rating-dist-item">
                 <span class="rating-stars">${'⭐'.repeat(item.rating)}</span>
                 <span class="rating-count">${item.count} (${item.percentage}%)</span>
               </div>
             `
-              )
-              .join('')}
+    )
+    .join('')}
           </div>
         </div>
       </div>
@@ -402,49 +402,49 @@ class InteractivePollsSystem {
         <h4>回答 (${results.analysis.responses.length}件)</h4>
         <div class="text-responses">
           ${results.analysis.responses
-            .slice(0, 5)
-            .map(
-              response => `
+    .slice(0, 5)
+    .map(
+      response => `
             <div class="text-response">
               <p>${this.escapeHtml(response.text)}</p>
               <span class="response-time">${this.formatDateTime(response.submittedAt)}</span>
             </div>
           `
-            )
-            .join('')}
+    )
+    .join('')}
           ${
-            results.analysis.responses.length > 5
-              ? `
+  results.analysis.responses.length > 5
+    ? `
             <div class="view-more">
               <button class="btn-link view-all-responses" data-poll-id="${this.currentPoll?.id}">
                 すべての回答を見る (${results.analysis.responses.length - 5}件)
               </button>
             </div>
           `
-              : ''
-          }
+    : ''
+}
         </div>
         ${
-          results.analysis.topWords && results.analysis.topWords.length > 0
-            ? `
+  results.analysis.topWords && results.analysis.topWords.length > 0
+    ? `
           <div class="word-cloud">
             <h5>頻出キーワード</h5>
             <div class="keywords">
               ${results.analysis.topWords
-                .slice(0, 10)
-                .map(
-                  word => `
+    .slice(0, 10)
+    .map(
+      word => `
                 <span class="keyword" style="font-size: ${Math.min(1 + word.count / 10, 2)}rem">
                   ${this.escapeHtml(word.word)} (${word.count})
                 </span>
               `
-                )
-                .join('')}
+    )
+    .join('')}
             </div>
           </div>
         `
-            : ''
-        }
+    : ''
+}
       </div>
     `;
   }
@@ -459,8 +459,8 @@ class InteractivePollsSystem {
         <h4>ランキング結果</h4>
         <div class="ranking-chart">
           ${results.analysis
-            .map(
-              (item, index) => `
+    .map(
+      (item, index) => `
             <div class="ranking-result-item">
               <span class="rank-position">${index + 1}</span>
               <span class="rank-option">${this.escapeHtml(item.option)}</span>
@@ -468,8 +468,8 @@ class InteractivePollsSystem {
               <span class="rank-mentions">${item.mentions}回選択</span>
             </div>
           `
-            )
-            .join('')}
+    )
+    .join('')}
         </div>
       </div>
     `;
@@ -563,29 +563,29 @@ class InteractivePollsSystem {
     }
 
     switch (poll.type) {
-      case 'multiple_choice': {
-        const checkboxes = pollInterface.querySelectorAll('input:checked');
-        return Array.from(checkboxes).map(cb => cb.value);
-      }
+    case 'multiple_choice': {
+      const checkboxes = pollInterface.querySelectorAll('input:checked');
+      return Array.from(checkboxes).map(cb => cb.value);
+    }
 
-      case 'rating_scale':
-      case 'yes_no': {
-        const radio = pollInterface.querySelector('input:checked');
-        return radio ? [poll.type === 'rating_scale' ? parseInt(radio.value) : radio.value] : [];
-      }
+    case 'rating_scale':
+    case 'yes_no': {
+      const radio = pollInterface.querySelector('input:checked');
+      return radio ? [poll.type === 'rating_scale' ? parseInt(radio.value) : radio.value] : [];
+    }
 
-      case 'text_input': {
-        const textarea = pollInterface.querySelector('.poll-text-input');
-        return textarea && textarea.value.trim() ? [textarea.value.trim()] : [];
-      }
+    case 'text_input': {
+      const textarea = pollInterface.querySelector('.poll-text-input');
+      return textarea && textarea.value.trim() ? [textarea.value.trim()] : [];
+    }
 
-      case 'ranking': {
-        const rankingItems = pollInterface.querySelectorAll('.ranking-item');
-        return Array.from(rankingItems).map(item => item.dataset.option);
-      }
+    case 'ranking': {
+      const rankingItems = pollInterface.querySelectorAll('.ranking-item');
+      return Array.from(rankingItems).map(item => item.dataset.option);
+    }
 
-      default:
-        return [];
+    default:
+      return [];
     }
   }
 
@@ -745,18 +745,18 @@ class InteractivePollsSystem {
     const allowMultiple = document.getElementById('allowMultiple');
 
     switch (pollType) {
-      case 'multiple_choice':
-      case 'ranking':
-        optionsGroup.style.display = 'block';
-        allowMultiple.parentElement.style.display =
+    case 'multiple_choice':
+    case 'ranking':
+      optionsGroup.style.display = 'block';
+      allowMultiple.parentElement.style.display =
           pollType === 'multiple_choice' ? 'block' : 'none';
-        break;
-      case 'text_input':
-      case 'rating_scale':
-      case 'yes_no':
-        optionsGroup.style.display = 'none';
-        allowMultiple.parentElement.style.display = 'none';
-        break;
+      break;
+    case 'text_input':
+    case 'rating_scale':
+    case 'yes_no':
+      optionsGroup.style.display = 'none';
+      allowMultiple.parentElement.style.display = 'none';
+      break;
     }
   }
 

@@ -329,13 +329,13 @@ class AIImageGenerator {
       generationCard.innerHTML = `
         <div class="generation-image">
           ${
-            generation.status === 'completed' && generation.imageUrl
-              ? `<img src="${generation.imageUrl}" alt="Generated image" loading="lazy">`
-              : `<div class="generation-placeholder">
+  generation.status === 'completed' && generation.imageUrl
+    ? `<img src="${generation.imageUrl}" alt="Generated image" loading="lazy">`
+    : `<div class="generation-placeholder">
                  <div class="loading-spinner ${generation.status === 'pending' || generation.status === 'generating' ? 'active' : ''}"></div>
                  <span class="status-text">${this.getStatusText(generation.status)}</span>
                </div>`
-          }
+}
         </div>
         <div class="generation-info">
           <div class="generation-meta">
@@ -350,8 +350,8 @@ class AIImageGenerator {
           </div>
           <div class="generation-actions">
             ${
-              generation.status === 'completed'
-                ? `
+  generation.status === 'completed'
+    ? `
               <button class="btn btn-sm btn-secondary download-btn" data-generation-id="${generation.id}">
                 ダウンロード
               </button>
@@ -362,8 +362,8 @@ class AIImageGenerator {
                 共有
               </button>
             `
-                : ''
-            }
+    : ''
+}
             <button class="btn btn-sm btn-outline view-details-btn" data-generation-id="${generation.id}">
               詳細
             </button>
@@ -522,13 +522,13 @@ class AIImageGenerator {
             </div>
 
             ${
-              template.customFields && template.customFields.length > 0
-                ? `
+  template.customFields && template.customFields.length > 0
+    ? `
               <div class="form-section">
                 <h3>カスタマイズ</h3>
                 ${template.customFields
-                  .map(
-                    field => `
+    .map(
+      field => `
                   <div class="form-group">
                     <label for="custom_${field}">${this.getFieldLabel(field)}</label>
                     <input 
@@ -539,12 +539,12 @@ class AIImageGenerator {
                     >
                   </div>
                 `
-                  )
-                  .join('')}
+    )
+    .join('')}
               </div>
             `
-                : ''
-            }
+    : ''
+}
 
             <div class="form-section">
               <h3>プレビュー</h3>
@@ -896,10 +896,10 @@ class AIImageGenerator {
           <div class="generation-detail-content">
             <div class="detail-image">
               ${
-                generation.imageUrl
-                  ? `<img src="${generation.imageUrl}" alt="Generated image">`
-                  : '<div class="placeholder">画像なし</div>'
-              }
+  generation.imageUrl
+    ? `<img src="${generation.imageUrl}" alt="Generated image">`
+    : '<div class="placeholder">画像なし</div>'
+}
             </div>
             <div class="detail-info">
               <div class="detail-section">
@@ -929,93 +929,93 @@ class AIImageGenerator {
                   <span class="value">${this.formatDate(generation.createdAt)}</span>
                 </div>
                 ${
-                  generation.completedAt
-                    ? `
+  generation.completedAt
+    ? `
                   <div class="detail-row">
                     <span class="label">完了日時:</span>
                     <span class="value">${this.formatDate(generation.completedAt)}</span>
                   </div>
                 `
-                    : ''
-                }
+    : ''
+}
               </div>
               
               <div class="detail-section">
                 <h3>プロンプト</h3>
                 <div class="prompt-text">${generation.prompt}</div>
                 ${
-                  generation.revisedPrompt
-                    ? `
+  generation.revisedPrompt
+    ? `
                   <h4>DALL-E修正プロンプト</h4>
                   <div class="revised-prompt-text">${generation.revisedPrompt}</div>
                 `
-                    : ''
-                }
+    : ''
+}
               </div>
 
               ${
-                generation.customizations && Object.keys(generation.customizations).length > 0
-                  ? `
+  generation.customizations && Object.keys(generation.customizations).length > 0
+    ? `
                 <div class="detail-section">
                   <h3>カスタマイズ</h3>
                   ${Object.entries(generation.customizations)
-                    .map(
-                      ([key, value]) => `
+    .map(
+      ([key, value]) => `
                     <div class="detail-row">
                       <span class="label">${this.getFieldLabel(key)}:</span>
                       <span class="value">${value}</span>
                     </div>
                   `
-                    )
-                    .join('')}
+    )
+    .join('')}
                 </div>
               `
-                  : ''
-              }
+    : ''
+}
 
               ${
-                generation.metadata
-                  ? `
+  generation.metadata
+    ? `
                 <div class="detail-section">
                   <h3>メタデータ</h3>
                   ${
-                    generation.metadata.generation_time
-                      ? `
+  generation.metadata.generation_time
+    ? `
                     <div class="detail-row">
                       <span class="label">生成時間:</span>
                       <span class="value">${generation.metadata.generation_time}ms</span>
                     </div>
                   `
-                      : ''
-                  }
+    : ''
+}
                   ${
-                    generation.metadata.cost
-                      ? `
+  generation.metadata.cost
+    ? `
                     <div class="detail-row">
                       <span class="label">コスト:</span>
                       <span class="value">$${generation.metadata.cost}</span>
                     </div>
                   `
-                      : ''
-                  }
+    : ''
+}
                 </div>
               `
-                  : ''
-              }
+    : ''
+}
             </div>
           </div>
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary close-modal">閉じる</button>
           ${
-            generation.status === 'completed' && generation.imageUrl
-              ? `
+  generation.status === 'completed' && generation.imageUrl
+    ? `
             <button type="button" class="btn btn-primary" onclick="aiImageGenerator.downloadGeneration('${generation.id}')">
               ダウンロード
             </button>
           `
-              : ''
-          }
+    : ''
+}
         </div>
       </div>
     `;

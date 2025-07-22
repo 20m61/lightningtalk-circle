@@ -13,26 +13,26 @@ exports.handler = async event => {
 
     // メッセージタイプに応じて処理
     switch (body.type) {
-      case 'ping':
-        // キープアライブ
-        return {
-          statusCode: 200,
-          body: JSON.stringify({ type: 'pong' })
-        };
+    case 'ping':
+      // キープアライブ
+      return {
+        statusCode: 200,
+        body: JSON.stringify({ type: 'pong' })
+      };
 
-      case 'subscribe':
-        // イベント購読（将来の拡張用）
-        console.log(`Connection ${connectionId} subscribed to event ${body.eventId}`);
-        return {
-          statusCode: 200,
-          body: JSON.stringify({ type: 'subscribed', eventId: body.eventId })
-        };
+    case 'subscribe':
+      // イベント購読（将来の拡張用）
+      console.log(`Connection ${connectionId} subscribed to event ${body.eventId}`);
+      return {
+        statusCode: 200,
+        body: JSON.stringify({ type: 'subscribed', eventId: body.eventId })
+      };
 
-      default:
-        return {
-          statusCode: 400,
-          body: JSON.stringify({ error: 'Unknown message type' })
-        };
+    default:
+      return {
+        statusCode: 400,
+        body: JSON.stringify({ error: 'Unknown message type' })
+      };
     }
   } catch (error) {
     console.error('Message handling error:', error);

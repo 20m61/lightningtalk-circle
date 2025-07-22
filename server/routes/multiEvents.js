@@ -28,7 +28,7 @@ router.post(
     body('options.notifyParticipants').optional().isBoolean(),
     body('options.batchSize').optional().isInt({ min: 1, max: 50 })
   ],
-  async (req, res) => {
+  async(req, res) => {
     try {
       const errors = validationResult(req);
       if (!errors.isEmpty()) {
@@ -74,7 +74,7 @@ router.get(
     query('resolveConflicts').optional().isBoolean(),
     query('priorityOrder').optional().isIn(['date', 'priority', 'participants'])
   ],
-  async (req, res) => {
+  async(req, res) => {
     try {
       const errors = validationResult(req);
       if (!errors.isEmpty()) {
@@ -88,9 +88,9 @@ router.get(
       const options = {
         dateRange: req.query.dateRange
           ? {
-              start: req.query.dateRange.start,
-              end: req.query.dateRange.end
-            }
+            start: req.query.dateRange.start,
+            end: req.query.dateRange.end
+          }
           : undefined,
         includeConflicts: req.query.includeConflicts !== 'false',
         resolveConflicts: req.query.resolveConflicts === 'true',
@@ -131,7 +131,7 @@ router.post(
     body('options.autoBalance').optional().isBoolean(),
     body('options.notifyChanges').optional().isBoolean()
   ],
-  async (req, res) => {
+  async(req, res) => {
     try {
       const errors = validationResult(req);
       if (!errors.isEmpty()) {
@@ -175,7 +175,7 @@ router.get(
     query('suggestOptimalEvents').optional().isBoolean(),
     query('autoNotify').optional().isBoolean()
   ],
-  async (req, res) => {
+  async(req, res) => {
     try {
       const errors = validationResult(req);
       if (!errors.isEmpty()) {
@@ -189,9 +189,9 @@ router.get(
       const options = {
         timeRange: req.query.timeRange
           ? {
-              start: req.query.timeRange.start,
-              end: req.query.timeRange.end
-            }
+            start: req.query.timeRange.start,
+            end: req.query.timeRange.end
+          }
           : undefined,
         detectDuplicates: req.query.detectDuplicates !== 'false',
         suggestOptimalEvents: req.query.suggestOptimalEvents !== 'false',
@@ -230,7 +230,7 @@ router.post(
     body('options.includeForecasts').optional().isBoolean(),
     body('options.timeGranularity').optional().isIn(['hourly', 'daily', 'weekly', 'monthly'])
   ],
-  async (req, res) => {
+  async(req, res) => {
     try {
       const errors = validationResult(req);
       if (!errors.isEmpty()) {
@@ -278,7 +278,7 @@ router.post(
     body('options.checkVenue').optional().isBoolean(),
     body('options.checkResources').optional().isBoolean()
   ],
-  async (req, res) => {
+  async(req, res) => {
     try {
       const errors = validationResult(req);
       if (!errors.isEmpty()) {
@@ -321,7 +321,7 @@ router.get(
     query('timeRange.end').optional().isISO8601(),
     query('optimizationType').optional().isIn(['schedule', 'resources', 'participants', 'all'])
   ],
-  async (req, res) => {
+  async(req, res) => {
     try {
       const errors = validationResult(req);
       if (!errors.isEmpty()) {
@@ -336,9 +336,9 @@ router.get(
         eventIds: req.query.eventIds ? req.query.eventIds.split(',') : undefined,
         timeRange: req.query.timeRange
           ? {
-              start: req.query.timeRange.start,
-              end: req.query.timeRange.end
-            }
+            start: req.query.timeRange.start,
+            end: req.query.timeRange.end
+          }
           : undefined,
         optimizationType: req.query.optimizationType || 'all'
       };
@@ -372,7 +372,7 @@ router.get(
     query('includeMetrics').optional().isBoolean(),
     query('includeAlerts').optional().isBoolean()
   ],
-  async (req, res) => {
+  async(req, res) => {
     try {
       const errors = validationResult(req);
       if (!errors.isEmpty()) {
@@ -407,17 +407,17 @@ router.get(
         },
         metrics: options.includeMetrics
           ? {
-              eventUtilization: this.calculateEventUtilization(concurrentEvents),
-              resourceEfficiency: this.calculateResourceEfficiency(resourceStatus),
-              participantSatisfaction: this.calculateParticipantSatisfaction(crossParticipants)
-            }
+            eventUtilization: this.calculateEventUtilization(concurrentEvents),
+            resourceEfficiency: this.calculateResourceEfficiency(resourceStatus),
+            participantSatisfaction: this.calculateParticipantSatisfaction(crossParticipants)
+          }
           : null,
         alerts: options.includeAlerts
           ? [
-              ...concurrentEvents.managementStatus.warnings,
-              ...this.generateResourceAlerts(resourceStatus),
-              ...this.generateParticipantAlerts(crossParticipants)
-            ]
+            ...concurrentEvents.managementStatus.warnings,
+            ...this.generateResourceAlerts(resourceStatus),
+            ...this.generateParticipantAlerts(crossParticipants)
+          ]
           : null,
         recommendations: [
           ...concurrentEvents.managementStatus.recommendations,

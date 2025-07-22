@@ -33,7 +33,7 @@ router.get('/health', cloudWatchHealthCheck());
  * GET /api/monitoring/status
  * Get current system status
  */
-router.get('/status', async (req, res) => {
+router.get('/status', async(req, res) => {
   try {
     const monitoring = getMonitoring();
     const cloudWatch = getCloudWatch();
@@ -77,7 +77,7 @@ router.get('/status', async (req, res) => {
  * GET /api/monitoring/metrics
  * Get comprehensive metrics
  */
-router.get('/metrics', async (req, res) => {
+router.get('/metrics', async(req, res) => {
   try {
     const monitoring = getMonitoring();
     const metrics = monitoring.getMetrics();
@@ -97,7 +97,7 @@ router.get('/metrics', async (req, res) => {
  * GET /api/monitoring/metrics/summary
  * Get metrics summary for dashboard
  */
-router.get('/metrics/summary', async (req, res) => {
+router.get('/metrics/summary', async(req, res) => {
   try {
     const monitoring = getMonitoring();
     const summary = monitoring.getMetricsSummary();
@@ -116,7 +116,7 @@ router.get('/metrics/summary', async (req, res) => {
  * GET /api/monitoring/alerts
  * Get active alerts
  */
-router.get('/alerts', async (req, res) => {
+router.get('/alerts', async(req, res) => {
   try {
     const monitoring = getMonitoring();
     const metrics = monitoring.getMetrics();
@@ -148,7 +148,7 @@ router.get('/alerts', async (req, res) => {
  * GET /api/monitoring/errors
  * Get recent errors
  */
-router.get('/errors', async (req, res) => {
+router.get('/errors', async(req, res) => {
   try {
     const monitoring = getMonitoring();
     const metrics = monitoring.getMetrics();
@@ -192,7 +192,7 @@ router.get('/errors', async (req, res) => {
  * GET /api/monitoring/performance
  * Get performance metrics
  */
-router.get('/performance', async (req, res) => {
+router.get('/performance', async(req, res) => {
   try {
     const monitoring = getMonitoring();
     const metrics = monitoring.getMetrics();
@@ -237,7 +237,7 @@ router.get('/performance', async (req, res) => {
  * POST /api/monitoring/alerts/:id/acknowledge
  * Acknowledge an alert
  */
-router.post('/alerts/:id/acknowledge', async (req, res) => {
+router.post('/alerts/:id/acknowledge', async(req, res) => {
   try {
     const { id } = req.params;
     const { acknowledgedBy, notes } = req.body;
@@ -275,7 +275,7 @@ router.post('/alerts/:id/acknowledge', async (req, res) => {
  * GET /api/monitoring/cloudwatch/status
  * Get CloudWatch service status
  */
-router.get('/cloudwatch/status', async (req, res) => {
+router.get('/cloudwatch/status', async(req, res) => {
   try {
     const cloudWatch = getCloudWatch();
     const status = cloudWatch.getHealthStatus();
@@ -294,7 +294,7 @@ router.get('/cloudwatch/status', async (req, res) => {
  * POST /api/monitoring/cloudwatch/alarms/create
  * Create CloudWatch alarms
  */
-router.post('/cloudwatch/alarms/create', async (req, res) => {
+router.post('/cloudwatch/alarms/create', async(req, res) => {
   try {
     const cloudWatch = getCloudWatch();
 
@@ -318,7 +318,7 @@ router.post('/cloudwatch/alarms/create', async (req, res) => {
  * GET /api/monitoring/dashboard
  * Get dashboard data
  */
-router.get('/dashboard', async (req, res) => {
+router.get('/dashboard', async(req, res) => {
   try {
     const monitoring = getMonitoring();
     const cloudWatch = getCloudWatch();

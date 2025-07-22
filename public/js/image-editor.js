@@ -442,18 +442,18 @@ class ImageEditor {
    */
   updateAdjustment(type, value) {
     switch (type) {
-      case 'brightness':
-        this.brightness = value;
-        break;
-      case 'contrast':
-        this.contrast = value;
-        break;
-      case 'saturation':
-        this.saturation = value;
-        break;
-      case 'rotation':
-        this.rotation = value;
-        break;
+    case 'brightness':
+      this.brightness = value;
+      break;
+    case 'contrast':
+      this.contrast = value;
+      break;
+    case 'saturation':
+      this.saturation = value;
+      break;
+    case 'rotation':
+      this.rotation = value;
+      break;
     }
 
     this.drawImage();

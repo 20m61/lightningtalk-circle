@@ -241,16 +241,16 @@ class EventSearch {
         </div>
         <p class="event-description">${this.escapeHtml(event.description)}</p>
         ${
-          event.stats
-            ? `
+  event.stats
+    ? `
           <div class="event-stats">
             <span>👥 参加者: ${event.stats.participantCount}人</span>
             <span>🎤 発表: ${event.stats.talkCount}件</span>
             <span>📍 残り枠: ${event.stats.spotsRemaining}件</span>
           </div>
         `
-            : ''
-        }
+    : ''
+}
         <div class="event-actions">
           <a href="/event/${event.id}" class="btn btn-small">詳細を見る</a>
         </div>

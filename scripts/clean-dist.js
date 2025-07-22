@@ -219,44 +219,44 @@ async function main() {
 
   try {
     switch (command) {
-      case 'analyze':
-        await analyzeDirectory();
-        break;
+    case 'analyze':
+      await analyzeDirectory();
+      break;
 
-      case 'clean-archives': {
-        const keepCount = parseInt(args[1]) || 10;
-        await cleanArchives(keepCount);
-        break;
-      }
+    case 'clean-archives': {
+      const keepCount = parseInt(args[1]) || 10;
+      await cleanArchives(keepCount);
+      break;
+    }
 
-      case 'clean-builds': {
-        const keepDays = parseInt(args[1]) || 7;
-        await cleanBuilds(keepDays);
-        break;
-      }
+    case 'clean-builds': {
+      const keepDays = parseInt(args[1]) || 7;
+      await cleanBuilds(keepDays);
+      break;
+    }
 
-      case 'clean-all':
-        await cleanArchives(10);
-        await cleanBuilds(7);
-        break;
+    case 'clean-all':
+      await cleanArchives(10);
+      await cleanBuilds(7);
+      break;
 
-      case 'reset':
-        await resetDist();
-        break;
+    case 'reset':
+      await resetDist();
+      break;
 
-      default:
-        console.log('使用方法:');
-        console.log('  node clean-dist.js analyze              - ディレクトリ分析');
-        console.log(
-          '  node clean-dist.js clean-archives [数]   - 古いアーカイブを削除（デフォルト: 10個保持）'
-        );
-        console.log(
-          '  node clean-dist.js clean-builds [日数]   - 古いビルドを削除（デフォルト: 7日保持）'
-        );
-        console.log(
-          '  node clean-dist.js clean-all            - アーカイブとビルドをクリーンアップ'
-        );
-        console.log('  node clean-dist.js reset                - distディレクトリを完全リセット');
+    default:
+      console.log('使用方法:');
+      console.log('  node clean-dist.js analyze              - ディレクトリ分析');
+      console.log(
+        '  node clean-dist.js clean-archives [数]   - 古いアーカイブを削除（デフォルト: 10個保持）'
+      );
+      console.log(
+        '  node clean-dist.js clean-builds [日数]   - 古いビルドを削除（デフォルト: 7日保持）'
+      );
+      console.log(
+        '  node clean-dist.js clean-all            - アーカイブとビルドをクリーンアップ'
+      );
+      console.log('  node clean-dist.js reset                - distディレクトリを完全リセット');
     }
   } catch (error) {
     console.error('❌ エラー:', error.message);

@@ -854,18 +854,18 @@ class MobilePerformanceOptimizer {
     console.warn(`[MobilePerformanceOptimizer] Poor ${type} detected:`, value);
 
     switch (type) {
-      case 'fps':
-        this.reduceFPSLoad();
-        break;
-      case 'memory':
-        this.reduceMemoryUsage();
-        break;
-      case 'touch':
-        this.optimizeTouchHandling();
-        break;
-      case 'scroll':
-        this.optimizeScrolling();
-        break;
+    case 'fps':
+      this.reduceFPSLoad();
+      break;
+    case 'memory':
+      this.reduceMemoryUsage();
+      break;
+    case 'touch':
+      this.optimizeTouchHandling();
+      break;
+    case 'scroll':
+      this.optimizeScrolling();
+      break;
     }
   }
 

@@ -110,7 +110,7 @@ router.get(
       .optional()
       .isIn(['event-poster', 'social-media', 'presentation', 'banner', 'logo'])
   ],
-  async (req, res) => {
+  async(req, res) => {
     try {
       const errors = validationResult(req);
       if (!errors.isEmpty()) {
@@ -201,7 +201,7 @@ router.post(
       .withMessage('Quality must be standard or hd'),
     body('customizations').optional().isObject()
   ],
-  async (req, res) => {
+  async(req, res) => {
     try {
       const errors = validationResult(req);
       if (!errors.isEmpty()) {
@@ -352,7 +352,7 @@ router.post(
 router.get(
   '/generations/:generationId',
   [param('generationId').isString().notEmpty()],
-  async (req, res) => {
+  async(req, res) => {
     try {
       const errors = validationResult(req);
       if (!errors.isEmpty()) {
@@ -430,7 +430,7 @@ router.get(
     query('limit').optional().isInt({ min: 1, max: 50 }).toInt(),
     query('offset').optional().isInt({ min: 0 }).toInt()
   ],
-  async (req, res) => {
+  async(req, res) => {
     try {
       const errors = validationResult(req);
       if (!errors.isEmpty()) {
@@ -515,7 +515,7 @@ router.post(
     body('variations').optional().isInt({ min: 1, max: 4 }).withMessage('Variations must be 1-4'),
     body('style').optional().isIn(['natural', 'vivid'])
   ],
-  async (req, res) => {
+  async(req, res) => {
     try {
       const errors = validationResult(req);
       if (!errors.isEmpty()) {
@@ -650,7 +650,7 @@ router.post(
  *     security:
  *       - bearerAuth: []
  */
-router.get('/status', async (req, res) => {
+router.get('/status', async(req, res) => {
   try {
     // Check if AI image service is enabled
     const serviceEnabled = AIImageService.isEnabled;
@@ -701,7 +701,7 @@ router.get('/status', async (req, res) => {
  *     security:
  *       - bearerAuth: []
  */
-router.get('/usage', async (req, res) => {
+router.get('/usage', async(req, res) => {
   try {
     const userId = req.user.id;
     const usage = await AIImageService.getUserUsage(userId);

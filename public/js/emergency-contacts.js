@@ -180,8 +180,8 @@ class EmergencyContactSystem {
         
         <div class="emergency-quick-contacts">
           ${priorityContacts
-            .map(
-              contact => `
+    .map(
+      contact => `
             <div class="emergency-contact-item" data-type="${contact.type}">
               <div class="contact-info">
                 <span class="contact-icon">${this.getTypeIcon(contact.type)}</span>
@@ -197,8 +197,8 @@ class EmergencyContactSystem {
               </button>
             </div>
           `
-            )
-            .join('')}
+    )
+    .join('')}
         </div>
         
         <div class="emergency-actions">
@@ -299,14 +299,14 @@ class EmergencyContactSystem {
           
           <div class="modal-content">
             ${Object.entries(contactsByType)
-              .map(
-                ([type, contacts]) => `
+    .map(
+      ([type, contacts]) => `
               <div class="contact-type-section">
                 <h3>${this.getTypeIcon(type)} ${this.getTypeName(type)}</h3>
                 <div class="contact-list">
                   ${contacts
-                    .map(
-                      contact => `
+    .map(
+      contact => `
                     <div class="contact-item ${contact.isSystem ? 'system' : contact.isEvent ? 'event' : ''}">
                       <div class="contact-main-info">
                         <div class="contact-name-phone">
@@ -314,12 +314,12 @@ class EmergencyContactSystem {
                           <span class="contact-phone-display">${contact.phone}</span>
                         </div>
                         ${
-                          contact.description
-                            ? `
+  contact.description
+    ? `
                           <div class="contact-description">${contact.description}</div>
                         `
-                            : ''
-                        }
+    : ''
+}
                       </div>
                       
                       <div class="contact-actions">
@@ -329,16 +329,16 @@ class EmergencyContactSystem {
                           📞 電話
                         </button>
                         ${
-                          contact.isEvent
-                            ? `
+  contact.isEvent
+    ? `
                           <button class="contact-action-btn edit" 
                                   onclick="emergencySystem.editContact('${contact.id}')"
                                   title="編集">
                             ✏️ 編集
                           </button>
                         `
-                            : ''
-                        }
+    : ''
+}
                       </div>
                       
                       <div class="contact-meta">
@@ -348,13 +348,13 @@ class EmergencyContactSystem {
                       </div>
                     </div>
                   `
-                    )
-                    .join('')}
+    )
+    .join('')}
                 </div>
               </div>
             `
-              )
-              .join('')}
+    )
+    .join('')}
           </div>
           
           <div class="modal-footer">
@@ -518,15 +518,15 @@ class EmergencyContactSystem {
           <h3>緊急事態の種類を選択してください</h3>
           <div class="alert-types">
             ${this.options.emergencyTypes
-              .map(
-                type => `
+    .map(
+      type => `
               <button class="alert-type-btn" data-type="${type.id}">
                 <span class="alert-type-icon">${type.icon}</span>
                 <span class="alert-type-name">${type.name}</span>
               </button>
             `
-              )
-              .join('')}
+    )
+    .join('')}
           </div>
           <button class="alert-cancel-btn">キャンセル</button>
         </div>

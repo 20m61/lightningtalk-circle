@@ -28,7 +28,7 @@ router.get(
   '/:eventId',
   param('eventId').isLength({ min: 1 }).withMessage('Event ID is required'),
   handleValidationErrors,
-  async (req, res) => {
+  async(req, res) => {
     try {
       const { database } = req.app.locals;
       const { eventId } = req.params;
@@ -135,7 +135,7 @@ router.post(
     body('speakerEmail').isEmail().normalizeEmail().withMessage('Valid speaker email is required')
   ],
   handleValidationErrors,
-  async (req, res) => {
+  async(req, res) => {
     try {
       const { database, eventService } = req.app.locals;
       const talkData = req.body;
@@ -219,7 +219,7 @@ router.put(
     body('status').optional().isIn(['pending', 'confirmed', 'rejected'])
   ],
   handleValidationErrors,
-  async (req, res) => {
+  async(req, res) => {
     try {
       const { database, eventService } = req.app.locals;
       const { id } = req.params;
@@ -268,7 +268,7 @@ router.delete(
   '/:id',
   param('id').isLength({ min: 1 }).withMessage('Talk ID is required'),
   handleValidationErrors,
-  async (req, res) => {
+  async(req, res) => {
     try {
       const { database, eventService } = req.app.locals;
       const { id } = req.params;

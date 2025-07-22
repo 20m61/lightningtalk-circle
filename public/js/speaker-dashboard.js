@@ -165,24 +165,24 @@ class SpeakerDashboard {
 
     // Load section-specific data
     switch (sectionId) {
-      case 'overview':
-        this.loadDashboardData();
-        break;
-      case 'my-talks':
-        this.loadMyTalks();
-        break;
-      case 'upcoming':
-        this.loadUpcomingEvents();
-        break;
-      case 'feedback':
-        this.loadFeedback();
-        break;
-      case 'resources':
-        this.loadResources();
-        break;
-      case 'settings':
-        this.loadSettings();
-        break;
+    case 'overview':
+      this.loadDashboardData();
+      break;
+    case 'my-talks':
+      this.loadMyTalks();
+      break;
+    case 'upcoming':
+      this.loadUpcomingEvents();
+      break;
+    case 'feedback':
+      this.loadFeedback();
+      break;
+    case 'resources':
+      this.loadResources();
+      break;
+    case 'settings':
+      this.loadSettings();
+      break;
     }
   }
 
@@ -376,24 +376,24 @@ class SpeakerDashboard {
           <h4>${this.escapeHtml(talk.title)}</h4>
           <p class="talk-event">Event ID: ${talk.eventId} - ${this.formatDateTime(talk.createdAt)}</p>
           ${
-            talk.tags && talk.tags.length > 0
-              ? `
+  talk.tags && talk.tags.length > 0
+    ? `
             <div class="talk-tags">
               ${talk.tags.map(tag => `<span class="tag">${this.escapeHtml(tag)}</span>`).join('')}
             </div>
           `
-              : ''
-          }
+    : ''
+}
           ${
-            talk.voting
-              ? `
+  talk.voting
+    ? `
             <div class="talk-metrics">
               <span>👥 ${talk.voting.voteCount}票</span>
               <span>⭐ ${talk.voting.averageRating.toFixed(1)}評価</span>
             </div>
           `
-              : ''
-          }
+    : ''
+}
         </div>
         <div class="talk-actions">
           <button class="btn-icon" title="編集" onclick="speakerDashboard.editTalk('${talk.id}')">✏️</button>
@@ -502,9 +502,9 @@ class SpeakerDashboard {
     try {
       const tags = formData.get('tags')
         ? formData
-            .get('tags')
-            .split(',')
-            .map(tag => tag.trim())
+          .get('tags')
+          .split(',')
+          .map(tag => tag.trim())
         : [];
 
       const talkData = {
@@ -589,16 +589,16 @@ class SpeakerDashboard {
         </div>
         ${comment.rating ? `<div class="comment-rating">評価: ${comment.rating}/5</div>` : ''}
         ${
-          comment.ratings
-            ? `
+  comment.ratings
+    ? `
           <div class="detailed-ratings">
             <span>内容: ${comment.ratings.content || 'N/A'}</span>
             <span>発表: ${comment.ratings.delivery || 'N/A'}</span>
             <span>エンゲージメント: ${comment.ratings.engagement || 'N/A'}</span>
           </div>
         `
-            : ''
-        }
+    : ''
+}
         <p class="comment-text">${this.escapeHtml(comment.comment)}</p>
       </div>
     `

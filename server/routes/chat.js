@@ -182,7 +182,7 @@ router.post(
       .withMessage('Name must be 1-100 characters'),
     body('settings').optional().isObject()
   ],
-  async (req, res) => {
+  async(req, res) => {
     try {
       const errors = validationResult(req);
       if (!errors.isEmpty()) {
@@ -243,7 +243,7 @@ router.post(
  *             schema:
  *               $ref: '#/components/schemas/ChatRoom'
  */
-router.get('/rooms/:roomId', [param('roomId').isString().notEmpty()], async (req, res) => {
+router.get('/rooms/:roomId', [param('roomId').isString().notEmpty()], async(req, res) => {
   try {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
@@ -324,7 +324,7 @@ router.put(
     body('settings').optional().isObject(),
     body('status').optional().isIn(['active', 'archived', 'disabled'])
   ],
-  async (req, res) => {
+  async(req, res) => {
     try {
       const errors = validationResult(req);
       if (!errors.isEmpty()) {
@@ -380,7 +380,7 @@ router.put(
  *       200:
  *         description: Successfully joined chat room
  */
-router.post('/rooms/:roomId/join', [param('roomId').isString().notEmpty()], async (req, res) => {
+router.post('/rooms/:roomId/join', [param('roomId').isString().notEmpty()], async(req, res) => {
   try {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
@@ -425,7 +425,7 @@ router.post('/rooms/:roomId/join', [param('roomId').isString().notEmpty()], asyn
  *       200:
  *         description: Successfully left chat room
  */
-router.post('/rooms/:roomId/leave', [param('roomId').isString().notEmpty()], async (req, res) => {
+router.post('/rooms/:roomId/leave', [param('roomId').isString().notEmpty()], async(req, res) => {
   try {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
@@ -506,7 +506,7 @@ router.get(
     query('before').optional().isString(),
     query('after').optional().isString()
   ],
-  async (req, res) => {
+  async(req, res) => {
     try {
       const errors = validationResult(req);
       if (!errors.isEmpty()) {
@@ -592,7 +592,7 @@ router.post(
     body('mentions').optional().isArray(),
     body('replyTo').optional().isString()
   ],
-  async (req, res) => {
+  async(req, res) => {
     try {
       const errors = validationResult(req);
       if (!errors.isEmpty()) {
@@ -662,7 +662,7 @@ router.post(
     param('roomId').isString().notEmpty(),
     body('caption').optional().isString().isLength({ max: 500 })
   ],
-  async (req, res) => {
+  async(req, res) => {
     try {
       const errors = validationResult(req);
       if (!errors.isEmpty()) {
@@ -763,7 +763,7 @@ router.put(
     param('messageId').isString().notEmpty(),
     body('content').isString().isLength({ min: 1, max: 2000 })
   ],
-  async (req, res) => {
+  async(req, res) => {
     try {
       const errors = validationResult(req);
       if (!errors.isEmpty()) {
@@ -813,7 +813,7 @@ router.put(
 router.delete(
   '/messages/:messageId',
   [param('messageId').isString().notEmpty()],
-  async (req, res) => {
+  async(req, res) => {
     try {
       const errors = validationResult(req);
       if (!errors.isEmpty()) {
@@ -876,7 +876,7 @@ router.post(
     param('messageId').isString().notEmpty(),
     body('emoji').isString().isLength({ min: 1, max: 10 })
   ],
-  async (req, res) => {
+  async(req, res) => {
     try {
       const errors = validationResult(req);
       if (!errors.isEmpty()) {
@@ -932,7 +932,7 @@ router.delete(
     param('messageId').isString().notEmpty(),
     query('emoji').isString().isLength({ min: 1, max: 10 })
   ],
-  async (req, res) => {
+  async(req, res) => {
     try {
       const errors = validationResult(req);
       if (!errors.isEmpty()) {

@@ -61,8 +61,8 @@ export const getDatabaseConfig = () => {
         ssl:
           process.env.DATABASE_SSL === 'true'
             ? {
-                rejectUnauthorized: process.env.DATABASE_SSL_REJECT_UNAUTHORIZED !== 'false'
-              }
+              rejectUnauthorized: process.env.DATABASE_SSL_REJECT_UNAUTHORIZED !== 'false'
+            }
             : false,
         pool: {
           min: parseInt(process.env.DATABASE_POOL_MIN) || 2,

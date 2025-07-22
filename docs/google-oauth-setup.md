@@ -54,10 +54,10 @@ GOOGLE_CLIENT_ID=your-google-client-id.apps.googleusercontent.com
 GOOGLE_CLIENT_SECRET=your-google-client-secret
 
 # Existing Cognito Configuration
-VITE_USER_POOL_ID=ap-northeast-1_i4IV8ixyg
-VITE_USER_POOL_CLIENT_ID=4ovq46vkld3t00o0slmr237s0l
-VITE_IDENTITY_POOL_ID=ap-northeast-1:3860e05a-c946-4c40-a7ea-212b261d2013
-VITE_COGNITO_DOMAIN=lightningtalk-auth.auth.ap-northeast-1.amazoncognito.com
+VITE_USER_POOL_ID=YOUR_SECURE_COGNITO_USER_POOL_ID
+VITE_USER_POOL_CLIENT_ID=YOUR_SECURE_COGNITO_CLIENT_ID
+VITE_IDENTITY_POOL_ID=YOUR_SECURE_COGNITO_IDENTITY_POOL_ID
+VITE_COGNITO_DOMAIN=your-secure-cognito-domain.auth.ap-northeast-1.amazoncognito.com
 ```
 
 ## Step 3: Deploy Updated Cognito Stack

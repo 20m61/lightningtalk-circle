@@ -1,21 +1,1677 @@
 {
-  "scanDate": "2025-07-22T05:48:45.347Z",
+  "scanDate": "2025-07-22T06:02:27.488Z",
   "repository": "/home/ec2-user/workspace/lightningtalk-circle",
   "scanType": "PRECISE_FILTERED",
   "summary": {
     "totalCommits": 50,
     "scannedCommits": 50,
-    "totalFindings": 73,
+    "totalFindings": 254,
     "categories": {
       "realApiKeys": 0,
       "databaseCredentials": 0,
-      "personalInfo": 35,
-      "infrastructureInfo": 38,
+      "personalInfo": 136,
+      "infrastructureInfo": 118,
       "sensitiveEnvVars": 0
     },
     "falsePositivesFiltered": true
   },
   "findings": [
+    {
+      "category": "personalInfo",
+      "pattern": "/[a-zA-Z0-9._%+-]+@(?!example|test|noreply|mock)[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}/g",
+      "match": "admin@lightningtalk.com",
+      "commitHash": "15cbbc89d933f580bb3943c245227220199d9a4a",
+      "filePath": "security-audit-precise.json",
+      "commitMessage": "feat: comprehensive security audit with Git history analysis",
+      "context": "      \"pattern\": \"/[a-zA-Z0-9._%+-]+@(?!example|test|noreply|mock)[a-zA-Z0-9.-]+\\\\.[a-zA-Z]{2,}/g\",\n      \"match\": \"\n>>> admin@lightningtalk.com <<<\n\",\n      \"commitHash\": \"ce9dc476c72740ffc51b7176f7c2c12ff6a6f558\","
+    },
+    {
+      "category": "personalInfo",
+      "pattern": "/[a-zA-Z0-9._%+-]+@(?!example|test|noreply|mock)[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}/g",
+      "match": "admin@lightningtalk.com",
+      "commitHash": "15cbbc89d933f580bb3943c245227220199d9a4a",
+      "filePath": "security-audit-precise.json",
+      "commitMessage": "feat: comprehensive security audit with Git history analysis",
+      "context": "      \"pattern\": \"/[a-zA-Z0-9._%+-]+@(?!example|test|noreply|mock)[a-zA-Z0-9.-]+\\\\.[a-zA-Z]{2,}/g\",\n      \"match\": \"\n>>> admin@lightningtalk.com <<<\n\",\n      \"commitHash\": \"ce9dc476c72740ffc51b7176f7c2c12ff6a6f558\","
+    },
+    {
+      "category": "personalInfo",
+      "pattern": "/[a-zA-Z0-9._%+-]+@(?!example|test|noreply|mock)[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}/g",
+      "match": "dev@lightningtalk.com",
+      "commitHash": "15cbbc89d933f580bb3943c245227220199d9a4a",
+      "filePath": "security-audit-precise.json",
+      "commitMessage": "feat: comprehensive security audit with Git history analysis",
+      "context": "      \"pattern\": \"/[a-zA-Z0-9._%+-]+@(?!example|test|noreply|mock)[a-zA-Z0-9.-]+\\\\.[a-zA-Z]{2,}/g\",\n      \"match\": \"\n>>> dev@lightningtalk.com <<<\n\",\n      \"commitHash\": \"ce9dc476c72740ffc51b7176f7c2c12ff6a6f558\","
+    },
+    {
+      "category": "personalInfo",
+      "pattern": "/[a-zA-Z0-9._%+-]+@(?!example|test|noreply|mock)[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}/g",
+      "match": "dev@lightningtalk.com",
+      "commitHash": "15cbbc89d933f580bb3943c245227220199d9a4a",
+      "filePath": "security-audit-precise.json",
+      "commitMessage": "feat: comprehensive security audit with Git history analysis",
+      "context": "      \"pattern\": \"/[a-zA-Z0-9._%+-]+@(?!example|test|noreply|mock)[a-zA-Z0-9.-]+\\\\.[a-zA-Z]{2,}/g\",\n      \"match\": \"\n>>> dev@lightningtalk.com <<<\n\",\n      \"commitHash\": \"ce9dc476c72740ffc51b7176f7c2c12ff6a6f558\","
+    },
+    {
+      "category": "personalInfo",
+      "pattern": "/[a-zA-Z0-9._%+-]+@(?!example|test|noreply|mock)[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}/g",
+      "match": "staging@lightningtalk.com",
+      "commitHash": "15cbbc89d933f580bb3943c245227220199d9a4a",
+      "filePath": "security-audit-precise.json",
+      "commitMessage": "feat: comprehensive security audit with Git history analysis",
+      "context": "      \"pattern\": \"/[a-zA-Z0-9._%+-]+@(?!example|test|noreply|mock)[a-zA-Z0-9.-]+\\\\.[a-zA-Z]{2,}/g\",\n      \"match\": \"\n>>> staging@lightningtalk.com <<<\n\",\n      \"commitHash\": \"ce9dc476c72740ffc51b7176f7c2c12ff6a6f558\","
+    },
+    {
+      "category": "personalInfo",
+      "pattern": "/[a-zA-Z0-9._%+-]+@(?!example|test|noreply|mock)[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}/g",
+      "match": "staging@lightningtalk.com",
+      "commitHash": "15cbbc89d933f580bb3943c245227220199d9a4a",
+      "filePath": "security-audit-precise.json",
+      "commitMessage": "feat: comprehensive security audit with Git history analysis",
+      "context": "      \"pattern\": \"/[a-zA-Z0-9._%+-]+@(?!example|test|noreply|mock)[a-zA-Z0-9.-]+\\\\.[a-zA-Z]{2,}/g\",\n      \"match\": \"\n>>> staging@lightningtalk.com <<<\n\",\n      \"commitHash\": \"ce9dc476c72740ffc51b7176f7c2c12ff6a6f558\","
+    },
+    {
+      "category": "personalInfo",
+      "pattern": "/[a-zA-Z0-9._%+-]+@(?!example|test|noreply|mock)[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}/g",
+      "match": "admin@lightningtalk.com",
+      "commitHash": "15cbbc89d933f580bb3943c245227220199d9a4a",
+      "filePath": "security-audit-precise.json",
+      "commitMessage": "feat: comprehensive security audit with Git history analysis",
+      "context": "      \"pattern\": \"/[a-zA-Z0-9._%+-]+@(?!example|test|noreply|mock)[a-zA-Z0-9.-]+\\\\.[a-zA-Z]{2,}/g\",\n      \"match\": \"\n>>> admin@lightningtalk.com <<<\n\",\n      \"commitHash\": \"ce9dc476c72740ffc51b7176f7c2c12ff6a6f558\","
+    },
+    {
+      "category": "personalInfo",
+      "pattern": "/[a-zA-Z0-9._%+-]+@(?!example|test|noreply|mock)[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}/g",
+      "match": "admin@lightningtalk.com",
+      "commitHash": "15cbbc89d933f580bb3943c245227220199d9a4a",
+      "filePath": "security-audit-precise.json",
+      "commitMessage": "feat: comprehensive security audit with Git history analysis",
+      "context": "      \"pattern\": \"/[a-zA-Z0-9._%+-]+@(?!example|test|noreply|mock)[a-zA-Z0-9.-]+\\\\.[a-zA-Z]{2,}/g\",\n      \"match\": \"\n>>> admin@lightningtalk.com <<<\n\",\n      \"commitHash\": \"ce9dc476c72740ffc51b7176f7c2c12ff6a6f558\","
+    },
+    {
+      "category": "personalInfo",
+      "pattern": "/[a-zA-Z0-9._%+-]+@(?!example|test|noreply|mock)[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}/g",
+      "match": "admin@lightningtalk.com",
+      "commitHash": "15cbbc89d933f580bb3943c245227220199d9a4a",
+      "filePath": "security-audit-precise.json",
+      "commitMessage": "feat: comprehensive security audit with Git history analysis",
+      "context": "      \"pattern\": \"/[a-zA-Z0-9._%+-]+@(?!example|test|noreply|mock)[a-zA-Z0-9.-]+\\\\.[a-zA-Z]{2,}/g\",\n      \"match\": \"\n>>> admin@lightningtalk.com <<<\n\",\n      \"commitHash\": \"ce9dc476c72740ffc51b7176f7c2c12ff6a6f558\","
+    },
+    {
+      "category": "personalInfo",
+      "pattern": "/[a-zA-Z0-9._%+-]+@(?!example|test|noreply|mock)[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}/g",
+      "match": "admin@lightningtalk.com",
+      "commitHash": "15cbbc89d933f580bb3943c245227220199d9a4a",
+      "filePath": "security-audit-precise.json",
+      "commitMessage": "feat: comprehensive security audit with Git history analysis",
+      "context": "      \"pattern\": \"/[a-zA-Z0-9._%+-]+@(?!example|test|noreply|mock)[a-zA-Z0-9.-]+\\\\.[a-zA-Z]{2,}/g\",\n      \"match\": \"\n>>> admin@lightningtalk.com <<<\n\",\n      \"commitHash\": \"ce9dc476c72740ffc51b7176f7c2c12ff6a6f558\","
+    },
+    {
+      "category": "personalInfo",
+      "pattern": "/[a-zA-Z0-9._%+-]+@(?!example|test|noreply|mock)[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}/g",
+      "match": "admin@lightningtalk.local",
+      "commitHash": "15cbbc89d933f580bb3943c245227220199d9a4a",
+      "filePath": "security-audit-precise.json",
+      "commitMessage": "feat: comprehensive security audit with Git history analysis",
+      "context": "      \"pattern\": \"/[a-zA-Z0-9._%+-]+@(?!example|test|noreply|mock)[a-zA-Z0-9.-]+\\\\.[a-zA-Z]{2,}/g\",\n      \"match\": \"\n>>> admin@lightningtalk.local <<<\n\",\n      \"commitHash\": \"85b585ef6c00f4653f6ee93cd75763ef3c013329\","
+    },
+    {
+      "category": "personalInfo",
+      "pattern": "/[a-zA-Z0-9._%+-]+@(?!example|test|noreply|mock)[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}/g",
+      "match": "admin@lightningtalk.local",
+      "commitHash": "15cbbc89d933f580bb3943c245227220199d9a4a",
+      "filePath": "security-audit-precise.json",
+      "commitMessage": "feat: comprehensive security audit with Git history analysis",
+      "context": "      \"pattern\": \"/[a-zA-Z0-9._%+-]+@(?!example|test|noreply|mock)[a-zA-Z0-9.-]+\\\\.[a-zA-Z]{2,}/g\",\n      \"match\": \"\n>>> admin@lightningtalk.local <<<\n\",\n      \"commitHash\": \"85b585ef6c00f4653f6ee93cd75763ef3c013329\","
+    },
+    {
+      "category": "personalInfo",
+      "pattern": "/[a-zA-Z0-9._%+-]+@(?!example|test|noreply|mock)[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}/g",
+      "match": "admin@lightningtalk.local",
+      "commitHash": "15cbbc89d933f580bb3943c245227220199d9a4a",
+      "filePath": "security-audit-precise.json",
+      "commitMessage": "feat: comprehensive security audit with Git history analysis",
+      "context": "      \"pattern\": \"/[a-zA-Z0-9._%+-]+@(?!example|test|noreply|mock)[a-zA-Z0-9.-]+\\\\.[a-zA-Z]{2,}/g\",\n      \"match\": \"\n>>> admin@lightningtalk.local <<<\n\",\n      \"commitHash\": \"85b585ef6c00f4653f6ee93cd75763ef3c013329\","
+    },
+    {
+      "category": "personalInfo",
+      "pattern": "/[a-zA-Z0-9._%+-]+@(?!example|test|noreply|mock)[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}/g",
+      "match": "admin@lightningtalk.local",
+      "commitHash": "15cbbc89d933f580bb3943c245227220199d9a4a",
+      "filePath": "security-audit-precise.json",
+      "commitMessage": "feat: comprehensive security audit with Git history analysis",
+      "context": "      \"pattern\": \"/[a-zA-Z0-9._%+-]+@(?!example|test|noreply|mock)[a-zA-Z0-9.-]+\\\\.[a-zA-Z]{2,}/g\",\n      \"match\": \"\n>>> admin@lightningtalk.local <<<\n\",\n      \"commitHash\": \"85b585ef6c00f4653f6ee93cd75763ef3c013329\","
+    },
+    {
+      "category": "personalInfo",
+      "pattern": "/[a-zA-Z0-9._%+-]+@(?!example|test|noreply|mock)[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}/g",
+      "match": "dev-alerts@xn--6wym69a.com",
+      "commitHash": "15cbbc89d933f580bb3943c245227220199d9a4a",
+      "filePath": "security-audit-precise.json",
+      "commitMessage": "feat: comprehensive security audit with Git history analysis",
+      "context": "      \"pattern\": \"/[a-zA-Z0-9._%+-]+@(?!example|test|noreply|mock)[a-zA-Z0-9.-]+\\\\.[a-zA-Z]{2,}/g\",\n      \"match\": \"\n>>> dev-alerts@xn--6wym69a.com <<<\n\",\n      \"commitHash\": \"24afe52d9140746103dba5011910213f993e34d1\","
+    },
+    {
+      "category": "personalInfo",
+      "pattern": "/[a-zA-Z0-9._%+-]+@(?!example|test|noreply|mock)[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}/g",
+      "match": "dev-alerts@xn--6wym69a.com",
+      "commitHash": "15cbbc89d933f580bb3943c245227220199d9a4a",
+      "filePath": "security-audit-precise.json",
+      "commitMessage": "feat: comprehensive security audit with Git history analysis",
+      "context": "      \"pattern\": \"/[a-zA-Z0-9._%+-]+@(?!example|test|noreply|mock)[a-zA-Z0-9.-]+\\\\.[a-zA-Z]{2,}/g\",\n      \"match\": \"\n>>> dev-alerts@xn--6wym69a.com <<<\n\",\n      \"commitHash\": \"24afe52d9140746103dba5011910213f993e34d1\","
+    },
+    {
+      "category": "personalInfo",
+      "pattern": "/[a-zA-Z0-9._%+-]+@(?!example|test|noreply|mock)[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}/g",
+      "match": "dev-billing@xn--6wym69a.com",
+      "commitHash": "15cbbc89d933f580bb3943c245227220199d9a4a",
+      "filePath": "security-audit-precise.json",
+      "commitMessage": "feat: comprehensive security audit with Git history analysis",
+      "context": "      \"pattern\": \"/[a-zA-Z0-9._%+-]+@(?!example|test|noreply|mock)[a-zA-Z0-9.-]+\\\\.[a-zA-Z]{2,}/g\",\n      \"match\": \"\n>>> dev-billing@xn--6wym69a.com <<<\n\",\n      \"commitHash\": \"24afe52d9140746103dba5011910213f993e34d1\","
+    },
+    {
+      "category": "personalInfo",
+      "pattern": "/[a-zA-Z0-9._%+-]+@(?!example|test|noreply|mock)[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}/g",
+      "match": "dev-billing@xn--6wym69a.com",
+      "commitHash": "15cbbc89d933f580bb3943c245227220199d9a4a",
+      "filePath": "security-audit-precise.json",
+      "commitMessage": "feat: comprehensive security audit with Git history analysis",
+      "context": "      \"pattern\": \"/[a-zA-Z0-9._%+-]+@(?!example|test|noreply|mock)[a-zA-Z0-9.-]+\\\\.[a-zA-Z]{2,}/g\",\n      \"match\": \"\n>>> dev-billing@xn--6wym69a.com <<<\n\",\n      \"commitHash\": \"24afe52d9140746103dba5011910213f993e34d1\","
+    },
+    {
+      "category": "personalInfo",
+      "pattern": "/[a-zA-Z0-9._%+-]+@(?!example|test|noreply|mock)[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}/g",
+      "match": "alerts@xn--6wym69a.com",
+      "commitHash": "15cbbc89d933f580bb3943c245227220199d9a4a",
+      "filePath": "security-audit-precise.json",
+      "commitMessage": "feat: comprehensive security audit with Git history analysis",
+      "context": "      \"pattern\": \"/[a-zA-Z0-9._%+-]+@(?!example|test|noreply|mock)[a-zA-Z0-9.-]+\\\\.[a-zA-Z]{2,}/g\",\n      \"match\": \"dev-\n>>> alerts@xn--6wym69a.com <<<\n\",\n      \"commitHash\": \"24afe52d9140746103dba5011910213f993e34d1\","
+    },
+    {
+      "category": "personalInfo",
+      "pattern": "/[a-zA-Z0-9._%+-]+@(?!example|test|noreply|mock)[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}/g",
+      "match": "alerts@xn--6wym69a.com",
+      "commitHash": "15cbbc89d933f580bb3943c245227220199d9a4a",
+      "filePath": "security-audit-precise.json",
+      "commitMessage": "feat: comprehensive security audit with Git history analysis",
+      "context": "      \"pattern\": \"/[a-zA-Z0-9._%+-]+@(?!example|test|noreply|mock)[a-zA-Z0-9.-]+\\\\.[a-zA-Z]{2,}/g\",\n      \"match\": \"dev-\n>>> alerts@xn--6wym69a.com <<<\n\",\n      \"commitHash\": \"24afe52d9140746103dba5011910213f993e34d1\","
+    },
+    {
+      "category": "personalInfo",
+      "pattern": "/[a-zA-Z0-9._%+-]+@(?!example|test|noreply|mock)[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}/g",
+      "match": "billing-alerts@xn--6wym69a.com",
+      "commitHash": "15cbbc89d933f580bb3943c245227220199d9a4a",
+      "filePath": "security-audit-precise.json",
+      "commitMessage": "feat: comprehensive security audit with Git history analysis",
+      "context": "      \"pattern\": \"/[a-zA-Z0-9._%+-]+@(?!example|test|noreply|mock)[a-zA-Z0-9.-]+\\\\.[a-zA-Z]{2,}/g\",\n      \"match\": \"\n>>> billing-alerts@xn--6wym69a.com <<<\n\",\n      \"commitHash\": \"24afe52d9140746103dba5011910213f993e34d1\","
+    },
+    {
+      "category": "personalInfo",
+      "pattern": "/[a-zA-Z0-9._%+-]+@(?!example|test|noreply|mock)[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}/g",
+      "match": "billing-alerts@xn--6wym69a.com",
+      "commitHash": "15cbbc89d933f580bb3943c245227220199d9a4a",
+      "filePath": "security-audit-precise.json",
+      "commitMessage": "feat: comprehensive security audit with Git history analysis",
+      "context": "      \"pattern\": \"/[a-zA-Z0-9._%+-]+@(?!example|test|noreply|mock)[a-zA-Z0-9.-]+\\\\.[a-zA-Z]{2,}/g\",\n      \"match\": \"\n>>> billing-alerts@xn--6wym69a.com <<<\n\",\n      \"commitHash\": \"24afe52d9140746103dba5011910213f993e34d1\","
+    },
+    {
+      "category": "personalInfo",
+      "pattern": "/[a-zA-Z0-9._%+-]+@(?!example|test|noreply|mock)[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}/g",
+      "match": "example@email.com",
+      "commitHash": "15cbbc89d933f580bb3943c245227220199d9a4a",
+      "filePath": "security-audit-precise.json",
+      "commitMessage": "feat: comprehensive security audit with Git history analysis",
+      "context": "      \"pattern\": \"/[a-zA-Z0-9._%+-]+@(?!example|test|noreply|mock)[a-zA-Z0-9.-]+\\\\.[a-zA-Z]{2,}/g\",\n      \"match\": \"\n>>> example@email.com <<<\n\",\n      \"commitHash\": \"24afe52d9140746103dba5011910213f993e34d1\","
+    },
+    {
+      "category": "personalInfo",
+      "pattern": "/[a-zA-Z0-9._%+-]+@(?!example|test|noreply|mock)[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}/g",
+      "match": "example@email.com",
+      "commitHash": "15cbbc89d933f580bb3943c245227220199d9a4a",
+      "filePath": "security-audit-precise.json",
+      "commitMessage": "feat: comprehensive security audit with Git history analysis",
+      "context": "      \"pattern\": \"/[a-zA-Z0-9._%+-]+@(?!example|test|noreply|mock)[a-zA-Z0-9.-]+\\\\.[a-zA-Z]{2,}/g\",\n      \"match\": \"\n>>> example@email.com <<<\n\",\n      \"commitHash\": \"24afe52d9140746103dba5011910213f993e34d1\","
+    },
+    {
+      "category": "personalInfo",
+      "pattern": "/[a-zA-Z0-9._%+-]+@(?!example|test|noreply|mock)[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}/g",
+      "match": "admin@lightningtalk.com",
+      "commitHash": "15cbbc89d933f580bb3943c245227220199d9a4a",
+      "filePath": "security-audit-precise.json",
+      "commitMessage": "feat: comprehensive security audit with Git history analysis",
+      "context": "      \"pattern\": \"/[a-zA-Z0-9._%+-]+@(?!example|test|noreply|mock)[a-zA-Z0-9.-]+\\\\.[a-zA-Z]{2,}/g\",\n      \"match\": \"\n>>> admin@lightningtalk.com <<<\n\",\n      \"commitHash\": \"ce9dc476c72740ffc51b7176f7c2c12ff6a6f558\","
+    },
+    {
+      "category": "personalInfo",
+      "pattern": "/[a-zA-Z0-9._%+-]+@(?!example|test|noreply|mock)[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}/g",
+      "match": "admin@lightningtalk.com",
+      "commitHash": "15cbbc89d933f580bb3943c245227220199d9a4a",
+      "filePath": "security-audit-precise.json",
+      "commitMessage": "feat: comprehensive security audit with Git history analysis",
+      "context": "      \"pattern\": \"/[a-zA-Z0-9._%+-]+@(?!example|test|noreply|mock)[a-zA-Z0-9.-]+\\\\.[a-zA-Z]{2,}/g\",\n      \"match\": \"\n>>> admin@lightningtalk.com <<<\n\",\n      \"commitHash\": \"ce9dc476c72740ffc51b7176f7c2c12ff6a6f558\","
+    },
+    {
+      "category": "personalInfo",
+      "pattern": "/[a-zA-Z0-9._%+-]+@(?!example|test|noreply|mock)[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}/g",
+      "match": "example@email.com",
+      "commitHash": "15cbbc89d933f580bb3943c245227220199d9a4a",
+      "filePath": "security-audit-precise.json",
+      "commitMessage": "feat: comprehensive security audit with Git history analysis",
+      "context": "      \"pattern\": \"/[a-zA-Z0-9._%+-]+@(?!example|test|noreply|mock)[a-zA-Z0-9.-]+\\\\.[a-zA-Z]{2,}/g\",\n      \"match\": \"\n>>> example@email.com <<<\n\",\n      \"commitHash\": \"24afe52d9140746103dba5011910213f993e34d1\","
+    },
+    {
+      "category": "personalInfo",
+      "pattern": "/[a-zA-Z0-9._%+-]+@(?!example|test|noreply|mock)[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}/g",
+      "match": "example@email.com",
+      "commitHash": "15cbbc89d933f580bb3943c245227220199d9a4a",
+      "filePath": "security-audit-precise.json",
+      "commitMessage": "feat: comprehensive security audit with Git history analysis",
+      "context": "      \"pattern\": \"/[a-zA-Z0-9._%+-]+@(?!example|test|noreply|mock)[a-zA-Z0-9.-]+\\\\.[a-zA-Z]{2,}/g\",\n      \"match\": \"\n>>> example@email.com <<<\n\",\n      \"commitHash\": \"24afe52d9140746103dba5011910213f993e34d1\","
+    },
+    {
+      "category": "personalInfo",
+      "pattern": "/[a-zA-Z0-9._%+-]+@(?!example|test|noreply|mock)[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}/g",
+      "match": "admin@lightningtalk.com",
+      "commitHash": "15cbbc89d933f580bb3943c245227220199d9a4a",
+      "filePath": "security-audit-precise.json",
+      "commitMessage": "feat: comprehensive security audit with Git history analysis",
+      "context": "      \"pattern\": \"/[a-zA-Z0-9._%+-]+@(?!example|test|noreply|mock)[a-zA-Z0-9.-]+\\\\.[a-zA-Z]{2,}/g\",\n      \"match\": \"\n>>> admin@lightningtalk.com <<<\n\",\n      \"commitHash\": \"ce9dc476c72740ffc51b7176f7c2c12ff6a6f558\","
+    },
+    {
+      "category": "personalInfo",
+      "pattern": "/[a-zA-Z0-9._%+-]+@(?!example|test|noreply|mock)[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}/g",
+      "match": "admin@lightningtalk.com",
+      "commitHash": "15cbbc89d933f580bb3943c245227220199d9a4a",
+      "filePath": "security-audit-precise.json",
+      "commitMessage": "feat: comprehensive security audit with Git history analysis",
+      "context": "      \"pattern\": \"/[a-zA-Z0-9._%+-]+@(?!example|test|noreply|mock)[a-zA-Z0-9.-]+\\\\.[a-zA-Z]{2,}/g\",\n      \"match\": \"\n>>> admin@lightningtalk.com <<<\n\",\n      \"commitHash\": \"ce9dc476c72740ffc51b7176f7c2c12ff6a6f558\","
+    },
+    {
+      "category": "personalInfo",
+      "pattern": "/[a-zA-Z0-9._%+-]+@(?!example|test|noreply|mock)[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}/g",
+      "match": "example@email.com",
+      "commitHash": "15cbbc89d933f580bb3943c245227220199d9a4a",
+      "filePath": "security-audit-precise.json",
+      "commitMessage": "feat: comprehensive security audit with Git history analysis",
+      "context": "      \"pattern\": \"/[a-zA-Z0-9._%+-]+@(?!example|test|noreply|mock)[a-zA-Z0-9.-]+\\\\.[a-zA-Z]{2,}/g\",\n      \"match\": \"\n>>> example@email.com <<<\n\",\n      \"commitHash\": \"24afe52d9140746103dba5011910213f993e34d1\","
+    },
+    {
+      "category": "personalInfo",
+      "pattern": "/[a-zA-Z0-9._%+-]+@(?!example|test|noreply|mock)[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}/g",
+      "match": "example@email.com",
+      "commitHash": "15cbbc89d933f580bb3943c245227220199d9a4a",
+      "filePath": "security-audit-precise.json",
+      "commitMessage": "feat: comprehensive security audit with Git history analysis",
+      "context": "      \"pattern\": \"/[a-zA-Z0-9._%+-]+@(?!example|test|noreply|mock)[a-zA-Z0-9.-]+\\\\.[a-zA-Z]{2,}/g\",\n      \"match\": \"\n>>> example@email.com <<<\n\",\n      \"commitHash\": \"24afe52d9140746103dba5011910213f993e34d1\","
+    },
+    {
+      "category": "personalInfo",
+      "pattern": "/[a-zA-Z0-9._%+-]+@(?!example|test|noreply|mock)[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}/g",
+      "match": "example@email.com",
+      "commitHash": "15cbbc89d933f580bb3943c245227220199d9a4a",
+      "filePath": "security-audit-precise.json",
+      "commitMessage": "feat: comprehensive security audit with Git history analysis",
+      "context": "      \"pattern\": \"/[a-zA-Z0-9._%+-]+@(?!example|test|noreply|mock)[a-zA-Z0-9.-]+\\\\.[a-zA-Z]{2,}/g\",\n      \"match\": \"\n>>> example@email.com <<<\n\",\n      \"commitHash\": \"24afe52d9140746103dba5011910213f993e34d1\","
+    },
+    {
+      "category": "personalInfo",
+      "pattern": "/[a-zA-Z0-9._%+-]+@(?!example|test|noreply|mock)[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}/g",
+      "match": "example@email.com",
+      "commitHash": "15cbbc89d933f580bb3943c245227220199d9a4a",
+      "filePath": "security-audit-precise.json",
+      "commitMessage": "feat: comprehensive security audit with Git history analysis",
+      "context": "      \"pattern\": \"/[a-zA-Z0-9._%+-]+@(?!example|test|noreply|mock)[a-zA-Z0-9.-]+\\\\.[a-zA-Z]{2,}/g\",\n      \"match\": \"\n>>> example@email.com <<<\n\",\n      \"commitHash\": \"24afe52d9140746103dba5011910213f993e34d1\","
+    },
+    {
+      "category": "personalInfo",
+      "pattern": "/[a-zA-Z0-9._%+-]+@(?!example|test|noreply|mock)[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}/g",
+      "match": "example@email.com",
+      "commitHash": "15cbbc89d933f580bb3943c245227220199d9a4a",
+      "filePath": "security-audit-precise.json",
+      "commitMessage": "feat: comprehensive security audit with Git history analysis",
+      "context": "      \"pattern\": \"/[a-zA-Z0-9._%+-]+@(?!example|test|noreply|mock)[a-zA-Z0-9.-]+\\\\.[a-zA-Z]{2,}/g\",\n      \"match\": \"\n>>> example@email.com <<<\n\",\n      \"commitHash\": \"24afe52d9140746103dba5011910213f993e34d1\","
+    },
+    {
+      "category": "personalInfo",
+      "pattern": "/[a-zA-Z0-9._%+-]+@(?!example|test|noreply|mock)[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}/g",
+      "match": "example@email.com",
+      "commitHash": "15cbbc89d933f580bb3943c245227220199d9a4a",
+      "filePath": "security-audit-precise.json",
+      "commitMessage": "feat: comprehensive security audit with Git history analysis",
+      "context": "      \"pattern\": \"/[a-zA-Z0-9._%+-]+@(?!example|test|noreply|mock)[a-zA-Z0-9.-]+\\\\.[a-zA-Z]{2,}/g\",\n      \"match\": \"\n>>> example@email.com <<<\n\",\n      \"commitHash\": \"24afe52d9140746103dba5011910213f993e34d1\","
+    },
+    {
+      "category": "personalInfo",
+      "pattern": "/[a-zA-Z0-9._%+-]+@(?!example|test|noreply|mock)[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}/g",
+      "match": "example@email.com",
+      "commitHash": "15cbbc89d933f580bb3943c245227220199d9a4a",
+      "filePath": "security-audit-precise.json",
+      "commitMessage": "feat: comprehensive security audit with Git history analysis",
+      "context": "      \"pattern\": \"/[a-zA-Z0-9._%+-]+@(?!example|test|noreply|mock)[a-zA-Z0-9.-]+\\\\.[a-zA-Z]{2,}/g\",\n      \"match\": \"\n>>> example@email.com <<<\n\",\n      \"commitHash\": \"24afe52d9140746103dba5011910213f993e34d1\","
+    },
+    {
+      "category": "personalInfo",
+      "pattern": "/[a-zA-Z0-9._%+-]+@(?!example|test|noreply|mock)[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}/g",
+      "match": "example@email.com",
+      "commitHash": "15cbbc89d933f580bb3943c245227220199d9a4a",
+      "filePath": "security-audit-precise.json",
+      "commitMessage": "feat: comprehensive security audit with Git history analysis",
+      "context": "      \"pattern\": \"/[a-zA-Z0-9._%+-]+@(?!example|test|noreply|mock)[a-zA-Z0-9.-]+\\\\.[a-zA-Z]{2,}/g\",\n      \"match\": \"\n>>> example@email.com <<<\n\",\n      \"commitHash\": \"24afe52d9140746103dba5011910213f993e34d1\","
+    },
+    {
+      "category": "personalInfo",
+      "pattern": "/[a-zA-Z0-9._%+-]+@(?!example|test|noreply|mock)[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}/g",
+      "match": "example@email.com",
+      "commitHash": "15cbbc89d933f580bb3943c245227220199d9a4a",
+      "filePath": "security-audit-precise.json",
+      "commitMessage": "feat: comprehensive security audit with Git history analysis",
+      "context": "      \"pattern\": \"/[a-zA-Z0-9._%+-]+@(?!example|test|noreply|mock)[a-zA-Z0-9.-]+\\\\.[a-zA-Z]{2,}/g\",\n      \"match\": \"\n>>> example@email.com <<<\n\",\n      \"commitHash\": \"24afe52d9140746103dba5011910213f993e34d1\","
+    },
+    {
+      "category": "personalInfo",
+      "pattern": "/[a-zA-Z0-9._%+-]+@(?!example|test|noreply|mock)[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}/g",
+      "match": "example@email.com",
+      "commitHash": "15cbbc89d933f580bb3943c245227220199d9a4a",
+      "filePath": "security-audit-precise.json",
+      "commitMessage": "feat: comprehensive security audit with Git history analysis",
+      "context": "      \"pattern\": \"/[a-zA-Z0-9._%+-]+@(?!example|test|noreply|mock)[a-zA-Z0-9.-]+\\\\.[a-zA-Z]{2,}/g\",\n      \"match\": \"\n>>> example@email.com <<<\n\",\n      \"commitHash\": \"24afe52d9140746103dba5011910213f993e34d1\","
+    },
+    {
+      "category": "personalInfo",
+      "pattern": "/[a-zA-Z0-9._%+-]+@(?!example|test|noreply|mock)[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}/g",
+      "match": "noreply@lightningtalk.local",
+      "commitHash": "15cbbc89d933f580bb3943c245227220199d9a4a",
+      "filePath": "security-audit-precise.json",
+      "commitMessage": "feat: comprehensive security audit with Git history analysis",
+      "context": "      \"pattern\": \"/[a-zA-Z0-9._%+-]+@(?!example|test|noreply|mock)[a-zA-Z0-9.-]+\\\\.[a-zA-Z]{2,}/g\",\n      \"match\": \"\n>>> noreply@lightningtalk.local <<<\n\",\n      \"commitHash\": \"WORKSPACE\","
+    },
+    {
+      "category": "personalInfo",
+      "pattern": "/[a-zA-Z0-9._%+-]+@(?!example|test|noreply|mock)[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}/g",
+      "match": "noreply@lightningtalk.local",
+      "commitHash": "15cbbc89d933f580bb3943c245227220199d9a4a",
+      "filePath": "security-audit-precise.json",
+      "commitMessage": "feat: comprehensive security audit with Git history analysis",
+      "context": "      \"pattern\": \"/[a-zA-Z0-9._%+-]+@(?!example|test|noreply|mock)[a-zA-Z0-9.-]+\\\\.[a-zA-Z]{2,}/g\",\n      \"match\": \"\n>>> noreply@lightningtalk.local <<<\n\",\n      \"commitHash\": \"WORKSPACE\","
+    },
+    {
+      "category": "personalInfo",
+      "pattern": "/[a-zA-Z0-9._%+-]+@(?!example|test|noreply|mock)[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}/g",
+      "match": "noreply@lightningtalk-circle.com",
+      "commitHash": "15cbbc89d933f580bb3943c245227220199d9a4a",
+      "filePath": "security-audit-precise.json",
+      "commitMessage": "feat: comprehensive security audit with Git history analysis",
+      "context": "      \"pattern\": \"/[a-zA-Z0-9._%+-]+@(?!example|test|noreply|mock)[a-zA-Z0-9.-]+\\\\.[a-zA-Z]{2,}/g\",\n      \"match\": \"\n>>> noreply@lightningtalk-circle.com <<<\n\",\n      \"commitHash\": \"WORKSPACE\","
+    },
+    {
+      "category": "personalInfo",
+      "pattern": "/[a-zA-Z0-9._%+-]+@(?!example|test|noreply|mock)[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}/g",
+      "match": "noreply@lightningtalk-circle.com",
+      "commitHash": "15cbbc89d933f580bb3943c245227220199d9a4a",
+      "filePath": "security-audit-precise.json",
+      "commitMessage": "feat: comprehensive security audit with Git history analysis",
+      "context": "      \"pattern\": \"/[a-zA-Z0-9._%+-]+@(?!example|test|noreply|mock)[a-zA-Z0-9.-]+\\\\.[a-zA-Z]{2,}/g\",\n      \"match\": \"\n>>> noreply@lightningtalk-circle.com <<<\n\",\n      \"commitHash\": \"WORKSPACE\","
+    },
+    {
+      "category": "personalInfo",
+      "pattern": "/[a-zA-Z0-9._%+-]+@(?!example|test|noreply|mock)[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}/g",
+      "match": "noreply@lightningtalk.local",
+      "commitHash": "15cbbc89d933f580bb3943c245227220199d9a4a",
+      "filePath": "security-audit-precise.json",
+      "commitMessage": "feat: comprehensive security audit with Git history analysis",
+      "context": "      \"pattern\": \"/[a-zA-Z0-9._%+-]+@(?!example|test|noreply|mock)[a-zA-Z0-9.-]+\\\\.[a-zA-Z]{2,}/g\",\n      \"match\": \"\n>>> noreply@lightningtalk.local <<<\n\",\n      \"commitHash\": \"WORKSPACE\","
+    },
+    {
+      "category": "personalInfo",
+      "pattern": "/[a-zA-Z0-9._%+-]+@(?!example|test|noreply|mock)[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}/g",
+      "match": "noreply@lightningtalk.local",
+      "commitHash": "15cbbc89d933f580bb3943c245227220199d9a4a",
+      "filePath": "security-audit-precise.json",
+      "commitMessage": "feat: comprehensive security audit with Git history analysis",
+      "context": "      \"pattern\": \"/[a-zA-Z0-9._%+-]+@(?!example|test|noreply|mock)[a-zA-Z0-9.-]+\\\\.[a-zA-Z]{2,}/g\",\n      \"match\": \"\n>>> noreply@lightningtalk.local <<<\n\",\n      \"commitHash\": \"WORKSPACE\","
+    },
+    {
+      "category": "personalInfo",
+      "pattern": "/\\b0[789]0-\\d{4}-\\d{4}\\b/g",
+      "match": "080-4540-7479",
+      "commitHash": "15cbbc89d933f580bb3943c245227220199d9a4a",
+      "filePath": "security-audit-precise.json",
+      "commitMessage": "feat: comprehensive security audit with Git history analysis",
+      "context": "      \"pattern\": \"/\\\\b0[789]0-\\\\d{4}-\\\\d{4}\\\\b/g\",\n      \"match\": \"\n>>> 080-4540-7479 <<<\n\",\n      \"commitHash\": \"24afe52d9140746103dba5011910213f993e34d1\","
+    },
+    {
+      "category": "personalInfo",
+      "pattern": "/\\b0[789]0-\\d{4}-\\d{4}\\b/g",
+      "match": "080-4540-7479",
+      "commitHash": "15cbbc89d933f580bb3943c245227220199d9a4a",
+      "filePath": "security-audit-precise.json",
+      "commitMessage": "feat: comprehensive security audit with Git history analysis",
+      "context": "      \"pattern\": \"/\\\\b0[789]0-\\\\d{4}-\\\\d{4}\\\\b/g\",\n      \"match\": \"\n>>> 080-4540-7479 <<<\n\",\n      \"commitHash\": \"24afe52d9140746103dba5011910213f993e34d1\","
+    },
+    {
+      "category": "personalInfo",
+      "pattern": "/\\b0[789]0-\\d{4}-\\d{4}\\b/g",
+      "match": "080-4540-7479",
+      "commitHash": "15cbbc89d933f580bb3943c245227220199d9a4a",
+      "filePath": "security-audit-precise.json",
+      "commitMessage": "feat: comprehensive security audit with Git history analysis",
+      "context": "      \"pattern\": \"/\\\\b0[789]0-\\\\d{4}-\\\\d{4}\\\\b/g\",\n      \"match\": \"\n>>> 080-4540-7479 <<<\n\",\n      \"commitHash\": \"24afe52d9140746103dba5011910213f993e34d1\","
+    },
+    {
+      "category": "personalInfo",
+      "pattern": "/\\b0[789]0-\\d{4}-\\d{4}\\b/g",
+      "match": "080-4540-7479",
+      "commitHash": "15cbbc89d933f580bb3943c245227220199d9a4a",
+      "filePath": "security-audit-precise.json",
+      "commitMessage": "feat: comprehensive security audit with Git history analysis",
+      "context": "      \"pattern\": \"/\\\\b0[789]0-\\\\d{4}-\\\\d{4}\\\\b/g\",\n      \"match\": \"\n>>> 080-4540-7479 <<<\n\",\n      \"commitHash\": \"24afe52d9140746103dba5011910213f993e34d1\","
+    },
+    {
+      "category": "personalInfo",
+      "pattern": "/\\b0[789]0-\\d{4}-\\d{4}\\b/g",
+      "match": "080-4540-7479",
+      "commitHash": "15cbbc89d933f580bb3943c245227220199d9a4a",
+      "filePath": "security-audit-precise.json",
+      "commitMessage": "feat: comprehensive security audit with Git history analysis",
+      "context": "      \"pattern\": \"/\\\\b0[789]0-\\\\d{4}-\\\\d{4}\\\\b/g\",\n      \"match\": \"\n>>> 080-4540-7479 <<<\n\",\n      \"commitHash\": \"24afe52d9140746103dba5011910213f993e34d1\","
+    },
+    {
+      "category": "personalInfo",
+      "pattern": "/\\b0[789]0-\\d{4}-\\d{4}\\b/g",
+      "match": "080-4540-7479",
+      "commitHash": "15cbbc89d933f580bb3943c245227220199d9a4a",
+      "filePath": "security-audit-precise.json",
+      "commitMessage": "feat: comprehensive security audit with Git history analysis",
+      "context": "      \"pattern\": \"/\\\\b0[789]0-\\\\d{4}-\\\\d{4}\\\\b/g\",\n      \"match\": \"\n>>> 080-4540-7479 <<<\n\",\n      \"commitHash\": \"24afe52d9140746103dba5011910213f993e34d1\","
+    },
+    {
+      "category": "personalInfo",
+      "pattern": "/\\b0[789]0-\\d{4}-\\d{4}\\b/g",
+      "match": "080-4540-7479",
+      "commitHash": "15cbbc89d933f580bb3943c245227220199d9a4a",
+      "filePath": "security-audit-precise.json",
+      "commitMessage": "feat: comprehensive security audit with Git history analysis",
+      "context": "      \"pattern\": \"/\\\\b0[789]0-\\\\d{4}-\\\\d{4}\\\\b/g\",\n      \"match\": \"\n>>> 080-4540-7479 <<<\n\",\n      \"commitHash\": \"24afe52d9140746103dba5011910213f993e34d1\","
+    },
+    {
+      "category": "personalInfo",
+      "pattern": "/\\b0[789]0-\\d{4}-\\d{4}\\b/g",
+      "match": "080-4540-7479",
+      "commitHash": "15cbbc89d933f580bb3943c245227220199d9a4a",
+      "filePath": "security-audit-precise.json",
+      "commitMessage": "feat: comprehensive security audit with Git history analysis",
+      "context": "      \"pattern\": \"/\\\\b0[789]0-\\\\d{4}-\\\\d{4}\\\\b/g\",\n      \"match\": \"\n>>> 080-4540-7479 <<<\n\",\n      \"commitHash\": \"24afe52d9140746103dba5011910213f993e34d1\","
+    },
+    {
+      "category": "personalInfo",
+      "pattern": "/\\b0[789]0-\\d{4}-\\d{4}\\b/g",
+      "match": "080-4540-7479",
+      "commitHash": "15cbbc89d933f580bb3943c245227220199d9a4a",
+      "filePath": "security-audit-precise.json",
+      "commitMessage": "feat: comprehensive security audit with Git history analysis",
+      "context": "      \"pattern\": \"/\\\\b0[789]0-\\\\d{4}-\\\\d{4}\\\\b/g\",\n      \"match\": \"\n>>> 080-4540-7479 <<<\n\",\n      \"commitHash\": \"24afe52d9140746103dba5011910213f993e34d1\","
+    },
+    {
+      "category": "personalInfo",
+      "pattern": "/\\b0[789]0-\\d{4}-\\d{4}\\b/g",
+      "match": "080-4540-7479",
+      "commitHash": "15cbbc89d933f580bb3943c245227220199d9a4a",
+      "filePath": "security-audit-precise.json",
+      "commitMessage": "feat: comprehensive security audit with Git history analysis",
+      "context": "      \"pattern\": \"/\\\\b0[789]0-\\\\d{4}-\\\\d{4}\\\\b/g\",\n      \"match\": \"\n>>> 080-4540-7479 <<<\n\",\n      \"commitHash\": \"24afe52d9140746103dba5011910213f993e34d1\","
+    },
+    {
+      "category": "personalInfo",
+      "pattern": "/\\b0[789]0-\\d{4}-\\d{4}\\b/g",
+      "match": "080-4540-7479",
+      "commitHash": "15cbbc89d933f580bb3943c245227220199d9a4a",
+      "filePath": "security-audit-precise.json",
+      "commitMessage": "feat: comprehensive security audit with Git history analysis",
+      "context": "      \"pattern\": \"/\\\\b0[789]0-\\\\d{4}-\\\\d{4}\\\\b/g\",\n      \"match\": \"\n>>> 080-4540-7479 <<<\n\",\n      \"commitHash\": \"24afe52d9140746103dba5011910213f993e34d1\","
+    },
+    {
+      "category": "personalInfo",
+      "pattern": "/\\b0[789]0-\\d{4}-\\d{4}\\b/g",
+      "match": "080-4540-7479",
+      "commitHash": "15cbbc89d933f580bb3943c245227220199d9a4a",
+      "filePath": "security-audit-precise.json",
+      "commitMessage": "feat: comprehensive security audit with Git history analysis",
+      "context": "      \"pattern\": \"/\\\\b0[789]0-\\\\d{4}-\\\\d{4}\\\\b/g\",\n      \"match\": \"\n>>> 080-4540-7479 <<<\n\",\n      \"commitHash\": \"24afe52d9140746103dba5011910213f993e34d1\","
+    },
+    {
+      "category": "personalInfo",
+      "pattern": "/\\b0[789]0-\\d{4}-\\d{4}\\b/g",
+      "match": "080-4540-7479",
+      "commitHash": "15cbbc89d933f580bb3943c245227220199d9a4a",
+      "filePath": "security-audit-precise.json",
+      "commitMessage": "feat: comprehensive security audit with Git history analysis",
+      "context": "      \"pattern\": \"/\\\\b0[789]0-\\\\d{4}-\\\\d{4}\\\\b/g\",\n      \"match\": \"\n>>> 080-4540-7479 <<<\n\",\n      \"commitHash\": \"24afe52d9140746103dba5011910213f993e34d1\","
+    },
+    {
+      "category": "personalInfo",
+      "pattern": "/\\b0[789]0-\\d{4}-\\d{4}\\b/g",
+      "match": "080-4540-7479",
+      "commitHash": "15cbbc89d933f580bb3943c245227220199d9a4a",
+      "filePath": "security-audit-precise.json",
+      "commitMessage": "feat: comprehensive security audit with Git history analysis",
+      "context": "      \"pattern\": \"/\\\\b0[789]0-\\\\d{4}-\\\\d{4}\\\\b/g\",\n      \"match\": \"\n>>> 080-4540-7479 <<<\n\",\n      \"commitHash\": \"24afe52d9140746103dba5011910213f993e34d1\","
+    },
+    {
+      "category": "personalInfo",
+      "pattern": "/\\b0[789]0-\\d{4}-\\d{4}\\b/g",
+      "match": "080-4540-7479",
+      "commitHash": "15cbbc89d933f580bb3943c245227220199d9a4a",
+      "filePath": "security-audit-precise.json",
+      "commitMessage": "feat: comprehensive security audit with Git history analysis",
+      "context": "      \"pattern\": \"/\\\\b0[789]0-\\\\d{4}-\\\\d{4}\\\\b/g\",\n      \"match\": \"\n>>> 080-4540-7479 <<<\n\",\n      \"commitHash\": \"24afe52d9140746103dba5011910213f993e34d1\","
+    },
+    {
+      "category": "personalInfo",
+      "pattern": "/\\b0[789]0-\\d{4}-\\d{4}\\b/g",
+      "match": "080-4540-7479",
+      "commitHash": "15cbbc89d933f580bb3943c245227220199d9a4a",
+      "filePath": "security-audit-precise.json",
+      "commitMessage": "feat: comprehensive security audit with Git history analysis",
+      "context": "      \"pattern\": \"/\\\\b0[789]0-\\\\d{4}-\\\\d{4}\\\\b/g\",\n      \"match\": \"\n>>> 080-4540-7479 <<<\n\",\n      \"commitHash\": \"24afe52d9140746103dba5011910213f993e34d1\","
+    },
+    {
+      "category": "personalInfo",
+      "pattern": "/\\b0[789]0-\\d{4}-\\d{4}\\b/g",
+      "match": "080-4540-7479",
+      "commitHash": "15cbbc89d933f580bb3943c245227220199d9a4a",
+      "filePath": "security-audit-precise.json",
+      "commitMessage": "feat: comprehensive security audit with Git history analysis",
+      "context": "      \"pattern\": \"/\\\\b0[789]0-\\\\d{4}-\\\\d{4}\\\\b/g\",\n      \"match\": \"\n>>> 080-4540-7479 <<<\n\",\n      \"commitHash\": \"24afe52d9140746103dba5011910213f993e34d1\","
+    },
+    {
+      "category": "personalInfo",
+      "pattern": "/\\b0[789]0-\\d{4}-\\d{4}\\b/g",
+      "match": "080-4540-7479",
+      "commitHash": "15cbbc89d933f580bb3943c245227220199d9a4a",
+      "filePath": "security-audit-precise.json",
+      "commitMessage": "feat: comprehensive security audit with Git history analysis",
+      "context": "      \"pattern\": \"/\\\\b0[789]0-\\\\d{4}-\\\\d{4}\\\\b/g\",\n      \"match\": \"\n>>> 080-4540-7479 <<<\n\",\n      \"commitHash\": \"24afe52d9140746103dba5011910213f993e34d1\","
+    },
+    {
+      "category": "personalInfo",
+      "pattern": "/\\b0[789]0-\\d{4}-\\d{4}\\b/g",
+      "match": "080-4540-7479",
+      "commitHash": "15cbbc89d933f580bb3943c245227220199d9a4a",
+      "filePath": "security-audit-precise.json",
+      "commitMessage": "feat: comprehensive security audit with Git history analysis",
+      "context": "      \"pattern\": \"/\\\\b0[789]0-\\\\d{4}-\\\\d{4}\\\\b/g\",\n      \"match\": \"\n>>> 080-4540-7479 <<<\n\",\n      \"commitHash\": \"24afe52d9140746103dba5011910213f993e34d1\","
+    },
+    {
+      "category": "personalInfo",
+      "pattern": "/\\b0[789]0-\\d{4}-\\d{4}\\b/g",
+      "match": "080-4540-7479",
+      "commitHash": "15cbbc89d933f580bb3943c245227220199d9a4a",
+      "filePath": "security-audit-precise.json",
+      "commitMessage": "feat: comprehensive security audit with Git history analysis",
+      "context": "      \"pattern\": \"/\\\\b0[789]0-\\\\d{4}-\\\\d{4}\\\\b/g\",\n      \"match\": \"\n>>> 080-4540-7479 <<<\n\",\n      \"commitHash\": \"24afe52d9140746103dba5011910213f993e34d1\","
+    },
+    {
+      "category": "personalInfo",
+      "pattern": "/\\b0[789]0-\\d{4}-\\d{4}\\b/g",
+      "match": "080-4540-7479",
+      "commitHash": "15cbbc89d933f580bb3943c245227220199d9a4a",
+      "filePath": "security-audit-precise.json",
+      "commitMessage": "feat: comprehensive security audit with Git history analysis",
+      "context": "      \"pattern\": \"/\\\\b0[789]0-\\\\d{4}-\\\\d{4}\\\\b/g\",\n      \"match\": \"\n>>> 080-4540-7479 <<<\n\",\n      \"commitHash\": \"24afe52d9140746103dba5011910213f993e34d1\","
+    },
+    {
+      "category": "personalInfo",
+      "pattern": "/\\b0[789]0-\\d{4}-\\d{4}\\b/g",
+      "match": "080-4540-7479",
+      "commitHash": "15cbbc89d933f580bb3943c245227220199d9a4a",
+      "filePath": "security-audit-precise.json",
+      "commitMessage": "feat: comprehensive security audit with Git history analysis",
+      "context": "      \"pattern\": \"/\\\\b0[789]0-\\\\d{4}-\\\\d{4}\\\\b/g\",\n      \"match\": \"\n>>> 080-4540-7479 <<<\n\",\n      \"commitHash\": \"24afe52d9140746103dba5011910213f993e34d1\","
+    },
+    {
+      "category": "personalInfo",
+      "pattern": "/\\b0[789]0-\\d{4}-\\d{4}\\b/g",
+      "match": "080-4540-7479",
+      "commitHash": "15cbbc89d933f580bb3943c245227220199d9a4a",
+      "filePath": "security-audit-precise.json",
+      "commitMessage": "feat: comprehensive security audit with Git history analysis",
+      "context": "      \"pattern\": \"/\\\\b0[789]0-\\\\d{4}-\\\\d{4}\\\\b/g\",\n      \"match\": \"\n>>> 080-4540-7479 <<<\n\",\n      \"commitHash\": \"24afe52d9140746103dba5011910213f993e34d1\","
+    },
+    {
+      "category": "personalInfo",
+      "pattern": "/\\b0[789]0-\\d{4}-\\d{4}\\b/g",
+      "match": "080-4540-7479",
+      "commitHash": "15cbbc89d933f580bb3943c245227220199d9a4a",
+      "filePath": "security-audit-precise.json",
+      "commitMessage": "feat: comprehensive security audit with Git history analysis",
+      "context": "      \"pattern\": \"/\\\\b0[789]0-\\\\d{4}-\\\\d{4}\\\\b/g\",\n      \"match\": \"\n>>> 080-4540-7479 <<<\n\",\n      \"commitHash\": \"24afe52d9140746103dba5011910213f993e34d1\","
+    },
+    {
+      "category": "personalInfo",
+      "pattern": "/\\b\\d{3}-\\d{4}-\\d{4}\\b/g",
+      "match": "080-4540-7479",
+      "commitHash": "15cbbc89d933f580bb3943c245227220199d9a4a",
+      "filePath": "security-audit-precise.json",
+      "commitMessage": "feat: comprehensive security audit with Git history analysis",
+      "context": "      \"pattern\": \"/\\\\b0[789]0-\\\\d{4}-\\\\d{4}\\\\b/g\",\n      \"match\": \"\n>>> 080-4540-7479 <<<\n\",\n      \"commitHash\": \"24afe52d9140746103dba5011910213f993e34d1\","
+    },
+    {
+      "category": "personalInfo",
+      "pattern": "/\\b\\d{3}-\\d{4}-\\d{4}\\b/g",
+      "match": "080-4540-7479",
+      "commitHash": "15cbbc89d933f580bb3943c245227220199d9a4a",
+      "filePath": "security-audit-precise.json",
+      "commitMessage": "feat: comprehensive security audit with Git history analysis",
+      "context": "      \"pattern\": \"/\\\\b0[789]0-\\\\d{4}-\\\\d{4}\\\\b/g\",\n      \"match\": \"\n>>> 080-4540-7479 <<<\n\",\n      \"commitHash\": \"24afe52d9140746103dba5011910213f993e34d1\","
+    },
+    {
+      "category": "personalInfo",
+      "pattern": "/\\b\\d{3}-\\d{4}-\\d{4}\\b/g",
+      "match": "080-4540-7479",
+      "commitHash": "15cbbc89d933f580bb3943c245227220199d9a4a",
+      "filePath": "security-audit-precise.json",
+      "commitMessage": "feat: comprehensive security audit with Git history analysis",
+      "context": "      \"pattern\": \"/\\\\b0[789]0-\\\\d{4}-\\\\d{4}\\\\b/g\",\n      \"match\": \"\n>>> 080-4540-7479 <<<\n\",\n      \"commitHash\": \"24afe52d9140746103dba5011910213f993e34d1\","
+    },
+    {
+      "category": "personalInfo",
+      "pattern": "/\\b\\d{3}-\\d{4}-\\d{4}\\b/g",
+      "match": "080-4540-7479",
+      "commitHash": "15cbbc89d933f580bb3943c245227220199d9a4a",
+      "filePath": "security-audit-precise.json",
+      "commitMessage": "feat: comprehensive security audit with Git history analysis",
+      "context": "      \"pattern\": \"/\\\\b0[789]0-\\\\d{4}-\\\\d{4}\\\\b/g\",\n      \"match\": \"\n>>> 080-4540-7479 <<<\n\",\n      \"commitHash\": \"24afe52d9140746103dba5011910213f993e34d1\","
+    },
+    {
+      "category": "personalInfo",
+      "pattern": "/\\b\\d{3}-\\d{4}-\\d{4}\\b/g",
+      "match": "080-4540-7479",
+      "commitHash": "15cbbc89d933f580bb3943c245227220199d9a4a",
+      "filePath": "security-audit-precise.json",
+      "commitMessage": "feat: comprehensive security audit with Git history analysis",
+      "context": "      \"pattern\": \"/\\\\b0[789]0-\\\\d{4}-\\\\d{4}\\\\b/g\",\n      \"match\": \"\n>>> 080-4540-7479 <<<\n\",\n      \"commitHash\": \"24afe52d9140746103dba5011910213f993e34d1\","
+    },
+    {
+      "category": "personalInfo",
+      "pattern": "/\\b\\d{3}-\\d{4}-\\d{4}\\b/g",
+      "match": "080-4540-7479",
+      "commitHash": "15cbbc89d933f580bb3943c245227220199d9a4a",
+      "filePath": "security-audit-precise.json",
+      "commitMessage": "feat: comprehensive security audit with Git history analysis",
+      "context": "      \"pattern\": \"/\\\\b0[789]0-\\\\d{4}-\\\\d{4}\\\\b/g\",\n      \"match\": \"\n>>> 080-4540-7479 <<<\n\",\n      \"commitHash\": \"24afe52d9140746103dba5011910213f993e34d1\","
+    },
+    {
+      "category": "personalInfo",
+      "pattern": "/\\b\\d{3}-\\d{4}-\\d{4}\\b/g",
+      "match": "080-4540-7479",
+      "commitHash": "15cbbc89d933f580bb3943c245227220199d9a4a",
+      "filePath": "security-audit-precise.json",
+      "commitMessage": "feat: comprehensive security audit with Git history analysis",
+      "context": "      \"pattern\": \"/\\\\b0[789]0-\\\\d{4}-\\\\d{4}\\\\b/g\",\n      \"match\": \"\n>>> 080-4540-7479 <<<\n\",\n      \"commitHash\": \"24afe52d9140746103dba5011910213f993e34d1\","
+    },
+    {
+      "category": "personalInfo",
+      "pattern": "/\\b\\d{3}-\\d{4}-\\d{4}\\b/g",
+      "match": "080-4540-7479",
+      "commitHash": "15cbbc89d933f580bb3943c245227220199d9a4a",
+      "filePath": "security-audit-precise.json",
+      "commitMessage": "feat: comprehensive security audit with Git history analysis",
+      "context": "      \"pattern\": \"/\\\\b0[789]0-\\\\d{4}-\\\\d{4}\\\\b/g\",\n      \"match\": \"\n>>> 080-4540-7479 <<<\n\",\n      \"commitHash\": \"24afe52d9140746103dba5011910213f993e34d1\","
+    },
+    {
+      "category": "personalInfo",
+      "pattern": "/\\b\\d{3}-\\d{4}-\\d{4}\\b/g",
+      "match": "080-4540-7479",
+      "commitHash": "15cbbc89d933f580bb3943c245227220199d9a4a",
+      "filePath": "security-audit-precise.json",
+      "commitMessage": "feat: comprehensive security audit with Git history analysis",
+      "context": "      \"pattern\": \"/\\\\b0[789]0-\\\\d{4}-\\\\d{4}\\\\b/g\",\n      \"match\": \"\n>>> 080-4540-7479 <<<\n\",\n      \"commitHash\": \"24afe52d9140746103dba5011910213f993e34d1\","
+    },
+    {
+      "category": "personalInfo",
+      "pattern": "/\\b\\d{3}-\\d{4}-\\d{4}\\b/g",
+      "match": "080-4540-7479",
+      "commitHash": "15cbbc89d933f580bb3943c245227220199d9a4a",
+      "filePath": "security-audit-precise.json",
+      "commitMessage": "feat: comprehensive security audit with Git history analysis",
+      "context": "      \"pattern\": \"/\\\\b0[789]0-\\\\d{4}-\\\\d{4}\\\\b/g\",\n      \"match\": \"\n>>> 080-4540-7479 <<<\n\",\n      \"commitHash\": \"24afe52d9140746103dba5011910213f993e34d1\","
+    },
+    {
+      "category": "personalInfo",
+      "pattern": "/\\b\\d{3}-\\d{4}-\\d{4}\\b/g",
+      "match": "080-4540-7479",
+      "commitHash": "15cbbc89d933f580bb3943c245227220199d9a4a",
+      "filePath": "security-audit-precise.json",
+      "commitMessage": "feat: comprehensive security audit with Git history analysis",
+      "context": "      \"pattern\": \"/\\\\b0[789]0-\\\\d{4}-\\\\d{4}\\\\b/g\",\n      \"match\": \"\n>>> 080-4540-7479 <<<\n\",\n      \"commitHash\": \"24afe52d9140746103dba5011910213f993e34d1\","
+    },
+    {
+      "category": "personalInfo",
+      "pattern": "/\\b\\d{3}-\\d{4}-\\d{4}\\b/g",
+      "match": "080-4540-7479",
+      "commitHash": "15cbbc89d933f580bb3943c245227220199d9a4a",
+      "filePath": "security-audit-precise.json",
+      "commitMessage": "feat: comprehensive security audit with Git history analysis",
+      "context": "      \"pattern\": \"/\\\\b0[789]0-\\\\d{4}-\\\\d{4}\\\\b/g\",\n      \"match\": \"\n>>> 080-4540-7479 <<<\n\",\n      \"commitHash\": \"24afe52d9140746103dba5011910213f993e34d1\","
+    },
+    {
+      "category": "personalInfo",
+      "pattern": "/\\b\\d{3}-\\d{4}-\\d{4}\\b/g",
+      "match": "080-4540-7479",
+      "commitHash": "15cbbc89d933f580bb3943c245227220199d9a4a",
+      "filePath": "security-audit-precise.json",
+      "commitMessage": "feat: comprehensive security audit with Git history analysis",
+      "context": "      \"pattern\": \"/\\\\b0[789]0-\\\\d{4}-\\\\d{4}\\\\b/g\",\n      \"match\": \"\n>>> 080-4540-7479 <<<\n\",\n      \"commitHash\": \"24afe52d9140746103dba5011910213f993e34d1\","
+    },
+    {
+      "category": "personalInfo",
+      "pattern": "/\\b\\d{3}-\\d{4}-\\d{4}\\b/g",
+      "match": "080-4540-7479",
+      "commitHash": "15cbbc89d933f580bb3943c245227220199d9a4a",
+      "filePath": "security-audit-precise.json",
+      "commitMessage": "feat: comprehensive security audit with Git history analysis",
+      "context": "      \"pattern\": \"/\\\\b0[789]0-\\\\d{4}-\\\\d{4}\\\\b/g\",\n      \"match\": \"\n>>> 080-4540-7479 <<<\n\",\n      \"commitHash\": \"24afe52d9140746103dba5011910213f993e34d1\","
+    },
+    {
+      "category": "personalInfo",
+      "pattern": "/\\b\\d{3}-\\d{4}-\\d{4}\\b/g",
+      "match": "080-4540-7479",
+      "commitHash": "15cbbc89d933f580bb3943c245227220199d9a4a",
+      "filePath": "security-audit-precise.json",
+      "commitMessage": "feat: comprehensive security audit with Git history analysis",
+      "context": "      \"pattern\": \"/\\\\b0[789]0-\\\\d{4}-\\\\d{4}\\\\b/g\",\n      \"match\": \"\n>>> 080-4540-7479 <<<\n\",\n      \"commitHash\": \"24afe52d9140746103dba5011910213f993e34d1\","
+    },
+    {
+      "category": "personalInfo",
+      "pattern": "/\\b\\d{3}-\\d{4}-\\d{4}\\b/g",
+      "match": "080-4540-7479",
+      "commitHash": "15cbbc89d933f580bb3943c245227220199d9a4a",
+      "filePath": "security-audit-precise.json",
+      "commitMessage": "feat: comprehensive security audit with Git history analysis",
+      "context": "      \"pattern\": \"/\\\\b0[789]0-\\\\d{4}-\\\\d{4}\\\\b/g\",\n      \"match\": \"\n>>> 080-4540-7479 <<<\n\",\n      \"commitHash\": \"24afe52d9140746103dba5011910213f993e34d1\","
+    },
+    {
+      "category": "personalInfo",
+      "pattern": "/\\b\\d{3}-\\d{4}-\\d{4}\\b/g",
+      "match": "080-4540-7479",
+      "commitHash": "15cbbc89d933f580bb3943c245227220199d9a4a",
+      "filePath": "security-audit-precise.json",
+      "commitMessage": "feat: comprehensive security audit with Git history analysis",
+      "context": "      \"pattern\": \"/\\\\b0[789]0-\\\\d{4}-\\\\d{4}\\\\b/g\",\n      \"match\": \"\n>>> 080-4540-7479 <<<\n\",\n      \"commitHash\": \"24afe52d9140746103dba5011910213f993e34d1\","
+    },
+    {
+      "category": "personalInfo",
+      "pattern": "/\\b\\d{3}-\\d{4}-\\d{4}\\b/g",
+      "match": "080-4540-7479",
+      "commitHash": "15cbbc89d933f580bb3943c245227220199d9a4a",
+      "filePath": "security-audit-precise.json",
+      "commitMessage": "feat: comprehensive security audit with Git history analysis",
+      "context": "      \"pattern\": \"/\\\\b0[789]0-\\\\d{4}-\\\\d{4}\\\\b/g\",\n      \"match\": \"\n>>> 080-4540-7479 <<<\n\",\n      \"commitHash\": \"24afe52d9140746103dba5011910213f993e34d1\","
+    },
+    {
+      "category": "personalInfo",
+      "pattern": "/\\b\\d{3}-\\d{4}-\\d{4}\\b/g",
+      "match": "080-4540-7479",
+      "commitHash": "15cbbc89d933f580bb3943c245227220199d9a4a",
+      "filePath": "security-audit-precise.json",
+      "commitMessage": "feat: comprehensive security audit with Git history analysis",
+      "context": "      \"pattern\": \"/\\\\b0[789]0-\\\\d{4}-\\\\d{4}\\\\b/g\",\n      \"match\": \"\n>>> 080-4540-7479 <<<\n\",\n      \"commitHash\": \"24afe52d9140746103dba5011910213f993e34d1\","
+    },
+    {
+      "category": "personalInfo",
+      "pattern": "/\\b\\d{3}-\\d{4}-\\d{4}\\b/g",
+      "match": "080-4540-7479",
+      "commitHash": "15cbbc89d933f580bb3943c245227220199d9a4a",
+      "filePath": "security-audit-precise.json",
+      "commitMessage": "feat: comprehensive security audit with Git history analysis",
+      "context": "      \"pattern\": \"/\\\\b0[789]0-\\\\d{4}-\\\\d{4}\\\\b/g\",\n      \"match\": \"\n>>> 080-4540-7479 <<<\n\",\n      \"commitHash\": \"24afe52d9140746103dba5011910213f993e34d1\","
+    },
+    {
+      "category": "personalInfo",
+      "pattern": "/\\b\\d{3}-\\d{4}-\\d{4}\\b/g",
+      "match": "080-4540-7479",
+      "commitHash": "15cbbc89d933f580bb3943c245227220199d9a4a",
+      "filePath": "security-audit-precise.json",
+      "commitMessage": "feat: comprehensive security audit with Git history analysis",
+      "context": "      \"pattern\": \"/\\\\b0[789]0-\\\\d{4}-\\\\d{4}\\\\b/g\",\n      \"match\": \"\n>>> 080-4540-7479 <<<\n\",\n      \"commitHash\": \"24afe52d9140746103dba5011910213f993e34d1\","
+    },
+    {
+      "category": "personalInfo",
+      "pattern": "/\\b\\d{3}-\\d{4}-\\d{4}\\b/g",
+      "match": "080-4540-7479",
+      "commitHash": "15cbbc89d933f580bb3943c245227220199d9a4a",
+      "filePath": "security-audit-precise.json",
+      "commitMessage": "feat: comprehensive security audit with Git history analysis",
+      "context": "      \"pattern\": \"/\\\\b0[789]0-\\\\d{4}-\\\\d{4}\\\\b/g\",\n      \"match\": \"\n>>> 080-4540-7479 <<<\n\",\n      \"commitHash\": \"24afe52d9140746103dba5011910213f993e34d1\","
+    },
+    {
+      "category": "personalInfo",
+      "pattern": "/\\b\\d{3}-\\d{4}-\\d{4}\\b/g",
+      "match": "080-4540-7479",
+      "commitHash": "15cbbc89d933f580bb3943c245227220199d9a4a",
+      "filePath": "security-audit-precise.json",
+      "commitMessage": "feat: comprehensive security audit with Git history analysis",
+      "context": "      \"pattern\": \"/\\\\b0[789]0-\\\\d{4}-\\\\d{4}\\\\b/g\",\n      \"match\": \"\n>>> 080-4540-7479 <<<\n\",\n      \"commitHash\": \"24afe52d9140746103dba5011910213f993e34d1\","
+    },
+    {
+      "category": "personalInfo",
+      "pattern": "/\\b\\d{3}-\\d{4}-\\d{4}\\b/g",
+      "match": "080-4540-7479",
+      "commitHash": "15cbbc89d933f580bb3943c245227220199d9a4a",
+      "filePath": "security-audit-precise.json",
+      "commitMessage": "feat: comprehensive security audit with Git history analysis",
+      "context": "      \"pattern\": \"/\\\\b0[789]0-\\\\d{4}-\\\\d{4}\\\\b/g\",\n      \"match\": \"\n>>> 080-4540-7479 <<<\n\",\n      \"commitHash\": \"24afe52d9140746103dba5011910213f993e34d1\","
+    },
+    {
+      "category": "infrastructureInfo",
+      "pattern": "/https?:\\/\\/(?!localhost|127\\.0\\.0\\.1|example)[a-zA-Z0-9.-]+\\.amazonaws\\.com[^\\s]*/g",
+      "match": "https://4mz5i3x23c.execute-api.ap-northeast-1.amazonaws.com/prod/api/health\",",
+      "commitHash": "15cbbc89d933f580bb3943c245227220199d9a4a",
+      "filePath": "security-audit-precise.json",
+      "commitMessage": "feat: comprehensive security audit with Git history analysis",
+      "context": "      \"pattern\": \"/https?:\\\\/\\\\/(?!localhost|127\\\\.0\\\\.0\\\\.1|example)[a-zA-Z0-9.-]+\\\\.amazonaws\\\\.com[^\\\\s]*/g\",\n      \"match\": \"\n>>> https://4mz5i3x23c.execute-api.ap-northeast-1.amazonaws.com/prod/api/health\", <<<\n\n      \"commitHash\": \"f47ea0203ac5363b921499e16bd57bf02b48690d\","
+    },
+    {
+      "category": "infrastructureInfo",
+      "pattern": "/https?:\\/\\/(?!localhost|127\\.0\\.0\\.1|example)[a-zA-Z0-9.-]+\\.amazonaws\\.com[^\\s]*/g",
+      "match": "https://4mz5i3x23c.execute-api.ap-northeast-1.amazonaws.com/prod/api/health",
+      "commitHash": "15cbbc89d933f580bb3943c245227220199d9a4a",
+      "filePath": "security-audit-precise.json",
+      "commitMessage": "feat: comprehensive security audit with Git history analysis",
+      "context": "      \"pattern\": \"/https?:\\\\/\\\\/(?!localhost|127\\\\.0\\\\.0\\\\.1|example)[a-zA-Z0-9.-]+\\\\.amazonaws\\\\.com[^\\\\s]*/g\",\n      \"match\": \"\n>>> https://4mz5i3x23c.execute-api.ap-northeast-1.amazonaws.com/prod/api/health <<<\n\",\n      \"commitHash\": \"f47ea0203ac5363b921499e16bd57bf02b48690d\","
+    },
+    {
+      "category": "infrastructureInfo",
+      "pattern": "/https?:\\/\\/(?!localhost|127\\.0\\.0\\.1|example)[a-zA-Z0-9.-]+\\.amazonaws\\.com[^\\s]*/g",
+      "match": "https://4ujhkvx000.execute-api.ap-northeast-1.amazonaws.com/prod/api/health\",",
+      "commitHash": "15cbbc89d933f580bb3943c245227220199d9a4a",
+      "filePath": "security-audit-precise.json",
+      "commitMessage": "feat: comprehensive security audit with Git history analysis",
+      "context": "      \"pattern\": \"/https?:\\\\/\\\\/(?!localhost|127\\\\.0\\\\.0\\\\.1|example)[a-zA-Z0-9.-]+\\\\.amazonaws\\\\.com[^\\\\s]*/g\",\n      \"match\": \"\n>>> https://4ujhkvx000.execute-api.ap-northeast-1.amazonaws.com/prod/api/health\", <<<\n\n      \"commitHash\": \"f47ea0203ac5363b921499e16bd57bf02b48690d\","
+    },
+    {
+      "category": "infrastructureInfo",
+      "pattern": "/https?:\\/\\/(?!localhost|127\\.0\\.0\\.1|example)[a-zA-Z0-9.-]+\\.amazonaws\\.com[^\\s]*/g",
+      "match": "https://4ujhkvx000.execute-api.ap-northeast-1.amazonaws.com/prod/api/health",
+      "commitHash": "15cbbc89d933f580bb3943c245227220199d9a4a",
+      "filePath": "security-audit-precise.json",
+      "commitMessage": "feat: comprehensive security audit with Git history analysis",
+      "context": "      \"pattern\": \"/https?:\\\\/\\\\/(?!localhost|127\\\\.0\\\\.0\\\\.1|example)[a-zA-Z0-9.-]+\\\\.amazonaws\\\\.com[^\\\\s]*/g\",\n      \"match\": \"\n>>> https://4ujhkvx000.execute-api.ap-northeast-1.amazonaws.com/prod/api/health <<<\n\",\n      \"commitHash\": \"f47ea0203ac5363b921499e16bd57bf02b48690d\","
+    },
+    {
+      "category": "infrastructureInfo",
+      "pattern": "/https?:\\/\\/(?!localhost|127\\.0\\.0\\.1|example)[a-zA-Z0-9.-]+\\.amazonaws\\.com[^\\s]*/g",
+      "match": "https://4mz5i3x23c.execute-api.ap-northeast-1.amazonaws.com/prod/api/health\",",
+      "commitHash": "15cbbc89d933f580bb3943c245227220199d9a4a",
+      "filePath": "security-audit-precise.json",
+      "commitMessage": "feat: comprehensive security audit with Git history analysis",
+      "context": "      \"pattern\": \"/https?:\\\\/\\\\/(?!localhost|127\\\\.0\\\\.0\\\\.1|example)[a-zA-Z0-9.-]+\\\\.amazonaws\\\\.com[^\\\\s]*/g\",\n      \"match\": \"\n>>> https://4mz5i3x23c.execute-api.ap-northeast-1.amazonaws.com/prod/api/health\", <<<\n\n      \"commitHash\": \"f47ea0203ac5363b921499e16bd57bf02b48690d\","
+    },
+    {
+      "category": "infrastructureInfo",
+      "pattern": "/https?:\\/\\/(?!localhost|127\\.0\\.0\\.1|example)[a-zA-Z0-9.-]+\\.amazonaws\\.com[^\\s]*/g",
+      "match": "https://4mz5i3x23c.execute-api.ap-northeast-1.amazonaws.com/prod/api/health",
+      "commitHash": "15cbbc89d933f580bb3943c245227220199d9a4a",
+      "filePath": "security-audit-precise.json",
+      "commitMessage": "feat: comprehensive security audit with Git history analysis",
+      "context": "      \"pattern\": \"/https?:\\\\/\\\\/(?!localhost|127\\\\.0\\\\.0\\\\.1|example)[a-zA-Z0-9.-]+\\\\.amazonaws\\\\.com[^\\\\s]*/g\",\n      \"match\": \"\n>>> https://4mz5i3x23c.execute-api.ap-northeast-1.amazonaws.com/prod/api/health <<<\n\",\n      \"commitHash\": \"f47ea0203ac5363b921499e16bd57bf02b48690d\","
+    },
+    {
+      "category": "infrastructureInfo",
+      "pattern": "/https?:\\/\\/(?!localhost|127\\.0\\.0\\.1|example)[a-zA-Z0-9.-]+\\.amazonaws\\.com[^\\s]*/g",
+      "match": "https://4ujhkvx000.execute-api.ap-northeast-1.amazonaws.com/prod/api/health\",",
+      "commitHash": "15cbbc89d933f580bb3943c245227220199d9a4a",
+      "filePath": "security-audit-precise.json",
+      "commitMessage": "feat: comprehensive security audit with Git history analysis",
+      "context": "      \"pattern\": \"/https?:\\\\/\\\\/(?!localhost|127\\\\.0\\\\.0\\\\.1|example)[a-zA-Z0-9.-]+\\\\.amazonaws\\\\.com[^\\\\s]*/g\",\n      \"match\": \"\n>>> https://4ujhkvx000.execute-api.ap-northeast-1.amazonaws.com/prod/api/health\", <<<\n\n      \"commitHash\": \"f47ea0203ac5363b921499e16bd57bf02b48690d\","
+    },
+    {
+      "category": "infrastructureInfo",
+      "pattern": "/https?:\\/\\/(?!localhost|127\\.0\\.0\\.1|example)[a-zA-Z0-9.-]+\\.amazonaws\\.com[^\\s]*/g",
+      "match": "https://4ujhkvx000.execute-api.ap-northeast-1.amazonaws.com/prod/api/health",
+      "commitHash": "15cbbc89d933f580bb3943c245227220199d9a4a",
+      "filePath": "security-audit-precise.json",
+      "commitMessage": "feat: comprehensive security audit with Git history analysis",
+      "context": "      \"pattern\": \"/https?:\\\\/\\\\/(?!localhost|127\\\\.0\\\\.0\\\\.1|example)[a-zA-Z0-9.-]+\\\\.amazonaws\\\\.com[^\\\\s]*/g\",\n      \"match\": \"\n>>> https://4ujhkvx000.execute-api.ap-northeast-1.amazonaws.com/prod/api/health <<<\n\",\n      \"commitHash\": \"f47ea0203ac5363b921499e16bd57bf02b48690d\","
+    },
+    {
+      "category": "infrastructureInfo",
+      "pattern": "/https?:\\/\\/(?!localhost|127\\.0\\.0\\.1|example)[a-zA-Z0-9.-]+\\.amazonaws\\.com[^\\s]*/g",
+      "match": "https://4mz5i3x23c.execute-api.ap-northeast-1.amazonaws.com/prod/api/health\",",
+      "commitHash": "15cbbc89d933f580bb3943c245227220199d9a4a",
+      "filePath": "security-audit-precise.json",
+      "commitMessage": "feat: comprehensive security audit with Git history analysis",
+      "context": "      \"pattern\": \"/https?:\\\\/\\\\/(?!localhost|127\\\\.0\\\\.0\\\\.1|example)[a-zA-Z0-9.-]+\\\\.amazonaws\\\\.com[^\\\\s]*/g\",\n      \"match\": \"\n>>> https://4mz5i3x23c.execute-api.ap-northeast-1.amazonaws.com/prod/api/health\", <<<\n\n      \"commitHash\": \"f47ea0203ac5363b921499e16bd57bf02b48690d\","
+    },
+    {
+      "category": "infrastructureInfo",
+      "pattern": "/https?:\\/\\/(?!localhost|127\\.0\\.0\\.1|example)[a-zA-Z0-9.-]+\\.amazonaws\\.com[^\\s]*/g",
+      "match": "https://4mz5i3x23c.execute-api.ap-northeast-1.amazonaws.com/prod/api/health",
+      "commitHash": "15cbbc89d933f580bb3943c245227220199d9a4a",
+      "filePath": "security-audit-precise.json",
+      "commitMessage": "feat: comprehensive security audit with Git history analysis",
+      "context": "      \"pattern\": \"/https?:\\\\/\\\\/(?!localhost|127\\\\.0\\\\.0\\\\.1|example)[a-zA-Z0-9.-]+\\\\.amazonaws\\\\.com[^\\\\s]*/g\",\n      \"match\": \"\n>>> https://4mz5i3x23c.execute-api.ap-northeast-1.amazonaws.com/prod/api/health <<<\n\",\n      \"commitHash\": \"f47ea0203ac5363b921499e16bd57bf02b48690d\","
+    },
+    {
+      "category": "infrastructureInfo",
+      "pattern": "/https?:\\/\\/(?!localhost|127\\.0\\.0\\.1|example)[a-zA-Z0-9.-]+\\.amazonaws\\.com[^\\s]*/g",
+      "match": "https://4ujhkvx000.execute-api.ap-northeast-1.amazonaws.com/prod/api/health\",",
+      "commitHash": "15cbbc89d933f580bb3943c245227220199d9a4a",
+      "filePath": "security-audit-precise.json",
+      "commitMessage": "feat: comprehensive security audit with Git history analysis",
+      "context": "      \"pattern\": \"/https?:\\\\/\\\\/(?!localhost|127\\\\.0\\\\.0\\\\.1|example)[a-zA-Z0-9.-]+\\\\.amazonaws\\\\.com[^\\\\s]*/g\",\n      \"match\": \"\n>>> https://4ujhkvx000.execute-api.ap-northeast-1.amazonaws.com/prod/api/health\", <<<\n\n      \"commitHash\": \"f47ea0203ac5363b921499e16bd57bf02b48690d\","
+    },
+    {
+      "category": "infrastructureInfo",
+      "pattern": "/https?:\\/\\/(?!localhost|127\\.0\\.0\\.1|example)[a-zA-Z0-9.-]+\\.amazonaws\\.com[^\\s]*/g",
+      "match": "https://4ujhkvx000.execute-api.ap-northeast-1.amazonaws.com/prod/api/health",
+      "commitHash": "15cbbc89d933f580bb3943c245227220199d9a4a",
+      "filePath": "security-audit-precise.json",
+      "commitMessage": "feat: comprehensive security audit with Git history analysis",
+      "context": "      \"pattern\": \"/https?:\\\\/\\\\/(?!localhost|127\\\\.0\\\\.0\\\\.1|example)[a-zA-Z0-9.-]+\\\\.amazonaws\\\\.com[^\\\\s]*/g\",\n      \"match\": \"\n>>> https://4ujhkvx000.execute-api.ap-northeast-1.amazonaws.com/prod/api/health <<<\n\",\n      \"commitHash\": \"f47ea0203ac5363b921499e16bd57bf02b48690d\","
+    },
+    {
+      "category": "infrastructureInfo",
+      "pattern": "/https?:\\/\\/(?!localhost|127\\.0\\.0\\.1|example)[a-zA-Z0-9.-]+\\.amazonaws\\.com[^\\s]*/g",
+      "match": "https://wf6gf7eisk.execute-api.ap-northeast-1.amazonaws.com/dev/api',\\\",\",",
+      "commitHash": "15cbbc89d933f580bb3943c245227220199d9a4a",
+      "filePath": "security-audit-precise.json",
+      "commitMessage": "feat: comprehensive security audit with Git history analysis",
+      "context": "      \"pattern\": \"/https?:\\\\/\\\\/(?!localhost|127\\\\.0\\\\.0\\\\.1|example)[a-zA-Z0-9.-]+\\\\.amazonaws\\\\.com[^\\\\s]*/g\",\n      \"match\": \"\n>>> https://wf6gf7eisk.execute-api.ap-northeast-1.amazonaws.com/dev/api',\\\",\", <<<\n\n      \"commitHash\": \"24afe52d9140746103dba5011910213f993e34d1\","
+    },
+    {
+      "category": "infrastructureInfo",
+      "pattern": "/https?:\\/\\/(?!localhost|127\\.0\\.0\\.1|example)[a-zA-Z0-9.-]+\\.amazonaws\\.com[^\\s]*/g",
+      "match": "https://wf6gf7eisk.execute-api.ap-northeast-1.amazonaws.com/dev/api',\\\",",
+      "commitHash": "15cbbc89d933f580bb3943c245227220199d9a4a",
+      "filePath": "security-audit-precise.json",
+      "commitMessage": "feat: comprehensive security audit with Git history analysis",
+      "context": "      \"pattern\": \"/https?:\\\\/\\\\/(?!localhost|127\\\\.0\\\\.0\\\\.1|example)[a-zA-Z0-9.-]+\\\\.amazonaws\\\\.com[^\\\\s]*/g\",\n      \"match\": \"\n>>> https://wf6gf7eisk.execute-api.ap-northeast-1.amazonaws.com/dev/api',\\\", <<<\n\",\n      \"commitHash\": \"24afe52d9140746103dba5011910213f993e34d1\","
+    },
+    {
+      "category": "infrastructureInfo",
+      "pattern": "/https?:\\/\\/(?!localhost|127\\.0\\.0\\.1|example)[a-zA-Z0-9.-]+\\.amazonaws\\.com[^\\s]*/g",
+      "match": "https://wf6gf7eisk.execute-api.ap-northeast-1.amazonaws.com/dev/api/events\\\",\",",
+      "commitHash": "15cbbc89d933f580bb3943c245227220199d9a4a",
+      "filePath": "security-audit-precise.json",
+      "commitMessage": "feat: comprehensive security audit with Git history analysis",
+      "context": "      \"pattern\": \"/https?:\\\\/\\\\/(?!localhost|127\\\\.0\\\\.0\\\\.1|example)[a-zA-Z0-9.-]+\\\\.amazonaws\\\\.com[^\\\\s]*/g\",\n      \"match\": \"\n>>> https://wf6gf7eisk.execute-api.ap-northeast-1.amazonaws.com/dev/api/events\\\",\", <<<\n\n      \"commitHash\": \"24afe52d9140746103dba5011910213f993e34d1\","
+    },
+    {
+      "category": "infrastructureInfo",
+      "pattern": "/https?:\\/\\/(?!localhost|127\\.0\\.0\\.1|example)[a-zA-Z0-9.-]+\\.amazonaws\\.com[^\\s]*/g",
+      "match": "https://wf6gf7eisk.execute-api.ap-northeast-1.amazonaws.com/dev/api/events\\\",",
+      "commitHash": "15cbbc89d933f580bb3943c245227220199d9a4a",
+      "filePath": "security-audit-precise.json",
+      "commitMessage": "feat: comprehensive security audit with Git history analysis",
+      "context": "      \"pattern\": \"/https?:\\\\/\\\\/(?!localhost|127\\\\.0\\\\.0\\\\.1|example)[a-zA-Z0-9.-]+\\\\.amazonaws\\\\.com[^\\\\s]*/g\",\n      \"match\": \"\n>>> https://wf6gf7eisk.execute-api.ap-northeast-1.amazonaws.com/dev/api/events\\\", <<<\n\",\n      \"commitHash\": \"24afe52d9140746103dba5011910213f993e34d1\","
+    },
+    {
+      "category": "infrastructureInfo",
+      "pattern": "/https?:\\/\\/(?!localhost|127\\.0\\.0\\.1|example)[a-zA-Z0-9.-]+\\.amazonaws\\.com[^\\s]*/g",
+      "match": "https://wf6gf7eisk.execute-api.ap-northeast-1.amazonaws.com\\\",\",",
+      "commitHash": "15cbbc89d933f580bb3943c245227220199d9a4a",
+      "filePath": "security-audit-precise.json",
+      "commitMessage": "feat: comprehensive security audit with Git history analysis",
+      "context": "      \"pattern\": \"/https?:\\\\/\\\\/(?!localhost|127\\\\.0\\\\.0\\\\.1|example)[a-zA-Z0-9.-]+\\\\.amazonaws\\\\.com[^\\\\s]*/g\",\n      \"match\": \"\n>>> https://wf6gf7eisk.execute-api.ap-northeast-1.amazonaws.com\\\",\", <<<\n\n      \"commitHash\": \"24afe52d9140746103dba5011910213f993e34d1\","
+    },
+    {
+      "category": "infrastructureInfo",
+      "pattern": "/https?:\\/\\/(?!localhost|127\\.0\\.0\\.1|example)[a-zA-Z0-9.-]+\\.amazonaws\\.com[^\\s]*/g",
+      "match": "https://wf6gf7eisk.execute-api.ap-northeast-1.amazonaws.com\\\",",
+      "commitHash": "15cbbc89d933f580bb3943c245227220199d9a4a",
+      "filePath": "security-audit-precise.json",
+      "commitMessage": "feat: comprehensive security audit with Git history analysis",
+      "context": "      \"pattern\": \"/https?:\\\\/\\\\/(?!localhost|127\\\\.0\\\\.0\\\\.1|example)[a-zA-Z0-9.-]+\\\\.amazonaws\\\\.com[^\\\\s]*/g\",\n      \"match\": \"\n>>> https://wf6gf7eisk.execute-api.ap-northeast-1.amazonaws.com\\\", <<<\n\",\n      \"commitHash\": \"24afe52d9140746103dba5011910213f993e34d1\","
+    },
+    {
+      "category": "infrastructureInfo",
+      "pattern": "/https?:\\/\\/(?!localhost|127\\.0\\.0\\.1|example)[a-zA-Z0-9.-]+\\.amazonaws\\.com[^\\s]*/g",
+      "match": "https://wf6gf7eisk.execute-api.ap-northeast-1.amazonaws.com\\\",\",",
+      "commitHash": "15cbbc89d933f580bb3943c245227220199d9a4a",
+      "filePath": "security-audit-precise.json",
+      "commitMessage": "feat: comprehensive security audit with Git history analysis",
+      "context": "      \"pattern\": \"/https?:\\\\/\\\\/(?!localhost|127\\\\.0\\\\.0\\\\.1|example)[a-zA-Z0-9.-]+\\\\.amazonaws\\\\.com[^\\\\s]*/g\",\n      \"match\": \"\n>>> https://wf6gf7eisk.execute-api.ap-northeast-1.amazonaws.com\\\",\", <<<\n\n      \"commitHash\": \"24afe52d9140746103dba5011910213f993e34d1\","
+    },
+    {
+      "category": "infrastructureInfo",
+      "pattern": "/https?:\\/\\/(?!localhost|127\\.0\\.0\\.1|example)[a-zA-Z0-9.-]+\\.amazonaws\\.com[^\\s]*/g",
+      "match": "https://wf6gf7eisk.execute-api.ap-northeast-1.amazonaws.com\\\",",
+      "commitHash": "15cbbc89d933f580bb3943c245227220199d9a4a",
+      "filePath": "security-audit-precise.json",
+      "commitMessage": "feat: comprehensive security audit with Git history analysis",
+      "context": "      \"pattern\": \"/https?:\\\\/\\\\/(?!localhost|127\\\\.0\\\\.0\\\\.1|example)[a-zA-Z0-9.-]+\\\\.amazonaws\\\\.com[^\\\\s]*/g\",\n      \"match\": \"\n>>> https://wf6gf7eisk.execute-api.ap-northeast-1.amazonaws.com\\\", <<<\n\",\n      \"commitHash\": \"24afe52d9140746103dba5011910213f993e34d1\","
+    },
+    {
+      "category": "infrastructureInfo",
+      "pattern": "/https?:\\/\\/(?!localhost|127\\.0\\.0\\.1|example)[a-zA-Z0-9.-]+\\.amazonaws\\.com[^\\s]*/g",
+      "match": "https://wf6gf7eisk.execute-api.ap-northeast-1.amazonaws.com/dev/api/events\\\",\",",
+      "commitHash": "15cbbc89d933f580bb3943c245227220199d9a4a",
+      "filePath": "security-audit-precise.json",
+      "commitMessage": "feat: comprehensive security audit with Git history analysis",
+      "context": "      \"pattern\": \"/https?:\\\\/\\\\/(?!localhost|127\\\\.0\\\\.0\\\\.1|example)[a-zA-Z0-9.-]+\\\\.amazonaws\\\\.com[^\\\\s]*/g\",\n      \"match\": \"\n>>> https://wf6gf7eisk.execute-api.ap-northeast-1.amazonaws.com/dev/api/events\\\",\", <<<\n\n      \"commitHash\": \"24afe52d9140746103dba5011910213f993e34d1\","
+    },
+    {
+      "category": "infrastructureInfo",
+      "pattern": "/https?:\\/\\/(?!localhost|127\\.0\\.0\\.1|example)[a-zA-Z0-9.-]+\\.amazonaws\\.com[^\\s]*/g",
+      "match": "https://wf6gf7eisk.execute-api.ap-northeast-1.amazonaws.com/dev/api/events\\\",",
+      "commitHash": "15cbbc89d933f580bb3943c245227220199d9a4a",
+      "filePath": "security-audit-precise.json",
+      "commitMessage": "feat: comprehensive security audit with Git history analysis",
+      "context": "      \"pattern\": \"/https?:\\\\/\\\\/(?!localhost|127\\\\.0\\\\.0\\\\.1|example)[a-zA-Z0-9.-]+\\\\.amazonaws\\\\.com[^\\\\s]*/g\",\n      \"match\": \"\n>>> https://wf6gf7eisk.execute-api.ap-northeast-1.amazonaws.com/dev/api/events\\\", <<<\n\",\n      \"commitHash\": \"24afe52d9140746103dba5011910213f993e34d1\","
+    },
+    {
+      "category": "infrastructureInfo",
+      "pattern": "/https?:\\/\\/(?!localhost|127\\.0\\.0\\.1|example)[a-zA-Z0-9.-]+\\.amazonaws\\.com[^\\s]*/g",
+      "match": "https://wf6gf7eisk.execute-api.ap-northeast-1.amazonaws.com/dev/api',\\\",\",",
+      "commitHash": "15cbbc89d933f580bb3943c245227220199d9a4a",
+      "filePath": "security-audit-precise.json",
+      "commitMessage": "feat: comprehensive security audit with Git history analysis",
+      "context": "      \"pattern\": \"/https?:\\\\/\\\\/(?!localhost|127\\\\.0\\\\.0\\\\.1|example)[a-zA-Z0-9.-]+\\\\.amazonaws\\\\.com[^\\\\s]*/g\",\n      \"match\": \"\n>>> https://wf6gf7eisk.execute-api.ap-northeast-1.amazonaws.com/dev/api',\\\",\", <<<\n\n      \"commitHash\": \"24afe52d9140746103dba5011910213f993e34d1\","
+    },
+    {
+      "category": "infrastructureInfo",
+      "pattern": "/https?:\\/\\/(?!localhost|127\\.0\\.0\\.1|example)[a-zA-Z0-9.-]+\\.amazonaws\\.com[^\\s]*/g",
+      "match": "https://wf6gf7eisk.execute-api.ap-northeast-1.amazonaws.com/dev/api',\\\",",
+      "commitHash": "15cbbc89d933f580bb3943c245227220199d9a4a",
+      "filePath": "security-audit-precise.json",
+      "commitMessage": "feat: comprehensive security audit with Git history analysis",
+      "context": "      \"pattern\": \"/https?:\\\\/\\\\/(?!localhost|127\\\\.0\\\\.0\\\\.1|example)[a-zA-Z0-9.-]+\\\\.amazonaws\\\\.com[^\\\\s]*/g\",\n      \"match\": \"\n>>> https://wf6gf7eisk.execute-api.ap-northeast-1.amazonaws.com/dev/api',\\\", <<<\n\",\n      \"commitHash\": \"24afe52d9140746103dba5011910213f993e34d1\","
+    },
+    {
+      "category": "infrastructureInfo",
+      "pattern": "/https?:\\/\\/(?!localhost|127\\.0\\.0\\.1|example)[a-zA-Z0-9.-]+\\.amazonaws\\.com[^\\s]*/g",
+      "match": "https://wf6gf7eisk.execute-api.ap-northeast-1.amazonaws.com/dev/api/events\\\",\",",
+      "commitHash": "15cbbc89d933f580bb3943c245227220199d9a4a",
+      "filePath": "security-audit-precise.json",
+      "commitMessage": "feat: comprehensive security audit with Git history analysis",
+      "context": "      \"pattern\": \"/https?:\\\\/\\\\/(?!localhost|127\\\\.0\\\\.0\\\\.1|example)[a-zA-Z0-9.-]+\\\\.amazonaws\\\\.com[^\\\\s]*/g\",\n      \"match\": \"\n>>> https://wf6gf7eisk.execute-api.ap-northeast-1.amazonaws.com/dev/api/events\\\",\", <<<\n\n      \"commitHash\": \"24afe52d9140746103dba5011910213f993e34d1\","
+    },
+    {
+      "category": "infrastructureInfo",
+      "pattern": "/https?:\\/\\/(?!localhost|127\\.0\\.0\\.1|example)[a-zA-Z0-9.-]+\\.amazonaws\\.com[^\\s]*/g",
+      "match": "https://wf6gf7eisk.execute-api.ap-northeast-1.amazonaws.com/dev/api/events\\\",",
+      "commitHash": "15cbbc89d933f580bb3943c245227220199d9a4a",
+      "filePath": "security-audit-precise.json",
+      "commitMessage": "feat: comprehensive security audit with Git history analysis",
+      "context": "      \"pattern\": \"/https?:\\\\/\\\\/(?!localhost|127\\\\.0\\\\.0\\\\.1|example)[a-zA-Z0-9.-]+\\\\.amazonaws\\\\.com[^\\\\s]*/g\",\n      \"match\": \"\n>>> https://wf6gf7eisk.execute-api.ap-northeast-1.amazonaws.com/dev/api/events\\\", <<<\n\",\n      \"commitHash\": \"24afe52d9140746103dba5011910213f993e34d1\","
+    },
+    {
+      "category": "infrastructureInfo",
+      "pattern": "/https?:\\/\\/(?!localhost|127\\.0\\.0\\.1|example)[a-zA-Z0-9.-]+\\.amazonaws\\.com[^\\s]*/g",
+      "match": "https://wf6gf7eisk.execute-api.ap-northeast-1.amazonaws.com\\\",\",",
+      "commitHash": "15cbbc89d933f580bb3943c245227220199d9a4a",
+      "filePath": "security-audit-precise.json",
+      "commitMessage": "feat: comprehensive security audit with Git history analysis",
+      "context": "      \"pattern\": \"/https?:\\\\/\\\\/(?!localhost|127\\\\.0\\\\.0\\\\.1|example)[a-zA-Z0-9.-]+\\\\.amazonaws\\\\.com[^\\\\s]*/g\",\n      \"match\": \"\n>>> https://wf6gf7eisk.execute-api.ap-northeast-1.amazonaws.com\\\",\", <<<\n\n      \"commitHash\": \"24afe52d9140746103dba5011910213f993e34d1\","
+    },
+    {
+      "category": "infrastructureInfo",
+      "pattern": "/https?:\\/\\/(?!localhost|127\\.0\\.0\\.1|example)[a-zA-Z0-9.-]+\\.amazonaws\\.com[^\\s]*/g",
+      "match": "https://wf6gf7eisk.execute-api.ap-northeast-1.amazonaws.com\\\",",
+      "commitHash": "15cbbc89d933f580bb3943c245227220199d9a4a",
+      "filePath": "security-audit-precise.json",
+      "commitMessage": "feat: comprehensive security audit with Git history analysis",
+      "context": "      \"pattern\": \"/https?:\\\\/\\\\/(?!localhost|127\\\\.0\\\\.0\\\\.1|example)[a-zA-Z0-9.-]+\\\\.amazonaws\\\\.com[^\\\\s]*/g\",\n      \"match\": \"\n>>> https://wf6gf7eisk.execute-api.ap-northeast-1.amazonaws.com\\\", <<<\n\",\n      \"commitHash\": \"24afe52d9140746103dba5011910213f993e34d1\","
+    },
+    {
+      "category": "infrastructureInfo",
+      "pattern": "/https?:\\/\\/(?!localhost|127\\.0\\.0\\.1|example)[a-zA-Z0-9.-]+\\.amazonaws\\.com[^\\s]*/g",
+      "match": "https://wf6gf7eisk.execute-api.ap-northeast-1.amazonaws.com/dev/api/events\\\",\",",
+      "commitHash": "15cbbc89d933f580bb3943c245227220199d9a4a",
+      "filePath": "security-audit-precise.json",
+      "commitMessage": "feat: comprehensive security audit with Git history analysis",
+      "context": "      \"pattern\": \"/https?:\\\\/\\\\/(?!localhost|127\\\\.0\\\\.0\\\\.1|example)[a-zA-Z0-9.-]+\\\\.amazonaws\\\\.com[^\\\\s]*/g\",\n      \"match\": \"\n>>> https://wf6gf7eisk.execute-api.ap-northeast-1.amazonaws.com/dev/api/events\\\",\", <<<\n\n      \"commitHash\": \"24afe52d9140746103dba5011910213f993e34d1\","
+    },
+    {
+      "category": "infrastructureInfo",
+      "pattern": "/https?:\\/\\/(?!localhost|127\\.0\\.0\\.1|example)[a-zA-Z0-9.-]+\\.amazonaws\\.com[^\\s]*/g",
+      "match": "https://wf6gf7eisk.execute-api.ap-northeast-1.amazonaws.com/dev/api/events\\\",",
+      "commitHash": "15cbbc89d933f580bb3943c245227220199d9a4a",
+      "filePath": "security-audit-precise.json",
+      "commitMessage": "feat: comprehensive security audit with Git history analysis",
+      "context": "      \"pattern\": \"/https?:\\\\/\\\\/(?!localhost|127\\\\.0\\\\.0\\\\.1|example)[a-zA-Z0-9.-]+\\\\.amazonaws\\\\.com[^\\\\s]*/g\",\n      \"match\": \"\n>>> https://wf6gf7eisk.execute-api.ap-northeast-1.amazonaws.com/dev/api/events\\\", <<<\n\",\n      \"commitHash\": \"24afe52d9140746103dba5011910213f993e34d1\","
+    },
+    {
+      "category": "infrastructureInfo",
+      "pattern": "/https?:\\/\\/(?!localhost|127\\.0\\.0\\.1|example)[a-zA-Z0-9.-]+\\.amazonaws\\.com[^\\s]*/g",
+      "match": "https://wf6gf7eisk.execute-api.ap-northeast-1.amazonaws.com\\\"],\",",
+      "commitHash": "15cbbc89d933f580bb3943c245227220199d9a4a",
+      "filePath": "security-audit-precise.json",
+      "commitMessage": "feat: comprehensive security audit with Git history analysis",
+      "context": "      \"pattern\": \"/https?:\\\\/\\\\/(?!localhost|127\\\\.0\\\\.0\\\\.1|example)[a-zA-Z0-9.-]+\\\\.amazonaws\\\\.com[^\\\\s]*/g\",\n      \"match\": \"\n>>> https://wf6gf7eisk.execute-api.ap-northeast-1.amazonaws.com\\\"],\", <<<\n\n      \"commitHash\": \"24afe52d9140746103dba5011910213f993e34d1\","
+    },
+    {
+      "category": "infrastructureInfo",
+      "pattern": "/https?:\\/\\/(?!localhost|127\\.0\\.0\\.1|example)[a-zA-Z0-9.-]+\\.amazonaws\\.com[^\\s]*/g",
+      "match": "https://wf6gf7eisk.execute-api.ap-northeast-1.amazonaws.com\\\"],",
+      "commitHash": "15cbbc89d933f580bb3943c245227220199d9a4a",
+      "filePath": "security-audit-precise.json",
+      "commitMessage": "feat: comprehensive security audit with Git history analysis",
+      "context": "      \"pattern\": \"/https?:\\\\/\\\\/(?!localhost|127\\\\.0\\\\.0\\\\.1|example)[a-zA-Z0-9.-]+\\\\.amazonaws\\\\.com[^\\\\s]*/g\",\n      \"match\": \"\n>>> https://wf6gf7eisk.execute-api.ap-northeast-1.amazonaws.com\\\"], <<<\n\",\n      \"commitHash\": \"24afe52d9140746103dba5011910213f993e34d1\","
+    },
+    {
+      "category": "infrastructureInfo",
+      "pattern": "/https?:\\/\\/(?!localhost|127\\.0\\.0\\.1|example)[a-zA-Z0-9.-]+\\.amazonaws\\.com[^\\s]*/g",
+      "match": "https://wf6gf7eisk.execute-api.ap-northeast-1.amazonaws.com/dev/api'\",",
+      "commitHash": "15cbbc89d933f580bb3943c245227220199d9a4a",
+      "filePath": "security-audit-precise.json",
+      "commitMessage": "feat: comprehensive security audit with Git history analysis",
+      "context": "      \"pattern\": \"/https?:\\\\/\\\\/(?!localhost|127\\\\.0\\\\.0\\\\.1|example)[a-zA-Z0-9.-]+\\\\.amazonaws\\\\.com[^\\\\s]*/g\",\n      \"match\": \"\n>>> https://wf6gf7eisk.execute-api.ap-northeast-1.amazonaws.com/dev/api'\", <<<\n\n      \"commitHash\": \"132a6247916c9908a0d11092ba3579156d96298d\","
+    },
+    {
+      "category": "infrastructureInfo",
+      "pattern": "/https?:\\/\\/(?!localhost|127\\.0\\.0\\.1|example)[a-zA-Z0-9.-]+\\.amazonaws\\.com[^\\s]*/g",
+      "match": "https://wf6gf7eisk.execute-api.ap-northeast-1.amazonaws.com/dev/api'",
+      "commitHash": "15cbbc89d933f580bb3943c245227220199d9a4a",
+      "filePath": "security-audit-precise.json",
+      "commitMessage": "feat: comprehensive security audit with Git history analysis",
+      "context": "      \"pattern\": \"/https?:\\\\/\\\\/(?!localhost|127\\\\.0\\\\.0\\\\.1|example)[a-zA-Z0-9.-]+\\\\.amazonaws\\\\.com[^\\\\s]*/g\",\n      \"match\": \"\n>>> https://wf6gf7eisk.execute-api.ap-northeast-1.amazonaws.com/dev/api' <<<\n,\\\",\",\n      \"commitHash\": \"24afe52d9140746103dba5011910213f993e34d1\","
+    },
+    {
+      "category": "infrastructureInfo",
+      "pattern": "/https?:\\/\\/(?!localhost|127\\.0\\.0\\.1|example)[a-zA-Z0-9.-]+\\.amazonaws\\.com[^\\s]*/g",
+      "match": "https://9qyaz7n47j.execute-api.ap-northeast-1.amazonaws.com/prod/api/voting/participation/${eventId}",
+      "commitHash": "15cbbc89d933f580bb3943c245227220199d9a4a",
+      "filePath": "security-audit-precise.json",
+      "commitMessage": "feat: comprehensive security audit with Git history analysis",
+      "context": "      \"pattern\": \"/https?:\\\\/\\\\/(?!localhost|127\\\\.0\\\\.0\\\\.1|example)[a-zA-Z0-9.-]+\\\\.amazonaws\\\\.com[^\\\\s]*/g\",\n      \"match\": \"\n>>> https://9qyaz7n47j.execute-api.ap-northeast-1.amazonaws.com/prod/api/voting/participation/${eventId}\", <<<\n\n      \"commitHash\": \"132a6247916c9908a0d11092ba3579156d96298d\","
+    },
+    {
+      "category": "infrastructureInfo",
+      "pattern": "/https?:\\/\\/(?!localhost|127\\.0\\.0\\.1|example)[a-zA-Z0-9.-]+\\.amazonaws\\.com[^\\s]*/g",
+      "match": "https://9qyaz7n47j.execute-api.ap-northeast-1.amazonaws.com/prod/api/voting/participation/${eventId}",
+      "commitHash": "15cbbc89d933f580bb3943c245227220199d9a4a",
+      "filePath": "security-audit-precise.json",
+      "commitMessage": "feat: comprehensive security audit with Git history analysis",
+      "context": "      \"commitMessage\": \"feat: Implement comprehensive code quality improvements with ESLint, Prettier, and unified design sy\",\n      \"context\": \"        const response = await fetch(\\n          `\\n>>> \n>>> https://9qyaz7n47j.execute-api.ap-northeast-1.amazonaws.com/prod/api/voting/participation/${eventId}` <<<\n <<<\\n\\n        );\"\n    },"
+    },
+    {
+      "category": "infrastructureInfo",
+      "pattern": "/https?:\\/\\/(?!localhost|127\\.0\\.0\\.1|example)[a-zA-Z0-9.-]+\\.amazonaws\\.com[^\\s]*/g",
+      "match": "https://9qyaz7n47j.execute-api.ap-northeast-1.amazonaws.com/prod/api/voting',\",",
+      "commitHash": "15cbbc89d933f580bb3943c245227220199d9a4a",
+      "filePath": "security-audit-precise.json",
+      "commitMessage": "feat: comprehensive security audit with Git history analysis",
+      "context": "      \"pattern\": \"/https?:\\\\/\\\\/(?!localhost|127\\\\.0\\\\.0\\\\.1|example)[a-zA-Z0-9.-]+\\\\.amazonaws\\\\.com[^\\\\s]*/g\",\n      \"match\": \"\n>>> https://9qyaz7n47j.execute-api.ap-northeast-1.amazonaws.com/prod/api/voting',\", <<<\n\n      \"commitHash\": \"132a6247916c9908a0d11092ba3579156d96298d\","
+    },
+    {
+      "category": "infrastructureInfo",
+      "pattern": "/https?:\\/\\/(?!localhost|127\\.0\\.0\\.1|example)[a-zA-Z0-9.-]+\\.amazonaws\\.com[^\\s]*/g",
+      "match": "https://9qyaz7n47j.execute-api.ap-northeast-1.amazonaws.com/prod/api/voting',",
+      "commitHash": "15cbbc89d933f580bb3943c245227220199d9a4a",
+      "filePath": "security-audit-precise.json",
+      "commitMessage": "feat: comprehensive security audit with Git history analysis",
+      "context": "      \"pattern\": \"/https?:\\\\/\\\\/(?!localhost|127\\\\.0\\\\.0\\\\.1|example)[a-zA-Z0-9.-]+\\\\.amazonaws\\\\.com[^\\\\s]*/g\",\n      \"match\": \"\n>>> https://9qyaz7n47j.execute-api.ap-northeast-1.amazonaws.com/prod/api/voting', <<<\n\",\n      \"commitHash\": \"132a6247916c9908a0d11092ba3579156d96298d\","
+    },
+    {
+      "category": "infrastructureInfo",
+      "pattern": "/https?:\\/\\/(?!localhost|127\\.0\\.0\\.1|example)[a-zA-Z0-9.-]+\\.amazonaws\\.com[^\\s]*/g",
+      "match": "https://9qyaz7n47j.execute-api.ap-northeast-1.amazonaws.com/prod/api/voting/participation/${eventId}",
+      "commitHash": "15cbbc89d933f580bb3943c245227220199d9a4a",
+      "filePath": "security-audit-precise.json",
+      "commitMessage": "feat: comprehensive security audit with Git history analysis",
+      "context": "      \"pattern\": \"/https?:\\\\/\\\\/(?!localhost|127\\\\.0\\\\.0\\\\.1|example)[a-zA-Z0-9.-]+\\\\.amazonaws\\\\.com[^\\\\s]*/g\",\n      \"match\": \"\n>>> https://9qyaz7n47j.execute-api.ap-northeast-1.amazonaws.com/prod/api/voting/participation/${eventId}\", <<<\n\n      \"commitHash\": \"132a6247916c9908a0d11092ba3579156d96298d\","
+    },
+    {
+      "category": "infrastructureInfo",
+      "pattern": "/https?:\\/\\/(?!localhost|127\\.0\\.0\\.1|example)[a-zA-Z0-9.-]+\\.amazonaws\\.com[^\\s]*/g",
+      "match": "https://9qyaz7n47j.execute-api.ap-northeast-1.amazonaws.com/prod/api/voting/participation/${eventId}",
+      "commitHash": "15cbbc89d933f580bb3943c245227220199d9a4a",
+      "filePath": "security-audit-precise.json",
+      "commitMessage": "feat: comprehensive security audit with Git history analysis",
+      "context": "      \"commitMessage\": \"feat: Implement comprehensive code quality improvements with ESLint, Prettier, and unified design sy\",\n      \"context\": \"        const response = await fetch(\\n          `\\n>>> \n>>> https://9qyaz7n47j.execute-api.ap-northeast-1.amazonaws.com/prod/api/voting/participation/${eventId}` <<<\n <<<\\n\\n        );\"\n    },"
+    },
+    {
+      "category": "infrastructureInfo",
+      "pattern": "/https?:\\/\\/(?!localhost|127\\.0\\.0\\.1|example)[a-zA-Z0-9.-]+\\.amazonaws\\.com[^\\s]*/g",
+      "match": "https://9qyaz7n47j.execute-api.ap-northeast-1.amazonaws.com/prod/api/voting',\",",
+      "commitHash": "15cbbc89d933f580bb3943c245227220199d9a4a",
+      "filePath": "security-audit-precise.json",
+      "commitMessage": "feat: comprehensive security audit with Git history analysis",
+      "context": "      \"pattern\": \"/https?:\\\\/\\\\/(?!localhost|127\\\\.0\\\\.0\\\\.1|example)[a-zA-Z0-9.-]+\\\\.amazonaws\\\\.com[^\\\\s]*/g\",\n      \"match\": \"\n>>> https://9qyaz7n47j.execute-api.ap-northeast-1.amazonaws.com/prod/api/voting',\", <<<\n\n      \"commitHash\": \"132a6247916c9908a0d11092ba3579156d96298d\","
+    },
+    {
+      "category": "infrastructureInfo",
+      "pattern": "/https?:\\/\\/(?!localhost|127\\.0\\.0\\.1|example)[a-zA-Z0-9.-]+\\.amazonaws\\.com[^\\s]*/g",
+      "match": "https://9qyaz7n47j.execute-api.ap-northeast-1.amazonaws.com/prod/api/voting',",
+      "commitHash": "15cbbc89d933f580bb3943c245227220199d9a4a",
+      "filePath": "security-audit-precise.json",
+      "commitMessage": "feat: comprehensive security audit with Git history analysis",
+      "context": "      \"pattern\": \"/https?:\\\\/\\\\/(?!localhost|127\\\\.0\\\\.0\\\\.1|example)[a-zA-Z0-9.-]+\\\\.amazonaws\\\\.com[^\\\\s]*/g\",\n      \"match\": \"\n>>> https://9qyaz7n47j.execute-api.ap-northeast-1.amazonaws.com/prod/api/voting', <<<\n\",\n      \"commitHash\": \"132a6247916c9908a0d11092ba3579156d96298d\","
+    },
+    {
+      "category": "infrastructureInfo",
+      "pattern": "/https?:\\/\\/(?!localhost|127\\.0\\.0\\.1|example)[a-zA-Z0-9.-]+\\.amazonaws\\.com[^\\s]*/g",
+      "match": "https://9qyaz7n47j.execute-api.ap-northeast-1.amazonaws.com/prod/api/voting/participation/${eventId}",
+      "commitHash": "15cbbc89d933f580bb3943c245227220199d9a4a",
+      "filePath": "security-audit-precise.json",
+      "commitMessage": "feat: comprehensive security audit with Git history analysis",
+      "context": "      \"pattern\": \"/https?:\\\\/\\\\/(?!localhost|127\\\\.0\\\\.0\\\\.1|example)[a-zA-Z0-9.-]+\\\\.amazonaws\\\\.com[^\\\\s]*/g\",\n      \"match\": \"\n>>> https://9qyaz7n47j.execute-api.ap-northeast-1.amazonaws.com/prod/api/voting/participation/${eventId}\", <<<\n\n      \"commitHash\": \"132a6247916c9908a0d11092ba3579156d96298d\","
+    },
+    {
+      "category": "infrastructureInfo",
+      "pattern": "/https?:\\/\\/(?!localhost|127\\.0\\.0\\.1|example)[a-zA-Z0-9.-]+\\.amazonaws\\.com[^\\s]*/g",
+      "match": "https://9qyaz7n47j.execute-api.ap-northeast-1.amazonaws.com/prod/api/voting/participation/${eventId}",
+      "commitHash": "15cbbc89d933f580bb3943c245227220199d9a4a",
+      "filePath": "security-audit-precise.json",
+      "commitMessage": "feat: comprehensive security audit with Git history analysis",
+      "context": "      \"commitMessage\": \"feat: Implement comprehensive code quality improvements with ESLint, Prettier, and unified design sy\",\n      \"context\": \"        const response = await fetch(\\n          `\\n>>> \n>>> https://9qyaz7n47j.execute-api.ap-northeast-1.amazonaws.com/prod/api/voting/participation/${eventId}` <<<\n <<<\\n\\n        );\"\n    },"
+    },
+    {
+      "category": "infrastructureInfo",
+      "pattern": "/https?:\\/\\/(?!localhost|127\\.0\\.0\\.1|example)[a-zA-Z0-9.-]+\\.amazonaws\\.com[^\\s]*/g",
+      "match": "https://9qyaz7n47j.execute-api.ap-northeast-1.amazonaws.com/prod/api/voting',\",",
+      "commitHash": "15cbbc89d933f580bb3943c245227220199d9a4a",
+      "filePath": "security-audit-precise.json",
+      "commitMessage": "feat: comprehensive security audit with Git history analysis",
+      "context": "      \"pattern\": \"/https?:\\\\/\\\\/(?!localhost|127\\\\.0\\\\.0\\\\.1|example)[a-zA-Z0-9.-]+\\\\.amazonaws\\\\.com[^\\\\s]*/g\",\n      \"match\": \"\n>>> https://9qyaz7n47j.execute-api.ap-northeast-1.amazonaws.com/prod/api/voting',\", <<<\n\n      \"commitHash\": \"132a6247916c9908a0d11092ba3579156d96298d\","
+    },
+    {
+      "category": "infrastructureInfo",
+      "pattern": "/https?:\\/\\/(?!localhost|127\\.0\\.0\\.1|example)[a-zA-Z0-9.-]+\\.amazonaws\\.com[^\\s]*/g",
+      "match": "https://9qyaz7n47j.execute-api.ap-northeast-1.amazonaws.com/prod/api/voting',",
+      "commitHash": "15cbbc89d933f580bb3943c245227220199d9a4a",
+      "filePath": "security-audit-precise.json",
+      "commitMessage": "feat: comprehensive security audit with Git history analysis",
+      "context": "      \"pattern\": \"/https?:\\\\/\\\\/(?!localhost|127\\\\.0\\\\.0\\\\.1|example)[a-zA-Z0-9.-]+\\\\.amazonaws\\\\.com[^\\\\s]*/g\",\n      \"match\": \"\n>>> https://9qyaz7n47j.execute-api.ap-northeast-1.amazonaws.com/prod/api/voting', <<<\n\",\n      \"commitHash\": \"132a6247916c9908a0d11092ba3579156d96298d\","
+    },
+    {
+      "category": "infrastructureInfo",
+      "pattern": "/https?:\\/\\/(?!localhost|127\\.0\\.0\\.1|example)[a-zA-Z0-9.-]+\\.amazonaws\\.com[^\\s]*/g",
+      "match": "https://4mz5i3x23c.execute-api.ap-northeast-1.amazonaws.com/prod/api\",",
+      "commitHash": "15cbbc89d933f580bb3943c245227220199d9a4a",
+      "filePath": "security-audit-precise.json",
+      "commitMessage": "feat: comprehensive security audit with Git history analysis",
+      "context": "      \"pattern\": \"/https?:\\\\/\\\\/(?!localhost|127\\\\.0\\\\.0\\\\.1|example)[a-zA-Z0-9.-]+\\\\.amazonaws\\\\.com[^\\\\s]*/g\",\n      \"match\": \"\n>>> https://4mz5i3x23c.execute-api.ap-northeast-1.amazonaws.com/prod/api\", <<<\n\n      \"commitHash\": \"WORKSPACE\","
+    },
+    {
+      "category": "infrastructureInfo",
+      "pattern": "/https?:\\/\\/(?!localhost|127\\.0\\.0\\.1|example)[a-zA-Z0-9.-]+\\.amazonaws\\.com[^\\s]*/g",
+      "match": "https://4mz5i3x23c.execute-api.ap-northeast-1.amazonaws.com/prod/api",
+      "commitHash": "15cbbc89d933f580bb3943c245227220199d9a4a",
+      "filePath": "security-audit-precise.json",
+      "commitMessage": "feat: comprehensive security audit with Git history analysis",
+      "context": "      \"pattern\": \"/https?:\\\\/\\\\/(?!localhost|127\\\\.0\\\\.0\\\\.1|example)[a-zA-Z0-9.-]+\\\\.amazonaws\\\\.com[^\\\\s]*/g\",\n      \"match\": \"\n>>> https://4mz5i3x23c.execute-api.ap-northeast-1.amazonaws.com/prod/api <<<\n/health\",\n      \"commitHash\": \"f47ea0203ac5363b921499e16bd57bf02b48690d\","
+    },
+    {
+      "category": "infrastructureInfo",
+      "pattern": "/https?:\\/\\/(?!localhost|127\\.0\\.0\\.1|example)[a-zA-Z0-9.-]+\\.amazonaws\\.com[^\\s]*/g",
+      "match": "https://4ujhkvx000.execute-api.ap-northeast-1.amazonaws.com/prod/api\",",
+      "commitHash": "15cbbc89d933f580bb3943c245227220199d9a4a",
+      "filePath": "security-audit-precise.json",
+      "commitMessage": "feat: comprehensive security audit with Git history analysis",
+      "context": "      \"pattern\": \"/https?:\\\\/\\\\/(?!localhost|127\\\\.0\\\\.0\\\\.1|example)[a-zA-Z0-9.-]+\\\\.amazonaws\\\\.com[^\\\\s]*/g\",\n      \"match\": \"\n>>> https://4ujhkvx000.execute-api.ap-northeast-1.amazonaws.com/prod/api\", <<<\n\n      \"commitHash\": \"WORKSPACE\","
+    },
+    {
+      "category": "infrastructureInfo",
+      "pattern": "/https?:\\/\\/(?!localhost|127\\.0\\.0\\.1|example)[a-zA-Z0-9.-]+\\.amazonaws\\.com[^\\s]*/g",
+      "match": "https://4ujhkvx000.execute-api.ap-northeast-1.amazonaws.com/prod/api",
+      "commitHash": "15cbbc89d933f580bb3943c245227220199d9a4a",
+      "filePath": "security-audit-precise.json",
+      "commitMessage": "feat: comprehensive security audit with Git history analysis",
+      "context": "      \"pattern\": \"/https?:\\\\/\\\\/(?!localhost|127\\\\.0\\\\.0\\\\.1|example)[a-zA-Z0-9.-]+\\\\.amazonaws\\\\.com[^\\\\s]*/g\",\n      \"match\": \"\n>>> https://4ujhkvx000.execute-api.ap-northeast-1.amazonaws.com/prod/api <<<\n/health\",\n      \"commitHash\": \"f47ea0203ac5363b921499e16bd57bf02b48690d\","
+    },
+    {
+      "category": "infrastructureInfo",
+      "pattern": "/https?:\\/\\/(?!localhost|127\\.0\\.0\\.1|example)[a-zA-Z0-9.-]+\\.amazonaws\\.com[^\\s]*/g",
+      "match": "https://4mz5i3x23c.execute-api.ap-northeast-1.amazonaws.com/prod/api\",",
+      "commitHash": "15cbbc89d933f580bb3943c245227220199d9a4a",
+      "filePath": "security-audit-precise.json",
+      "commitMessage": "feat: comprehensive security audit with Git history analysis",
+      "context": "      \"pattern\": \"/https?:\\\\/\\\\/(?!localhost|127\\\\.0\\\\.0\\\\.1|example)[a-zA-Z0-9.-]+\\\\.amazonaws\\\\.com[^\\\\s]*/g\",\n      \"match\": \"\n>>> https://4mz5i3x23c.execute-api.ap-northeast-1.amazonaws.com/prod/api\", <<<\n\n      \"commitHash\": \"WORKSPACE\","
+    },
+    {
+      "category": "infrastructureInfo",
+      "pattern": "/https?:\\/\\/(?!localhost|127\\.0\\.0\\.1|example)[a-zA-Z0-9.-]+\\.amazonaws\\.com[^\\s]*/g",
+      "match": "https://4mz5i3x23c.execute-api.ap-northeast-1.amazonaws.com/prod/api",
+      "commitHash": "15cbbc89d933f580bb3943c245227220199d9a4a",
+      "filePath": "security-audit-precise.json",
+      "commitMessage": "feat: comprehensive security audit with Git history analysis",
+      "context": "      \"pattern\": \"/https?:\\\\/\\\\/(?!localhost|127\\\\.0\\\\.0\\\\.1|example)[a-zA-Z0-9.-]+\\\\.amazonaws\\\\.com[^\\\\s]*/g\",\n      \"match\": \"\n>>> https://4mz5i3x23c.execute-api.ap-northeast-1.amazonaws.com/prod/api <<<\n/health\",\n      \"commitHash\": \"f47ea0203ac5363b921499e16bd57bf02b48690d\","
+    },
+    {
+      "category": "infrastructureInfo",
+      "pattern": "/\\b(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\b/g",
+      "match": "138.0.0.0",
+      "commitHash": "15cbbc89d933f580bb3943c245227220199d9a4a",
+      "filePath": "security-audit-precise.json",
+      "commitMessage": "feat: comprehensive security audit with Git history analysis",
+      "context": "      \"pattern\": \"/\\\\b(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\\\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\\\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\\\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\\\b/g\",\n      \"match\": \"\n>>> 138.0.0.0 <<<\n\",\n      \"commitHash\": \"24afe52d9140746103dba5011910213f993e34d1\","
+    },
+    {
+      "category": "infrastructureInfo",
+      "pattern": "/\\b(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\b/g",
+      "match": "138.0.0.0",
+      "commitHash": "15cbbc89d933f580bb3943c245227220199d9a4a",
+      "filePath": "security-audit-precise.json",
+      "commitMessage": "feat: comprehensive security audit with Git history analysis",
+      "context": "      \"pattern\": \"/\\\\b(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\\\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\\\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\\\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\\\b/g\",\n      \"match\": \"\n>>> 138.0.0.0 <<<\n\",\n      \"commitHash\": \"24afe52d9140746103dba5011910213f993e34d1\","
+    },
+    {
+      "category": "infrastructureInfo",
+      "pattern": "/\\b(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\b/g",
+      "match": "136.0.0.0",
+      "commitHash": "15cbbc89d933f580bb3943c245227220199d9a4a",
+      "filePath": "security-audit-precise.json",
+      "commitMessage": "feat: comprehensive security audit with Git history analysis",
+      "context": "      \"pattern\": \"/\\\\b(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\\\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\\\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\\\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\\\b/g\",\n      \"match\": \"\n>>> 136.0.0.0 <<<\n\",\n      \"commitHash\": \"24afe52d9140746103dba5011910213f993e34d1\","
+    },
+    {
+      "category": "infrastructureInfo",
+      "pattern": "/\\b(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\b/g",
+      "match": "136.0.0.0",
+      "commitHash": "15cbbc89d933f580bb3943c245227220199d9a4a",
+      "filePath": "security-audit-precise.json",
+      "commitMessage": "feat: comprehensive security audit with Git history analysis",
+      "context": "      \"pattern\": \"/\\\\b(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\\\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\\\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\\\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\\\b/g\",\n      \"match\": \"\n>>> 136.0.0.0 <<<\n\",\n      \"commitHash\": \"24afe52d9140746103dba5011910213f993e34d1\","
+    },
+    {
+      "category": "infrastructureInfo",
+      "pattern": "/\\b(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\b/g",
+      "match": "138.0.0.0",
+      "commitHash": "15cbbc89d933f580bb3943c245227220199d9a4a",
+      "filePath": "security-audit-precise.json",
+      "commitMessage": "feat: comprehensive security audit with Git history analysis",
+      "context": "      \"pattern\": \"/\\\\b(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\\\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\\\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\\\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\\\b/g\",\n      \"match\": \"\n>>> 138.0.0.0 <<<\n\",\n      \"commitHash\": \"24afe52d9140746103dba5011910213f993e34d1\","
+    },
+    {
+      "category": "infrastructureInfo",
+      "pattern": "/\\b(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\b/g",
+      "match": "138.0.0.0",
+      "commitHash": "15cbbc89d933f580bb3943c245227220199d9a4a",
+      "filePath": "security-audit-precise.json",
+      "commitMessage": "feat: comprehensive security audit with Git history analysis",
+      "context": "      \"pattern\": \"/\\\\b(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\\\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\\\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\\\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\\\b/g\",\n      \"match\": \"\n>>> 138.0.0.0 <<<\n\",\n      \"commitHash\": \"24afe52d9140746103dba5011910213f993e34d1\","
+    },
+    {
+      "category": "infrastructureInfo",
+      "pattern": "/\\b(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\b/g",
+      "match": "138.0.0.0",
+      "commitHash": "15cbbc89d933f580bb3943c245227220199d9a4a",
+      "filePath": "security-audit-precise.json",
+      "commitMessage": "feat: comprehensive security audit with Git history analysis",
+      "context": "      \"pattern\": \"/\\\\b(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\\\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\\\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\\\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\\\b/g\",\n      \"match\": \"\n>>> 138.0.0.0 <<<\n\",\n      \"commitHash\": \"24afe52d9140746103dba5011910213f993e34d1\","
+    },
+    {
+      "category": "infrastructureInfo",
+      "pattern": "/\\b(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\b/g",
+      "match": "9.1.4.3",
+      "commitHash": "15cbbc89d933f580bb3943c245227220199d9a4a",
+      "filePath": "security-audit-precise.json",
+      "commitMessage": "feat: comprehensive security audit with Git history analysis",
+      "context": "      \"pattern\": \"/\\\\b(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\\\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\\\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\\\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\\\b/g\",\n      \"match\": \"\n>>> 9.1.4.3 <<<\n\",\n      \"commitHash\": \"24afe52d9140746103dba5011910213f993e34d1\","
+    },
+    {
+      "category": "infrastructureInfo",
+      "pattern": "/\\b(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\b/g",
+      "match": "9.1.4.3",
+      "commitHash": "15cbbc89d933f580bb3943c245227220199d9a4a",
+      "filePath": "security-audit-precise.json",
+      "commitMessage": "feat: comprehensive security audit with Git history analysis",
+      "context": "      \"pattern\": \"/\\\\b(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\\\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\\\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\\\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\\\b/g\",\n      \"match\": \"\n>>> 9.1.4.3 <<<\n\",\n      \"commitHash\": \"24afe52d9140746103dba5011910213f993e34d1\","
+    },
+    {
+      "category": "infrastructureInfo",
+      "pattern": "/\\b(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\b/g",
+      "match": "9.1.4.4",
+      "commitHash": "15cbbc89d933f580bb3943c245227220199d9a4a",
+      "filePath": "security-audit-precise.json",
+      "commitMessage": "feat: comprehensive security audit with Git history analysis",
+      "context": "      \"pattern\": \"/\\\\b(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\\\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\\\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\\\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\\\b/g\",\n      \"match\": \"\n>>> 9.1.4.4 <<<\n\",\n      \"commitHash\": \"24afe52d9140746103dba5011910213f993e34d1\","
+    },
+    {
+      "category": "infrastructureInfo",
+      "pattern": "/\\b(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\b/g",
+      "match": "9.1.4.4",
+      "commitHash": "15cbbc89d933f580bb3943c245227220199d9a4a",
+      "filePath": "security-audit-precise.json",
+      "commitMessage": "feat: comprehensive security audit with Git history analysis",
+      "context": "      \"pattern\": \"/\\\\b(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\\\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\\\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\\\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\\\b/g\",\n      \"match\": \"\n>>> 9.1.4.4 <<<\n\",\n      \"commitHash\": \"24afe52d9140746103dba5011910213f993e34d1\","
+    },
+    {
+      "category": "infrastructureInfo",
+      "pattern": "/\\b(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\b/g",
+      "match": "136.0.0.0",
+      "commitHash": "15cbbc89d933f580bb3943c245227220199d9a4a",
+      "filePath": "security-audit-precise.json",
+      "commitMessage": "feat: comprehensive security audit with Git history analysis",
+      "context": "      \"pattern\": \"/\\\\b(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\\\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\\\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\\\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\\\b/g\",\n      \"match\": \"\n>>> 136.0.0.0 <<<\n\",\n      \"commitHash\": \"24afe52d9140746103dba5011910213f993e34d1\","
+    },
+    {
+      "category": "infrastructureInfo",
+      "pattern": "/\\b(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\b/g",
+      "match": "136.0.0.0",
+      "commitHash": "15cbbc89d933f580bb3943c245227220199d9a4a",
+      "filePath": "security-audit-precise.json",
+      "commitMessage": "feat: comprehensive security audit with Git history analysis",
+      "context": "      \"pattern\": \"/\\\\b(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\\\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\\\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\\\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\\\b/g\",\n      \"match\": \"\n>>> 136.0.0.0 <<<\n\",\n      \"commitHash\": \"24afe52d9140746103dba5011910213f993e34d1\","
+    },
+    {
+      "category": "infrastructureInfo",
+      "pattern": "/\\b(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\b/g",
+      "match": "138.0.0.0",
+      "commitHash": "15cbbc89d933f580bb3943c245227220199d9a4a",
+      "filePath": "security-audit-precise.json",
+      "commitMessage": "feat: comprehensive security audit with Git history analysis",
+      "context": "      \"pattern\": \"/\\\\b(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\\\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\\\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\\\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\\\b/g\",\n      \"match\": \"\n>>> 138.0.0.0 <<<\n\",\n      \"commitHash\": \"24afe52d9140746103dba5011910213f993e34d1\","
+    },
+    {
+      "category": "infrastructureInfo",
+      "pattern": "/\\b(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\b/g",
+      "match": "138.0.0.0",
+      "commitHash": "15cbbc89d933f580bb3943c245227220199d9a4a",
+      "filePath": "security-audit-precise.json",
+      "commitMessage": "feat: comprehensive security audit with Git history analysis",
+      "context": "      \"pattern\": \"/\\\\b(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\\\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\\\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\\\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\\\b/g\",\n      \"match\": \"\n>>> 138.0.0.0 <<<\n\",\n      \"commitHash\": \"24afe52d9140746103dba5011910213f993e34d1\","
+    },
+    {
+      "category": "infrastructureInfo",
+      "pattern": "/\\b(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\b/g",
+      "match": "138.0.0.0",
+      "commitHash": "15cbbc89d933f580bb3943c245227220199d9a4a",
+      "filePath": "security-audit-precise.json",
+      "commitMessage": "feat: comprehensive security audit with Git history analysis",
+      "context": "      \"pattern\": \"/\\\\b(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\\\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\\\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\\\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\\\b/g\",\n      \"match\": \"\n>>> 138.0.0.0 <<<\n\",\n      \"commitHash\": \"24afe52d9140746103dba5011910213f993e34d1\","
+    },
+    {
+      "category": "infrastructureInfo",
+      "pattern": "/\\b(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\b/g",
+      "match": "136.0.0.0",
+      "commitHash": "15cbbc89d933f580bb3943c245227220199d9a4a",
+      "filePath": "security-audit-precise.json",
+      "commitMessage": "feat: comprehensive security audit with Git history analysis",
+      "context": "      \"pattern\": \"/\\\\b(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\\\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\\\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\\\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\\\b/g\",\n      \"match\": \"\n>>> 136.0.0.0 <<<\n\",\n      \"commitHash\": \"24afe52d9140746103dba5011910213f993e34d1\","
+    },
+    {
+      "category": "infrastructureInfo",
+      "pattern": "/\\b(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\b/g",
+      "match": "136.0.0.0",
+      "commitHash": "15cbbc89d933f580bb3943c245227220199d9a4a",
+      "filePath": "security-audit-precise.json",
+      "commitMessage": "feat: comprehensive security audit with Git history analysis",
+      "context": "      \"pattern\": \"/\\\\b(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\\\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\\\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\\\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\\\b/g\",\n      \"match\": \"\n>>> 136.0.0.0 <<<\n\",\n      \"commitHash\": \"24afe52d9140746103dba5011910213f993e34d1\","
+    },
+    {
+      "category": "infrastructureInfo",
+      "pattern": "/\\b(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\b/g",
+      "match": "138.0.0.0",
+      "commitHash": "15cbbc89d933f580bb3943c245227220199d9a4a",
+      "filePath": "security-audit-precise.json",
+      "commitMessage": "feat: comprehensive security audit with Git history analysis",
+      "context": "      \"pattern\": \"/\\\\b(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\\\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\\\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\\\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\\\b/g\",\n      \"match\": \"\n>>> 138.0.0.0 <<<\n\",\n      \"commitHash\": \"24afe52d9140746103dba5011910213f993e34d1\","
+    },
+    {
+      "category": "infrastructureInfo",
+      "pattern": "/\\b(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\b/g",
+      "match": "138.0.0.0",
+      "commitHash": "15cbbc89d933f580bb3943c245227220199d9a4a",
+      "filePath": "security-audit-precise.json",
+      "commitMessage": "feat: comprehensive security audit with Git history analysis",
+      "context": "      \"pattern\": \"/\\\\b(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\\\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\\\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\\\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\\\b/g\",\n      \"match\": \"\n>>> 138.0.0.0 <<<\n\",\n      \"commitHash\": \"24afe52d9140746103dba5011910213f993e34d1\","
+    },
+    {
+      "category": "infrastructureInfo",
+      "pattern": "/\\b(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\b/g",
+      "match": "138.0.0.0",
+      "commitHash": "15cbbc89d933f580bb3943c245227220199d9a4a",
+      "filePath": "security-audit-precise.json",
+      "commitMessage": "feat: comprehensive security audit with Git history analysis",
+      "context": "      \"pattern\": \"/\\\\b(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\\\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\\\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\\\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\\\b/g\",\n      \"match\": \"\n>>> 138.0.0.0 <<<\n\",\n      \"commitHash\": \"24afe52d9140746103dba5011910213f993e34d1\","
+    },
+    {
+      "category": "infrastructureInfo",
+      "pattern": "/\\b(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\b/g",
+      "match": "9.1.4.3",
+      "commitHash": "15cbbc89d933f580bb3943c245227220199d9a4a",
+      "filePath": "security-audit-precise.json",
+      "commitMessage": "feat: comprehensive security audit with Git history analysis",
+      "context": "      \"pattern\": \"/\\\\b(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\\\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\\\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\\\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\\\b/g\",\n      \"match\": \"\n>>> 9.1.4.3 <<<\n\",\n      \"commitHash\": \"24afe52d9140746103dba5011910213f993e34d1\","
+    },
+    {
+      "category": "infrastructureInfo",
+      "pattern": "/\\b(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\b/g",
+      "match": "9.1.4.3",
+      "commitHash": "15cbbc89d933f580bb3943c245227220199d9a4a",
+      "filePath": "security-audit-precise.json",
+      "commitMessage": "feat: comprehensive security audit with Git history analysis",
+      "context": "      \"pattern\": \"/\\\\b(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\\\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\\\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\\\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\\\b/g\",\n      \"match\": \"\n>>> 9.1.4.3 <<<\n\",\n      \"commitHash\": \"24afe52d9140746103dba5011910213f993e34d1\","
+    },
+    {
+      "category": "infrastructureInfo",
+      "pattern": "/\\b(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\b/g",
+      "match": "9.4.1.2",
+      "commitHash": "15cbbc89d933f580bb3943c245227220199d9a4a",
+      "filePath": "security-audit-precise.json",
+      "commitMessage": "feat: comprehensive security audit with Git history analysis",
+      "context": "      \"pattern\": \"/\\\\b(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\\\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\\\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\\\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\\\b/g\",\n      \"match\": \"\n>>> 9.4.1.2 <<<\n\",\n      \"commitHash\": \"24afe52d9140746103dba5011910213f993e34d1\","
+    },
+    {
+      "category": "infrastructureInfo",
+      "pattern": "/\\b(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\b/g",
+      "match": "9.4.1.2",
+      "commitHash": "15cbbc89d933f580bb3943c245227220199d9a4a",
+      "filePath": "security-audit-precise.json",
+      "commitMessage": "feat: comprehensive security audit with Git history analysis",
+      "context": "      \"pattern\": \"/\\\\b(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\\\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\\\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\\\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\\\b/g\",\n      \"match\": \"\n>>> 9.4.1.2 <<<\n\",\n      \"commitHash\": \"24afe52d9140746103dba5011910213f993e34d1\","
+    },
+    {
+      "category": "infrastructureInfo",
+      "pattern": "/\\b(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\b/g",
+      "match": "136.0.0.0",
+      "commitHash": "15cbbc89d933f580bb3943c245227220199d9a4a",
+      "filePath": "security-audit-precise.json",
+      "commitMessage": "feat: comprehensive security audit with Git history analysis",
+      "context": "      \"pattern\": \"/\\\\b(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\\\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\\\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\\\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\\\b/g\",\n      \"match\": \"\n>>> 136.0.0.0 <<<\n\",\n      \"commitHash\": \"24afe52d9140746103dba5011910213f993e34d1\","
+    },
+    {
+      "category": "infrastructureInfo",
+      "pattern": "/\\b(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\b/g",
+      "match": "136.0.0.0",
+      "commitHash": "15cbbc89d933f580bb3943c245227220199d9a4a",
+      "filePath": "security-audit-precise.json",
+      "commitMessage": "feat: comprehensive security audit with Git history analysis",
+      "context": "      \"pattern\": \"/\\\\b(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\\\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\\\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\\\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\\\b/g\",\n      \"match\": \"\n>>> 136.0.0.0 <<<\n\",\n      \"commitHash\": \"24afe52d9140746103dba5011910213f993e34d1\","
+    },
+    {
+      "category": "infrastructureInfo",
+      "pattern": "/\\b(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\b/g",
+      "match": "138.0.0.0",
+      "commitHash": "15cbbc89d933f580bb3943c245227220199d9a4a",
+      "filePath": "security-audit-precise.json",
+      "commitMessage": "feat: comprehensive security audit with Git history analysis",
+      "context": "      \"pattern\": \"/\\\\b(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\\\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\\\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\\\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\\\b/g\",\n      \"match\": \"\n>>> 138.0.0.0 <<<\n\",\n      \"commitHash\": \"24afe52d9140746103dba5011910213f993e34d1\","
+    },
+    {
+      "category": "personalInfo",
+      "pattern": "/[a-zA-Z0-9._%+-]+@(?!example|test|noreply|mock)[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}/g",
+      "match": "admin@lightningtalk.com",
+      "commitHash": "15cbbc89d933f580bb3943c245227220199d9a4a",
+      "filePath": "security-audit-report.json",
+      "commitMessage": "feat: comprehensive security audit with Git history analysis",
+      "context": "      \"pattern\": \"/\\\\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\\\.[A-Z|a-z]{2,}\\\\b/g\",\n      \"match\": \"\n>>> admin@lightningtalk.com <<<\n\",\n      \"commitHash\": \"ce9dc476c72740ffc51b7176f7c2c12ff6a6f558\","
+    },
+    {
+      "category": "personalInfo",
+      "pattern": "/[a-zA-Z0-9._%+-]+@(?!example|test|noreply|mock)[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}/g",
+      "match": "dev@lightningtalk.com",
+      "commitHash": "15cbbc89d933f580bb3943c245227220199d9a4a",
+      "filePath": "security-audit-report.json",
+      "commitMessage": "feat: comprehensive security audit with Git history analysis",
+      "context": "      \"pattern\": \"/\\\\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\\\.[A-Z|a-z]{2,}\\\\b/g\",\n      \"match\": \"\n>>> dev@lightningtalk.com <<<\n\",\n      \"commitHash\": \"ce9dc476c72740ffc51b7176f7c2c12ff6a6f558\","
+    },
+    {
+      "category": "personalInfo",
+      "pattern": "/[a-zA-Z0-9._%+-]+@(?!example|test|noreply|mock)[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}/g",
+      "match": "staging@lightningtalk.com",
+      "commitHash": "15cbbc89d933f580bb3943c245227220199d9a4a",
+      "filePath": "security-audit-report.json",
+      "commitMessage": "feat: comprehensive security audit with Git history analysis",
+      "context": "      \"pattern\": \"/\\\\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\\\.[A-Z|a-z]{2,}\\\\b/g\",\n      \"match\": \"\n>>> staging@lightningtalk.com <<<\n\",\n      \"commitHash\": \"ce9dc476c72740ffc51b7176f7c2c12ff6a6f558\","
+    },
+    {
+      "category": "personalInfo",
+      "pattern": "/[a-zA-Z0-9._%+-]+@(?!example|test|noreply|mock)[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}/g",
+      "match": "admin@lightningtalk.com",
+      "commitHash": "15cbbc89d933f580bb3943c245227220199d9a4a",
+      "filePath": "security-audit-report.json",
+      "commitMessage": "feat: comprehensive security audit with Git history analysis",
+      "context": "      \"pattern\": \"/\\\\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\\\.[A-Z|a-z]{2,}\\\\b/g\",\n      \"match\": \"\n>>> admin@lightningtalk.com <<<\n\",\n      \"commitHash\": \"ce9dc476c72740ffc51b7176f7c2c12ff6a6f558\","
+    },
+    {
+      "category": "personalInfo",
+      "pattern": "/[a-zA-Z0-9._%+-]+@(?!example|test|noreply|mock)[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}/g",
+      "match": "admin@lightningtalk.com",
+      "commitHash": "15cbbc89d933f580bb3943c245227220199d9a4a",
+      "filePath": "security-audit-report.json",
+      "commitMessage": "feat: comprehensive security audit with Git history analysis",
+      "context": "      \"pattern\": \"/\\\\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\\\.[A-Z|a-z]{2,}\\\\b/g\",\n      \"match\": \"\n>>> admin@lightningtalk.com <<<\n\",\n      \"commitHash\": \"ce9dc476c72740ffc51b7176f7c2c12ff6a6f558\","
+    },
+    {
+      "category": "personalInfo",
+      "pattern": "/[a-zA-Z0-9._%+-]+@(?!example|test|noreply|mock)[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}/g",
+      "match": "storybook@lightningtalk.local",
+      "commitHash": "15cbbc89d933f580bb3943c245227220199d9a4a",
+      "filePath": "security-audit-report.json",
+      "commitMessage": "feat: comprehensive security audit with Git history analysis",
+      "context": "      \"pattern\": \"/\\\\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\\\.[A-Z|a-z]{2,}\\\\b/g\",\n      \"match\": \"\n>>> storybook@lightningtalk.local <<<\n\",\n      \"commitHash\": \"ce9dc476c72740ffc51b7176f7c2c12ff6a6f558\","
+    },
+    {
+      "category": "personalInfo",
+      "pattern": "/[a-zA-Z0-9._%+-]+@(?!example|test|noreply|mock)[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}/g",
+      "match": "admin@lightningtalk.local",
+      "commitHash": "15cbbc89d933f580bb3943c245227220199d9a4a",
+      "filePath": "security-audit-report.json",
+      "commitMessage": "feat: comprehensive security audit with Git history analysis",
+      "context": "      \"pattern\": \"/\\\\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\\\.[A-Z|a-z]{2,}\\\\b/g\",\n      \"match\": \"\n>>> admin@lightningtalk.local <<<\n\",\n      \"commitHash\": \"ce9dc476c72740ffc51b7176f7c2c12ff6a6f558\","
+    },
+    {
+      "category": "personalInfo",
+      "pattern": "/[a-zA-Z0-9._%+-]+@(?!example|test|noreply|mock)[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}/g",
+      "match": "storybook@lightningtalk.local",
+      "commitHash": "15cbbc89d933f580bb3943c245227220199d9a4a",
+      "filePath": "security-audit-report.json",
+      "commitMessage": "feat: comprehensive security audit with Git history analysis",
+      "context": "      \"pattern\": \"/\\\\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\\\.[A-Z|a-z]{2,}\\\\b/g\",\n      \"match\": \"\n>>> storybook@lightningtalk.local <<<\n\",\n      \"commitHash\": \"ce9dc476c72740ffc51b7176f7c2c12ff6a6f558\","
+    },
+    {
+      "category": "infrastructureInfo",
+      "pattern": "/https?:\\/\\/(?!localhost|127\\.0\\.0\\.1|example)[a-zA-Z0-9.-]+\\.amazonaws\\.com[^\\s]*/g",
+      "match": "https://4mz5i3x23c.execute-api.ap-northeast-1.amazonaws.com/prod/api/health\",",
+      "commitHash": "15cbbc89d933f580bb3943c245227220199d9a4a",
+      "filePath": "security-audit-report.json",
+      "commitMessage": "feat: comprehensive security audit with Git history analysis",
+      "context": "      \"pattern\": \"/https?:\\\\/\\\\/[a-zA-Z0-9.-]+\\\\.amazonaws\\\\.com[^\\\\s]*/g\",\n      \"match\": \"\n>>> https://4mz5i3x23c.execute-api.ap-northeast-1.amazonaws.com/prod/api/health\", <<<\n\n      \"commitHash\": \"f47ea0203ac5363b921499e16bd57bf02b48690d\","
+    },
+    {
+      "category": "infrastructureInfo",
+      "pattern": "/https?:\\/\\/(?!localhost|127\\.0\\.0\\.1|example)[a-zA-Z0-9.-]+\\.amazonaws\\.com[^\\s]*/g",
+      "match": "https://4ujhkvx000.execute-api.ap-northeast-1.amazonaws.com/prod/api/health\",",
+      "commitHash": "15cbbc89d933f580bb3943c245227220199d9a4a",
+      "filePath": "security-audit-report.json",
+      "commitMessage": "feat: comprehensive security audit with Git history analysis",
+      "context": "      \"pattern\": \"/https?:\\\\/\\\\/[a-zA-Z0-9.-]+\\\\.amazonaws\\\\.com[^\\\\s]*/g\",\n      \"match\": \"\n>>> https://4ujhkvx000.execute-api.ap-northeast-1.amazonaws.com/prod/api/health\", <<<\n\n      \"commitHash\": \"f47ea0203ac5363b921499e16bd57bf02b48690d\","
+    },
     {
       "category": "personalInfo",
       "pattern": "/[a-zA-Z0-9._%+-]+@(?!example|test|noreply|mock)[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}/g",
@@ -590,33 +2246,6 @@
       "commitHash": "e617153032c4a2a38fad3069f3162691b91cddca",
       "filePath": "public/js/main.js",
       "commitMessage": "feat: Implement comprehensive frontend structured logging system",
-      "context": "    // Also send via API\n    fetch('\n>>> https://9qyaz7n47j.execute-api.ap-northeast-1.amazonaws.com/prod/api/voting', <<<\n {\n      method: 'POST',"
-    },
-    {
-      "category": "personalInfo",
-      "pattern": "/[a-zA-Z0-9._%+-]+@(?!example|test|noreply|mock)[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}/g",
-      "match": "example@email.com",
-      "commitHash": "83b1ddee6c0e78100e51274d063ac2ad5a97c2ed",
-      "filePath": "public/js/main.js",
-      "commitMessage": "feat: Implement comprehensive mobile optimization system v1",
-      "context": "                    <input type=\"email\" id=\"email\" name=\"email\" required>\n                    <span class=\"field-hint\">例: \n>>> example@email.com <<<\n</span>\n                    <span class=\"field-error\" id=\"email-error\"></span>"
-    },
-    {
-      "category": "infrastructureInfo",
-      "pattern": "/https?:\\/\\/(?!localhost|127\\.0\\.0\\.1|example)[a-zA-Z0-9.-]+\\.amazonaws\\.com[^\\s]*/g",
-      "match": "https://9qyaz7n47j.execute-api.ap-northeast-1.amazonaws.com/prod/api/voting/participation/${eventId}",
-      "commitHash": "83b1ddee6c0e78100e51274d063ac2ad5a97c2ed",
-      "filePath": "public/js/main.js",
-      "commitMessage": "feat: Implement comprehensive mobile optimization system v1",
-      "context": "        const response = await fetch(\n          `\n>>> https://9qyaz7n47j.execute-api.ap-northeast-1.amazonaws.com/prod/api/voting/participation/${eventId}` <<<\n\n        );"
-    },
-    {
-      "category": "infrastructureInfo",
-      "pattern": "/https?:\\/\\/(?!localhost|127\\.0\\.0\\.1|example)[a-zA-Z0-9.-]+\\.amazonaws\\.com[^\\s]*/g",
-      "match": "https://9qyaz7n47j.execute-api.ap-northeast-1.amazonaws.com/prod/api/voting',",
-      "commitHash": "83b1ddee6c0e78100e51274d063ac2ad5a97c2ed",
-      "filePath": "public/js/main.js",
-      "commitMessage": "feat: Implement comprehensive mobile optimization system v1",
       "context": "    // Also send via API\n    fetch('\n>>> https://9qyaz7n47j.execute-api.ap-northeast-1.amazonaws.com/prod/api/voting', <<<\n {\n      method: 'POST',"
     },
     {

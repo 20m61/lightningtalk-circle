@@ -3,7 +3,7 @@
  * Simple integration script to add chat functionality to event pages
  */
 
-(function () {
+(function() {
   'use strict';
 
   // Chat Integration Class

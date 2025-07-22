@@ -114,7 +114,7 @@ export class EventService {
     const timeUntilReminder = reminderDate.getTime() - Date.now();
 
     if (timeUntilReminder > 0) {
-      const timeoutId = setTimeout(async () => {
+      const timeoutId = setTimeout(async() => {
         await this.sendEventReminders(eventId, daysUntil);
         this.reminderJobs.delete(`${eventId}-${daysUntil}`);
       }, timeUntilReminder);
@@ -175,7 +175,7 @@ export class EventService {
   startReminderScheduler() {
     // Check for pending reminders every hour
     setInterval(
-      async () => {
+      async() => {
         await this.checkPendingReminders();
       },
       60 * 60 * 1000

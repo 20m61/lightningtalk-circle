@@ -39,7 +39,7 @@ const validateAnalyticsData = [
  * POST /api/analytics
  * Receive analytics data from client
  */
-router.post('/', validateAnalyticsData, async (req, res) => {
+router.post('/', validateAnalyticsData, async(req, res) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     return res.status(400).json({ errors: errors.array() });
@@ -140,7 +140,7 @@ router.post('/', validateAnalyticsData, async (req, res) => {
  * GET /api/analytics/dashboard
  * Get analytics dashboard data
  */
-router.get('/dashboard', async (req, res) => {
+router.get('/dashboard', async(req, res) => {
   try {
     const now = Date.now();
     const oneDayAgo = now - 24 * 60 * 60 * 1000;
@@ -193,7 +193,7 @@ router.get('/dashboard', async (req, res) => {
  * GET /api/analytics/events
  * Get detailed event data with filtering
  */
-router.get('/events', async (req, res) => {
+router.get('/events', async(req, res) => {
   try {
     const {
       type,
@@ -231,7 +231,7 @@ router.get('/events', async (req, res) => {
  * GET /api/analytics/performance
  * Get performance metrics
  */
-router.get('/performance', async (req, res) => {
+router.get('/performance', async(req, res) => {
   try {
     const metrics = analyticsStore.metrics.filter(m => m.type === 'navigation');
 
@@ -278,7 +278,7 @@ router.get('/performance', async (req, res) => {
  * GET /api/analytics/errors
  * Get error analytics
  */
-router.get('/errors', async (req, res) => {
+router.get('/errors', async(req, res) => {
   try {
     const { resolved = false } = req.query;
 
@@ -334,7 +334,7 @@ router.get('/errors', async (req, res) => {
  * POST /api/analytics/errors/:id/resolve
  * Mark an error as resolved
  */
-router.post('/errors/:id/resolve', async (req, res) => {
+router.post('/errors/:id/resolve', async(req, res) => {
   try {
     const { id } = req.params;
     const error = analyticsStore.errors.find(e => e.id === id);
@@ -467,29 +467,29 @@ function calculateWebVitals() {
     lcp:
       lcp.length > 0
         ? {
-            value: Math.round(average(lcp)),
-            good: (lcp.filter(v => v <= 2500).length / lcp.length) * 100,
-            needsImprovement: (lcp.filter(v => v > 2500 && v <= 4000).length / lcp.length) * 100,
-            poor: (lcp.filter(v => v > 4000).length / lcp.length) * 100
-          }
+          value: Math.round(average(lcp)),
+          good: (lcp.filter(v => v <= 2500).length / lcp.length) * 100,
+          needsImprovement: (lcp.filter(v => v > 2500 && v <= 4000).length / lcp.length) * 100,
+          poor: (lcp.filter(v => v > 4000).length / lcp.length) * 100
+        }
         : null,
     fid:
       fid.length > 0
         ? {
-            value: Math.round(average(fid)),
-            good: (fid.filter(v => v <= 100).length / fid.length) * 100,
-            needsImprovement: (fid.filter(v => v > 100 && v <= 300).length / fid.length) * 100,
-            poor: (fid.filter(v => v > 300).length / fid.length) * 100
-          }
+          value: Math.round(average(fid)),
+          good: (fid.filter(v => v <= 100).length / fid.length) * 100,
+          needsImprovement: (fid.filter(v => v > 100 && v <= 300).length / fid.length) * 100,
+          poor: (fid.filter(v => v > 300).length / fid.length) * 100
+        }
         : null,
     cls:
       cls.length > 0
         ? {
-            value: average(cls).toFixed(3),
-            good: (cls.filter(v => v <= 0.1).length / cls.length) * 100,
-            needsImprovement: (cls.filter(v => v > 0.1 && v <= 0.25).length / cls.length) * 100,
-            poor: (cls.filter(v => v > 0.25).length / cls.length) * 100
-          }
+          value: average(cls).toFixed(3),
+          good: (cls.filter(v => v <= 0.1).length / cls.length) * 100,
+          needsImprovement: (cls.filter(v => v > 0.1 && v <= 0.25).length / cls.length) * 100,
+          poor: (cls.filter(v => v > 0.25).length / cls.length) * 100
+        }
         : null
   };
 }

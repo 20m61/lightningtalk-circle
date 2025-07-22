@@ -20,7 +20,7 @@ export function cloudWatchRequestLogger() {
 
     // Capture response end
     const originalEnd = res.end;
-    res.end = function (chunk, encoding) {
+    res.end = function(chunk, encoding) {
       const duration = Date.now() - startTime;
 
       // Log API request to CloudWatch
@@ -115,9 +115,9 @@ export function cloudWatchSecurityLogger() {
           timestamp: new Date().toISOString(),
           user: req.user
             ? {
-                id: req.user.id,
-                email: req.user.email
-              }
+              id: req.user.id,
+              email: req.user.email
+            }
             : null,
           ...details
         })
@@ -146,9 +146,9 @@ export function cloudWatchBusinessMetrics() {
           timestamp: new Date().toISOString(),
           user: req.user
             ? {
-                id: req.user.id,
-                email: req.user.email
-              }
+              id: req.user.id,
+              email: req.user.email
+            }
             : null,
           ...metadata
         })
@@ -176,8 +176,8 @@ export function cloudWatchPerformanceMonitor() {
           method: req.method,
           user: req.user
             ? {
-                id: req.user.id
-              }
+              id: req.user.id
+            }
             : null,
           ...metadata
         })
@@ -261,8 +261,8 @@ export function cloudWatchDatabaseMonitor() {
           recordCount: metadata.recordCount,
           user: req.user
             ? {
-                id: req.user.id
-              }
+              id: req.user.id
+            }
             : null,
           ...metadata
         })
@@ -317,8 +317,8 @@ export function cloudWatchWebSocketMonitor() {
           userAgent: req.get('user-agent'),
           user: req.user
             ? {
-                id: req.user.id
-              }
+              id: req.user.id
+            }
             : null,
           ...metadata
         })
@@ -345,7 +345,7 @@ export function cloudWatchWebSocketMonitor() {
 export function cloudWatchHealthCheck() {
   const cloudWatch = getCloudWatch();
 
-  return async (req, res) => {
+  return async(req, res) => {
     const healthStatus = cloudWatch.getHealthStatus();
 
     // Log health check

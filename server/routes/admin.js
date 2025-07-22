@@ -24,7 +24,7 @@ const handleValidationErrors = (req, res, next) => {
  * GET /api/admin/dashboard
  * Get admin dashboard data
  */
-router.get('/dashboard', async (req, res) => {
+router.get('/dashboard', async(req, res) => {
   try {
     const { database, votingService } = req.app.locals;
 
@@ -82,9 +82,9 @@ router.get('/dashboard', async (req, res) => {
       },
       currentEvent: currentEvent
         ? {
-            ...currentEvent,
-            stats: currentEventStats
-          }
+          ...currentEvent,
+          stats: currentEventStats
+        }
         : null,
       recentActivity: {
         participants: recentParticipants.map(p => ({
@@ -128,7 +128,7 @@ router.get(
   query('eventId').optional().isLength({ min: 1 }),
   query('dateRange').optional().isIn(['7d', '30d', '90d', 'all']),
   handleValidationErrors,
-  async (req, res) => {
+  async(req, res) => {
     try {
       const { database, eventService } = req.app.locals;
       const { eventId, dateRange = '30d' } = req.query;
@@ -186,7 +186,7 @@ router.get(
   query('eventId').optional().isLength({ min: 1 }),
   query('format').optional().isIn(['json', 'csv']).withMessage('Valid format required'),
   handleValidationErrors,
-  async (req, res) => {
+  async(req, res) => {
     try {
       const { database } = req.app.locals;
       const { type, eventId, format = 'json' } = req.query;
@@ -195,22 +195,22 @@ router.get(
       let filename;
 
       switch (type) {
-        case 'participants':
-          data = await database.findAll('participants', eventId ? { eventId } : {});
-          filename = `participants-${eventId || 'all'}-${new Date().toISOString().split('T')[0]}`;
-          break;
-        case 'talks':
-          data = await database.findAll('talks', eventId ? { eventId } : {});
-          filename = `talks-${eventId || 'all'}-${new Date().toISOString().split('T')[0]}`;
-          break;
-        case 'events':
-          data = await database.findAll('events');
-          filename = `events-${new Date().toISOString().split('T')[0]}`;
-          break;
-        case 'all':
-          data = await database.exportData();
-          filename = `full-export-${new Date().toISOString().split('T')[0]}`;
-          break;
+      case 'participants':
+        data = await database.findAll('participants', eventId ? { eventId } : {});
+        filename = `participants-${eventId || 'all'}-${new Date().toISOString().split('T')[0]}`;
+        break;
+      case 'talks':
+        data = await database.findAll('talks', eventId ? { eventId } : {});
+        filename = `talks-${eventId || 'all'}-${new Date().toISOString().split('T')[0]}`;
+        break;
+      case 'events':
+        data = await database.findAll('events');
+        filename = `events-${new Date().toISOString().split('T')[0]}`;
+        break;
+      case 'all':
+        data = await database.exportData();
+        filename = `full-export-${new Date().toISOString().split('T')[0]}`;
+        break;
       }
 
       if (format === 'csv') {
@@ -242,7 +242,7 @@ router.get(
  * GET /api/admin/settings
  * Get system settings
  */
-router.get('/settings', async (req, res) => {
+router.get('/settings', async(req, res) => {
   try {
     const { database } = req.app.locals;
     const settings = await database.getSettings();
@@ -263,7 +263,7 @@ router.get('/settings', async (req, res) => {
  * PUT /api/admin/settings
  * Update system settings
  */
-router.put('/settings', async (req, res) => {
+router.put('/settings', async(req, res) => {
   try {
     const { database } = req.app.locals;
     const updates = req.body;
@@ -288,7 +288,7 @@ router.put('/settings', async (req, res) => {
  * POST /api/admin/maintenance
  * Perform maintenance tasks
  */
-router.post('/maintenance', async (req, res) => {
+router.post('/maintenance', async(req, res) => {
   try {
     const { database } = req.app.locals;
     const { action } = req.body;
@@ -296,20 +296,20 @@ router.post('/maintenance', async (req, res) => {
     let result;
 
     switch (action) {
-      case 'cleanup':
-        result = await this.performCleanup(database);
-        break;
-      case 'backup':
-        result = await this.performBackup(database);
-        break;
-      case 'optimize':
-        result = await this.performOptimization(database);
-        break;
-      default:
-        return res.status(400).json({
-          error: 'Invalid maintenance action',
-          message: '無効なメンテナンス操作です'
-        });
+    case 'cleanup':
+      result = await this.performCleanup(database);
+      break;
+    case 'backup':
+      result = await this.performBackup(database);
+      break;
+    case 'optimize':
+      result = await this.performOptimization(database);
+      break;
+    default:
+      return res.status(400).json({
+        error: 'Invalid maintenance action',
+        message: '無効なメンテナンス操作です'
+      });
     }
 
     res.json({

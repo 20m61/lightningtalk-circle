@@ -216,20 +216,20 @@ export class NotificationService extends EventEmitter {
    */
   handleWebSocketMessage(ws, data) {
     switch (data.type) {
-      case 'subscribe':
-        this.handleSubscription(ws, data.topics);
-        break;
-      case 'unsubscribe':
-        this.handleUnsubscription(ws, data.topics);
-        break;
-      case 'chat':
-        this.handleChatMessage(ws, data);
-        break;
-      case 'ping':
-        ws.send(JSON.stringify({ type: 'pong', timestamp: new Date().toISOString() }));
-        break;
-      default:
-        logger.warn(`Unknown WebSocket message type: ${data.type}`);
+    case 'subscribe':
+      this.handleSubscription(ws, data.topics);
+      break;
+    case 'unsubscribe':
+      this.handleUnsubscription(ws, data.topics);
+      break;
+    case 'chat':
+      this.handleChatMessage(ws, data);
+      break;
+    case 'ping':
+      ws.send(JSON.stringify({ type: 'pong', timestamp: new Date().toISOString() }));
+      break;
+    default:
+      logger.warn(`Unknown WebSocket message type: ${data.type}`);
     }
   }
 
