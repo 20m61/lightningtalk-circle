@@ -18,7 +18,7 @@ const DIFF_DIR = './screenshots-diff';
 const TEST_CONFIG = {
   viewports: {
     desktop: { width: 1920, height: 1080 },
-    tablet: { width: 768, height: 1024 }, 
+    tablet: { width: 768, height: 1024 },
     mobile: { width: 375, height: 812 }
   },
   waitForNetworkIdle: 2000,
@@ -39,7 +39,7 @@ class AutomatedUITester {
 
   async init() {
     console.log('🚀 Initializing Automated UI Testing Suite...');
-    
+
     // ディレクトリの作成
     [SCREENSHOTS_DIR, BASELINE_DIR, DIFF_DIR].forEach(dir => {
       if (!fs.existsSync(dir)) {
@@ -63,7 +63,7 @@ class AutomatedUITester {
     });
 
     this.page = await this.browser.newPage();
-    
+
     // コンソールエラーキャプチャ
     this.page.on('console', msg => {
       if (msg.type() === 'error') {
@@ -83,7 +83,7 @@ class AutomatedUITester {
 
   async runComprehensiveTests() {
     console.log('\n🧪 Running Comprehensive UI Tests...');
-    
+
     const testSuites = [
       { name: 'basic-pages', tests: this.getBasicPageTests() },
       { name: 'modal-interactions', tests: this.getModalTests() },
@@ -112,9 +112,9 @@ class AutomatedUITester {
         name: 'homepage-scroll',
         url: BASE_URL,
         description: 'Homepage scrolling behavior and sticky elements',
-        customAction: async (page) => {
+        customAction: async page => {
           await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight / 2));
-          await page.waitForTimeout(1000);
+          await new Promise(resolve => setTimeout(resolve, 1000));
         }
       }
     ];
@@ -126,11 +126,11 @@ class AutomatedUITester {
         name: 'registration-modal-open',
         url: BASE_URL,
         description: 'Registration modal opens correctly',
-        customAction: async (page) => {
+        customAction: async page => {
           const regButton = await page.$('[data-action="register-listener"]');
           if (regButton) {
             await regButton.click();
-            await page.waitForTimeout(1500); // モーダル表示とアニメーション完了待機
+            await new Promise(resolve => setTimeout(resolve, 1500)); // モーダル表示とアニメーション完了待機
           }
         }
       },
@@ -138,15 +138,15 @@ class AutomatedUITester {
         name: 'modal-focus-trap',
         url: BASE_URL,
         description: 'Modal focus trap functionality',
-        customAction: async (page) => {
+        customAction: async page => {
           const regButton = await page.$('[data-action="register-listener"]');
           if (regButton) {
             await regButton.click();
-            await page.waitForTimeout(1000);
+            await new Promise(resolve => setTimeout(resolve, 1000));
             // Tab キーでフォーカス移動
             await page.keyboard.press('Tab');
             await page.keyboard.press('Tab');
-            await page.waitForTimeout(500);
+            await new Promise(resolve => setTimeout(resolve, 500));
           }
         }
       }
@@ -160,11 +160,11 @@ class AutomatedUITester {
         url: BASE_URL,
         description: 'Mobile navigation menu functionality',
         viewport: 'mobile',
-        customAction: async (page) => {
+        customAction: async page => {
           const menuToggle = await page.$('.mobile-menu-toggle, .menu-toggle');
           if (menuToggle) {
             await menuToggle.click();
-            await page.waitForTimeout(800);
+            await new Promise(resolve => setTimeout(resolve, 800));
           }
         }
       },
@@ -183,11 +183,11 @@ class AutomatedUITester {
         name: 'keyboard-navigation',
         url: BASE_URL,
         description: 'Keyboard navigation functionality',
-        customAction: async (page) => {
+        customAction: async page => {
           // Tab キーで複数要素にフォーカス
           for (let i = 0; i < 5; i++) {
             await page.keyboard.press('Tab');
-            await page.waitForTimeout(200);
+            await new Promise(resolve => setTimeout(resolve, 200));
           }
         }
       },
@@ -195,7 +195,7 @@ class AutomatedUITester {
         name: 'high-contrast-simulation',
         url: BASE_URL,
         description: 'High contrast accessibility test',
-        customAction: async (page) => {
+        customAction: async page => {
           await page.addStyleTag({
             content: `
               * {
@@ -203,7 +203,7 @@ class AutomatedUITester {
               }
             `
           });
-          await page.waitForTimeout(1000);
+          await new Promise(resolve => setTimeout(resolve, 1000));
         }
       }
     ];
@@ -215,17 +215,17 @@ class AutomatedUITester {
         name: 'form-validation',
         url: BASE_URL,
         description: 'Form validation states',
-        customAction: async (page) => {
+        customAction: async page => {
           const regButton = await page.$('[data-action="register-listener"]');
           if (regButton) {
             await regButton.click();
-            await page.waitForTimeout(1000);
-            
+            await new Promise(resolve => setTimeout(resolve, 1000));
+
             // フォーム入力のテスト
             const nameInput = await page.$('#modalName, input[name="name"]');
             if (nameInput) {
               await nameInput.type('Test User');
-              await page.waitForTimeout(500);
+              await new Promise(resolve => setTimeout(resolve, 500));
             }
           }
         }
@@ -240,11 +240,11 @@ class AutomatedUITester {
         url: BASE_URL,
         description: 'Button hover and animation states',
         viewport: 'desktop',
-        customAction: async (page) => {
+        customAction: async page => {
           const button = await page.$('.btn[data-action="register-speaker"]');
           if (button) {
             await button.hover();
-            await page.waitForTimeout(500);
+            await new Promise(resolve => setTimeout(resolve, 500));
           }
         }
       },
@@ -252,7 +252,7 @@ class AutomatedUITester {
         name: 'loading-states',
         url: BASE_URL,
         description: 'Loading state animations',
-        customAction: async (page) => {
+        customAction: async page => {
           await page.addStyleTag({
             content: `
               .btn { 
@@ -272,7 +272,7 @@ class AutomatedUITester {
               @keyframes spin { to { transform: rotate(360deg); } }
             `
           });
-          await page.waitForTimeout(1000);
+          await new Promise(resolve => setTimeout(resolve, 1000));
         }
       }
     ];
@@ -291,7 +291,7 @@ class AutomatedUITester {
         console.log(`  📸 Running: ${test.name}`);
         const result = await this.runSingleTest(test, suite.name);
         suiteResults.tests.push(result);
-        
+
         if (result.success) {
           suiteResults.passed++;
         } else {
@@ -315,10 +315,10 @@ class AutomatedUITester {
   async runSingleTest(test, suiteName) {
     const viewport = test.viewport || 'desktop';
     const testViewport = TEST_CONFIG.viewports[viewport];
-    
+
     // ビューポート設定
     await this.page.setViewport(testViewport);
-    
+
     // ページ移動
     await this.page.goto(test.url, {
       waitUntil: 'networkidle2',
@@ -326,7 +326,7 @@ class AutomatedUITester {
     });
 
     // 追加の待機時間
-    await this.page.waitForTimeout(TEST_CONFIG.waitForNetworkIdle);
+    await new Promise(resolve => setTimeout(resolve, TEST_CONFIG.waitForNetworkIdle));
 
     // カスタムアクション実行
     if (test.customAction) {
@@ -336,7 +336,7 @@ class AutomatedUITester {
     // スクリーンショット撮影
     const filename = `${suiteName}_${test.name}_${viewport}.png`;
     const screenshotPath = path.join(SCREENSHOTS_DIR, filename);
-    
+
     await this.page.screenshot({
       path: screenshotPath,
       ...TEST_CONFIG.screenshotOptions
@@ -345,7 +345,7 @@ class AutomatedUITester {
     // ベースラインとの比較（存在する場合）
     const baselinePath = path.join(BASELINE_DIR, filename);
     let comparison = null;
-    
+
     if (fs.existsSync(baselinePath)) {
       comparison = await this.compareScreenshots(screenshotPath, baselinePath, filename);
     }
@@ -366,18 +366,18 @@ class AutomatedUITester {
     try {
       const currentBuffer = fs.readFileSync(currentPath);
       const baselineBuffer = fs.readFileSync(baselinePath);
-      
+
       const currentHash = createHash('md5').update(currentBuffer).digest('hex');
       const baselineHash = createHash('md5').update(baselineBuffer).digest('hex');
-      
+
       const isIdentical = currentHash === baselineHash;
-      
+
       if (!isIdentical) {
         // 差分ファイルの作成（基本的なコピー、実際のピクセル比較は別ツールが必要）
         const diffPath = path.join(DIFF_DIR, `diff_${filename}`);
         fs.copyFileSync(currentPath, diffPath);
       }
-      
+
       return {
         isIdentical,
         currentHash,
@@ -393,7 +393,7 @@ class AutomatedUITester {
   async generateComprehensiveReport() {
     const endTime = Date.now();
     const duration = endTime - this.startTime;
-    
+
     const totalTests = this.testResults.reduce((sum, suite) => sum + suite.tests.length, 0);
     const totalPassed = this.testResults.reduce((sum, suite) => sum + suite.passed, 0);
     const totalFailed = this.testResults.reduce((sum, suite) => sum + suite.failed, 0);
@@ -442,22 +442,24 @@ class AutomatedUITester {
     markdown += `## Test Environment\n\n`;
     markdown += `- **Base URL:** ${report.environment.baseUrl}\n`;
     markdown += `- **Screenshot Directory:** ${report.environment.screenshotDir}\n`;
-    markdown += `- **Viewports:** ${Object.entries(report.environment.viewports).map(([name, vp]) => `${name} (${vp.width}x${vp.height})`).join(', ')}\n\n`;
+    markdown += `- **Viewports:** ${Object.entries(report.environment.viewports)
+      .map(([name, vp]) => `${name} (${vp.width}x${vp.height})`)
+      .join(', ')}\n\n`;
 
     markdown += `## Test Suite Results\n\n`;
-    
+
     report.testSuites.forEach(suite => {
       markdown += `### ${suite.name}\n`;
       markdown += `**Results:** ✅ ${suite.passed} passed, ❌ ${suite.failed} failed\n\n`;
-      
+
       markdown += `| Test | Status | Viewport | Description |\n`;
       markdown += `|------|--------|----------|-------------|\n`;
-      
+
       suite.tests.forEach(test => {
         const status = test.success ? '✅ Pass' : '❌ Fail';
         markdown += `| ${test.name} | ${status} | ${test.viewport || 'desktop'} | ${test.description || 'N/A'} |\n`;
       });
-      
+
       markdown += `\n`;
     });
 
@@ -495,14 +497,14 @@ class AutomatedUITester {
 // CI/CD統合用の簡単な実行
 async function runCIMode() {
   console.log('🚀 Running in CI/CD mode...');
-  
+
   const tester = new AutomatedUITester();
   try {
     const report = await tester.run();
-    
+
     // CI/CD で使用するための exit code 設定
     const hasFailures = report.summary.totalFailed > 0;
-    
+
     if (hasFailures) {
       console.log('\n❌ Some tests failed. Check the report for details.');
       process.exit(1);
@@ -523,7 +525,8 @@ if (isCI) {
   runCIMode();
 } else {
   const tester = new AutomatedUITester();
-  tester.run()
+  tester
+    .run()
     .then(report => {
       console.log('\n🎉 Automated UI testing completed successfully!');
     })

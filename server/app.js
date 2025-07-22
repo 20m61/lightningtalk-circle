@@ -185,7 +185,15 @@ class LightningTalkServer {
       max: 100, // limit each IP to 100 requests per windowMs
       message: 'Too many requests from this IP, please try again later.',
       standardHeaders: true,
-      legacyHeaders: false
+      legacyHeaders: false,
+      skip: req => {
+        // Skip rate limiting for static images and assets
+        return (
+          req.path.startsWith('/images/') ||
+          req.path.startsWith('/icons/') ||
+          req.path.match(/\.(jpg|jpeg|png|gif|webp|svg|ico|css|js)$/i)
+        );
+      }
     });
     this.app.use(limiter);
 
@@ -202,11 +210,11 @@ class LightningTalkServer {
       : this.environment === 'production'
         ? ['https://lightningtalk.example.com']
         : [
-          'http://localhost:3000',
-          'http://localhost:3010',
-          'http://127.0.0.1:3000',
-          'http://127.0.0.1:3010'
-        ];
+            'http://localhost:3000',
+            'http://localhost:3010',
+            'http://127.0.0.1:3000',
+            'http://127.0.0.1:3010'
+          ];
 
     this.app.use(
       cors({
@@ -375,7 +383,7 @@ class LightningTalkServer {
       console.log(`\n📴 Received ${signal}. Starting graceful shutdown...`);
 
       if (this.server) {
-        this.server.close(async() => {
+        this.server.close(async () => {
           console.log('📴 HTTP server closed');
 
           try {
@@ -455,7 +463,7 @@ if (import.meta.url === `file://${process.argv[1]}`) {
 
   // Seed database in development
   if (process.env.NODE_ENV === 'development' && process.argv.includes('--seed')) {
-    (async() => {
+    (async () => {
       try {
         await server.initializeServices();
         await server.seedDatabase();

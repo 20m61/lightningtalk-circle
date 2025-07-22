@@ -80,6 +80,9 @@
     <link rel="stylesheet" href="css/enhanced-interactions.css" />
     <link rel="stylesheet" href="css/event-modal.css" />
 
+    <!-- Responsive Navigation System -->
+    <link rel="stylesheet" href="css/responsive-navigation.css" />
+
     <!-- Mobile-specific viewport meta tags -->
     <meta name="format-detection" content="telephone=no" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -101,34 +104,76 @@
   </head>
   <body>
     <header class="header">
-      <nav class="container flex flex--items-center flex--justify-between">
+      <div class="header__container">
+        <!-- Logo Section -->
         <div class="logo-container">
           <picture>
             <source srcset="/icons/logo-header.webp" type="image/webp" />
             <img src="/icons/logo-header.jpg" alt="なんでもライトニングトーク" class="logo-image" loading="eager" />
           </picture>
-          <div class="logo-text text-primary font-bold">なんでもLT</div>
+          <div class="logo-text">なんでもLT</div>
         </div>
-        <ul class="nav-links flex flex--items-center">
-          <li><a href="#hero" class="nav-link">イベント一覧</a></li>
-          <li><a href="#event-detail" class="nav-link">現在のイベント</a></li>
-          <li><a href="/presentations.html" class="nav-link">アーカイブ</a></li>
-          <li><a href="#about" class="nav-link">ライトニングトークとは</a></li>
-          <li><a href="#join" class="nav-link">参加方法</a></li>
-          <li><a href="#contact" class="nav-link">お問い合わせ</a></li>
-        </ul>
 
-        <!-- Auth Header Integration -->
-        <div id="auth-header" class="auth-header">
+        <!-- Desktop Navigation -->
+        <nav class="nav-links" role="navigation" aria-label="メインナビゲーション">
+          <!-- Primary Navigation (Always visible on tablet+) -->
+          <a href="#hero" class="nav-link nav-item--primary">イベント</a>
+          <a href="#event-detail" class="nav-link nav-item--primary">現在のイベント</a>
+
+          <!-- Secondary Navigation (Tablet+) -->
+          <a href="/presentations.html" class="nav-link nav-item--secondary">アーカイブ</a>
+          <a href="#about" class="nav-link nav-item--secondary">LTとは</a>
+
+          <!-- Tertiary Navigation (Desktop only) -->
+          <a href="#join" class="nav-link nav-item--tertiary">参加方法</a>
+          <a href="#contact" class="nav-link nav-item--tertiary">お問い合わせ</a>
+        </nav>
+
+        <!-- Auth Section (Desktop) -->
+        <div id="auth-header" class="auth-header" aria-label="認証">
           <!-- This will be populated by React -->
         </div>
-        <div class="mobile-menu-toggle">
-          <span></span>
-          <span></span>
-          <span></span>
-        </div>
-      </nav>
+
+        <!-- Mobile Menu Toggle -->
+        <button class="mobile-menu-toggle" type="button" aria-label="メニューを開く" aria-expanded="false">
+          <span class="mobile-menu-toggle__line"></span>
+          <span class="mobile-menu-toggle__line"></span>
+          <span class="mobile-menu-toggle__line"></span>
+        </button>
+      </div>
     </header>
+
+    <!-- Mobile Menu Overlay -->
+    <div class="mobile-menu-overlay"></div>
+
+    <!-- Mobile Menu Panel -->
+    <nav class="mobile-menu" role="navigation" aria-label="モバイルメインナビゲーション">
+      <ul class="mobile-menu__list">
+        <li class="mobile-menu__item">
+          <a href="#hero" class="mobile-menu__link">🎉 イベント一覧</a>
+        </li>
+        <li class="mobile-menu__item">
+          <a href="#event-detail" class="mobile-menu__link">⚡ 現在のイベント</a>
+        </li>
+        <li class="mobile-menu__item">
+          <a href="/presentations.html" class="mobile-menu__link">📚 アーカイブ</a>
+        </li>
+        <li class="mobile-menu__item">
+          <a href="#about" class="mobile-menu__link">💡 ライトニングトークとは</a>
+        </li>
+        <li class="mobile-menu__item">
+          <a href="#join" class="mobile-menu__link">🚀 参加方法</a>
+        </li>
+        <li class="mobile-menu__item">
+          <a href="#contact" class="mobile-menu__link">📧 お問い合わせ</a>
+        </li>
+      </ul>
+
+      <!-- Mobile Auth Section -->
+      <div class="mobile-menu__auth" id="auth-mobile">
+        <!-- This will be populated by React for mobile -->
+      </div>
+    </nav>
 
     <main>
       <section id="hero" class="hero">
@@ -635,6 +680,9 @@
     <script src="js/event-modal.js"></script>
     <script src="js/events-manager-modal.js"></script>
     <script src="js/main.js"></script>
+
+    <!-- Responsive Navigation Controller -->
+    <script src="js/responsive-navigation.js"></script>
 
     <!-- UI/UX Integration - Load after all components -->
     <script src="js/ui-ux-integration.js"></script>

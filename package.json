@@ -83,10 +83,10 @@
     "ui:screenshot": "node screenshot-capture.js",
     "ui:test": "node automated-ui-testing.js",
     "ui:test:ci": "node automated-ui-testing.js --ci",
-    "ui:test:setup": "node package-scripts/ui-testing.js test-setup",
-    "ui:test:baseline": "node package-scripts/ui-testing.js update-baseline",
-    "ui:test:report": "node package-scripts/ui-testing.js generate-report",
-    "ui:test:full": "node package-scripts/ui-testing.js test-with-server",
+    "ui:test:setup": "node package-scripts/ui-testing.cjs test-setup",
+    "ui:test:baseline": "node package-scripts/ui-testing.cjs update-baseline",
+    "ui:test:report": "node package-scripts/ui-testing.cjs generate-report",
+    "ui:test:full": "node package-scripts/ui-testing.cjs test-with-server",
     "build:theme-packages": "cd theme && ./deploy.sh",
     "release:auto": "./scripts/build-and-release.sh",
     "release:auto:patch": "./scripts/build-and-release.sh patch",
@@ -177,7 +177,6 @@
     "@babel/plugin-transform-modules-commonjs": "^7.27.1",
     "@babel/preset-env": "^7.28.0",
     "@playwright/test": "^1.53.2",
-    "puppeteer": "^22.0.0",
     "@storybook/addon-essentials": "^8.6.14",
     "@storybook/addon-interactions": "^8.6.14",
     "@storybook/addon-links": "^8.6.14",
@@ -204,6 +203,7 @@
     "playwright": "^1.54.0",
     "postcss": "^8.5.6",
     "prettier": "^3.6.2",
+    "puppeteer": "^22.15.0",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
     "supertest": "^7.1.3",
@@ -214,9 +214,7 @@
     "canvas": "^3.1.2"
   },
   "eslintConfig": {
-    "extends": [
-      "plugin:storybook/recommended"
-    ]
+    "extends": ["plugin:storybook/recommended"]
   },
   "overrides": {
     "trim-newlines": "^3.0.1",

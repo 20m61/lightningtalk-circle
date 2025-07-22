@@ -1,0 +1,462 @@
+/**
+ * Responsive Navigation System - Lightning Talk Circle
+ * マルチデバイス対応ナビゲーションシステム
+ */
+
+/* =============================================================================
+   CSS Variables for Responsive Navigation
+   ============================================================================= */
+
+:root {
+  /* Navigation Heights */
+  --nav-height-mobile: 60px;
+  --nav-height-tablet: 70px;
+  --nav-height-desktop: 80px;
+
+  /* Breakpoints */
+  --breakpoint-mobile: 375px;
+  --breakpoint-tablet: 768px;
+  --breakpoint-desktop: 1024px;
+
+  /* Z-index Stack */
+  --z-navigation: 1000;
+  --z-mobile-menu: 1001;
+  --z-overlay: 999;
+
+  /* Animation Timing */
+  --nav-transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  --mobile-menu-transition: 0.35s cubic-bezier(0.25, 0.8, 0.25, 1);
+
+  /* Touch Targets */
+  --touch-target-min: 44px;
+  --touch-target-comfortable: 48px;
+}
+
+/* =============================================================================
+   Base Header Styles
+   ============================================================================= */
+
+.header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: var(--nav-height-mobile);
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+  z-index: var(--z-navigation);
+  transition: all var(--nav-transition);
+}
+
+.header--scrolled {
+  background: rgba(255, 255, 255, 0.98);
+  box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
+}
+
+.header__container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 100%;
+  padding: 0 16px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* =============================================================================
+   Logo Component
+   ============================================================================= */
+
+.logo-container {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  z-index: var(--z-navigation);
+}
+
+.logo-image {
+  height: 32px;
+  width: auto;
+  transition: transform var(--nav-transition);
+}
+
+.logo-text {
+  font-size: 18px;
+  font-weight: 700;
+  color: #2563eb;
+  white-space: nowrap;
+}
+
+/* =============================================================================
+   Desktop Navigation
+   ============================================================================= */
+
+.nav-links {
+  display: none;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  gap: 8px;
+}
+
+.nav-link {
+  display: block;
+  padding: 8px 16px;
+  color: #1f2937;
+  text-decoration: none;
+  font-weight: 500;
+  font-size: 14px;
+  border-radius: 8px;
+  transition: all var(--nav-transition);
+  white-space: nowrap;
+}
+
+.nav-link:hover {
+  background-color: #f3f4f6;
+  color: #2563eb;
+}
+
+.nav-link:focus {
+  outline: 2px solid #2563eb;
+  outline-offset: 2px;
+}
+
+/* =============================================================================
+   Mobile Menu Toggle
+   ============================================================================= */
+
+.mobile-menu-toggle {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: var(--touch-target-comfortable);
+  height: var(--touch-target-comfortable);
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 8px;
+  border-radius: 8px;
+  transition: background-color var(--nav-transition);
+}
+
+.mobile-menu-toggle:hover {
+  background-color: #f3f4f6;
+}
+
+.mobile-menu-toggle:focus {
+  outline: 2px solid #2563eb;
+  outline-offset: 2px;
+}
+
+.mobile-menu-toggle__line {
+  width: 24px;
+  height: 2px;
+  background-color: #374151;
+  margin: 2px 0;
+  transition: all var(--nav-transition);
+  transform-origin: center;
+}
+
+/* Active State Animation */
+.mobile-menu-toggle--active .mobile-menu-toggle__line:nth-child(1) {
+  transform: rotate(45deg) translate(6px, 6px);
+}
+
+.mobile-menu-toggle--active .mobile-menu-toggle__line:nth-child(2) {
+  opacity: 0;
+}
+
+.mobile-menu-toggle--active .mobile-menu-toggle__line:nth-child(3) {
+  transform: rotate(-45deg) translate(6px, -6px);
+}
+
+/* =============================================================================
+   Mobile Menu Overlay
+   ============================================================================= */
+
+.mobile-menu-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: var(--z-overlay);
+  opacity: 0;
+  visibility: hidden;
+  transition: all var(--mobile-menu-transition);
+}
+
+.mobile-menu-overlay--active {
+  opacity: 1;
+  visibility: visible;
+}
+
+/* =============================================================================
+   Mobile Menu Panel
+   ============================================================================= */
+
+.mobile-menu {
+  position: fixed;
+  top: 0;
+  right: -100%;
+  width: 280px;
+  max-width: 80vw;
+  height: 100vh;
+  background: #ffffff;
+  z-index: var(--z-mobile-menu);
+  padding: 80px 24px 24px;
+  overflow-y: auto;
+  transition: right var(--mobile-menu-transition);
+  box-shadow: -4px 0 20px rgba(0, 0, 0, 0.1);
+}
+
+.mobile-menu--active {
+  right: 0;
+}
+
+.mobile-menu__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.mobile-menu__item {
+  margin-bottom: 8px;
+}
+
+.mobile-menu__link {
+  display: flex;
+  align-items: center;
+  padding: 16px 0;
+  color: #1f2937;
+  text-decoration: none;
+  font-weight: 500;
+  font-size: 16px;
+  border-bottom: 1px solid #f3f4f6;
+  transition: color var(--nav-transition);
+  min-height: var(--touch-target-min);
+}
+
+.mobile-menu__link:hover {
+  color: #2563eb;
+}
+
+.mobile-menu__link:focus {
+  outline: 2px solid #2563eb;
+  outline-offset: 2px;
+}
+
+/* Mobile Auth Section */
+.mobile-menu__auth {
+  margin-top: 32px;
+  padding-top: 24px;
+  border-top: 1px solid #e5e7eb;
+}
+
+/* =============================================================================
+   Priority Navigation Items
+   ============================================================================= */
+
+/* Primary (Always Visible) */
+.nav-item--primary {
+  display: block;
+}
+
+/* Secondary (Tablet+) */
+.nav-item--secondary {
+  display: none;
+}
+
+/* Tertiary (Desktop Only) */
+.nav-item--tertiary {
+  display: none;
+}
+
+/* =============================================================================
+   Tablet Styles (768px+)
+   ============================================================================= */
+
+@media (min-width: 768px) {
+  .header {
+    height: var(--nav-height-tablet);
+  }
+
+  .header__container {
+    padding: 0 24px;
+  }
+
+  .logo-image {
+    height: 36px;
+  }
+
+  .logo-text {
+    font-size: 20px;
+  }
+
+  /* Show secondary navigation items */
+  .nav-item--secondary {
+    display: block;
+  }
+
+  /* Simplified mobile menu for tablet */
+  .mobile-menu {
+    width: 320px;
+  }
+
+  .nav-links {
+    display: flex;
+  }
+
+  .mobile-menu-toggle {
+    display: none;
+  }
+}
+
+/* =============================================================================
+   Desktop Styles (1024px+)
+   ============================================================================= */
+
+@media (min-width: 1024px) {
+  .header {
+    height: var(--nav-height-desktop);
+  }
+
+  .header__container {
+    padding: 0 32px;
+  }
+
+  .logo-image {
+    height: 40px;
+  }
+
+  .logo-text {
+    font-size: 22px;
+  }
+
+  .nav-links {
+    gap: 12px;
+  }
+
+  .nav-link {
+    font-size: 15px;
+    padding: 10px 18px;
+  }
+
+  /* Show all navigation items */
+  .nav-item--tertiary {
+    display: block;
+  }
+
+  /* Hide mobile menu completely */
+  .mobile-menu-toggle {
+    display: none;
+  }
+}
+
+/* =============================================================================
+   Large Desktop Styles (1440px+)
+   ============================================================================= */
+
+@media (min-width: 1440px) {
+  .header__container {
+    max-width: 1400px;
+  }
+
+  .nav-links {
+    gap: 16px;
+  }
+
+  .nav-link {
+    padding: 12px 20px;
+  }
+}
+
+/* =============================================================================
+   Accessibility Enhancements
+   ============================================================================= */
+
+/* Reduce motion for users who prefer it */
+@media (prefers-reduced-motion: reduce) {
+  .header,
+  .mobile-menu-toggle__line,
+  .mobile-menu,
+  .mobile-menu-overlay,
+  .nav-link {
+    transition: none;
+  }
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  .header {
+    border-bottom: 2px solid #000;
+  }
+
+  .nav-link:focus,
+  .mobile-menu-toggle:focus {
+    outline: 3px solid #000;
+  }
+}
+
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+  .header {
+    background: rgba(17, 24, 39, 0.95);
+    border-bottom-color: rgba(255, 255, 255, 0.1);
+  }
+
+  .nav-link,
+  .mobile-menu__link {
+    color: #f9fafb;
+  }
+
+  .nav-link:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+    color: #60a5fa;
+  }
+
+  .mobile-menu {
+    background: #111827;
+  }
+
+  .mobile-menu-toggle__line {
+    background-color: #f9fafb;
+  }
+}
+
+/* =============================================================================
+   Touch Device Optimizations
+   ============================================================================= */
+
+@media (hover: none) and (pointer: coarse) {
+  /* Increase touch targets on touch devices */
+  .nav-link {
+    min-height: var(--touch-target-min);
+    padding: 12px 16px;
+  }
+
+  .mobile-menu__link {
+    min-height: var(--touch-target-comfortable);
+    padding: 18px 0;
+  }
+
+  /* Remove hover effects on touch devices */
+  .nav-link:hover,
+  .mobile-menu-toggle:hover {
+    background-color: transparent;
+  }
+
+  /* Add tap highlight for better feedback */
+  .nav-link:active {
+    background-color: #e5e7eb;
+  }
+
+  .mobile-menu__link:active {
+    color: #2563eb;
+    background-color: #f3f4f6;
+  }
+}
