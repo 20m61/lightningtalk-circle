@@ -38,7 +38,7 @@ router.post(
   body('email').isEmail().normalizeEmail().withMessage('Valid email required'),
   body('password').notEmpty().withMessage('Password required'),
   handleValidationErrors,
-  async(req, res) => {
+  async (req, res) => {
     try {
       const { database } = req.app.locals;
       const { email, password } = req.body;
@@ -104,7 +104,7 @@ router.post(
   body('name').notEmpty().trim().withMessage('Name required'),
   body('role').optional().isIn(['user', 'admin']).withMessage('Invalid role'),
   handleValidationErrors,
-  async(req, res) => {
+  async (req, res) => {
     try {
       const { database } = req.app.locals;
       const { email, password, name, role = 'user' } = req.body;
@@ -163,7 +163,7 @@ router.post(
  * GET /api/auth/me
  * Get current user info
  */
-router.get('/me', authenticateToken, async(req, res) => {
+router.get('/me', authenticateToken, async (req, res) => {
   try {
     const { database } = req.app.locals;
     const user = await database.findById('users', req.user.id);
@@ -205,7 +205,7 @@ router.put(
     .isLength({ min: 8 })
     .withMessage('New password must be at least 8 characters'),
   handleValidationErrors,
-  async(req, res) => {
+  async (req, res) => {
     try {
       const { database } = req.app.locals;
       const { currentPassword, newPassword } = req.body;
@@ -264,7 +264,7 @@ router.put(
  * GET /api/auth/users
  * List all users (admin only)
  */
-router.get('/users', authenticateToken, requireAdmin, async(req, res) => {
+router.get('/users', authenticateToken, requireAdmin, async (req, res) => {
   try {
     const { database } = req.app.locals;
     const users = await database.findAll('users');
@@ -300,7 +300,7 @@ router.put(
   body('name').optional().trim().isLength({ min: 1 }).withMessage('Name cannot be empty'),
   body('role').optional().isIn(['user', 'admin']).withMessage('Invalid role'),
   handleValidationErrors,
-  async(req, res) => {
+  async (req, res) => {
     try {
       const { database } = req.app.locals;
       const { id } = req.params;
@@ -358,7 +358,7 @@ router.put(
  * DELETE /api/auth/users/:id
  * Delete user (admin only)
  */
-router.delete('/users/:id', authenticateToken, requireAdmin, async(req, res) => {
+router.delete('/users/:id', authenticateToken, requireAdmin, async (req, res) => {
   try {
     const { database } = req.app.locals;
     const { id } = req.params;
@@ -405,7 +405,7 @@ router.post(
   '/google',
   body('idToken').notEmpty().withMessage('ID token required'),
   handleValidationErrors,
-  async(req, res) => {
+  async (req, res) => {
     try {
       const { verifyCognitoToken, syncCognitoUser } = await import('../middleware/cognito-auth.js');
       const { database } = req.app.locals;
@@ -453,6 +453,137 @@ router.post(
 );
 
 /**
+ * POST /api/auth/callback
+ * Handle OAuth callback from Cognito
+ */
+router.post(
+  '/callback',
+  body('code').notEmpty().withMessage('Authorization code required'),
+  handleValidationErrors,
+  async (req, res) => {
+    try {
+      const { code } = req.body;
+
+      // Exchange authorization code for tokens with Cognito
+      const tokenUrl = `https://lightningtalk-auth-dev.auth.ap-northeast-1.amazoncognito.com/oauth2/token`;
+
+      // Get client secret from AWS Secrets Manager or environment
+      let clientSecret;
+      try {
+        // Try to get from AWS Secrets Manager first
+        const AWS = await import('aws-sdk');
+        const secretsManager = new AWS.SecretsManager({ region: 'ap-northeast-1' });
+        const secretResult = await secretsManager
+          .getSecretValue({
+            SecretId: 'lightningtalk-google-client-secret'
+          })
+          .promise();
+        const secretData = JSON.parse(secretResult.SecretString);
+        clientSecret = secretData.clientSecret;
+      } catch (error) {
+        console.warn('Could not retrieve client secret from AWS Secrets Manager:', error.message);
+        // Fallback to hardcoded for development
+        clientSecret = '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';
+      }
+
+      const params = new URLSearchParams({
+        grant_type: 'authorization_code',
+        client_id: '5t48tpbh5qe26otojkfq1rf0ls',
+        client_secret: clientSecret,
+        code: code,
+        redirect_uri:
+          process.env.NODE_ENV === 'production'
+            ? 'https://xn--6wym69a.com/callback'
+            : 'http://localhost:3333/callback'
+      });
+
+      const response = await fetch(tokenUrl, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded'
+        },
+        body: params
+      });
+
+      if (!response.ok) {
+        throw new Error(`Token exchange failed: ${response.status}`);
+      }
+
+      const tokenData = await response.json();
+
+      // Decode the ID token to get user information
+      const idTokenPayload = JSON.parse(
+        Buffer.from(tokenData.id_token.split('.')[1], 'base64').toString()
+      );
+
+      // Create user object from token payload
+      const user = {
+        id: idTokenPayload.sub,
+        email: idTokenPayload.email,
+        name: idTokenPayload.name || idTokenPayload.email,
+        role: idTokenPayload['custom:role'] || 'user',
+        provider: 'google'
+      };
+
+      res.json({
+        success: true,
+        id_token: tokenData.id_token,
+        access_token: tokenData.access_token,
+        refresh_token: tokenData.refresh_token,
+        user
+      });
+    } catch (error) {
+      console.error('OAuth callback error:', error);
+      res.status(500).json({
+        error: 'OAuth callback failed',
+        message: 'OAuth認証コールバックに失敗しました'
+      });
+    }
+  }
+);
+
+/**
+ * GET /api/auth/verify
+ * Verify JWT token
+ */
+router.get('/verify', async (req, res) => {
+  try {
+    const authHeader = req.headers.authorization;
+    if (!authHeader || !authHeader.startsWith('Bearer ')) {
+      return res.status(401).json({
+        error: 'No token provided',
+        message: 'トークンが提供されていません'
+      });
+    }
+
+    const token = authHeader.substring(7);
+
+    // Decode the ID token to get user information
+    const idTokenPayload = JSON.parse(Buffer.from(token.split('.')[1], 'base64').toString());
+
+    // Create user object from token payload
+    const user = {
+      id: idTokenPayload.sub,
+      email: idTokenPayload.email,
+      name: idTokenPayload.name || idTokenPayload.email,
+      role: idTokenPayload['custom:role'] || 'user',
+      provider: 'google'
+    };
+
+    res.json({
+      success: true,
+      user
+    });
+  } catch (error) {
+    console.error('Token verification error:', error);
+    res.status(401).json({
+      error: 'Invalid token',
+      message: '無効なトークンです'
+    });
+  }
+});
+
+/**
  * POST /api/auth/refresh
  * Refresh JWT token
  */
@@ -460,7 +591,7 @@ router.post(
   '/refresh',
   body('refreshToken').notEmpty().withMessage('Refresh token required'),
   handleValidationErrors,
-  async(req, res) => {
+  async (req, res) => {
     try {
       const { database } = req.app.locals;
       const { refreshToken } = req.body;
