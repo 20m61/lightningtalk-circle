@@ -132,7 +132,7 @@ class LightningTalkApp {
   throttle(func, delay) {
     let timeoutId;
     let lastExecTime = 0;
-    return function(...args) {
+    return function (...args) {
       const currentTime = Date.now();
 
       if (currentTime - lastExecTime > delay) {
@@ -153,7 +153,7 @@ class LightningTalkApp {
 
   debounce(func, delay) {
     let timeoutId;
-    return function(...args) {
+    return function (...args) {
       clearTimeout(timeoutId);
       timeoutId = setTimeout(() => func.apply(this, args), delay);
     };
@@ -274,30 +274,67 @@ class LightningTalkApp {
   }
 
   handleAction(action, element) {
-    switch (action) {
-    case 'register':
-      this.openRegistrationModal('general');
-      break;
-    case 'register-listener':
-      this.openRegistrationModal('listener');
-      break;
-    case 'register-speaker':
-      this.openRegistrationModal('speaker');
-      break;
-    case 'feedback':
-      this.openFeedbackForm();
-      break;
-    case 'walkin-info':
-      this.showWalkinInfo();
-      break;
-    case 'survey-online':
-      this.incrementSurveyCounter('online');
-      break;
-    case 'survey-offline':
-      this.incrementSurveyCounter('offline');
-      break;
-    default:
-      this.logger.warn('Unknown action:', { action });
+    // ローディング状態の表示
+    if (element && element.classList) {
+      element.classList.add('loading');
+      element.disabled = true;
+    }
+
+    try {
+      switch (action) {
+        case 'register':
+          this.openRegistrationModal('general');
+          break;
+        case 'register-listener':
+          this.openRegistrationModal('listener');
+          break;
+        case 'register-speaker':
+          this.openRegistrationModal('speaker');
+          break;
+        case 'feedback':
+          this.openFeedbackForm();
+          break;
+        case 'walkin-info':
+          this.showWalkinInfo();
+          break;
+        case 'survey-online':
+          this.incrementSurveyCounter('online');
+          break;
+        case 'survey-offline':
+          this.incrementSurveyCounter('offline');
+          break;
+        case 'view-detail':
+          this.openEventDetailModal(element.dataset.eventId);
+          break;
+        case 'toggle-participants':
+          this.toggleParticipantsList();
+          break;
+        case 'toggle-settings':
+          this.toggleChatSettings();
+          break;
+        case 'minimize':
+          this.minimizeChat();
+          break;
+        case 'attach-file':
+          this.openFileAttachment();
+          break;
+        case 'emoji':
+          this.toggleEmojiPicker();
+          break;
+        default:
+          this.logger.warn('Unknown action:', { action });
+      }
+    } catch (error) {
+      this.logger.error('Action execution failed:', { action, error: error.message });
+      this.showNotification('アクション実行中にエラーが発生しました', 'error');
+    } finally {
+      // ローディング状態の解除
+      if (element && element.classList) {
+        setTimeout(() => {
+          element.classList.remove('loading');
+          element.disabled = false;
+        }, 500);
+      }
     }
   }
 
@@ -376,8 +413,8 @@ class LightningTalkApp {
                 </div>
                 
                 ${
-  showSpeakerFields
-    ? `
+                  showSpeakerFields
+                    ? `
                 <div class="form-group">
                     <label for="talkTitle">発表タイトル *</label>
                     <input type="text" id="talkTitle" name="talkTitle" required maxlength="200" placeholder="例: 猫の写真で学ぶマシンラーニング">
@@ -412,8 +449,8 @@ class LightningTalkApp {
                     </select>
                 </div>
                 `
-    : ''
-}
+                    : ''
+                }
                 
                 <div class="form-group">
                     <label for="message">メッセージ・質問など</label>
@@ -1389,6 +1426,235 @@ class LightningTalkApp {
     this.openVoteModal('online'); // Default to online, user can change in modal
   }
 
+  // ===== 新規追加アクションメソッド =====
+
+  openEventDetailModal(eventId) {
+    if (!eventId) {
+      this.logger.warn('Event ID not provided for detail modal');
+      return;
+    }
+
+    // イベントデータ取得（EventsManagerから）
+    const event = this.getEventById(eventId);
+    if (!event) {
+      this.logger.error('Event not found:', eventId);
+      return;
+    }
+
+    // Event Modal システムを使用（既存の event-modal.js との統合）
+    if (window.EventModal) {
+      window.EventModal.open(event);
+    } else {
+      // フォールバック実装
+      this.showEventDetailFallback(event);
+    }
+  }
+
+  showEventDetailFallback(event) {
+    // 簡易イベント詳細表示のフォールバック
+    const modalBody = document.getElementById('modalBody');
+    if (modalBody) {
+      modalBody.innerHTML = `
+        <h2>${event.title || 'イベント詳細'}</h2>
+        <p><strong>日時:</strong> ${event.date || '未定'}</p>
+        <p><strong>形式:</strong> ${event.format || '未定'}</p>
+        <p><strong>説明:</strong> ${event.description || '詳細情報なし'}</p>
+        <div class="modal-actions">
+          <button class="btn btn-primary" data-action="register" data-event-id="${event.id}">
+            参加登録
+          </button>
+          <button class="btn btn-secondary" onclick="this.closest('.modal').style.display='none'">
+            閉じる
+          </button>
+        </div>
+      `;
+      document.getElementById('registerModal').style.display = 'block';
+    }
+  }
+
+  getEventById(eventId) {
+    // EventsManager経由でイベント取得
+    if (window.EventsManager && window.EventsManager.events) {
+      return window.EventsManager.events.find(event => event.id === eventId);
+    }
+
+    // フォールバック: ローカルデータから取得
+    const fallbackEvents = [
+      {
+        id: '1',
+        title: 'なんでもライトニングトーク',
+        date: '2025-07-15T19:00:00+09:00',
+        format: 'ハイブリッド',
+        description: '5分で伝える、みんなのアイデア'
+      }
+    ];
+    return fallbackEvents.find(event => event.id === eventId) || fallbackEvents[0];
+  }
+
+  // チャット関連アクションメソッド
+  toggleParticipantsList() {
+    const participantsList = document.getElementById('chat-participants-list');
+    if (participantsList) {
+      participantsList.classList.toggle('hidden');
+
+      // アイコン状態の更新
+      const toggleBtn = document.querySelector('[data-action="toggle-participants"]');
+      if (toggleBtn) {
+        const isVisible = !participantsList.classList.contains('hidden');
+        toggleBtn.classList.toggle('active', isVisible);
+        toggleBtn.setAttribute('aria-pressed', isVisible.toString());
+      }
+
+      this.logger.info('Participants list toggled', {
+        visible: !participantsList.classList.contains('hidden')
+      });
+    }
+  }
+
+  toggleChatSettings() {
+    const settingsPanel = document.getElementById('chat-settings-panel');
+    if (settingsPanel) {
+      settingsPanel.classList.toggle('hidden');
+
+      // 設定ボタン状態の更新
+      const settingsBtn = document.querySelector('[data-action="toggle-settings"]');
+      if (settingsBtn) {
+        const isVisible = !settingsPanel.classList.contains('hidden');
+        settingsBtn.classList.toggle('active', isVisible);
+        settingsBtn.setAttribute('aria-pressed', isVisible.toString());
+      }
+
+      this.logger.info('Chat settings toggled', {
+        visible: !settingsPanel.classList.contains('hidden')
+      });
+    }
+  }
+
+  minimizeChat() {
+    const chatWidget = document.getElementById('chat-widget');
+    if (chatWidget) {
+      chatWidget.classList.toggle('minimized');
+
+      // 最小化ボタンのアイコン変更
+      const minimizeBtn = document.querySelector('[data-action="minimize"]');
+      if (minimizeBtn) {
+        const isMinimized = chatWidget.classList.contains('minimized');
+        minimizeBtn.innerHTML = isMinimized ? '🔼' : '🔽';
+        minimizeBtn.title = isMinimized ? '最大化' : '最小化';
+      }
+
+      this.logger.info('Chat minimized/maximized', {
+        minimized: chatWidget.classList.contains('minimized')
+      });
+    }
+  }
+
+  openFileAttachment() {
+    // ファイル選択ダイアログの作成
+    const fileInput = document.createElement('input');
+    fileInput.type = 'file';
+    fileInput.multiple = true;
+    fileInput.accept = 'image/*,video/*,audio/*,.pdf,.doc,.docx,.txt';
+
+    fileInput.onchange = e => {
+      const files = Array.from(e.target.files);
+      if (files.length > 0) {
+        this.handleFileSelection(files);
+      }
+    };
+
+    fileInput.click();
+    this.logger.info('File attachment dialog opened');
+  }
+
+  handleFileSelection(files) {
+    // ファイル添付処理（実装要）
+    this.logger.info('Files selected for attachment', {
+      count: files.length,
+      files: files.map(f => f.name)
+    });
+
+    // チャットシステムにファイル情報を渡す
+    if (window.ChatSystem && window.ChatSystem.attachFiles) {
+      window.ChatSystem.attachFiles(files);
+    } else {
+      // 簡易フィードバック
+      this.showNotification(`${files.length}個のファイルが選択されました`, 'info');
+    }
+  }
+
+  toggleEmojiPicker() {
+    let emojiPicker = document.getElementById('emoji-picker');
+
+    if (!emojiPicker) {
+      emojiPicker = this.createEmojiPicker();
+    }
+
+    emojiPicker.classList.toggle('hidden');
+
+    // 絵文字ボタンの状態更新
+    const emojiBtn = document.querySelector('[data-action="emoji"]');
+    if (emojiBtn) {
+      const isVisible = !emojiPicker.classList.contains('hidden');
+      emojiBtn.classList.toggle('active', isVisible);
+    }
+
+    this.logger.info('Emoji picker toggled', {
+      visible: !emojiPicker.classList.contains('hidden')
+    });
+  }
+
+  createEmojiPicker() {
+    const picker = document.createElement('div');
+    picker.id = 'emoji-picker';
+    picker.className = 'emoji-picker hidden';
+
+    const commonEmojis = ['😀', '😂', '😍', '🤔', '👍', '👎', '❤️', '🎉', '💪', '🔥', '✨', '💡'];
+
+    picker.innerHTML = `
+      <div class="emoji-grid">
+        ${commonEmojis
+          .map(emoji => `<button class="emoji-btn" data-emoji="${emoji}">${emoji}</button>`)
+          .join('')}
+      </div>
+    `;
+
+    // 絵文字選択イベント
+    picker.addEventListener('click', e => {
+      if (e.target.classList.contains('emoji-btn')) {
+        const emoji = e.target.dataset.emoji;
+        this.insertEmoji(emoji);
+        picker.classList.add('hidden');
+      }
+    });
+
+    // チャット入力エリアの近くに配置
+    const chatInput = document.querySelector('.chat-input-container');
+    if (chatInput) {
+      chatInput.appendChild(picker);
+    } else {
+      document.body.appendChild(picker);
+    }
+
+    return picker;
+  }
+
+  insertEmoji(emoji) {
+    const chatInput =
+      document.getElementById('chat-message-input') || document.querySelector('.chat-input');
+    if (chatInput) {
+      const currentValue = chatInput.value;
+      const cursorPos = chatInput.selectionStart;
+      const newValue = currentValue.slice(0, cursorPos) + emoji + currentValue.slice(cursorPos);
+
+      chatInput.value = newValue;
+      chatInput.focus();
+      chatInput.setSelectionRange(cursorPos + emoji.length, cursorPos + emoji.length);
+
+      this.logger.info('Emoji inserted', { emoji });
+    }
+  }
+
   // Mobile Optimization Methods
   setupMobileEventListeners() {
     // モバイルカスタムジェスチャーイベントリスナー
@@ -1941,14 +2207,14 @@ class LightningTalkApp {
 
       // Handle different message types efficiently
       switch (data.type) {
-      case 'voteUpdate':
-        this.handleVoteUpdate(data);
-        break;
-      case 'pong':
-        // Keep-alive response, no action needed
-        break;
-      default:
-        this.logger.warn('Unknown WebSocket message type', { type: data.type, data });
+        case 'voteUpdate':
+          this.handleVoteUpdate(data);
+          break;
+        case 'pong':
+          // Keep-alive response, no action needed
+          break;
+        default:
+          this.logger.warn('Unknown WebSocket message type', { type: data.type, data });
       }
     } catch (error) {
       this.logger.error('Error parsing WebSocket message', {
@@ -2832,7 +3098,7 @@ document.addEventListener('DOMContentLoaded', () => {
   };
 
   // Admin login processing
-  window.processAdminLogin = async() => {
+  window.processAdminLogin = async () => {
     const email = document.getElementById('adminEmail').value;
     const password = document.getElementById('adminPassword').value;
     const errorDiv = document.getElementById('loginError');

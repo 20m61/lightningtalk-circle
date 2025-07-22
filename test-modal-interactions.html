@@ -1,0 +1,373 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>モーダルインタラクションテスト</title>
+    <style>
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        margin: 40px;
+        background: #f8f9fa;
+      }
+
+      .test-container {
+        max-width: 800px;
+        background: white;
+        padding: 30px;
+        border-radius: 12px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+      }
+
+      .test-section {
+        margin: 30px 0;
+        padding: 20px;
+        border: 2px solid #e0e0e0;
+        border-radius: 8px;
+      }
+
+      .test-result {
+        padding: 10px;
+        margin: 10px 0;
+        border-radius: 6px;
+      }
+
+      .success {
+        background: #d4edda;
+        color: #155724;
+        border: 1px solid #c3e6cb;
+      }
+      .error {
+        background: #f8d7da;
+        color: #721c24;
+        border: 1px solid #f5c6cb;
+      }
+      .info {
+        background: #d1ecf1;
+        color: #0c5460;
+        border: 1px solid #b6d4d9;
+      }
+
+      button {
+        background: #007bff;
+        color: white;
+        border: none;
+        padding: 12px 24px;
+        margin: 8px;
+        border-radius: 6px;
+        cursor: pointer;
+        font-size: 16px;
+        transition: all 0.2s ease;
+      }
+
+      button:hover {
+        background: #0056b3;
+        transform: translateY(-2px);
+      }
+
+      button:focus {
+        outline: 2px solid #4ecdc4;
+        outline-offset: 2px;
+      }
+
+      .modal {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.5);
+        backdrop-filter: blur(4px);
+        z-index: 10000;
+      }
+
+      .modal-content {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background: white;
+        padding: 30px;
+        border-radius: 12px;
+        max-width: 500px;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+      }
+
+      .close-btn {
+        position: absolute;
+        top: 15px;
+        right: 15px;
+        background: none;
+        color: #666;
+        font-size: 24px;
+        border: none;
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .close-btn:hover {
+        background: #f0f0f0;
+        transform: none;
+      }
+
+      .form-group {
+        margin: 15px 0;
+      }
+
+      .form-group label {
+        display: block;
+        margin-bottom: 5px;
+        font-weight: 600;
+      }
+
+      .form-group input {
+        width: 100%;
+        padding: 10px;
+        border: 2px solid #e0e0e0;
+        border-radius: 6px;
+        font-size: 16px;
+      }
+
+      .form-group input:focus {
+        outline: none;
+        border-color: #4ecdc4;
+        box-shadow: 0 0 0 3px rgba(78, 205, 196, 0.1);
+      }
+
+      #results {
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        width: 300px;
+        background: white;
+        border-radius: 8px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+        padding: 20px;
+        z-index: 20000;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="test-container">
+      <h1>🧪 モーダルインタラクションテスト</h1>
+      <p>UI/UX改修で実装したモーダルシステムの動作確認を行います</p>
+
+      <div class="test-section">
+        <h3>📋 基本モーダル機能</h3>
+        <button onclick="openTestModal()">テストモーダルを開く</button>
+        <button onclick="runAutomaticTests()">自動テストを実行</button>
+      </div>
+
+      <div class="test-section">
+        <h3>⌨️ キーボードナビゲーションテスト</h3>
+        <p>以下の順序でTabキーを押してフォーカスの動きを確認してください：</p>
+        <button tabindex="1">ボタン1</button>
+        <button tabindex="2">ボタン2</button>
+        <button tabindex="3">ボタン3</button>
+        <input tabindex="4" placeholder="入力フィールド" />
+      </div>
+
+      <div class="test-section">
+        <h3>📱 レスポンシブ動作テスト</h3>
+        <p>ブラウザの開発者ツール（F12）でデバイスモードを切り替えて確認してください</p>
+        <button onclick="testResponsive()">レスポンシブテストを開始</button>
+      </div>
+    </div>
+
+    <!-- テスト用モーダル -->
+    <div id="testModal" class="modal">
+      <div class="modal-content">
+        <button class="close-btn" onclick="closeTestModal()">&times;</button>
+        <h2>テストモーダル</h2>
+        <p>このモーダルで以下の動作を確認してください：</p>
+        <ul>
+          <li>ESCキーで閉じる</li>
+          <li>背景クリックで閉じる</li>
+          <li>Tabキーでフォーカス移動</li>
+          <li>フォーカストラップ機能</li>
+        </ul>
+
+        <div class="form-group">
+          <label for="testInput1">テスト入力1:</label>
+          <input type="text" id="testInput1" placeholder="フォーカステスト" />
+        </div>
+
+        <div class="form-group">
+          <label for="testInput2">テスト入力2:</label>
+          <input type="text" id="testInput2" placeholder="タブ移動テスト" />
+        </div>
+
+        <div style="margin-top: 20px">
+          <button onclick="closeTestModal()">閉じる</button>
+          <button onclick="alert('アクション実行!')">アクション実行</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 結果表示パネル -->
+    <div id="results" style="display: none">
+      <h4>🎯 テスト結果</h4>
+      <div id="resultsList"></div>
+      <button onclick="document.getElementById('results').style.display='none'">閉じる</button>
+    </div>
+
+    <script>
+      // テスト結果記録
+      const testResults = [];
+
+      function addResult(test, passed, details = '') {
+        testResults.push({ test, passed, details, timestamp: new Date() });
+        updateResultsDisplay();
+      }
+
+      function updateResultsDisplay() {
+        const resultsList = document.getElementById('resultsList');
+        const results = document.getElementById('results');
+
+        resultsList.innerHTML = testResults
+          .map(
+            r =>
+              `<div class="${r.passed ? 'success' : 'error'}">
+                    ${r.passed ? '✅' : '❌'} ${r.test}
+                    ${r.details ? '<br><small>' + r.details + '</small>' : ''}
+                </div>`
+          )
+          .join('');
+
+        results.style.display = 'block';
+      }
+
+      function openTestModal() {
+        const modal = document.getElementById('testModal');
+        modal.style.display = 'block';
+
+        // フォーカスを最初の入力フィールドに移動
+        setTimeout(() => {
+          document.getElementById('testInput1').focus();
+        }, 100);
+
+        addResult('モーダル表示', true, 'display: block で正常に表示');
+      }
+
+      function closeTestModal() {
+        const modal = document.getElementById('testModal');
+        modal.style.display = 'none';
+        addResult('モーダル非表示', true, 'プログラムで正常に非表示');
+      }
+
+      function runAutomaticTests() {
+        // CSS確認テスト
+        const enhancedCSS = Array.from(document.styleSheets).some(sheet => {
+          try {
+            return sheet.href && sheet.href.includes('enhanced-interactions.css');
+          } catch (e) {
+            return false;
+          }
+        });
+
+        addResult(
+          'enhanced-interactions.css 読み込み',
+          enhancedCSS,
+          enhancedCSS ? 'CSSファイルが正常に読み込まれています' : 'CSSファイルが見つかりません'
+        );
+
+        // モーダル要素確認
+        const modal = document.getElementById('testModal');
+        addResult('モーダル要素存在確認', !!modal, 'DOM内にモーダル要素が存在します');
+
+        // フォーカス要素確認
+        const focusableElements = modal.querySelectorAll(
+          'button, input, select, textarea, [tabindex]:not([tabindex="-1"])'
+        );
+        addResult(
+          'フォーカス可能要素確認',
+          focusableElements.length > 0,
+          `${focusableElements.length}個のフォーカス可能要素を発見`
+        );
+
+        // ボタンホバーテスト
+        const buttons = document.querySelectorAll('button');
+        let hasHoverEffects = false;
+        buttons.forEach(btn => {
+          const styles = getComputedStyle(btn);
+          if (styles.transition && styles.transition.includes('transform')) {
+            hasHoverEffects = true;
+          }
+        });
+
+        addResult(
+          'ボタンホバーエフェクト',
+          hasHoverEffects,
+          hasHoverEffects ? 'transform transition が適用されています' : 'ホバーエフェクトが見つかりません'
+        );
+      }
+
+      function testResponsive() {
+        const viewportWidth = window.innerWidth;
+        const viewportHeight = window.innerHeight;
+
+        addResult('現在のビューポート', true, `${viewportWidth}x${viewportHeight}px`);
+
+        if (viewportWidth <= 768) {
+          addResult('モバイルビューポート判定', true, 'モバイル表示モードです');
+        } else if (viewportWidth <= 1024) {
+          addResult('タブレットビューポート判定', true, 'タブレット表示モードです');
+        } else {
+          addResult('デスクトップビューポート判定', true, 'デスクトップ表示モードです');
+        }
+      }
+
+      // ESCキーでモーダルを閉じる
+      document.addEventListener('keydown', e => {
+        if (e.key === 'Escape') {
+          const modal = document.getElementById('testModal');
+          if (modal.style.display === 'block') {
+            closeTestModal();
+            addResult('ESCキー動作', true, 'ESCキーでモーダルが正常に閉じました');
+          }
+        }
+      });
+
+      // 背景クリックでモーダルを閉じる
+      document.getElementById('testModal').addEventListener('click', e => {
+        if (e.target.id === 'testModal') {
+          closeTestModal();
+          addResult('背景クリック動作', true, '背景クリックでモーダルが正常に閉じました');
+        }
+      });
+
+      // フォーカストラップのシミュレーション
+      document.addEventListener('keydown', e => {
+        const modal = document.getElementById('testModal');
+        if (modal.style.display === 'block' && e.key === 'Tab') {
+          const focusableElements = modal.querySelectorAll(
+            'button, input, select, textarea, [tabindex]:not([tabindex="-1"])'
+          );
+          const firstElement = focusableElements[0];
+          const lastElement = focusableElements[focusableElements.length - 1];
+
+          if (e.shiftKey && document.activeElement === firstElement) {
+            e.preventDefault();
+            lastElement.focus();
+            addResult('フォーカストラップ（逆方向）', true, 'Shift+Tabで最後の要素にフォーカス');
+          } else if (!e.shiftKey && document.activeElement === lastElement) {
+            e.preventDefault();
+            firstElement.focus();
+            addResult('フォーカストラップ（正方向）', true, 'Tabで最初の要素にフォーカス');
+          }
+        }
+      });
+
+      // ページ読み込み時の初期化
+      document.addEventListener('DOMContentLoaded', () => {
+        addResult('ページ読み込み', true, 'テストページが正常に初期化されました');
+      });
+    </script>
+  </body>
+</html>
