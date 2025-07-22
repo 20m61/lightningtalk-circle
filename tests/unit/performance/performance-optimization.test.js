@@ -21,6 +21,18 @@ jest.unstable_mockModule('compression', () => ({
   filter: jest.fn()
 }));
 
+// Mock fs module safely
+jest.unstable_mockModule('fs', () => ({
+  existsSync: jest.fn(() => true),
+  readFileSync: jest.fn(() => '{}'),
+  writeFileSync: jest.fn(),
+  promises: {
+    access: jest.fn(),
+    readFile: jest.fn(() => '{}'),
+    writeFile: jest.fn()
+  }
+}));
+
 const performanceModule = await import('../../../server/middleware/performance-optimization.js');
 const {
   compressionMiddleware,
