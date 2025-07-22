@@ -267,11 +267,19 @@ header.scrolled .nav-links a {
 .online-info a {
   color: #2ecc71;
   text-decoration: none;
+  display: inline-block;
+  min-height: 44px;
+  min-width: 44px;
+  padding: 10px 12px;
+  line-height: 24px;
+  border-radius: 4px;
+  transition: background-color 0.2s ease;
 }
 
 .online-info a:hover {
   color: #27ae60;
   text-decoration: underline;
+  background-color: rgba(46, 204, 113, 0.1);
 }
 
 .emergency-contact {

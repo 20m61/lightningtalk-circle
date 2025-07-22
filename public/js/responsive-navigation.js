@@ -14,18 +14,18 @@ class ResponsiveNavigation {
       navLinks: document.querySelectorAll('.mobile-menu__link')
     };
 
-    this.state = {
-      isMenuOpen: false,
-      isScrolled: false,
-      currentBreakpoint: this.getCurrentBreakpoint(),
-      scrollPosition: 0
-    };
-
     this.breakpoints = {
       mobile: 375,
       tablet: 768,
       desktop: 1024,
       desktopLarge: 1440
+    };
+
+    this.state = {
+      isMenuOpen: false,
+      isScrolled: false,
+      currentBreakpoint: this.getCurrentBreakpoint(),
+      scrollPosition: 0
     };
 
     this.init();

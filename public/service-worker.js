@@ -3,7 +3,7 @@
  * オフライン対応、キャッシュ戦略、バックグラウンド同期を実装
  */
 
-const CACHE_VERSION = 'v1.0.0';
+const CACHE_VERSION = 'v1.0.1-fixed';
 const CACHE_NAME = `lightningtalk-${CACHE_VERSION}`;
 const RUNTIME_CACHE = 'lightningtalk-runtime';
 
@@ -136,6 +136,9 @@ self.addEventListener('fetch', event => {
     responsePromise = CACHE_STRATEGIES.networkFirst(request);
   } else if (request.destination === 'image') {
     responsePromise = CACHE_STRATEGIES.staleWhileRevalidate(request);
+  } else if (request.mode === 'navigate' || request.destination === 'document') {
+    // ナビゲーションリクエスト（HTMLページ）はネットワークファーストで処理
+    responsePromise = CACHE_STRATEGIES.networkFirst(request);
   } else {
     responsePromise = CACHE_STRATEGIES.cacheFirst(request);
   }

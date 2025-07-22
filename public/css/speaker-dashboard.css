@@ -410,8 +410,10 @@
 }
 
 .btn-icon {
-  width: 36px;
-  height: 36px;
+  width: 44px;
+  height: 44px;
+  min-width: 44px;
+  min-height: 44px;
   border: 1px solid var(--border-color, #e8ecf0);
   background: white;
   border-radius: 8px;
