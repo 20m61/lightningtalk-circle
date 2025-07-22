@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ページテスト - なんでもライトニングトーク</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 600px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        h1 {
+            color: #22c55e;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .link-section {
+            margin-bottom: 30px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 8px;
+        }
+        
+        .link-section h2 {
+            color: #333;
+            margin-bottom: 15px;
+        }
+        
+        .test-link {
+            display: inline-block;
+            margin: 8px;
+            padding: 12px 20px;
+            background: #22c55e;
+            color: white;
+            text-decoration: none;
+            border-radius: 6px;
+            transition: background 0.3s ease;
+        }
+        
+        .test-link:hover {
+            background: #1ea34c;
+        }
+        
+        .status {
+            margin-top: 10px;
+            padding: 10px;
+            background: #e8f5e9;
+            border-radius: 4px;
+            font-size: 14px;
+            color: #2e7d32;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🧪 ページテスト</h1>
+        
+        <div class="link-section">
+            <h2>📄 利用規約・プライバシーポリシー</h2>
+            <a href="/privacy.html" class="test-link" target="_blank">プライバシーポリシー</a>
+            <a href="/terms.html" class="test-link" target="_blank">利用規約</a>
+            <a href="/contact.html" class="test-link" target="_blank">お問い合わせ</a>
+            
+            <div class="status">
+                ✅ すべてのリンクが別タブで開くように設定されています
+            </div>
+        </div>
+        
+        <div class="link-section">
+            <h2>🚀 メインページ</h2>
+            <a href="/index.html" class="test-link">メインページ</a>
+            <a href="/" class="test-link">ホーム</a>
+            
+            <div class="status">
+                ✅ フッターリンクが修正されました：<br>
+                • パスに.html拡張子を追加<br>
+                • target="_blank"で別タブで開く<br>
+                • rel="noopener"でセキュリティを強化
+            </div>
+        </div>
+        
+        <div class="link-section">
+            <h2>🔐 認証テスト</h2>
+            <a href="/test-login.html" class="test-link" target="_blank">ログインテスト</a>
+            
+            <div class="status">
+                🔧 Google OAuth認証の動作確認用ページ
+            </div>
+        </div>
+        
+        <div class="link-section">
+            <h2>📍 アクセス情報</h2>
+            <p><strong>開発サーバー：</strong> http://localhost:3000</p>
+            <p><strong>現在のページ：</strong> http://localhost:3000/test-pages.html</p>
+            
+            <div class="status">
+                💡 ブラウザでこのURLにアクセスして、各リンクをテストしてください
+            </div>
+        </div>
+    </div>
+</body>
+</html>

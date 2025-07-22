@@ -21,6 +21,7 @@ const logs = require('aws-cdk-lib/aws-logs');
 const iam = require('aws-cdk-lib/aws-iam');
 const secretsmanager = require('aws-cdk-lib/aws-secretsmanager');
 const path = require('path');
+const ssm = require('aws-cdk-lib/aws-ssm');
 
 class LightningTalkMainStack extends cdk.Stack {
   constructor(scope, id, props) {
