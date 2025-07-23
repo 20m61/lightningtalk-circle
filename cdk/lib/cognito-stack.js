@@ -70,7 +70,7 @@ class CognitoStack extends Stack {
     const userPool = new cognito.UserPool(this, 'LightningTalkUserPool', userPoolConfig);
     
     // Google Identity Provider
-    // Use existing Google OAuth secret from AWS Secrets Manager
+    // Use existing Google OAuth secrets from AWS Secrets Manager
     const googleClientSecret = SecretValue.secretsManager(
       'lightningtalk-google-client-secret',
       {
@@ -78,9 +78,17 @@ class CognitoStack extends Stack {
       }
     );
     
+    // Get Google Client ID from Secrets Manager
+    const googleClientId = SecretValue.secretsManager(
+      'lightningtalk-google-client-id',
+      {
+        jsonField: 'clientId'
+      }
+    );
+    
     const googleProvider = new cognito.UserPoolIdentityProviderGoogle(this, 'GoogleProvider', {
       userPool,
-      clientId: process.env.GOOGLE_CLIENT_ID || 'placeholder-google-client-id',
+      clientId: googleClientId.unsafeUnwrap() || '853790608149-8jo0sestdodgdfju7gqb3snspe06bjom.apps.googleusercontent.com',
       clientSecretValue: googleClientSecret,
       scopes: ['email', 'profile', 'openid'],
       attributeMapping: {

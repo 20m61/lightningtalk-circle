@@ -4,12 +4,31 @@
 
 // Configuration
 const COGNITO_CONFIG = {
-  userPoolId: 'ap-northeast-1_PHRdkumdl',
-  clientId: '5t48tpbh5qe26otojkfq1rf0ls',
+  userPoolId:
+    window.location.hostname.includes('dev') ||
+    window.location.hostname.includes('localhost') ||
+    window.location.hostname.includes('cloudfront')
+      ? 'ap-northeast-1_PHRdkumdl'
+      : 'ap-northeast-1_IG3yOKBmT',
+  clientId:
+    window.location.hostname.includes('dev') ||
+    window.location.hostname.includes('localhost') ||
+    window.location.hostname.includes('cloudfront')
+      ? '5t48tpbh5qe26otojkfq1rf0ls'
+      : '42u3ma63qf01utk4jcd6pn9l8s',
   region: 'ap-northeast-1',
-  domain: 'lightningtalk-auth-v2.auth.ap-northeast-1.amazoncognito.com',
+  domain:
+    window.location.hostname.includes('dev') ||
+    window.location.hostname.includes('localhost') ||
+    window.location.hostname.includes('cloudfront')
+      ? 'lightningtalk-auth-dev.auth.ap-northeast-1.amazoncognito.com'
+      : 'lightningtalk-secure-1753166187.auth.ap-northeast-1.amazoncognito.com',
   redirectUri: `${window.location.origin}/callback`,
-  apiEndpoint: 'https://wf6gf7eisk.execute-api.ap-northeast-1.amazonaws.com/dev/api'
+  apiEndpoint: window.location.origin.includes('localhost')
+    ? 'http://localhost:3333/api'
+    : window.location.hostname.includes('dev') || window.location.hostname.includes('cloudfront')
+      ? 'https://wf6gf7eisk.execute-api.ap-northeast-1.amazonaws.com/dev/api'
+      : 'https://4ujhkvx000.execute-api.ap-northeast-1.amazonaws.com/prod/api'
 };
 
 // Authentication state
@@ -21,6 +40,7 @@ let currentUser = null;
 async function initAuth() {
   // Check for callback from Cognito
   if (window.location.pathname === '/callback') {
+    showAuthLoading('認証情報を処理中...');
     await handleCallback();
     return;
   }
@@ -84,6 +104,9 @@ function updateAuthUI() {
  * Login with Google
  */
 function loginWithGoogle() {
+  // Show loading state
+  showAuthLoading('Googleログインに移動中...');
+
   const authUrl =
     `https://${COGNITO_CONFIG.domain}/oauth2/authorize?` +
     `client_id=${COGNITO_CONFIG.clientId}&` +
@@ -92,7 +115,10 @@ function loginWithGoogle() {
     `redirect_uri=${encodeURIComponent(COGNITO_CONFIG.redirectUri)}&` +
     'identity_provider=Google';
 
-  window.location.href = authUrl;
+  // Add slight delay for better UX
+  setTimeout(() => {
+    window.location.href = authUrl;
+  }, 500);
 }
 
 /**
@@ -136,7 +162,14 @@ async function handleCallback() {
     window.location.href = '/';
   } catch (error) {
     console.error('Callback handling failed:', error);
-    window.location.href = '/';
+
+    // Show user-friendly error message
+    showAuthError('認証に失敗しました。再度お試しください。');
+
+    // Redirect to home after showing error
+    setTimeout(() => {
+      window.location.href = '/';
+    }, 3000);
   }
 }
 
@@ -228,6 +261,48 @@ function showAdminSuccessMessage() {
       document.body.removeChild(notification);
     }, 300);
   }, 3000);
+}
+
+/**
+ * Show authentication error message
+ */
+function showAuthError(message) {
+  // Create error notification
+  const notification = document.createElement('div');
+  notification.className = 'auth-error-notification';
+  notification.innerHTML = `
+    <div class="notification-content">
+      <span class="notification-icon">❌</span>
+      <span class="notification-text">${escapeHtml(message)}</span>
+    </div>
+  `;
+
+  document.body.appendChild(notification);
+
+  // Remove notification after 5 seconds
+  setTimeout(() => {
+    notification.classList.add('fade-out');
+    setTimeout(() => {
+      if (notification.parentNode) {
+        document.body.removeChild(notification);
+      }
+    }, 300);
+  }, 5000);
+}
+
+/**
+ * Show loading state during authentication
+ */
+function showAuthLoading(message = 'ログイン中...') {
+  const authHeader = document.getElementById('auth-header');
+  if (authHeader) {
+    authHeader.innerHTML = `
+      <div class="auth-loading">
+        <div class="loading-spinner"></div>
+        <span>${escapeHtml(message)}</span>
+      </div>
+    `;
+  }
 }
 
 /**

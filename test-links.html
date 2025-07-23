@@ -1,0 +1,22 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>リンクテストページ</title>
+  </head>
+  <body>
+    <h1>Lightning Talk Circle - リンクテスト</h1>
+    <p>以下のリンクが正常に動作するかテストします：</p>
+    <ul>
+      <li><a href="/privacy.html">プライバシーポリシー</a></li>
+      <li><a href="/terms.html">利用規約</a></li>
+      <li><a href="/contact.html">お問い合わせ</a></li>
+      <li><a href="/">トップページに戻る</a></li>
+    </ul>
+    <p>現在の時刻: <span id="time"></span></p>
+    <script>
+      document.getElementById('time').textContent = new Date().toLocaleString('ja-JP');
+    </script>
+  </body>
+</html>

@@ -2,7 +2,8 @@
 
 ## Overview
 
-このガイドでは、Lightning Talk CircleアプリケーションでAWS CognitoとGoogle OAuthを統合するための詳細な手順を説明します。
+このガイドでは、Lightning Talk CircleアプリケーションでAWS CognitoとGoogle
+OAuthを統合するための詳細な手順を説明します。
 
 ## Prerequisites（前提条件）
 
@@ -11,7 +12,9 @@
 - CDKのデプロイ権限
 - 現在のCognito認証情報：
   - User Pool ID: `ap-northeast-1_IG3yOKBmT`
-  - Domain: `lightningtalk-secure-1738054592.auth.ap-northeast-1.amazoncognito.com`
+  - Client ID: `42u3ma63qf01utk4jcd6pn9l8s`
+  - Domain:
+    `lightningtalk-secure-1753166187.auth.ap-northeast-1.amazoncognito.com`
 
 ## Step 1: Google Cloud Console でOAuth認証情報を作成
 
@@ -55,7 +58,7 @@
    - 「作成」をクリック
 
 3. **OAuth同意画面の設定**
-   
+
    **「OAuth同意画面」タブで以下を入力：**
    - **アプリ名**: `Lightning Talk Circle`
    - **ユーザーサポートメール**: あなたのメールアドレス
@@ -64,7 +67,7 @@
      - ホームページ: `https://xn--6wym69a.com`（発表.comの punycode）
      - プライバシーポリシー: `https://xn--6wym69a.com/privacy`
      - 利用規約: `https://xn--6wym69a.com/terms`
-   - **承認済みドメイン**: 
+   - **承認済みドメイン**:
      - `xn--6wym69a.com` を追加
      - `amazoncognito.com` を追加
    - **デベロッパーの連絡先情報**: あなたのメールアドレス
@@ -74,7 +77,7 @@
    - 「スコープを追加または削除」をクリック
    - 以下のスコープにチェック：
      - `../auth/userinfo.email`
-     - `../auth/userinfo.profile` 
+     - `../auth/userinfo.profile`
      - `openid`
    - 「更新」をクリック
    - 「保存して次へ」をクリック
@@ -99,20 +102,17 @@
 
 4. **詳細設定**
    - **名前**: `Lightning Talk Circle OAuth Client`
-   
    - **承認済みの JavaScript 生成元**:
      ```
      https://xn--6wym69a.com
      http://localhost:3000
      ```
-   
    - **承認済みのリダイレクト URI**:
      ```
-     https://lightningtalk-secure-1738054592.auth.ap-northeast-1.amazoncognito.com/oauth2/idpresponse
-     https://xn--6wym69a.com/callback  
+     https://lightningtalk-secure-1753166187.auth.ap-northeast-1.amazoncognito.com/oauth2/idpresponse
+     https://xn--6wym69a.com/callback
      http://localhost:3000/callback
      ```
-   
    - 「作成」をクリック
 
 5. **認証情報の保存**
@@ -151,7 +151,7 @@ GOOGLE_CLIENT_SECRET=your-google-client-secret
 VITE_USER_POOL_ID=ap-northeast-1_IG3yOKBmT
 VITE_USER_POOL_CLIENT_ID=42u3ma63qf01utk4jcd6pn9l8s
 VITE_IDENTITY_POOL_ID=ap-northeast-1:f570516d-a516-49ca-bb11-71477a976d8c
-VITE_COGNITO_DOMAIN=lightningtalk-secure-1738054592.auth.ap-northeast-1.amazoncognito.com
+VITE_COGNITO_DOMAIN=lightningtalk-secure-1753166187.auth.ap-northeast-1.amazoncognito.com
 ```
 
 ## Step 3: AWS Cognito にGoogleアイデンティティプロバイダーを設定
@@ -171,7 +171,7 @@ aws cognito-idp create-identity-provider \
   }' \
   --attribute-mapping '{
     "email": "email",
-    "family_name": "family_name", 
+    "family_name": "family_name",
     "given_name": "given_name",
     "name": "name",
     "picture": "picture",
@@ -206,19 +206,23 @@ aws cognito-idp update-user-pool-client \
 
 ```typescript
 // Google Identity Provider
-const googleProvider = new cognito.UserPoolIdentityProviderGoogle(this, 'GoogleProvider', {
-  userPool: userPool,
-  clientId: process.env.GOOGLE_CLIENT_ID!,
-  clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
-  scopes: ['email', 'openid', 'profile'],
-  attributeMapping: {
-    email: cognito.ProviderAttribute.GOOGLE_EMAIL,
-    familyName: cognito.ProviderAttribute.GOOGLE_FAMILY_NAME,
-    givenName: cognito.ProviderAttribute.GOOGLE_GIVEN_NAME,
-    fullname: cognito.ProviderAttribute.GOOGLE_NAME,
-    profilePicture: cognito.ProviderAttribute.GOOGLE_PICTURE,
-  },
-});
+const googleProvider = new cognito.UserPoolIdentityProviderGoogle(
+  this,
+  'GoogleProvider',
+  {
+    userPool: userPool,
+    clientId: process.env.GOOGLE_CLIENT_ID!,
+    clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
+    scopes: ['email', 'openid', 'profile'],
+    attributeMapping: {
+      email: cognito.ProviderAttribute.GOOGLE_EMAIL,
+      familyName: cognito.ProviderAttribute.GOOGLE_FAMILY_NAME,
+      givenName: cognito.ProviderAttribute.GOOGLE_GIVEN_NAME,
+      fullname: cognito.ProviderAttribute.GOOGLE_NAME,
+      profilePicture: cognito.ProviderAttribute.GOOGLE_PICTURE
+    }
+  }
+);
 
 // Update User Pool Client
 userPoolClient.node.addDependency(googleProvider);
@@ -241,6 +245,7 @@ npm run cdk:deploy:prod
 ### 5.1 開発環境でのテスト
 
 1. **開発サーバーを起動:**
+
    ```bash
    npm run dev
    ```
@@ -304,7 +309,7 @@ aws cognito-idp describe-user-pool \
   --user-pool-id ap-northeast-1_IG3yOKBmT \
   --region ap-northeast-1
 
-# アイデンティティプロバイダー一覧確認  
+# アイデンティティプロバイダー一覧確認
 aws cognito-idp list-identity-providers \
   --user-pool-id ap-northeast-1_IG3yOKBmT \
   --region ap-northeast-1
@@ -327,25 +332,26 @@ aws cognito-idp describe-identity-provider \
 ### よくある問題と解決方法
 
 1. **「無効なリダイレクトURI」エラー**
-   
+
    **症状**: OAuth認証時に「redirect_uri_mismatch」エラー
-   
+
    **解決方法**:
    - Google Cloud ConsoleとCognito設定のリダイレクトURIが一致していることを確認
    - 国際化ドメイン名は punycode 形式（xn--6wym69a.com）で設定
    - URIの末尾にスラッシュが含まれていないことを確認
 
 2. **「プロバイダーが見つからない」エラー**
-   
+
    **症状**: CognitoでGoogleプロバイダーが認識されない
-   
+
    **解決方法**:
+
    ```bash
    # プロバイダーの存在確認
    aws cognito-idp list-identity-providers \
      --user-pool-id ap-northeast-1_IG3yOKBmT \
      --region ap-northeast-1
-   
+
    # プロバイダーが見つからない場合は再作成
    aws cognito-idp create-identity-provider \
      --user-pool-id ap-northeast-1_IG3yOKBmT \
@@ -355,27 +361,27 @@ aws cognito-idp describe-identity-provider \
    ```
 
 3. **「スコープエラー」**
-   
+
    **症状**: 認証時にスコープ関連のエラー
-   
+
    **解決方法**:
    - Google Cloud ConsoleのOAuth同意画面でスコープが正しく設定されているか確認
    - Cognitoのプロバイダー設定でスコープが一致していることを確認
    - 必要最小限のスコープ: `email`, `openid`, `profile`
 
 4. **「アプリが確認されていません」警告**
-   
+
    **症状**: Google認証時に警告が表示される
-   
+
    **解決方法**:
    - Google Cloud ConsoleでOAuth同意画面を「本番環境」に変更
    - アプリの確認プロセスを完了（本格運用の場合）
    - テスト段階では「詳細設定」→「安全でないページに移動」で継続可能
 
 5. **認証後のリダイレクトエラー**
-   
+
    **症状**: 認証成功後にコールバックページでエラー
-   
+
    **解決方法**:
    - フロントエンドのコールバック処理が正しく実装されているか確認
    - Cognito Hosted UIの設定確認
@@ -400,15 +406,16 @@ aws logs get-log-events \
 
 ```bash
 # Cognitoの認証エンドポイントへの接続テスト
-curl -I "https://lightningtalk-secure-1738054592.auth.ap-northeast-1.amazoncognito.com/login"
+curl -I "https://lightningtalk-secure-1753166187.auth.ap-northeast-1.amazoncognito.com/login"
 
 # OAuth認証URLの構築テスト
-curl -X GET "https://lightningtalk-secure-1738054592.auth.ap-northeast-1.amazoncognito.com/oauth2/authorize?client_id=42u3ma63qf01utk4jcd6pn9l8s&response_type=code&scope=email+openid+profile&redirect_uri=http://localhost:3000/callback"
+curl -X GET "https://lightningtalk-secure-1753166187.auth.ap-northeast-1.amazoncognito.com/oauth2/authorize?client_id=42u3ma63qf01utk4jcd6pn9l8s&response_type=code&scope=email+openid+profile&redirect_uri=http://localhost:3000/callback"
 ```
 
 ## Step 7: 自動設定スクリプト（推奨）
 
-Google Cloud Consoleでの設定完了後、以下のスクリプトを使用してAWS設定を自動化できます：
+Google Cloud
+Consoleでの設定完了後、以下のスクリプトを使用してAWS設定を自動化できます：
 
 ### 使用方法
 
@@ -468,7 +475,9 @@ $ ./scripts/setup-google-oauth.sh
 
 ## まとめ
 
-このガイドに従って設定を完了すると、Lightning Talk CircleアプリケーションでGoogle OAuthを使用したソーシャルログインが利用できるようになります。
+このガイドに従って設定を完了すると、Lightning Talk
+CircleアプリケーションでGoogle
+OAuthを使用したソーシャルログインが利用できるようになります。
 
 ### 重要なポイント
 

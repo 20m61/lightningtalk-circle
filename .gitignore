@@ -310,4 +310,5 @@ dist
 vite.config.js.timestamp-*
 vite.config.ts.timestamp-*
 
-.env
+.env*.json
+google_credentials_*.json

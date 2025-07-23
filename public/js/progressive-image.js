@@ -98,7 +98,12 @@ class ProgressiveImageLoader {
       // 読み込み完了イベントの発火
       this.dispatchImageEvent(img, 'progressive-image-loaded', { src: loadedSrc });
     } catch (error) {
-      console.error('Progressive image loading failed:', error);
+      // AVIFファイルが存在しない場合は警告レベルに下げる
+      if ((error.message && error.message.includes('404')) || error.message.includes('Not Found')) {
+        console.warn('Progressive image file not found (expected):', originalSrc, error.message);
+      } else {
+        console.error('Progressive image loading failed:', originalSrc, error);
+      }
       this.handleImageError(img, error);
     }
   }
