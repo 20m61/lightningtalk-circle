@@ -471,9 +471,12 @@ router.post(
           : `https://lightningtalk-auth-dev.auth.ap-northeast-1.amazoncognito.com/oauth2/token`;
 
       // Get client secret from AWS Secrets Manager or environment
+      // SECURITY: Never hardcode secrets in the codebase
+      // For production: Use AWS Secrets Manager
+      // For development: Use environment variable GOOGLE_CLIENT_SECRET
       let clientSecret;
       try {
-        // Try to get from AWS Secrets Manager first
+        // Try to get from AWS Secrets Manager first (production)
         const AWS = await import('aws-sdk');
         const secretsManager = new AWS.SecretsManager({ region: 'ap-northeast-1' });
         const secretResult = await secretsManager
@@ -484,9 +487,15 @@ router.post(
         const secretData = JSON.parse(secretResult.SecretString);
         clientSecret = secretData.clientSecret;
       } catch (error) {
-        console.warn('Could not retrieve client secret from AWS Secrets Manager:', error.message);
-        // Fallback to hardcoded for development
-        clientSecret = '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';
+        console.error('Could not retrieve client secret from AWS Secrets Manager:', error.message);
+        // Use environment variable for development
+        clientSecret = process.env.GOOGLE_CLIENT_SECRET;
+
+        if (!clientSecret) {
+          throw new Error(
+            'Google Client Secret not configured. Please set GOOGLE_CLIENT_SECRET environment variable or configure AWS Secrets Manager.'
+          );
+        }
       }
 
       const params = new URLSearchParams({
