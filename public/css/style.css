@@ -21,20 +21,22 @@ body {
 
 /* Header Styles */
 header {
-  background: rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.95);
   backdrop-filter: blur(10px);
   padding: 20px 0;
   position: fixed;
   width: 100%;
   top: 0;
-  z-index: 1000;
-  border-bottom: 3px solid #2ecc71;
-  transition: all 0.3s ease;
+  z-index: var(--z-sticky, 1000);
+  border-bottom: 3px solid var(--color-primary, #2ecc71);
+  transition: all var(--transition-base);
+  box-shadow: var(--shadow-sm);
 }
 
 header.scrolled {
-  background: rgba(248, 249, 250, 0.95);
+  background: rgba(248, 249, 250, 0.98);
   backdrop-filter: blur(20px);
+  box-shadow: var(--shadow-md);
 }
 
 nav {
@@ -45,14 +47,14 @@ nav {
 
 .logo {
   font-size: 2rem;
-  font-weight: 700;
-  color: #2ecc71;
+  font-weight: var(--font-weight-bold, 700);
+  color: var(--color-primary, #2ecc71);
   text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
-  transition: color 0.3s ease;
+  transition: color var(--transition-base);
 }
 
 header.scrolled .logo {
-  color: #333;
+  color: var(--color-primary, #2ecc71);
 }
 
 .nav-links {
@@ -62,20 +64,21 @@ header.scrolled .logo {
 }
 
 .nav-links a {
-  color: #fff;
+  color: var(--color-text-primary, #2c3e50);
   text-decoration: none;
-  font-weight: 500;
-  transition: all 0.3s ease;
-  padding: 10px 15px;
-  border-radius: 20px;
+  font-weight: var(--font-weight-medium, 500);
+  transition: all var(--transition-base);
+  padding: var(--spacing-sm, 10px) var(--spacing-md, 15px);
+  border-radius: var(--radius-xl, 20px);
 }
 
 header.scrolled .nav-links a {
-  color: #333;
+  color: var(--color-text-primary, #2c3e50);
 }
 
 .nav-links a:hover {
-  background: rgba(255, 255, 255, 0.2);
+  background: var(--color-primary-light, rgba(74, 144, 226, 0.1));
+  color: var(--color-primary, #4a90e2);
   transform: translateY(-2px);
 }
 
@@ -89,8 +92,8 @@ header.scrolled .nav-links a {
 .mobile-menu-toggle span {
   width: 25px;
   height: 3px;
-  background: #fff;
-  transition: all 0.3s ease;
+  background: var(--color-text-primary, #2c3e50);
+  transition: all var(--transition-base);
 }
 
 /* Hero Section */
