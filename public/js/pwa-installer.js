@@ -3,156 +3,186 @@
  * プログレッシブウェブアプリのインストール管理
  */
 
+(function() {
+  'use strict';
+
 class PWAInstaller {
   constructor() {
     this.deferredPrompt = null;
     this.installButton = null;
     this.installBanner = null;
-    this.isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
-    this.isInstalled = false;
-    this.init();
+    this.updateBanner = null;
+    this.setupEventListeners();
+    this.createUI();
+    this.checkInstallState();
+    this.registerServiceWorker();
   }
 
-  init() {
-    // インストール状態をチェック
-    this.checkInstallState();
-
-    // インストールプロンプトのイベントリスナー
-    window.addEventListener('beforeinstallprompt', e => {
+  setupEventListeners() {
+    // インストールプロンプトをキャッチ
+    window.addEventListener('beforeinstallprompt', (e) => {
       e.preventDefault();
       this.deferredPrompt = e;
       this.showInstallPromotion();
+      
+      // アナリティクスイベント
+      if (window.gtag) {
+        window.gtag('event', 'pwa_install_available');
+      }
     });
 
-    // インストール成功イベント
+    // インストール成功
     window.addEventListener('appinstalled', () => {
-      this.deferredPrompt = null;
+      console.log('PWA was installed');
       this.hideInstallPromotion();
-      this.showSuccessMessage();
-      this.isInstalled = true;
-      localStorage.setItem('pwa-installed', 'true');
+      
+      // アナリティクスイベント
+      if (window.gtag) {
+        window.gtag('event', 'pwa_installed');
+      }
     });
 
-    // iOS用の処理
-    if (this.isIOS && !this.isInStandaloneMode()) {
-      this.showIOSInstallInstructions();
-    }
-
-    // Service Worker登録
-    this.registerServiceWorker();
-
-    // インストールUIの初期化
-    this.createInstallUI();
+    // ページ表示状態の変更を監視
+    document.addEventListener('visibilitychange', () => {
+      if (document.visibilityState === 'visible') {
+        this.checkForUpdates();
+      }
+    });
   }
 
-  checkInstallState() {
-    // スタンドアロンモードかチェック
-    if (this.isInStandaloneMode()) {
-      this.isInstalled = true;
-      return;
-    }
-
-    // ローカルストレージでインストール状態を確認
-    if (localStorage.getItem('pwa-installed') === 'true') {
-      this.isInstalled = true;
-    }
-  }
-
-  isInStandaloneMode() {
-    return (
-      window.matchMedia('(display-mode: standalone)').matches ||
-      window.navigator.standalone ||
-      document.referrer.includes('android-app://')
-    );
-  }
-
-  createInstallUI() {
+  createUI() {
     // インストールバナー
     this.installBanner = document.createElement('div');
     this.installBanner.className = 'pwa-install-banner';
     this.installBanner.innerHTML = `
-      <div class="pwa-install-banner__content">
-        <div class="pwa-install-banner__icon">
-          <img src="/icons/android-chrome-96x96.png" alt="App Icon">
+      <div class="pwa-install-content">
+        <div class="pwa-install-icon">
+          <svg viewBox="0 0 24 24" width="24" height="24">
+            <path fill="currentColor" d="M5,20H19V18H5M19,9H15V3H9V9H5L12,16L19,9Z" />
+          </svg>
         </div>
-        <div class="pwa-install-banner__text">
-          <h4>アプリをインストール</h4>
-          <p>ホーム画面に追加してオフラインでも使用できます</p>
+        <div class="pwa-install-text">
+          <strong>アプリをインストール</strong>
+          <span>ホーム画面に追加して、より快適にご利用ください</span>
         </div>
-        <div class="pwa-install-banner__actions">
-          <button class="pwa-install-banner__dismiss" aria-label="閉じる">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
-              <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
-            </svg>
-          </button>
-          <button class="pwa-install-banner__install btn btn--primary">
-            インストール
-          </button>
-        </div>
+        <button class="pwa-install-button">インストール</button>
+        <button class="pwa-install-dismiss" aria-label="閉じる">
+          <svg viewBox="0 0 24 24" width="20" height="20">
+            <path fill="currentColor" d="M19,6.41L17.59,5L12,10.59L6.41,5L5,6.41L10.59,12L5,17.59L6.41,19L12,13.41L17.59,19L19,17.59L13.41,12L19,6.41Z" />
+          </svg>
+        </button>
       </div>
     `;
-
-    // インストールボタン（ヘッダー用）
-    this.installButton = document.createElement('button');
-    this.installButton.className = 'pwa-install-button';
-    this.installButton.innerHTML = `
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-        <path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/>
-      </svg>
-      <span>インストール</span>
-    `;
-
-    // イベントリスナー設定
-    this.installBanner
-      .querySelector('.pwa-install-banner__dismiss')
-      .addEventListener('click', () => {
-        this.hideInstallPromotion();
-        this.setDismissed();
-      });
-
-    this.installBanner
-      .querySelector('.pwa-install-banner__install')
-      .addEventListener('click', () => {
-        this.handleInstallClick();
-      });
-
-    this.installButton.addEventListener('click', () => {
-      this.handleInstallClick();
-    });
-
     document.body.appendChild(this.installBanner);
 
-    // ヘッダーにボタンを追加
-    const authContainer = document.getElementById('auth-container');
-    if (authContainer) {
-      authContainer.parentNode.insertBefore(this.installButton, authContainer);
+    // インストールボタンのイベント
+    this.installButton = this.installBanner.querySelector('.pwa-install-button');
+    this.installButton.addEventListener('click', () => this.installPWA());
+
+    // 閉じるボタン
+    const dismissButton = this.installBanner.querySelector('.pwa-install-dismiss');
+    dismissButton.addEventListener('click', () => this.hideInstallPromotion());
+
+    // アップデートバナー
+    this.updateBanner = document.createElement('div');
+    this.updateBanner.className = 'pwa-update-banner';
+    this.updateBanner.innerHTML = `
+      <div class="pwa-update-content">
+        <span>新しいバージョンが利用可能です</span>
+        <button class="pwa-update-button">更新</button>
+      </div>
+    `;
+    document.body.appendChild(this.updateBanner);
+
+    // 更新ボタンのイベント
+    const updateButton = this.updateBanner.querySelector('.pwa-update-button');
+    updateButton.addEventListener('click', () => this.updatePWA());
+  }
+
+  async checkInstallState() {
+    // スタンドアロンモードで実行されているかチェック
+    if (window.matchMedia('(display-mode: standalone)').matches) {
+      console.log('PWA is running in standalone mode');
+      return;
     }
+
+    // iOSの場合は特別な処理
+    if (this.isIOS()) {
+      // iOSではbeforeinstallpromptイベントが発火しない
+      const isInstalled = this.isIOSInstalled();
+      if (!isInstalled) {
+        this.showIOSInstallGuide();
+      }
+    }
+  }
+
+  isIOS() {
+    const userAgent = window.navigator.userAgent.toLowerCase();
+    return /iphone|ipad|ipod/.test(userAgent);
+  }
+
+  isIOSInstalled() {
+    return window.navigator.standalone === true;
+  }
+
+  showIOSInstallGuide() {
+    // 既に表示したことがある場合はスキップ
+    if (localStorage.getItem('pwa-ios-guide-shown')) {
+      return;
+    }
+
+    const guide = document.createElement('div');
+    guide.className = 'pwa-ios-guide';
+    guide.innerHTML = `
+      <div class="pwa-ios-guide-content">
+        <h3>ホーム画面に追加</h3>
+        <p>
+          1. Safari下部の<span class="pwa-ios-icon">共有</span>ボタンをタップ<br>
+          2. 「ホーム画面に追加」を選択<br>
+          3. 「追加」をタップ
+        </p>
+        <button class="pwa-ios-guide-close">閉じる</button>
+      </div>
+    `;
+    document.body.appendChild(guide);
+
+    setTimeout(() => {
+      guide.classList.add('show');
+    }, 100);
+
+    const closeButton = guide.querySelector('.pwa-ios-guide-close');
+    closeButton.addEventListener('click', () => {
+      guide.remove();
+      localStorage.setItem('pwa-ios-guide-shown', 'true');
+    });
   }
 
   showInstallPromotion() {
-    // 既にインストール済みまたは無視された場合は表示しない
-    if (this.isInstalled || this.isDismissed()) {
+    // 既にインストール済みの場合は表示しない
+    if (this.isInstalled()) {
       return;
     }
 
-    // デスクトップでは小さめのボタンのみ表示
-    if (!this.isMobile()) {
-      this.installButton.style.display = 'flex';
-      return;
+    // 過去に非表示にした場合は一定期間表示しない
+    const dismissedTime = localStorage.getItem('pwa-install-dismissed');
+    if (dismissedTime) {
+      const daysSinceDismissed = (Date.now() - parseInt(dismissedTime)) / (1000 * 60 * 60 * 24);
+      if (daysSinceDismissed < 7) {
+        return;
+      }
     }
 
-    // モバイルではバナーを表示
     setTimeout(() => {
-      this.installBanner.classList.add('active');
-    }, 3000); // 3秒後に表示
+      this.installBanner.classList.add('show');
+    }, 2000); // 2秒後に表示
   }
 
   hideInstallPromotion() {
-    this.installBanner.classList.remove('active');
-    this.installButton.style.display = 'none';
+    this.installBanner.classList.remove('show');
+    localStorage.setItem('pwa-install-dismissed', Date.now().toString());
   }
 
-  async handleInstallClick() {
+  async installPWA() {
     if (!this.deferredPrompt) {
       return;
     }
@@ -162,72 +192,33 @@ class PWAInstaller {
 
     // ユーザーの選択を待つ
     const { outcome } = await this.deferredPrompt.userChoice;
+    
+    console.log(`User response to the install prompt: ${outcome}`);
 
-    if (outcome === 'accepted') {
-      console.log('PWA installation accepted');
-      this.trackInstallation('accepted');
-    } else {
-      console.log('PWA installation dismissed');
-      this.trackInstallation('dismissed');
-    }
-
+    // プロンプトは一度しか使えないのでリセット
     this.deferredPrompt = null;
+
+    // バナーを非表示
     this.hideInstallPromotion();
-  }
 
-  showIOSInstallInstructions() {
-    // iOS用のインストール手順モーダル
-    const modal = document.createElement('div');
-    modal.className = 'ios-install-modal';
-    modal.innerHTML = `
-      <div class="ios-install-modal__content">
-        <h3>アプリをインストール</h3>
-        <p>iOSでは以下の手順でホーム画面に追加できます：</p>
-        <ol>
-          <li>Safari下部の<strong>共有ボタン</strong>
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-              <path d="M16 5l-1.42 1.42-1.59-1.59V16h-2V4.83L9.42 6.42 8 5l4-4 4 4zm4 7v8c0 1.1-.9 2-2 2H6c-1.11 0-2-.9-2-2v-8c0-1.11.89-2 2-2h3v2H6v8h12v-8h-3v-2h3c1.1 0 2 .89 2 2z"/>
-            </svg>
-            をタップ
-          </li>
-          <li>「<strong>ホーム画面に追加</strong>」を選択</li>
-          <li>「<strong>追加</strong>」をタップ</li>
-        </ol>
-        <button class="btn btn--primary" onclick="this.closest('.ios-install-modal').remove()">
-          閉じる
-        </button>
-      </div>
-    `;
-
-    // 一度だけ表示
-    if (!localStorage.getItem('ios-install-shown')) {
-      setTimeout(() => {
-        document.body.appendChild(modal);
-        localStorage.setItem('ios-install-shown', 'true');
-      }, 5000);
+    // アナリティクスイベント
+    if (window.gtag) {
+      window.gtag('event', 'pwa_install_' + outcome);
     }
   }
 
-  showSuccessMessage() {
-    const notification = document.createElement('div');
-    notification.className = 'pwa-install-success';
-    notification.innerHTML = `
-      <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
-        <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/>
-      </svg>
-      <span>アプリが正常にインストールされました！</span>
-    `;
+  isInstalled() {
+    // スタンドアロンモードで実行されているか
+    if (window.matchMedia('(display-mode: standalone)').matches) {
+      return true;
+    }
 
-    document.body.appendChild(notification);
+    // iOSの場合
+    if (this.isIOS() && window.navigator.standalone === true) {
+      return true;
+    }
 
-    setTimeout(() => {
-      notification.classList.add('show');
-    }, 100);
-
-    setTimeout(() => {
-      notification.classList.remove('show');
-      setTimeout(() => notification.remove(), 300);
-    }, 3000);
+    return false;
   }
 
   async registerServiceWorker() {
@@ -236,62 +227,48 @@ class PWAInstaller {
         const registration = await navigator.serviceWorker.register('/service-worker.js');
         console.log('Service Worker registered:', registration);
 
-        // アップデートのチェック
+        // アップデートチェック
         registration.addEventListener('updatefound', () => {
           const newWorker = registration.installing;
           newWorker.addEventListener('statechange', () => {
             if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
-              this.showUpdateNotification();
+              // 新しいバージョンが利用可能
+              this.showUpdateBanner();
             }
           });
         });
+
+        // 定期的にアップデートをチェック
+        setInterval(() => {
+          registration.update();
+        }, 60 * 60 * 1000); // 1時間ごと
+
       } catch (error) {
         console.error('Service Worker registration failed:', error);
       }
     }
   }
 
-  showUpdateNotification() {
-    const updateBanner = document.createElement('div');
-    updateBanner.className = 'pwa-update-banner';
-    updateBanner.innerHTML = `
-      <p>新しいバージョンが利用可能です</p>
-      <button class="btn btn--primary btn--sm" onclick="location.reload()">
-        更新
-      </button>
-    `;
-
-    document.body.appendChild(updateBanner);
-
-    setTimeout(() => {
-      updateBanner.classList.add('show');
-    }, 100);
+  showUpdateBanner() {
+    this.updateBanner.classList.add('show');
   }
 
-  isMobile() {
-    return window.innerWidth <= 768;
+  updatePWA() {
+    // 新しいService Workerをアクティベート
+    if ('serviceWorker' in navigator && navigator.serviceWorker.controller) {
+      navigator.serviceWorker.controller.postMessage({ type: 'SKIP_WAITING' });
+    }
+
+    // ページをリロード
+    window.location.reload();
   }
 
-  isDismissed() {
-    const dismissedTime = localStorage.getItem('pwa-install-dismissed');
-    if (!dismissedTime) return false;
-
-    // 7日後に再表示
-    const daysSinceDismissed = (Date.now() - parseInt(dismissedTime)) / (1000 * 60 * 60 * 24);
-    return daysSinceDismissed < 7;
-  }
-
-  setDismissed() {
-    localStorage.setItem('pwa-install-dismissed', Date.now().toString());
-  }
-
-  trackInstallation(outcome) {
-    // アナリティクスイベントを送信
-    if (window.gtag) {
-      window.gtag('event', 'pwa_install_prompt', {
-        event_category: 'PWA',
-        event_label: outcome
-      });
+  async checkForUpdates() {
+    if ('serviceWorker' in navigator) {
+      const registration = await navigator.serviceWorker.getRegistration();
+      if (registration) {
+        registration.update();
+      }
     }
   }
 }
@@ -302,169 +279,161 @@ style.textContent = `
   /* インストールバナー */
   .pwa-install-banner {
     position: fixed;
-    bottom: -100px;
-    left: 0;
-    right: 0;
+    bottom: calc(-100% - 10px);
+    left: var(--spacing-lg);
+    right: var(--spacing-lg);
     background: var(--color-surface, #ffffff);
-    border-top: 1px solid var(--color-border-light);
-    box-shadow: var(--shadow-lg);
-    z-index: var(--z-sticky, 1020);
-    transition: bottom var(--transition-base);
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
     padding: var(--spacing-md);
-    padding-bottom: calc(var(--spacing-md) + env(safe-area-inset-bottom));
+    z-index: 1000;
+    transition: bottom 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   }
 
-  .pwa-install-banner.active {
-    bottom: 0;
+  .pwa-install-banner.show {
+    bottom: calc(var(--spacing-lg) + env(safe-area-inset-bottom));
   }
 
-  .pwa-install-banner__content {
-    max-width: 600px;
-    margin: 0 auto;
+  .pwa-install-content {
     display: flex;
     align-items: center;
     gap: var(--spacing-md);
   }
 
-  .pwa-install-banner__icon img {
+  .pwa-install-icon {
+    flex-shrink: 0;
     width: 48px;
     height: 48px;
-    border-radius: var(--radius-md);
-    box-shadow: var(--shadow-sm);
-  }
-
-  .pwa-install-banner__text {
-    flex: 1;
-  }
-
-  .pwa-install-banner__text h4 {
-    margin: 0 0 4px;
-    font-size: var(--font-size-base);
-    color: var(--color-text-primary);
-  }
-
-  .pwa-install-banner__text p {
-    margin: 0;
-    font-size: var(--font-size-sm);
-    color: var(--color-text-secondary);
-  }
-
-  .pwa-install-banner__actions {
+    background: var(--color-primary-light, #e3f2fd);
+    border-radius: 50%;
     display: flex;
     align-items: center;
-    gap: var(--spacing-sm);
+    justify-content: center;
+    color: var(--color-primary, #2196f3);
   }
 
-  .pwa-install-banner__dismiss {
-    background: none;
-    border: none;
-    padding: var(--spacing-xs);
-    cursor: pointer;
-    color: var(--color-text-secondary);
-    border-radius: var(--radius-sm);
-    transition: all var(--transition-fast);
+  .pwa-install-text {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
   }
 
-  .pwa-install-banner__dismiss:hover {
-    background: var(--color-background-alt);
+  .pwa-install-text strong {
+    font-size: 16px;
+    color: var(--color-text-primary, #333);
   }
 
-  /* インストールボタン */
+  .pwa-install-text span {
+    font-size: 14px;
+    color: var(--color-text-secondary, #666);
+  }
+
   .pwa-install-button {
-    display: none;
-    align-items: center;
-    gap: var(--spacing-xs);
-    padding: var(--spacing-sm) var(--spacing-md);
-    background: var(--color-primary);
+    flex-shrink: 0;
+    background: var(--color-primary, #2196f3);
     color: white;
     border: none;
-    border-radius: var(--radius-md);
-    font-size: var(--font-size-sm);
+    border-radius: 8px;
+    padding: 10px 20px;
+    font-weight: 600;
     cursor: pointer;
-    transition: all var(--transition-base);
+    transition: all 0.2s;
   }
 
   .pwa-install-button:hover {
-    background: var(--color-primary-dark);
+    background: var(--color-primary-dark, #1976d2);
     transform: translateY(-1px);
-    box-shadow: var(--shadow-md);
   }
 
-  /* iOS用モーダル */
-  .ios-install-modal {
+  .pwa-install-dismiss {
+    position: absolute;
+    top: var(--spacing-sm);
+    right: var(--spacing-sm);
+    background: none;
+    border: none;
+    color: var(--color-text-secondary, #666);
+    cursor: pointer;
+    padding: 4px;
+    border-radius: 50%;
+    transition: all 0.2s;
+  }
+
+  .pwa-install-dismiss:hover {
+    background: var(--color-background-secondary, #f5f5f5);
+  }
+
+  /* iOSインストールガイド */
+  .pwa-ios-guide {
     position: fixed;
     top: 0;
     left: 0;
     right: 0;
     bottom: 0;
-    background: rgba(0, 0, 0, 0.5);
+    background: rgba(0, 0, 0, 0.8);
     display: flex;
     align-items: center;
     justify-content: center;
-    z-index: var(--z-modal, 1050);
-    padding: var(--spacing-md);
+    z-index: 9999;
+    opacity: 0;
+    transition: opacity 0.3s;
+    padding: var(--spacing-lg);
   }
 
-  .ios-install-modal__content {
-    background: var(--color-surface);
+  .pwa-ios-guide.show {
+    opacity: 1;
+  }
+
+  .pwa-ios-guide-content {
+    background: white;
+    border-radius: 16px;
     padding: var(--spacing-xl);
-    border-radius: var(--radius-lg);
-    max-width: 400px;
-    width: 100%;
-    box-shadow: var(--shadow-xl);
+    max-width: 320px;
+    text-align: center;
   }
 
-  .ios-install-modal__content h3 {
-    margin-top: 0;
+  .pwa-ios-guide h3 {
+    margin: 0 0 var(--spacing-md);
+    font-size: 20px;
   }
 
-  .ios-install-modal__content ol {
-    margin: var(--spacing-md) 0;
-    padding-left: var(--spacing-lg);
+  .pwa-ios-guide p {
+    margin: 0 0 var(--spacing-lg);
+    line-height: 1.6;
+    color: var(--color-text-secondary, #666);
   }
 
-  .ios-install-modal__content li {
-    margin-bottom: var(--spacing-sm);
+  .pwa-ios-icon {
+    display: inline-block;
+    padding: 2px 8px;
+    background: var(--color-primary-light, #e3f2fd);
+    border-radius: 4px;
+    font-weight: 600;
+    color: var(--color-primary, #2196f3);
   }
 
-  /* 成功通知 */
-  .pwa-install-success {
-    position: fixed;
-    top: -60px;
-    left: 50%;
-    transform: translateX(-50%);
-    background: var(--color-success);
+  .pwa-ios-guide-close {
+    background: var(--color-primary, #2196f3);
     color: white;
-    padding: var(--spacing-sm) var(--spacing-lg);
-    border-radius: var(--radius-xl);
-    display: flex;
-    align-items: center;
-    gap: var(--spacing-sm);
-    box-shadow: var(--shadow-lg);
-    transition: top var(--transition-base);
-    z-index: var(--z-tooltip);
+    border: none;
+    border-radius: 8px;
+    padding: 12px 32px;
+    font-weight: 600;
+    cursor: pointer;
   }
 
-  .pwa-install-success.show {
-    top: calc(var(--spacing-lg) + env(safe-area-inset-top));
-  }
-
-  /* アップデート通知 */
+  /* アップデートバナー */
   .pwa-update-banner {
     position: fixed;
-    top: -60px;
-    left: 50%;
-    transform: translateX(-50%);
-    background: var(--color-info);
-    color: white;
-    padding: var(--spacing-sm) var(--spacing-lg);
-    border-radius: var(--radius-md);
-    display: flex;
-    align-items: center;
-    gap: var(--spacing-md);
-    box-shadow: var(--shadow-lg);
-    transition: top var(--transition-base);
-    z-index: var(--z-tooltip);
+    top: calc(-100% - 10px);
+    left: var(--spacing-lg);
+    right: var(--spacing-lg);
+    background: var(--color-warning-light, #fff3cd);
+    border: 1px solid var(--color-warning, #ffc107);
+    border-radius: 8px;
+    padding: var(--spacing-sm) var(--spacing-md);
+    z-index: 1000;
+    transition: top 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   }
 
   .pwa-update-banner.show {
@@ -477,3 +446,5 @@ document.head.appendChild(style);
 document.addEventListener('DOMContentLoaded', () => {
   window.pwaInstaller = new PWAInstaller();
 });
+
+})(); // IIFE終了

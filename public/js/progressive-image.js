@@ -69,6 +69,7 @@ class ProgressiveImageLoader {
     const srcset = img.dataset.srcset;
     const sizes = img.dataset.sizes;
     const placeholder = img.dataset.placeholder;
+    const originalSrc = src; // エラーメッセージ用に保存
 
     if (!src) return;
 
