@@ -117,12 +117,17 @@
     toggleLocationField(participationType) {
       const locationGroup = document.querySelector('.location-group');
       if (locationGroup) {
+        const input = locationGroup.querySelector('input');
         if (participationType === 'venue') {
           locationGroup.style.display = 'block';
-          locationGroup.querySelector('input').required = true;
+          if (input) {
+            input.required = true;
+          }
         } else {
           locationGroup.style.display = 'none';
-          locationGroup.querySelector('input').required = false;
+          if (input) {
+            input.required = false;
+          }
         }
       }
     }
