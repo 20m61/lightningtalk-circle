@@ -1,3 +1,18 @@
+/* CSS Variables for Better Maintainability */
+:root {
+  /* Contrast-optimized text colors */
+  --text-primary: #1a202c;
+  --text-secondary: #374151;
+  --text-light: #6b7280;
+
+  /* Text shadow for enhanced readability */
+  --text-shadow-light: 0 1px 2px rgba(255, 255, 255, 0.8);
+
+  /* Existing color variables */
+  --color-primary: #4a90e2;
+  --color-primary-light: rgba(74, 144, 226, 0.2);
+}
+
 /* Reset & Base Styles */
 * {
   margin: 0;
@@ -64,18 +79,18 @@ header.scrolled .logo {
 }
 
 .nav-links a {
-  color: #1a202c !important;
+  color: var(--text-primary) !important;
   text-decoration: none;
   font-weight: 600;
   transition: all var(--transition-base);
   padding: var(--spacing-sm, 10px) var(--spacing-md, 15px);
   border-radius: var(--radius-xl, 20px);
-  text-shadow: 0 1px 2px rgba(255, 255, 255, 0.8);
+  text-shadow: var(--text-shadow-light);
 }
 
 header.scrolled .nav-links a {
-  color: #1a202c !important;
-  text-shadow: 0 1px 2px rgba(255, 255, 255, 0.8);
+  color: var(--text-primary) !important;
+  text-shadow: var(--text-shadow-light);
 }
 
 .nav-links a:hover {
@@ -225,7 +240,7 @@ header.scrolled .nav-links a {
 }
 
 .event-card h3 {
-  color: #1a202c !important;
+  color: var(--text-primary) !important;
   margin-bottom: 20px;
   font-size: 1.5rem;
   font-weight: 700;
@@ -1503,23 +1518,23 @@ footer h3 {
 .event-card p,
 .event-card span,
 .event-card div:not(.btn):not(.badge) {
-  color: #1a202c !important;
+  color: var(--text-primary) !important;
   font-weight: 500;
 }
 
 .event-card .event-meta span,
 .event-card .event-stats span {
-  color: #374151 !important;
+  color: var(--text-secondary) !important;
   font-weight: 500;
 }
 
 .event-card .event-title {
-  color: #1a202c !important;
+  color: var(--text-primary) !important;
   font-weight: 700;
 }
 
 .event-card .event-description {
-  color: #374151 !important;
+  color: var(--text-secondary) !important;
   font-weight: 500;
 }
 
