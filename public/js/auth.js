@@ -4,14 +4,31 @@
 
 // Configuration
 const COGNITO_CONFIG = {
-  userPoolId: 'ap-northeast-1_PHRdkumdl',
-  clientId: '5t48tpbh5qe26otojkfq1rf0ls',
+  userPoolId:
+    window.location.hostname.includes('dev') ||
+    window.location.hostname.includes('localhost') ||
+    window.location.hostname.includes('cloudfront')
+      ? 'ap-northeast-1_PHRdkumdl'
+      : 'ap-northeast-1_IG3yOKBmT',
+  clientId:
+    window.location.hostname.includes('dev') ||
+    window.location.hostname.includes('localhost') ||
+    window.location.hostname.includes('cloudfront')
+      ? '5t48tpbh5qe26otojkfq1rf0ls'
+      : '42u3ma63qf01utk4jcd6pn9l8s',
   region: 'ap-northeast-1',
-  domain: 'lightningtalk-auth-dev.auth.ap-northeast-1.amazoncognito.com',
+  domain:
+    window.location.hostname.includes('dev') ||
+    window.location.hostname.includes('localhost') ||
+    window.location.hostname.includes('cloudfront')
+      ? 'lightningtalk-auth-dev.auth.ap-northeast-1.amazoncognito.com'
+      : 'lightningtalk-secure-1753166187.auth.ap-northeast-1.amazoncognito.com',
   redirectUri: `${window.location.origin}/callback`,
   apiEndpoint: window.location.origin.includes('localhost')
     ? 'http://localhost:3333/api'
-    : 'https://4mz5i3x23c.execute-api.ap-northeast-1.amazonaws.com/prod/api'
+    : window.location.hostname.includes('dev') || window.location.hostname.includes('cloudfront')
+      ? 'https://wf6gf7eisk.execute-api.ap-northeast-1.amazonaws.com/dev/api'
+      : 'https://4ujhkvx000.execute-api.ap-northeast-1.amazonaws.com/prod/api'
 };
 
 // Authentication state

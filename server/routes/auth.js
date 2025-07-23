@@ -465,7 +465,10 @@ router.post(
       const { code } = req.body;
 
       // Exchange authorization code for tokens with Cognito
-      const tokenUrl = `https://lightningtalk-auth-dev.auth.ap-northeast-1.amazoncognito.com/oauth2/token`;
+      const tokenUrl =
+        process.env.NODE_ENV === 'production'
+          ? `https://lightningtalk-secure-1753166187.auth.ap-northeast-1.amazoncognito.com/oauth2/token`
+          : `https://lightningtalk-auth-dev.auth.ap-northeast-1.amazoncognito.com/oauth2/token`;
 
       // Get client secret from AWS Secrets Manager or environment
       let clientSecret;
@@ -488,7 +491,10 @@ router.post(
 
       const params = new URLSearchParams({
         grant_type: 'authorization_code',
-        client_id: '5t48tpbh5qe26otojkfq1rf0ls',
+        client_id:
+          process.env.NODE_ENV === 'production'
+            ? '42u3ma63qf01utk4jcd6pn9l8s'
+            : '5t48tpbh5qe26otojkfq1rf0ls',
         client_secret: clientSecret,
         code: code,
         redirect_uri:
