@@ -7,7 +7,7 @@
 import puppeteer from 'puppeteer';
 import fs from 'fs/promises';
 
-const TEST_URL = 'http://127.0.0.1:3334';
+const TEST_URL = process.env.CHECK_URL || 'http://127.0.0.1:3334';
 
 async function detailedErrorCheck() {
   console.log('🔍 詳細なエラーチェックを開始します...\n');
