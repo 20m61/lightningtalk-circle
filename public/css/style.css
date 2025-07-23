@@ -64,22 +64,25 @@ header.scrolled .logo {
 }
 
 .nav-links a {
-  color: var(--color-text-primary, #2c3e50);
+  color: #1a202c !important;
   text-decoration: none;
-  font-weight: var(--font-weight-medium, 500);
+  font-weight: 600;
   transition: all var(--transition-base);
   padding: var(--spacing-sm, 10px) var(--spacing-md, 15px);
   border-radius: var(--radius-xl, 20px);
+  text-shadow: 0 1px 2px rgba(255, 255, 255, 0.8);
 }
 
 header.scrolled .nav-links a {
-  color: var(--color-text-primary, #2c3e50);
+  color: #1a202c !important;
+  text-shadow: 0 1px 2px rgba(255, 255, 255, 0.8);
 }
 
 .nav-links a:hover {
-  background: var(--color-primary-light, rgba(74, 144, 226, 0.1));
-  color: var(--color-primary, #4a90e2);
+  background: var(--color-primary-light, rgba(74, 144, 226, 0.2));
+  color: #2563eb !important;
   transform: translateY(-2px);
+  text-shadow: none;
 }
 
 .mobile-menu-toggle {
@@ -222,10 +225,10 @@ header.scrolled .nav-links a {
 }
 
 .event-card h3 {
-  color: #34495e;
+  color: #1a202c !important;
   margin-bottom: 20px;
   font-size: 1.5rem;
-  font-weight: 600;
+  font-weight: 700;
   font-family: "Noto Sans JP", sans-serif;
 }
 
@@ -1494,6 +1497,30 @@ footer h3 {
     opacity: 1;
     transform: scale(1);
   }
+}
+
+/* Event Card Text Contrast Fixes */
+.event-card p,
+.event-card span,
+.event-card div:not(.btn):not(.badge) {
+  color: #1a202c !important;
+  font-weight: 500;
+}
+
+.event-card .event-meta span,
+.event-card .event-stats span {
+  color: #374151 !important;
+  font-weight: 500;
+}
+
+.event-card .event-title {
+  color: #1a202c !important;
+  font-weight: 700;
+}
+
+.event-card .event-description {
+  color: #374151 !important;
+  font-weight: 500;
 }
 
 /* Responsive Design */

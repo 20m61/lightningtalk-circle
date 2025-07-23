@@ -12,10 +12,10 @@ class LightningTalkApp {
 
     // Cognito Configuration - SECURE: Retrieved from environment
     this.cognitoConfig = {
-      userPoolId: process.env.VITE_USER_POOL_ID || 'SET_VIA_ENVIRONMENT',
-      clientId: process.env.VITE_USER_POOL_CLIENT_ID || 'SET_VIA_ENVIRONMENT',
-      region: process.env.VITE_AWS_REGION || 'ap-northeast-1',
-      domain: process.env.VITE_COGNITO_DOMAIN || 'SET_VIA_ENVIRONMENT'
+      userPoolId: 'SET_VIA_ENVIRONMENT',
+      clientId: 'SET_VIA_ENVIRONMENT',
+      region: 'ap-northeast-1',
+      domain: 'SET_VIA_ENVIRONMENT'
     };
 
     // Animation Manager Reference
@@ -78,24 +78,59 @@ class LightningTalkApp {
     this.init();
   }
 
+  // Helper method to safely get environment variables
+  getEnvVar(name, defaultValue) {
+    try {
+      if (typeof process !== 'undefined' && process.env && process.env[name]) {
+        return process.env[name];
+      }
+    } catch (e) {
+      // process is not defined in browser
+    }
+    return defaultValue;
+  }
+
   init() {
-    this.cacheDOMElements();
-    this.setupEventListeners();
-    this.setupScrollAnimations();
-    this.setupSmoothScroll();
-    this.updateFeedbackButton();
-    this.startPeriodicUpdates();
-    this.setupParallax();
-    this.setupFloatingEffects();
-    this.setupModalHandlers();
-    this.setupTopicInteractions();
-    this.initEventModal();
-    this.setupMobileMenu();
-    this.updateSurveyCounters();
-    this.setupChatWidget();
-    this.setupCountdownTimer();
-    this.setupParticipationVoting();
-    this.connectWebSocket();
+    try {
+      this.cacheDOMElements();
+      this.setupEventListeners();
+
+      // 存在しない要素に依存する機能は安全にスキップ
+      if (this.elements.header) {
+        this.setupScrollAnimations();
+        this.setupParallax();
+      }
+
+      this.setupSmoothScroll();
+      this.updateFeedbackButton();
+      this.startPeriodicUpdates();
+      this.setupFloatingEffects();
+      this.setupModalHandlers();
+      this.setupTopicInteractions();
+      this.initEventModal();
+      this.setupMobileMenu();
+
+      if (this.elements.surveyCounters.online || this.elements.surveyCounters.offline) {
+        this.updateSurveyCounters();
+      }
+
+      if (this.elements.chatWidget) {
+        this.setupChatWidget();
+      }
+
+      if (Object.values(this.elements.countdownElements).some(el => el !== null)) {
+        this.setupCountdownTimer();
+      }
+
+      this.setupParticipationVoting();
+      this.connectWebSocket();
+    } catch (error) {
+      if (this.logger) {
+        this.logger.error('Initialization error', { error: error.message, category: 'app_init' });
+      } else {
+        console.error('App initialization error:', error);
+      }
+    }
   }
 
   cacheDOMElements() {
@@ -2930,9 +2965,199 @@ styleSheet.textContent = additionalStyles;
 document.head.appendChild(styleSheet);
 
 // Initialize the application when DOM is loaded
-document.addEventListener('DOMContentLoaded', () => {
+function initializeApp() {
   const app = new LightningTalkApp();
   window.lightningTalkApp = app;
+  return app;
+}
+
+// Check if DOM is already loaded, otherwise wait for DOMContentLoaded
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', () => {
+    const app = initializeApp();
+
+    // Initialize Mobile Optimizations
+    if (
+      window.MobileTouchManager &&
+      window.MobileComponentSystem &&
+      window.MobilePerformanceOptimizer
+    ) {
+      app.logger.info('Mobile optimization systems initialized', { category: 'mobile' });
+
+      // Set up mobile-specific event listeners
+      app.setupMobileEventListeners();
+
+      // Apply mobile-specific UI enhancements
+      app.applyMobileEnhancements();
+    }
+
+    // Register Service Worker for offline support
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker
+          .register('/service-worker.js')
+          .then(registration => {
+            app.logger.info('Service Worker registered', {
+              scope: registration.scope,
+              category: 'service_worker'
+            });
+
+            // Check for updates
+            registration.addEventListener('updatefound', () => {
+              const newWorker = registration.installing;
+              app.logger.info('Service Worker update found', { category: 'service_worker' });
+
+              newWorker.addEventListener('statechange', () => {
+                if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+                  // New service worker installed, show update notification
+                  app.showNotification(
+                    '新しいバージョンが利用可能です。ページを更新してください。',
+                    'info'
+                  );
+                }
+              });
+            });
+          })
+          .catch(error => {
+            app.logger.error('Service Worker registration failed', {
+              error: error.message,
+              category: 'service_worker'
+            });
+          });
+      });
+    }
+
+    // Setup vote form submission
+    const voteForm = document.getElementById('voteForm');
+    if (voteForm) {
+      voteForm.addEventListener('submit', e => {
+        e.preventDefault();
+
+        const formData = new FormData(voteForm);
+        const voterData = {
+          name: formData.get('name').trim(),
+          email: formData.get('email').trim()
+        };
+
+        if (!voterData.name) {
+          alert('お名前を入力してください');
+          return;
+        }
+
+        app.submitVote(app.currentEventId, app.currentVoteType, voterData);
+
+        // Close modal and reset form
+        app.elements.voteModal.style.display = 'none';
+        voteForm.reset();
+      });
+    }
+
+    // Setup admin login form submission
+    const adminLoginForm = document.getElementById('adminLoginForm');
+    if (adminLoginForm) {
+      adminLoginForm.addEventListener('submit', async e => {
+        e.preventDefault();
+
+        const formData = new FormData(adminLoginForm);
+        const loginData = {
+          email: formData.get('email').trim(),
+          password: formData.get('password'),
+          remember: formData.get('remember') ? true : false
+        };
+
+        // Hide error message
+        document.getElementById('loginError').style.display = 'none';
+
+        try {
+          const response = await fetch('/api/auth/login', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(loginData)
+          });
+
+          const data = await response.json();
+
+          if (response.ok) {
+            // Store token
+            localStorage.setItem('adminToken', data.token);
+            if (loginData.remember) {
+              localStorage.setItem('adminTokenExpiry', data.expiresAt);
+            }
+
+            // Redirect to admin dashboard
+            window.location.href = '/admin.html';
+          } else {
+            // Show error message
+            const errorEl = document.getElementById('loginError');
+            const errorMessageEl = document.getElementById('loginErrorMessage');
+            errorMessageEl.textContent = data.message || 'ログインに失敗しました';
+            errorEl.style.display = 'block';
+          }
+        } catch (error) {
+          this.logger.error('Login error', {
+            error: error.message,
+            category: 'authentication'
+          });
+          const errorEl = document.getElementById('loginError');
+          const errorMessageEl = document.getElementById('loginErrorMessage');
+          errorMessageEl.textContent = 'ネットワークエラーが発生しました';
+          errorEl.style.display = 'block';
+        }
+      });
+    }
+
+    // Global function to close vote modal
+    window.closeVoteModal = () => {
+      const voteModal = document.getElementById('voteModal');
+      if (voteModal) {
+        voteModal.style.display = 'none';
+      }
+    };
+
+    // Global function to show admin login modal
+    window.showAdminLogin = () => {
+      // Googleログインのみを使用
+      if (window.googleAuth) {
+        window.googleAuth.login();
+      } else if (window.loginWithGoogle) {
+        window.loginWithGoogle();
+      }
+    };
+
+    // Global function to close admin login modal
+    window.closeAdminLogin = () => {
+      // 管理者ログインモーダルは削除されたため何もしない
+    };
+
+    // Admin login processing - Googleログインのみ使用
+    window.processAdminLogin = async () => {
+      // Googleログインにリダイレクト
+      if (window.googleAuth) {
+        window.googleAuth.login();
+      } else if (window.loginWithGoogle) {
+        window.loginWithGoogle();
+      }
+    };
+
+    // Close modals when clicking outside
+    window.addEventListener('click', e => {
+      const voteModal = document.getElementById('voteModal');
+      const adminLoginModal = document.getElementById('adminLoginModal');
+
+      if (e.target === voteModal) {
+        voteModal.style.display = 'none';
+      }
+
+      if (e.target === adminLoginModal) {
+        adminLoginModal.style.display = 'none';
+      }
+    });
+  });
+} else {
+  // DOM is already loaded, initialize immediately
+  const app = initializeApp();
 
   // Initialize Mobile Optimizations
   if (
@@ -2940,7 +3165,7 @@ document.addEventListener('DOMContentLoaded', () => {
     window.MobileComponentSystem &&
     window.MobilePerformanceOptimizer
   ) {
-    this.logger.info('Mobile optimization systems initialized', { category: 'mobile' });
+    app.logger.info('Mobile optimization systems initialized', { category: 'mobile' });
 
     // Set up mobile-specific event listeners
     app.setupMobileEventListeners();
@@ -3112,9 +3337,12 @@ document.addEventListener('DOMContentLoaded', () => {
       adminLoginModal.style.display = 'none';
     }
   });
-});
+}
 
 // Export for potential module use
 if (typeof module !== 'undefined' && module.exports) {
   module.exports = LightningTalkApp;
 }
+
+// Make class available globally for testing and debugging
+window.LightningTalkApp = LightningTalkApp;

@@ -828,7 +828,7 @@ class UnifiedComponentSystem {
     fallback.textContent = `⚠️ Component Error: ${errorMessage}`;
 
     // 開発環境でのみ表示
-    if (process.env.NODE_ENV !== 'production') {
+    if (typeof process !== 'undefined' && process.env && process.env.NODE_ENV !== 'production') {
       return fallback;
     }
 
