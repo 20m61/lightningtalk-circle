@@ -1,0 +1,493 @@
+/**
+ * Card Component
+ * 統一されたカードシステム
+ */
+
+/* ========================================
+   Base Card Styles
+   ======================================== */
+
+.card {
+  /* Layout */
+  display: flex;
+  flex-direction: column;
+  position: relative;
+
+  /* Appearance */
+  background-color: var(--color-neutral-0);
+  border: var(--card-border);
+  border-radius: var(--card-radius);
+  box-shadow: var(--card-shadow);
+
+  /* Spacing */
+  padding: var(--card-padding);
+
+  /* Transitions */
+  transition: var(--event-card-transition);
+
+  /* Ensure full height in grid layouts */
+  height: 100%;
+}
+
+.card:hover {
+  box-shadow: var(--card-shadow-hover);
+  transform: translateY(-2px);
+}
+
+/* ========================================
+   Card Variants
+   ======================================== */
+
+/* Interactive Card */
+.card-interactive {
+  cursor: pointer;
+  transition: var(--event-card-transition);
+}
+
+.card-interactive:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-xl);
+}
+
+.card-interactive:active {
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-lg);
+}
+
+/* Outlined Card */
+.card-outlined {
+  box-shadow: none;
+  border: 2px solid var(--color-neutral-200);
+}
+
+.card-outlined:hover {
+  border-color: var(--color-primary-300);
+  box-shadow: var(--shadow-md);
+}
+
+/* Filled Card */
+.card-filled {
+  background-color: var(--color-neutral-50);
+  border: 1px solid var(--color-neutral-100);
+}
+
+/* Elevated Card */
+.card-elevated {
+  box-shadow: var(--shadow-lg);
+  border: none;
+}
+
+.card-elevated:hover {
+  box-shadow: var(--shadow-xl);
+}
+
+/* Gradient Card */
+.card-gradient {
+  background: linear-gradient(135deg, var(--color-primary-50) 0%, var(--color-secondary-50) 100%);
+  border: 1px solid var(--color-primary-100);
+}
+
+/* ========================================
+   Card Sections
+   ======================================== */
+
+/* Card Header */
+.card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: var(--space-4);
+  padding-bottom: var(--space-4);
+  border-bottom: 1px solid var(--color-neutral-200);
+}
+
+.card-header:last-child {
+  margin-bottom: 0;
+  padding-bottom: 0;
+  border-bottom: none;
+}
+
+/* Card Title */
+.card-title {
+  margin: 0;
+  font-size: var(--font-size-xl);
+  font-weight: var(--font-weight-semibold);
+  line-height: var(--line-height-tight);
+  color: var(--color-neutral-900);
+}
+
+.card-title a {
+  color: inherit;
+  text-decoration: none;
+  transition: var(--transition-colors);
+}
+
+.card-title a:hover {
+  color: var(--color-primary-600);
+}
+
+/* Card Subtitle */
+.card-subtitle {
+  margin: var(--space-1) 0 0 0;
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-normal);
+  color: var(--color-neutral-600);
+  line-height: var(--line-height-normal);
+}
+
+/* Card Body */
+.card-body {
+  flex: 1;
+  margin-bottom: var(--space-4);
+}
+
+.card-body:last-child {
+  margin-bottom: 0;
+}
+
+/* Card Content */
+.card-content {
+  flex: 1;
+  color: var(--color-neutral-700);
+  line-height: var(--line-height-relaxed);
+}
+
+.card-content p {
+  margin: 0 0 var(--space-3) 0;
+}
+
+.card-content p:last-child {
+  margin-bottom: 0;
+}
+
+/* Card Footer */
+.card-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: var(--space-4);
+  padding-top: var(--space-4);
+  border-top: 1px solid var(--color-neutral-200);
+}
+
+.card-footer:first-child {
+  margin-top: 0;
+  padding-top: 0;
+  border-top: none;
+}
+
+/* Card Actions */
+.card-actions {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  margin-top: auto; /* Push to bottom in flex column */
+}
+
+.card-actions-right {
+  margin-left: auto;
+}
+
+.card-actions-full {
+  width: 100%;
+  justify-content: center;
+}
+
+/* ========================================
+   Card Sizes
+   ======================================== */
+
+.card-sm {
+  padding: var(--space-4);
+}
+
+.card-lg {
+  padding: var(--space-8);
+}
+
+.card-xl {
+  padding: var(--space-12);
+}
+
+/* ========================================
+   Card Media
+   ======================================== */
+
+/* Card Image */
+.card-image {
+  position: relative;
+  margin: calc(-1 * var(--card-padding)) calc(-1 * var(--card-padding)) var(--space-4) calc(-1 * var(--card-padding));
+  border-radius: var(--card-radius) var(--card-radius) 0 0;
+  overflow: hidden;
+}
+
+.card-image img {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+  display: block;
+}
+
+.card-image-small img {
+  height: 120px;
+}
+
+.card-image-large img {
+  height: 300px;
+}
+
+/* Card Image Overlay */
+.card-image-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(to bottom, transparent 0%, rgba(0, 0, 0, 0.7) 100%);
+  display: flex;
+  align-items: flex-end;
+  padding: var(--space-4);
+  color: var(--color-neutral-0);
+}
+
+.card-image-overlay .card-title {
+  color: var(--color-neutral-0);
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+/* ========================================
+   Event Card Specific Styles
+   ======================================== */
+
+.event-card {
+  /* Inherit from base card */
+  position: relative;
+  transition: var(--event-card-transition);
+}
+
+.event-card:hover {
+  transform: translateY(-5px);
+  box-shadow: var(--event-card-shadow-hover);
+}
+
+/* Event Status Badge */
+.event-status-badge {
+  position: absolute;
+  top: var(--space-4);
+  right: var(--space-4);
+  padding: var(--space-1) var(--space-3);
+  border-radius: var(--radius-full);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-medium);
+  text-transform: uppercase;
+  letter-spacing: var(--letter-spacing-wide);
+}
+
+.event-status-badge.status-upcoming {
+  background-color: var(--color-info-500);
+  color: var(--color-neutral-0);
+}
+
+.event-status-badge.status-ongoing {
+  background-color: var(--color-success-500);
+  color: var(--color-neutral-0);
+}
+
+.event-status-badge.status-completed {
+  background-color: var(--color-neutral-500);
+  color: var(--color-neutral-0);
+}
+
+.event-status-badge.status-cancelled {
+  background-color: var(--color-error-500);
+  color: var(--color-neutral-0);
+}
+
+/* Event Meta Information */
+.event-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-4);
+  margin-bottom: var(--space-4);
+  font-size: var(--font-size-sm);
+  color: var(--color-neutral-600);
+}
+
+.event-meta-item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+}
+
+.event-meta-icon {
+  width: var(--size-4);
+  height: var(--size-4);
+  flex-shrink: 0;
+}
+
+/* Event Participants Count */
+.event-participants {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  margin-top: var(--space-3);
+  padding: var(--space-2) var(--space-3);
+  background-color: var(--color-neutral-50);
+  border-radius: var(--radius-md);
+  font-size: var(--font-size-sm);
+}
+
+.event-participants-count {
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-primary-600);
+}
+
+/* ========================================
+   Card Lists and Grids
+   ======================================== */
+
+.card-grid {
+  display: grid;
+  gap: var(--space-6);
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+}
+
+.card-grid-sm {
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: var(--space-4);
+}
+
+.card-grid-lg {
+  grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+  gap: var(--space-8);
+}
+
+.card-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+/* ========================================
+   Responsive Modifications
+   ======================================== */
+
+@media (max-width: 767px) {
+  .card {
+    padding: var(--space-4);
+  }
+
+  .card-lg {
+    padding: var(--space-6);
+  }
+
+  .card-xl {
+    padding: var(--space-8);
+  }
+
+  .card-grid {
+    grid-template-columns: 1fr;
+    gap: var(--space-4);
+  }
+
+  .card-footer {
+    flex-direction: column;
+    align-items: stretch;
+    gap: var(--space-3);
+  }
+
+  .card-actions {
+    justify-content: center;
+  }
+
+  .event-meta {
+    font-size: var(--font-size-xs);
+    gap: var(--space-3);
+  }
+}
+
+@media (min-width: 768px) and (max-width: 1023px) {
+  .card-grid {
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  }
+}
+
+/* ========================================
+   Dark Mode Support
+   ======================================== */
+
+@media (prefers-color-scheme: dark) {
+  .card {
+    background-color: var(--color-neutral-100);
+    border-color: var(--color-neutral-200);
+  }
+
+  .card-filled {
+    background-color: var(--color-neutral-200);
+    border-color: var(--color-neutral-300);
+  }
+
+  .card-header {
+    border-bottom-color: var(--color-neutral-300);
+  }
+
+  .card-footer {
+    border-top-color: var(--color-neutral-300);
+  }
+
+  .card-title {
+    color: var(--color-neutral-900);
+  }
+
+  .card-subtitle {
+    color: var(--color-neutral-700);
+  }
+
+  .card-content {
+    color: var(--color-neutral-800);
+  }
+
+  .event-meta {
+    color: var(--color-neutral-700);
+  }
+
+  .event-participants {
+    background-color: var(--color-neutral-200);
+  }
+}
+
+/* ========================================
+   Accessibility Enhancements
+   ======================================== */
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  .card {
+    border-width: 2px;
+  }
+
+  .card-outlined {
+    border-width: 3px;
+  }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  .card,
+  .card-interactive,
+  .event-card {
+    transition: none;
+  }
+
+  .card:hover,
+  .card-interactive:hover,
+  .event-card:hover {
+    transform: none;
+  }
+}
+
+/* Focus styles for interactive cards */
+.card-interactive:focus-visible {
+  outline: 2px solid var(--color-primary-500);
+  outline-offset: 2px;
+}

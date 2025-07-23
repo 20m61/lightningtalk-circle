@@ -1,0 +1,550 @@
+/**
+ * Contrast Improvements CSS
+ * WCAG AA準拠のコントラスト比改善
+ */
+
+/* ========================================
+   Color System Override for Better Contrast
+   ======================================== */
+
+:root {
+  /* Primary text colors - darker for better contrast */
+  --color-text-primary: #1a1a1a; /* Was: var(--color-neutral-900) */
+  --color-text-secondary: #4a4a4a; /* Was: var(--color-neutral-600) */
+  --color-text-muted: #666666; /* Lighter text but still AA compliant */
+  --color-text-inverse: #ffffff;
+
+  /* Background colors */
+  --color-bg-primary: #ffffff;
+  --color-bg-secondary: #f9fafb;
+  --color-bg-tertiary: #f3f4f6;
+  --color-bg-inverse: #1a1a1a;
+
+  /* Link colors with better contrast */
+  --color-link: #0066cc; /* AA compliant blue */
+  --color-link-hover: #0052a3;
+  --color-link-visited: #663399;
+
+  /* Button contrast improvements */
+  --color-button-primary-bg: #ea580c; /* Darker orange */
+  --color-button-primary-text: #ffffff;
+  --color-button-primary-hover: #c2410c;
+
+  --color-button-secondary-bg: #0d9488; /* Darker turquoise */
+  --color-button-secondary-text: #ffffff;
+  --color-button-secondary-hover: #0f766e;
+
+  --color-button-outline-border: #4b5563;
+  --color-button-outline-text: #1f2937;
+  --color-button-outline-hover-bg: #1f2937;
+  --color-button-outline-hover-text: #ffffff;
+
+  /* Form elements */
+  --color-input-border: #6b7280;
+  --color-input-text: #1a1a1a;
+  --color-input-placeholder: #6b7280;
+  --color-input-bg: #ffffff;
+  --color-input-focus-border: #2563eb;
+
+  /* State colors with better contrast */
+  --color-success-text: #166534;
+  --color-success-bg: #dcfce7;
+  --color-warning-text: #854d0e;
+  --color-warning-bg: #fef3c7;
+  --color-error-text: #991b1b;
+  --color-error-bg: #fee2e2;
+  --color-info-text: #1e40af;
+  --color-info-bg: #dbeafe;
+}
+
+/* ========================================
+   Global Text Contrast Improvements
+   ======================================== */
+
+body {
+  color: var(--color-text-primary);
+  background-color: var(--color-bg-primary);
+}
+
+/* Headings with strong contrast */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  color: var(--color-text-primary);
+  font-weight: var(--font-weight-semibold);
+}
+
+/* Paragraphs and general text */
+p,
+li,
+span,
+div {
+  color: var(--color-text-primary);
+  line-height: var(--line-height-relaxed);
+}
+
+/* Muted text - still AA compliant */
+.text-muted,
+.text-secondary {
+  color: var(--color-text-secondary) !important;
+}
+
+/* ========================================
+   Link Contrast Improvements
+   ======================================== */
+
+a {
+  color: var(--color-link);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+a:hover {
+  color: var(--color-link-hover);
+  text-decoration-thickness: 2px;
+}
+
+a:visited {
+  color: var(--color-link-visited);
+}
+
+a:focus {
+  outline: 3px solid var(--color-link);
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+/* Navigation links */
+.nav-link,
+.nav-item a {
+  color: var(--color-text-primary) !important;
+  text-decoration: none;
+  font-weight: var(--font-weight-medium);
+}
+
+.nav-link:hover,
+.nav-item a:hover {
+  color: var(--color-primary-700) !important;
+  background-color: var(--color-primary-50);
+}
+
+/* ========================================
+   Button Contrast Improvements
+   ======================================== */
+
+/* Primary buttons */
+.btn-primary,
+.btn.btn-primary,
+button.btn-primary {
+  background-color: var(--color-button-primary-bg) !important;
+  color: var(--color-button-primary-text) !important;
+  border: 2px solid transparent;
+  font-weight: var(--font-weight-semibold);
+}
+
+.btn-primary:hover,
+.btn.btn-primary:hover,
+button.btn-primary:hover {
+  background-color: var(--color-button-primary-hover) !important;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(234, 88, 12, 0.3);
+}
+
+/* Secondary buttons */
+.btn-secondary,
+.btn.btn-secondary,
+button.btn-secondary {
+  background-color: var(--color-button-secondary-bg) !important;
+  color: var(--color-button-secondary-text) !important;
+  border: 2px solid transparent;
+  font-weight: var(--font-weight-semibold);
+}
+
+.btn-secondary:hover,
+.btn.btn-secondary:hover,
+button.btn-secondary:hover {
+  background-color: var(--color-button-secondary-hover) !important;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(13, 148, 136, 0.3);
+}
+
+/* Outline buttons */
+.btn-outline,
+.btn.btn-outline,
+button.btn-outline {
+  background-color: transparent !important;
+  color: var(--color-button-outline-text) !important;
+  border: 2px solid var(--color-button-outline-border) !important;
+  font-weight: var(--font-weight-medium);
+}
+
+.btn-outline:hover,
+.btn.btn-outline:hover,
+button.btn-outline:hover {
+  background-color: var(--color-button-outline-hover-bg) !important;
+  color: var(--color-button-outline-hover-text) !important;
+  border-color: var(--color-button-outline-hover-bg) !important;
+}
+
+/* Button focus states */
+button:focus,
+.btn:focus,
+[role="button"]:focus {
+  outline: 3px solid var(--color-primary-500);
+  outline-offset: 2px;
+}
+
+/* ========================================
+   Form Element Contrast
+   ======================================== */
+
+input,
+textarea,
+select {
+  color: var(--color-input-text);
+  background-color: var(--color-input-bg);
+  border: 2px solid var(--color-input-border);
+  font-size: var(--font-size-base);
+}
+
+input::placeholder,
+textarea::placeholder {
+  color: var(--color-input-placeholder);
+  opacity: 1;
+}
+
+input:focus,
+textarea:focus,
+select:focus {
+  border-color: var(--color-input-focus-border);
+  outline: 3px solid rgba(37, 99, 235, 0.2);
+  outline-offset: 0;
+}
+
+label {
+  color: var(--color-text-primary);
+  font-weight: var(--font-weight-medium);
+  margin-bottom: var(--space-2);
+  display: inline-block;
+}
+
+/* ========================================
+   Card and Component Contrast
+   ======================================== */
+
+.card,
+.event-card,
+.participation-card {
+  background-color: var(--color-bg-primary);
+  border: 1px solid var(--color-neutral-300);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.card-title,
+.event-card h3,
+.participation-card h3 {
+  color: var(--color-text-primary);
+  font-weight: var(--font-weight-bold);
+}
+
+.card-text,
+.event-card p,
+.participation-card p {
+  color: var(--color-text-secondary);
+}
+
+/* ========================================
+   Modal Contrast
+   ======================================== */
+
+.modal-content,
+.modal__body {
+  background-color: var(--color-bg-primary);
+  color: var(--color-text-primary);
+}
+
+.modal-header,
+.modal__header {
+  border-bottom: 2px solid var(--color-neutral-300);
+}
+
+.modal-title,
+.modal__title {
+  color: var(--color-text-primary);
+  font-weight: var(--font-weight-bold);
+}
+
+/* ========================================
+   Header and Navigation Contrast
+   ======================================== */
+
+.header {
+  background-color: rgba(255, 255, 255, 0.95) !important;
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--color-neutral-200);
+}
+
+.header.scrolled {
+  background-color: rgba(255, 255, 255, 0.98) !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Logo text */
+.logo-text {
+  color: var(--color-text-primary) !important;
+  font-weight: var(--font-weight-bold);
+}
+
+/* ========================================
+   Hero Section Contrast
+   ======================================== */
+
+.hero {
+  background: linear-gradient(135deg, #ffffff 0%, #f9fafb 100%);
+}
+
+.hero h1 {
+  color: var(--color-text-primary);
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.hero p {
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-lg);
+}
+
+/* ========================================
+   Event Cards Contrast
+   ======================================== */
+
+.hero-event-card {
+  background-color: var(--color-bg-primary);
+  border: 2px solid var(--color-neutral-200);
+}
+
+.hero-event-card:hover {
+  border-color: var(--color-primary-400);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+}
+
+.event-status {
+  font-weight: var(--font-weight-semibold);
+}
+
+.event-status.upcoming {
+  color: var(--color-success-text);
+  background-color: var(--color-success-bg);
+}
+
+.event-status.planning {
+  color: var(--color-info-text);
+  background-color: var(--color-info-bg);
+}
+
+.event-status.past {
+  color: var(--color-text-secondary);
+  background-color: var(--color-bg-tertiary);
+}
+
+/* ========================================
+   Footer Contrast
+   ======================================== */
+
+footer {
+  background-color: var(--color-bg-inverse);
+  color: var(--color-text-inverse);
+}
+
+footer h3 {
+  color: var(--color-text-inverse);
+}
+
+footer a {
+  color: var(--color-secondary-300);
+}
+
+footer a:hover {
+  color: var(--color-secondary-200);
+  text-decoration: underline;
+}
+
+/* ========================================
+   State Message Contrast
+   ======================================== */
+
+.alert,
+.message,
+.notification {
+  font-weight: var(--font-weight-medium);
+  padding: var(--space-4);
+  border-radius: var(--radius-md);
+  border-width: 2px;
+  border-style: solid;
+}
+
+.alert-success,
+.message-success {
+  color: var(--color-success-text);
+  background-color: var(--color-success-bg);
+  border-color: var(--color-success-text);
+}
+
+.alert-warning,
+.message-warning {
+  color: var(--color-warning-text);
+  background-color: var(--color-warning-bg);
+  border-color: var(--color-warning-text);
+}
+
+.alert-error,
+.message-error {
+  color: var(--color-error-text);
+  background-color: var(--color-error-bg);
+  border-color: var(--color-error-text);
+}
+
+.alert-info,
+.message-info {
+  color: var(--color-info-text);
+  background-color: var(--color-info-bg);
+  border-color: var(--color-info-text);
+}
+
+/* ========================================
+   Badge and Tag Contrast
+   ======================================== */
+
+.badge,
+.tag {
+  font-weight: var(--font-weight-semibold);
+  padding: var(--space-1) var(--space-2);
+  border-radius: var(--radius-full);
+}
+
+.badge-primary {
+  background-color: var(--color-primary-700);
+  color: var(--color-text-inverse);
+}
+
+.badge-secondary {
+  background-color: var(--color-secondary-700);
+  color: var(--color-text-inverse);
+}
+
+/* ========================================
+   Table Contrast
+   ======================================== */
+
+table {
+  color: var(--color-text-primary);
+}
+
+th {
+  color: var(--color-text-primary);
+  font-weight: var(--font-weight-bold);
+  background-color: var(--color-bg-tertiary);
+}
+
+td {
+  color: var(--color-text-secondary);
+  border-bottom: 1px solid var(--color-neutral-200);
+}
+
+tr:hover td {
+  background-color: var(--color-bg-secondary);
+}
+
+/* ========================================
+   Code Block Contrast
+   ======================================== */
+
+code,
+pre {
+  background-color: var(--color-neutral-100);
+  color: var(--color-text-primary);
+  border: 1px solid var(--color-neutral-300);
+}
+
+/* ========================================
+   Loading State Contrast
+   ======================================== */
+
+.loading-placeholder p {
+  color: var(--color-text-secondary);
+  font-weight: var(--font-weight-medium);
+}
+
+.loading-spinner {
+  border-color: var(--color-neutral-300);
+  border-top-color: var(--color-primary-600);
+}
+
+/* ========================================
+   Mobile Specific Contrast
+   ======================================== */
+
+@media (max-width: 767px) {
+  /* Ensure good contrast on mobile */
+  body {
+    font-size: var(--font-size-base);
+  }
+
+  .btn,
+  button {
+    font-size: var(--font-size-base);
+    font-weight: var(--font-weight-semibold);
+  }
+
+  /* Mobile menu contrast */
+  .mobile-menu {
+    background-color: var(--color-bg-primary);
+    color: var(--color-text-primary);
+  }
+
+  .mobile-menu__link {
+    color: var(--color-text-primary) !important;
+    font-weight: var(--font-weight-medium);
+  }
+
+  .mobile-menu__link:hover {
+    background-color: var(--color-primary-50);
+    color: var(--color-primary-700) !important;
+  }
+}
+
+/* ========================================
+   Dark Mode Support (if implemented)
+   ======================================== */
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --color-text-primary: #f3f4f6;
+    --color-text-secondary: #d1d5db;
+    --color-text-muted: #9ca3af;
+    --color-bg-primary: #111827;
+    --color-bg-secondary: #1f2937;
+    --color-bg-tertiary: #374151;
+    --color-link: #60a5fa;
+    --color-link-hover: #93bbfc;
+    --color-link-visited: #c084fc;
+  }
+}
+
+/* ========================================
+   Print Styles
+   ======================================== */
+
+@media print {
+  body {
+    color: #000000;
+    background-color: #ffffff;
+  }
+
+  a {
+    color: #000000;
+    text-decoration: underline;
+  }
+}

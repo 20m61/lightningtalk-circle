@@ -10,6 +10,9 @@ class ModalFunctionalityFix {
 
   init() {
     this.ensureModalSystemWorks();
+    this.fixRegistrationModal();
+    this.fixEventModal();
+    this.addFallbackTriggers();
   }
 
   ensureModalSystemWorks() {

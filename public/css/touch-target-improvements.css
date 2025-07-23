@@ -1,0 +1,457 @@
+/**
+ * Touch Target Size Improvements
+ * 44px最小タッチターゲットサイズの完全対応
+ */
+
+/* ========================================
+   Global Touch Target Rules
+   ======================================== */
+
+/* All interactive elements must meet minimum size */
+button,
+.btn,
+[role="button"],
+a.button,
+input[type="button"],
+input[type="submit"],
+input[type="reset"] {
+  min-height: 44px !important;
+  min-width: 44px !important;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+/* Ensure clickable area extends to full size */
+button::before,
+.btn::before,
+[role="button"]::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: max(100%, 44px);
+  height: max(100%, 44px);
+  z-index: -1;
+}
+
+/* ========================================
+   Navigation Touch Targets
+   ======================================== */
+
+/* Header navigation links */
+.nav-link,
+.nav-item a,
+.header__nav a {
+  min-height: 44px !important;
+  padding: 12px 16px !important;
+  display: inline-flex;
+  align-items: center;
+}
+
+/* Mobile menu items */
+.mobile-menu__link {
+  min-height: 48px !important;
+  padding: 14px 20px !important;
+  display: flex;
+  align-items: center;
+}
+
+/* Mobile menu toggle */
+.mobile-menu-toggle {
+  width: 48px !important;
+  height: 48px !important;
+  padding: 0 !important;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* ========================================
+   Form Elements Touch Targets
+   ======================================== */
+
+/* Text inputs and textareas */
+input[type="text"],
+input[type="email"],
+input[type="password"],
+input[type="tel"],
+input[type="number"],
+input[type="search"],
+input[type="url"],
+input[type="date"],
+input[type="time"],
+textarea,
+select {
+  min-height: 44px !important;
+  padding: 10px 12px !important;
+  font-size: 16px !important; /* Prevents zoom on iOS */
+}
+
+/* Checkbox and radio containers */
+.checkbox-wrapper,
+.radio-wrapper,
+.form-check {
+  min-height: 44px !important;
+  display: flex;
+  align-items: center;
+  padding: 8px 0;
+}
+
+/* Checkbox and radio inputs */
+input[type="checkbox"],
+input[type="radio"] {
+  width: 20px !important;
+  height: 20px !important;
+  margin: 0 12px 0 0 !important;
+  cursor: pointer;
+}
+
+/* Labels for checkboxes and radios */
+input[type="checkbox"] + label,
+input[type="radio"] + label {
+  cursor: pointer;
+  padding: 12px 12px 12px 0;
+  display: inline-block;
+  min-height: 44px;
+  line-height: 20px;
+  display: flex;
+  align-items: center;
+}
+
+/* ========================================
+   Button Variations
+   ======================================== */
+
+/* Small buttons still meet minimum */
+.btn-sm,
+.btn.btn-sm,
+button.btn-sm {
+  min-height: 44px !important;
+  padding: 10px 16px !important;
+  font-size: var(--font-size-sm);
+}
+
+/* Large buttons */
+.btn-lg,
+.btn.btn-lg,
+button.btn-lg {
+  min-height: 56px !important;
+  padding: 16px 32px !important;
+  font-size: var(--font-size-lg);
+}
+
+/* Icon buttons */
+.btn-icon,
+.icon-button {
+  width: 44px !important;
+  height: 44px !important;
+  padding: 0 !important;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Floating action buttons */
+.fab,
+.floating-action-button {
+  width: 56px !important;
+  height: 56px !important;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* ========================================
+   Card and List Item Touch Targets
+   ======================================== */
+
+/* Clickable cards */
+.card.clickable,
+.event-card,
+.participation-card {
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+
+.card.clickable:hover,
+.event-card:hover,
+.participation-card:hover {
+  transform: translateY(-2px);
+}
+
+/* List items with actions */
+.list-item-action,
+.clickable-list-item {
+  min-height: 48px !important;
+  padding: 12px 16px !important;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+}
+
+/* ========================================
+   Modal and Dialog Touch Targets
+   ======================================== */
+
+/* Modal close buttons */
+.modal__close,
+.modal-close,
+.close-button {
+  width: 44px !important;
+  height: 44px !important;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+/* Modal action buttons */
+.modal-footer .btn,
+.modal__actions .btn {
+  min-height: 44px !important;
+  margin: 4px !important;
+}
+
+/* ========================================
+   Dropdown and Menu Touch Targets
+   ======================================== */
+
+/* Dropdown items */
+.dropdown-item,
+.menu-item {
+  min-height: 44px !important;
+  padding: 12px 16px !important;
+  display: flex;
+  align-items: center;
+}
+
+/* Select dropdown replacement */
+.custom-select,
+.select-wrapper {
+  min-height: 44px !important;
+}
+
+/* ========================================
+   Tab and Pill Navigation
+   ======================================== */
+
+/* Tab items */
+.nav-tabs .nav-link,
+.tab-item {
+  min-height: 44px !important;
+  padding: 12px 20px !important;
+  display: flex;
+  align-items: center;
+}
+
+/* Pill navigation */
+.nav-pills .nav-link,
+.pill-item {
+  min-height: 44px !important;
+  padding: 10px 20px !important;
+  display: inline-flex;
+  align-items: center;
+}
+
+/* ========================================
+   Pagination Touch Targets
+   ======================================== */
+
+/* Pagination buttons */
+.pagination-btn,
+.page-link {
+  min-width: 44px !important;
+  min-height: 44px !important;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 2px;
+}
+
+/* ========================================
+   Tag and Chip Touch Targets
+   ======================================== */
+
+/* Tags with actions */
+.tag.clickable,
+.chip.clickable {
+  min-height: 32px !important;
+  padding: 6px 12px !important;
+  cursor: pointer;
+  position: relative;
+}
+
+/* Tag close buttons */
+.tag-close,
+.chip-close {
+  width: 24px !important;
+  height: 24px !important;
+  margin-left: 8px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+/* Ensure tag touch target with pseudo element */
+.tag.clickable::before,
+.chip.clickable::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: max(100%, 44px);
+  height: 44px;
+  z-index: -1;
+}
+
+/* ========================================
+   Social Media and Icon Links
+   ======================================== */
+
+/* Social media icons */
+.social-icon,
+.icon-link {
+  width: 44px !important;
+  height: 44px !important;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+}
+
+/* ========================================
+   Mobile Specific Adjustments
+   ======================================== */
+
+@media (max-width: 767px) {
+  /* Even larger targets on mobile */
+  button,
+  .btn,
+  [role="button"] {
+    min-height: 48px !important;
+  }
+
+  /* Mobile navigation */
+  .mobile-nav-item {
+    min-height: 56px !important;
+    padding: 16px 20px !important;
+  }
+
+  /* Bottom navigation items */
+  .bottom-nav-item {
+    min-height: 56px !important;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+
+  /* Mobile form inputs */
+  input:not([type="checkbox"]):not([type="radio"]),
+  textarea,
+  select {
+    min-height: 48px !important;
+    font-size: 16px !important;
+  }
+}
+
+/* ========================================
+   Tablet Specific Adjustments
+   ======================================== */
+
+@media (min-width: 768px) and (max-width: 1023px) {
+  /* Comfortable touch targets for tablets */
+  .touch-target {
+    min-height: 48px !important;
+    min-width: 48px !important;
+  }
+}
+
+/* ========================================
+   Accessibility Enhancements
+   ======================================== */
+
+/* Focus states for touch targets */
+button:focus,
+.btn:focus,
+[role="button"]:focus,
+a:focus {
+  outline: 3px solid var(--color-primary-500);
+  outline-offset: 2px;
+  z-index: 1;
+}
+
+/* High contrast mode adjustments */
+@media (prefers-contrast: high) {
+  button,
+  .btn,
+  [role="button"] {
+    border: 2px solid currentColor !important;
+  }
+}
+
+/* ========================================
+   Special Cases
+   ======================================== */
+
+/* Inline links in text */
+p a,
+li a,
+.text-link {
+  padding: 2px 4px;
+  margin: -2px -4px;
+  display: inline-block;
+  min-height: auto;
+  position: relative;
+}
+
+/* Ensure inline link touch target with pseudo element */
+p a::after,
+li a::after,
+.text-link::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: max(100%, 44px);
+  height: 44px;
+  z-index: -1;
+}
+
+/* Skip links */
+.skip-link {
+  min-height: 44px !important;
+  padding: 12px 20px !important;
+  display: inline-flex;
+  align-items: center;
+}
+
+/* Toast/Snackbar actions */
+.toast-action,
+.snackbar-action {
+  min-height: 36px !important;
+  min-width: 64px !important;
+  padding: 8px 16px !important;
+  margin-left: 16px;
+}
+
+/* ========================================
+   Debug Mode
+   ======================================== */
+
+/* Enable to visualize touch targets */
+.debug-touch-targets button::before,
+.debug-touch-targets .btn::before,
+.debug-touch-targets [role="button"]::before {
+  background-color: rgba(255, 0, 0, 0.1);
+  border: 1px dashed red;
+}
