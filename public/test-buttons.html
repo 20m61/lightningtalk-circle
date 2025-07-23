@@ -1,0 +1,169 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Button Test - Lightning Talk Circle</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        padding: 20px;
+        max-width: 800px;
+        margin: 0 auto;
+      }
+      .btn {
+        padding: 10px 20px;
+        margin: 10px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        background: #4a90e2;
+        color: white;
+      }
+      .test-result {
+        margin: 10px 0;
+        padding: 10px;
+        border-left: 4px solid #4a90e2;
+        background: #f0f8ff;
+      }
+      .error {
+        border-color: #e74c3c;
+        background: #fdf2f2;
+      }
+      .success {
+        border-color: #27ae60;
+        background: #f0fdf4;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Button Functionality Test</h1>
+
+    <div id="test-results"></div>
+
+    <h2>Test Buttons</h2>
+    <button class="btn" data-action="register-listener">参加登録（リスナー）</button>
+    <button class="btn" data-action="register-speaker">発表申込み</button>
+    <button class="btn" data-action="feedback">フィードバック</button>
+
+    <h2>Direct Method Calls</h2>
+    <button class="btn" onclick="testDirectCall('openRegistrationModal', 'listener')">
+      直接呼び出し：登録モーダル
+    </button>
+    <button class="btn" onclick="testAppInstance()">アプリインスタンス確認</button>
+
+    <!-- モーダル -->
+    <div
+      id="registerModal"
+      class="modal"
+      style="
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.5);
+        z-index: 1000;
+      "
+    >
+      <div
+        class="modal-content"
+        style="background: white; margin: 10% auto; padding: 20px; width: 80%; max-width: 600px; border-radius: 8px"
+      >
+        <span class="close" style="float: right; font-size: 28px; cursor: pointer">&times;</span>
+        <div id="modalBody">モーダル本体</div>
+      </div>
+    </div>
+
+    <script>
+      function log(message, type = 'info') {
+        const results = document.getElementById('test-results');
+        const div = document.createElement('div');
+        div.className = `test-result ${type}`;
+        div.innerHTML = `<strong>${new Date().toLocaleTimeString()}</strong>: ${message}`;
+        results.appendChild(div);
+        console.log(message);
+      }
+
+      function testDirectCall(methodName, arg) {
+        try {
+          if (window.lightningTalkApp && typeof window.lightningTalkApp[methodName] === 'function') {
+            window.lightningTalkApp[methodName](arg);
+            log(`✓ ${methodName}(${arg}) called successfully`, 'success');
+          } else {
+            log(`✗ ${methodName} method not found or app not initialized`, 'error');
+          }
+        } catch (error) {
+          log(`✗ Error calling ${methodName}: ${error.message}`, 'error');
+        }
+      }
+
+      function testAppInstance() {
+        if (window.lightningTalkApp) {
+          log(`✓ App instance found: ${typeof window.lightningTalkApp}`, 'success');
+          log(
+            `Available methods: ${Object.getOwnPropertyNames(Object.getPrototypeOf(window.lightningTalkApp))
+              .filter(m => m !== 'constructor')
+              .join(', ')}`,
+            'info'
+          );
+        } else {
+          log('✗ App instance not found', 'error');
+        }
+      }
+
+      // Test data-action buttons
+      document.addEventListener('DOMContentLoaded', () => {
+        log('DOM loaded, setting up tests...');
+
+        // Check if main script loaded
+        if (window.LightningTalkApp) {
+          log('✓ LightningTalkApp class found', 'success');
+        } else {
+          log('✗ LightningTalkApp class not found', 'error');
+        }
+
+        // Wait for app initialization
+        setTimeout(() => {
+          testAppInstance();
+
+          // Test data-action buttons
+          const actionButtons = document.querySelectorAll('[data-action]');
+          log(`Found ${actionButtons.length} buttons with data-action`);
+
+          actionButtons.forEach((btn, i) => {
+            btn.addEventListener('click', e => {
+              e.preventDefault();
+              log(`Button clicked: ${btn.dataset.action} - "${btn.textContent.trim()}"`, 'info');
+
+              if (window.lightningTalkApp && typeof window.lightningTalkApp.handleAction === 'function') {
+                try {
+                  window.lightningTalkApp.handleAction(btn.dataset.action, btn);
+                  log(`✓ handleAction called for: ${btn.dataset.action}`, 'success');
+                } catch (error) {
+                  log(`✗ Error in handleAction: ${error.message}`, 'error');
+                }
+              } else {
+                log('✗ handleAction method not found', 'error');
+              }
+            });
+          });
+
+          // Close modal functionality
+          const closeBtn = document.querySelector('.close');
+          if (closeBtn) {
+            closeBtn.onclick = () => {
+              document.getElementById('registerModal').style.display = 'none';
+              log('Modal closed', 'info');
+            };
+          }
+        }, 1000);
+      });
+    </script>
+
+    <!-- Load main scripts -->
+    <script src="js/logger.js"></script>
+    <script src="js/main.js"></script>
+  </body>
+</html>

@@ -1,0 +1,190 @@
+{
+  "url": "http://127.0.0.1:3334",
+  "timestamp": "2025-07-23T11:26:00.832Z",
+  "errors": {
+    "console": [],
+    "network": [
+      {
+        "url": "http://127.0.0.1:3334/icons/logo-hero.webp",
+        "method": "HEAD",
+        "errorText": "net::ERR_ABORTED",
+        "timestamp": "2025-07-23T11:25:56.695Z"
+      }
+    ],
+    "page": [],
+    "runtime": []
+  },
+  "pageContent": {
+    "title": "なんでもライトニングトーク ⚡",
+    "scripts": [
+      {
+        "src": "inline",
+        "async": false,
+        "defer": false,
+        "type": "text/javascript"
+      },
+      {
+        "src": "http://127.0.0.1:3334/js/logger.js",
+        "async": false,
+        "defer": false,
+        "type": "text/javascript"
+      },
+      {
+        "src": "http://127.0.0.1:3334/js/auth.js",
+        "async": false,
+        "defer": false,
+        "type": "text/javascript"
+      },
+      {
+        "src": "http://127.0.0.1:3334/js/auth-google-only.js",
+        "async": false,
+        "defer": false,
+        "type": "text/javascript"
+      },
+      {
+        "src": "http://127.0.0.1:3334/js/unified-components.js",
+        "async": false,
+        "defer": false,
+        "type": "text/javascript"
+      },
+      {
+        "src": "http://127.0.0.1:3334/js/mobile-touch-manager.js",
+        "async": false,
+        "defer": false,
+        "type": "text/javascript"
+      },
+      {
+        "src": "http://127.0.0.1:3334/js/mobile-components.js",
+        "async": false,
+        "defer": false,
+        "type": "text/javascript"
+      },
+      {
+        "src": "http://127.0.0.1:3334/js/modal-enhancements.js",
+        "async": false,
+        "defer": false,
+        "type": "text/javascript"
+      },
+      {
+        "src": "http://127.0.0.1:3334/js/progressive-image.js",
+        "async": false,
+        "defer": false,
+        "type": "text/javascript"
+      },
+      {
+        "src": "http://127.0.0.1:3334/js/micro-interactions.js",
+        "async": false,
+        "defer": false,
+        "type": "text/javascript"
+      },
+      {
+        "src": "http://127.0.0.1:3334/js/form-enhancements.js",
+        "async": false,
+        "defer": false,
+        "type": "text/javascript"
+      },
+      {
+        "src": "http://127.0.0.1:3334/js/events-manager.js",
+        "async": false,
+        "defer": false,
+        "type": "text/javascript"
+      },
+      {
+        "src": "http://127.0.0.1:3334/js/modal-system.js",
+        "async": false,
+        "defer": false,
+        "type": "text/javascript"
+      },
+      {
+        "src": "http://127.0.0.1:3334/js/registration-modal.js",
+        "async": false,
+        "defer": false,
+        "type": "text/javascript"
+      },
+      {
+        "src": "http://127.0.0.1:3334/js/event-modal.js",
+        "async": false,
+        "defer": false,
+        "type": "text/javascript"
+      },
+      {
+        "src": "http://127.0.0.1:3334/js/events-manager-modal.js",
+        "async": false,
+        "defer": false,
+        "type": "text/javascript"
+      },
+      {
+        "src": "http://127.0.0.1:3334/js/main.js",
+        "async": false,
+        "defer": false,
+        "type": "text/javascript"
+      },
+      {
+        "src": "http://127.0.0.1:3334/js/responsive-navigation.js",
+        "async": false,
+        "defer": false,
+        "type": "text/javascript"
+      },
+      {
+        "src": "http://127.0.0.1:3334/js/pwa-installer.js",
+        "async": false,
+        "defer": false,
+        "type": "text/javascript"
+      },
+      {
+        "src": "http://127.0.0.1:3334/js/mobile-navigation.js",
+        "async": false,
+        "defer": false,
+        "type": "text/javascript"
+      },
+      {
+        "src": "http://127.0.0.1:3334/js/ui-ux-integration.js",
+        "async": false,
+        "defer": false,
+        "type": "text/javascript"
+      }
+    ],
+    "stylesheets": [
+      "https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;600;700&display=swap",
+      "http://127.0.0.1:3334/css/design-system.css",
+      "http://127.0.0.1:3334/css/design-tokens.css",
+      "http://127.0.0.1:3334/css/tailwind.css",
+      "http://127.0.0.1:3334/css/style.css",
+      "http://127.0.0.1:3334/css/components/button.css",
+      "http://127.0.0.1:3334/css/components/card.css",
+      "http://127.0.0.1:3334/css/architecture-integration.css",
+      "http://127.0.0.1:3334/css/auth.css",
+      "http://127.0.0.1:3334/css/auth-google-only.css",
+      "http://127.0.0.1:3334/css/logo-integration.css",
+      "http://127.0.0.1:3334/css/hero-events.css",
+      "http://127.0.0.1:3334/css/mobile-optimizations.css",
+      "http://127.0.0.1:3334/css/mobile-responsive.css",
+      "http://127.0.0.1:3334/css/mobile-bottom-nav.css",
+      "http://127.0.0.1:3334/css/ui-ux-enhancements.css",
+      "http://127.0.0.1:3334/css/enhanced-interactions.css",
+      "http://127.0.0.1:3334/css/event-modal.css",
+      "http://127.0.0.1:3334/css/modal-system.css",
+      "http://127.0.0.1:3334/css/responsive-navigation.css",
+      "inline",
+      "inline",
+      "inline",
+      "inline",
+      "inline",
+      "inline",
+      "inline",
+      "inline",
+      "inline",
+      "inline",
+      "inline"
+    ],
+    "hasRegistrationModal": true,
+    "hasPWAInstaller": true,
+    "hasLightningTalkApp": true
+  },
+  "summary": {
+    "totalErrors": 1,
+    "consoleErrors": 0,
+    "pageErrors": 0,
+    "networkErrors": 1
+  }
+}
