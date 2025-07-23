@@ -27,6 +27,12 @@
   --nav-transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   --mobile-menu-transition: 0.35s cubic-bezier(0.25, 0.8, 0.25, 1);
 
+  /* Contrast-optimized colors */
+  --nav-text-primary: #1a202c;
+  --nav-text-shadow: 0 1px 2px rgba(255, 255, 255, 0.8);
+  --nav-primary-color: #4a90e2;
+  --nav-primary-light: rgba(74, 144, 226, 0.2);
+
   /* Touch Targets */
   --touch-target-min: 44px;
   --touch-target-comfortable: 48px;
@@ -42,17 +48,18 @@
   left: 0;
   right: 0;
   height: var(--nav-height-mobile);
-  background: rgba(255, 255, 255, 0.95);
+  background: rgba(255, 255, 255, 0.99);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
-  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+  border-bottom: 3px solid var(--color-primary-500, #4a90e2);
   z-index: var(--z-navigation);
   transition: all var(--nav-transition);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
 }
 
 .header--scrolled {
-  background: rgba(255, 255, 255, 0.98);
-  box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
+  background: rgba(248, 249, 250, 0.99);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
 }
 
 .header__container {
@@ -85,7 +92,7 @@
 .logo-text {
   font-size: 18px;
   font-weight: 700;
-  color: #2563eb;
+  color: var(--color-primary, #4a90e2);
   white-space: nowrap;
 }
 
@@ -104,22 +111,24 @@
 .nav-link {
   display: block;
   padding: 8px 16px;
-  color: #1f2937;
+  color: var(--nav-text-primary) !important;
   text-decoration: none;
-  font-weight: 500;
+  font-weight: 600;
   font-size: 14px;
   border-radius: 8px;
   transition: all var(--nav-transition);
   white-space: nowrap;
+  text-shadow: var(--nav-text-shadow);
 }
 
 .nav-link:hover {
-  background-color: #f3f4f6;
-  color: #2563eb;
+  background-color: var(--nav-primary-light);
+  color: var(--nav-primary-color) !important;
+  text-shadow: none;
 }
 
 .nav-link:focus {
-  outline: 2px solid #2563eb;
+  outline: 2px solid var(--color-primary, #4a90e2);
   outline-offset: 2px;
 }
 
@@ -154,7 +163,7 @@
 .mobile-menu-toggle__line {
   width: 24px;
   height: 2px;
-  background-color: #374151;
+  background-color: var(--color-text-primary, #2c3e50);
   margin: 2px 0;
   transition: all var(--nav-transition);
   transform-origin: center;
@@ -232,7 +241,7 @@
   display: flex;
   align-items: center;
   padding: 16px 0;
-  color: #1f2937;
+  color: var(--color-text-primary, #2c3e50);
   text-decoration: none;
   font-weight: 500;
   font-size: 16px;
@@ -242,11 +251,11 @@
 }
 
 .mobile-menu__link:hover {
-  color: #2563eb;
+  color: var(--color-primary, #4a90e2);
 }
 
 .mobile-menu__link:focus {
-  outline: 2px solid #2563eb;
+  outline: 2px solid var(--color-primary, #4a90e2);
   outline-offset: 2px;
 }
 
