@@ -353,7 +353,7 @@ class MicroInteractions {
 
     // クリック音
     document.addEventListener('click', e => {
-      if (e.target.matches('[data-sound="click"]')) {
+      if (e.target && e.target.matches && e.target.matches('[data-sound="click"]')) {
         playSound(600, 0.05);
       }
     });
@@ -362,7 +362,7 @@ class MicroInteractions {
     document.addEventListener(
       'mouseenter',
       e => {
-        if (e.target.matches('[data-sound="hover"]')) {
+        if (e.target && e.target.matches && e.target.matches('[data-sound="hover"]')) {
           playSound(800, 0.03, 'square');
         }
       },

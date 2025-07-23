@@ -1,0 +1,23 @@
+{
+  "id": { "S": "event-001" },
+  "title": { "S": "第1回 なんでもライトニングトーク" },
+  "description": { "S": "5分間で世界を変える！あなたの「なんでも」を聞かせて！" },
+  "date": { "S": "2025-07-30T19:00:00+09:00" },
+  "endDate": { "S": "2025-07-30T21:00:00+09:00" },
+  "venue": {
+    "M": {
+      "name": { "S": "新宿会場" },
+      "address": { "S": "西新宿8-14-19 小林第二ビル8階" },
+      "capacity": { "N": "50" },
+      "online": { "BOOL": true },
+      "onlineUrl": { "S": "https://meet.google.com/ycp-sdec-xsr" }
+    }
+  },
+  "status": { "S": "upcoming" },
+  "registrationOpen": { "BOOL": true },
+  "talkSubmissionOpen": { "BOOL": true },
+  "maxTalks": { "N": "20" },
+  "talkDuration": { "N": "5" },
+  "createdAt": { "S": "2025-07-23T08:45:00.000Z" },
+  "updatedAt": { "S": "2025-07-23T08:45:00.000Z" }
+}

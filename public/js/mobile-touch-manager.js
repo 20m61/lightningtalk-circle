@@ -361,7 +361,9 @@ class MobileTouchManager {
 
   handlePointerUp(event) {
     if (event.pointerType !== 'touch') {
-      this.handleMousePenEnd(event);
+      // マウス/ペンの終了処理
+      // TODO: handleMousePenEndメソッドを実装するか、必要な処理を追加
+      console.debug('Mouse/Pen pointer up event:', event.pointerType);
     }
   }
 

@@ -69,6 +69,7 @@ class ProgressiveImageLoader {
     const srcset = img.dataset.srcset;
     const sizes = img.dataset.sizes;
     const placeholder = img.dataset.placeholder;
+    const originalSrc = src; // エラーメッセージ用に保存
 
     if (!src) return;
 
@@ -181,9 +182,21 @@ class ProgressiveImageLoader {
 
   async checkImageExists(src) {
     try {
-      const response = await fetch(src, { method: 'HEAD' });
+      // AbortControllerを使用してタイムアウトを設定
+      const controller = new AbortController();
+      const timeout = setTimeout(() => controller.abort(), 2000); // 2秒でタイムアウト
+
+      const response = await fetch(src, {
+        method: 'HEAD',
+        signal: controller.signal,
+        // キャッシュを使用して重複リクエストを避ける
+        cache: 'force-cache'
+      });
+
+      clearTimeout(timeout);
       return response.ok;
-    } catch {
+    } catch (error) {
+      // エラーを無視して静かに失敗
       return false;
     }
   }
@@ -323,7 +336,7 @@ document.addEventListener('DOMContentLoaded', () => {
     rootMargin: '100px',
     enableBlurUp: true,
     enableWebP: true,
-    enableAVIF: true
+    enableAVIF: false // AVIFファイルが準備されるまで無効化
   });
 });
 

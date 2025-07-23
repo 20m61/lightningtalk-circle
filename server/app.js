@@ -134,7 +134,9 @@ class LightningTalkServer {
               connectSrc: [
                 "'self'",
                 'https://accounts.google.com',
-                'https://*.auth.ap-northeast-1.amazoncognito.com'
+                'https://*.auth.ap-northeast-1.amazoncognito.com',
+                'https://*.execute-api.ap-northeast-1.amazonaws.com',
+                'wss://*.execute-api.ap-northeast-1.amazonaws.com'
               ],
               workerSrc: ["'self'", 'blob:'],
               objectSrc: ["'none'"],
@@ -162,7 +164,9 @@ class LightningTalkServer {
               connectSrc: [
                 "'self'",
                 'https://accounts.google.com',
-                'https://*.auth.ap-northeast-1.amazoncognito.com'
+                'https://*.auth.ap-northeast-1.amazoncognito.com',
+                'https://*.execute-api.ap-northeast-1.amazonaws.com',
+                'wss://*.execute-api.ap-northeast-1.amazonaws.com'
               ],
               workerSrc: ["'self'", 'blob:'],
               objectSrc: ["'none'"],
