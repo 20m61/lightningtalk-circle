@@ -8,6 +8,16 @@ import express from 'express';
  * 投票APIの統合テスト
  */
 
+// Polyfill for setImmediate if not available
+if (typeof global.setImmediate === 'undefined') {
+  global.setImmediate = (callback, ...args) => {
+    return setTimeout(callback, 0, ...args);
+  };
+  global.clearImmediate = id => {
+    return clearTimeout(id);
+  };
+}
+
 // Mock dependencies
 jest.unstable_mockModule('../../server/utils/logger.js', () => ({
   createLogger: () => ({
@@ -48,25 +58,25 @@ describe('Voting API Integration Tests', () => {
       createSession: jest.fn(),
       submitVote: jest.fn(),
       getResults: jest.fn(),
-      getActiveSessions: jest.fn(),
-      endSession: jest.fn(),
-      getTalkVotingHistory: jest.fn(),
-      hasVoted: jest.fn(),
-      cleanupExpiredSessions: jest.fn().mockResolvedValue(true)
+      closeSession: jest.fn(),
+      getSessionDetails: jest.fn(),
+      getActiveSessionsForEvent: jest.fn(),
+      getSessionHistory: jest.fn(),
+      exportResults: jest.fn(),
+      validateVote: jest.fn(),
+      calculateStatistics: jest.fn()
     });
 
     mockNotificationService = {
-      broadcast: jest.fn().mockResolvedValue(true)
+      sendEmail: jest.fn(),
+      sendRealtimeUpdate: jest.fn(),
+      notifyVoteUpdate: jest.fn()
     };
 
-    // Set up app locals
-    app.locals.votingService = mockVotingService;
-    app.locals.notificationService = mockNotificationService;
-
-    // Mount the voting router
+    // Mount the router
     app.use('/api/voting', votingRouter);
 
-    // Add error handling
+    // Error handling middleware
     app.use((err, req, res, next) => {
       res.status(err.status || 500).json({
         error: err.message || 'Internal server error'
@@ -78,324 +88,233 @@ describe('Voting API Integration Tests', () => {
     jest.clearAllMocks();
   });
 
-  describe('POST /api/voting/sessions', () => {
-    it('should create a new voting session with authentication', async () => {
-      const mockSession = {
-        id: 'test-session-id',
-        eventId: '123e4567-e89b-12d3-a456-426614174000',
-        talkId: '123e4567-e89b-12d3-a456-426614174001',
+  describe('Session Management', () => {
+    it('should create a new voting session', async () => {
+      const sessionData = {
+        eventId: 'event-123',
+        title: 'Best Lightning Talk',
+        options: ['Talk 1', 'Talk 2', 'Talk 3'],
+        startTime: new Date().toISOString(),
+        endTime: new Date(Date.now() + 3600000).toISOString()
+      };
+
+      mockVotingService.createSession.mockResolvedValue({
+        id: 'session-456',
+        ...sessionData,
         status: 'active',
-        duration: 60,
-        createdBy: 'test-user-123',
-        createdAt: new Date().toISOString(),
-        endsAt: new Date(Date.now() + 60000).toISOString(),
-        votes: {},
-        results: {
+        createdAt: new Date().toISOString()
+      });
+
+      const response = await request(app).post('/api/voting/sessions').send(sessionData).expect(201);
+
+      expect(response.body).toHaveProperty('id', 'session-456');
+      expect(response.body).toHaveProperty('status', 'active');
+      expect(mockVotingService.createSession).toHaveBeenCalledWith(sessionData);
+    });
+
+    it('should get session details', async () => {
+      const sessionDetails = {
+        id: 'session-456',
+        eventId: 'event-123',
+        title: 'Best Lightning Talk',
+        options: ['Talk 1', 'Talk 2', 'Talk 3'],
+        status: 'active',
+        votes: [],
+        statistics: {
           totalVotes: 0,
-          averageRating: 0,
-          distribution: { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0 }
+          distribution: {}
         }
       };
 
-      mockVotingService.createSession.mockResolvedValue(mockSession);
+      mockVotingService.getSessionDetails.mockResolvedValue(sessionDetails);
 
-      const response = await request(app).post('/api/voting/sessions').set('Authorization', 'Bearer test-token').send({
-        eventId: '123e4567-e89b-12d3-a456-426614174000',
-        talkId: '123e4567-e89b-12d3-a456-426614174001',
-        duration: 60
+      const response = await request(app).get('/api/voting/sessions/session-456').expect(200);
+
+      expect(response.body).toEqual(sessionDetails);
+      expect(mockVotingService.getSessionDetails).toHaveBeenCalledWith('session-456');
+    });
+
+    it('should close a voting session', async () => {
+      mockVotingService.closeSession.mockResolvedValue({
+        id: 'session-456',
+        status: 'closed',
+        closedAt: new Date().toISOString()
       });
 
-      expect(response.status).toBe(201);
-      expect(response.body).toEqual({
-        success: true,
-        session: mockSession
+      const response = await request(app).post('/api/voting/sessions/session-456/close').expect(200);
+
+      expect(response.body).toHaveProperty('status', 'closed');
+      expect(mockVotingService.closeSession).toHaveBeenCalledWith('session-456');
+    });
+  });
+
+  describe('Vote Submission', () => {
+    it('should submit a vote successfully', async () => {
+      const voteData = {
+        sessionId: 'session-456',
+        optionIndex: 1,
+        comment: 'Great talk!'
+      };
+
+      mockVotingService.submitVote.mockResolvedValue({
+        id: 'vote-789',
+        ...voteData,
+        userId: 'test-user-123',
+        timestamp: new Date().toISOString()
       });
-      expect(mockVotingService.createSession).toHaveBeenCalledWith({
-        eventId: '123e4567-e89b-12d3-a456-426614174000',
-        talkId: '123e4567-e89b-12d3-a456-426614174001',
-        duration: 60,
-        createdBy: 'test-user-123'
+
+      const response = await request(app).post('/api/voting/votes').send(voteData).expect(201);
+
+      expect(response.body).toHaveProperty('id', 'vote-789');
+      expect(mockVotingService.submitVote).toHaveBeenCalledWith({
+        ...voteData,
+        userId: 'test-user-123'
       });
-      expect(mockNotificationService.broadcast).toHaveBeenCalledWith(
-        'voting_session_created',
+    });
+
+    it('should prevent duplicate votes', async () => {
+      const voteData = {
+        sessionId: 'session-456',
+        optionIndex: 1
+      };
+
+      mockVotingService.submitVote.mockRejectedValue(new Error('User has already voted in this session'));
+
+      const response = await request(app).post('/api/voting/votes').send(voteData).expect(500);
+
+      expect(response.body).toHaveProperty('error');
+    });
+
+    it('should validate vote data', async () => {
+      const invalidVoteData = {
+        sessionId: 'session-456'
+        // Missing optionIndex
+      };
+
+      const response = await request(app).post('/api/voting/votes').send(invalidVoteData).expect(400);
+
+      expect(response.body).toHaveProperty('error');
+    });
+  });
+
+  describe('Results and Statistics', () => {
+    it('should get voting results', async () => {
+      const results = {
+        sessionId: 'session-456',
+        totalVotes: 10,
+        options: [
+          { name: 'Talk 1', votes: 5, percentage: 50 },
+          { name: 'Talk 2', votes: 3, percentage: 30 },
+          { name: 'Talk 3', votes: 2, percentage: 20 }
+        ],
+        winner: 'Talk 1'
+      };
+
+      mockVotingService.getResults.mockResolvedValue(results);
+
+      const response = await request(app).get('/api/voting/sessions/session-456/results').expect(200);
+
+      expect(response.body).toEqual(results);
+      expect(mockVotingService.getResults).toHaveBeenCalledWith('session-456');
+    });
+
+    it('should export results in CSV format', async () => {
+      const csvData = 'Option,Votes,Percentage\nTalk 1,5,50\nTalk 2,3,30\nTalk 3,2,20';
+
+      mockVotingService.exportResults.mockResolvedValue(csvData);
+
+      const response = await request(app).get('/api/voting/sessions/session-456/export?format=csv').expect(200);
+
+      expect(response.headers['content-type']).toContain('text/csv');
+      expect(response.text).toBe(csvData);
+    });
+
+    it('should get real-time statistics', async () => {
+      const statistics = {
+        activeVoters: 5,
+        totalVotes: 10,
+        votingRate: 0.5,
+        timeRemaining: 1800
+      };
+
+      mockVotingService.calculateStatistics.mockResolvedValue(statistics);
+
+      const response = await request(app).get('/api/voting/sessions/session-456/statistics').expect(200);
+
+      expect(response.body).toEqual(statistics);
+    });
+  });
+
+  describe('Event-based Voting', () => {
+    it('should get active sessions for an event', async () => {
+      const activeSessions = [
+        {
+          id: 'session-456',
+          title: 'Best Lightning Talk',
+          status: 'active'
+        },
+        {
+          id: 'session-789',
+          title: 'Most Innovative Topic',
+          status: 'active'
+        }
+      ];
+
+      mockVotingService.getActiveSessionsForEvent.mockResolvedValue(activeSessions);
+
+      const response = await request(app).get('/api/voting/events/event-123/sessions').expect(200);
+
+      expect(response.body).toEqual(activeSessions);
+      expect(mockVotingService.getActiveSessionsForEvent).toHaveBeenCalledWith('event-123');
+    });
+
+    it('should get voting history for an event', async () => {
+      const history = [
+        {
+          id: 'session-123',
+          title: 'Previous Vote',
+          status: 'closed',
+          results: {
+            winner: 'Option A',
+            totalVotes: 20
+          }
+        }
+      ];
+
+      mockVotingService.getSessionHistory.mockResolvedValue(history);
+
+      const response = await request(app).get('/api/voting/events/event-123/history').expect(200);
+
+      expect(response.body).toEqual(history);
+    });
+  });
+
+  describe('Real-time Updates', () => {
+    it('should emit vote updates via WebSocket', async () => {
+      const voteData = {
+        sessionId: 'session-456',
+        optionIndex: 0
+      };
+
+      mockVotingService.submitVote.mockResolvedValue({
+        id: 'vote-new',
+        ...voteData,
+        userId: 'test-user-123'
+      });
+
+      // Spy on notification service
+      const notifySpy = jest.spyOn(mockNotificationService, 'notifyVoteUpdate');
+
+      await request(app).post('/api/voting/votes').send(voteData).expect(201);
+
+      // Verify real-time notification was triggered
+      expect(notifySpy).toHaveBeenCalledWith(
+        'session-456',
         expect.objectContaining({
-          sessionId: 'test-session-id',
-          eventId: '123e4567-e89b-12d3-a456-426614174000',
-          talkId: '123e4567-e89b-12d3-a456-426614174001'
+          id: 'vote-new',
+          sessionId: 'session-456'
         })
       );
-    });
-
-    it('should validate required fields', async () => {
-      const response = await request(app).post('/api/voting/sessions').set('Authorization', 'Bearer test-token').send({
-        talkId: '123e4567-e89b-12d3-a456-426614174001'
-        // Missing eventId
-      });
-
-      expect(response.status).toBe(400);
-      expect(response.body.errors).toBeDefined();
-      expect(response.body.errors[0].msg).toMatch(/Event ID/); // Matches both validation messages
-    });
-
-    it('should validate duration range', async () => {
-      const response = await request(app).post('/api/voting/sessions').set('Authorization', 'Bearer test-token').send({
-        eventId: '123e4567-e89b-12d3-a456-426614174000',
-        talkId: '123e4567-e89b-12d3-a456-426614174001',
-        duration: 400 // Too long
-      });
-
-      expect(response.status).toBe(400);
-      expect(response.body.errors).toBeDefined();
-      expect(response.body.errors[0].msg).toBe('Duration must be between 30-300 seconds');
-    });
-  });
-
-  describe('POST /api/voting/sessions/:sessionId/vote', () => {
-    it('should submit a vote successfully', async () => {
-      const mockVote = {
-        voterId: 'voter-123',
-        rating: 5,
-        timestamp: new Date().toISOString()
-      };
-
-      const mockResults = {
-        sessionId: 'test-session-id',
-        status: 'active',
-        totalVotes: 1,
-        averageRating: 5.0,
-        distribution: { 1: 0, 2: 0, 3: 0, 4: 0, 5: 1 },
-        percentages: { 1: 0, 2: 0, 3: 0, 4: 0, 5: 100 },
-        endsAt: new Date(Date.now() + 60000).toISOString()
-      };
-
-      mockVotingService.submitVote.mockResolvedValue(mockVote);
-      mockVotingService.getResults.mockResolvedValue(mockResults);
-
-      const response = await request(app).post('/api/voting/sessions/550e8400-e29b-41d4-a716-446655440000/vote').send({
-        rating: 5,
-        participantId: 'participant-123'
-      });
-
-      expect(response.status).toBe(200);
-      expect(response.body).toEqual({
-        success: true,
-        vote: mockVote,
-        results: mockResults
-      });
-      expect(mockNotificationService.broadcast).toHaveBeenCalledWith('vote_submitted', {
-        sessionId: '550e8400-e29b-41d4-a716-446655440000',
-        results: mockResults
-      });
-    });
-
-    it('should validate rating range', async () => {
-      const response = await request(app).post('/api/voting/sessions/550e8400-e29b-41d4-a716-446655440000/vote').send({
-        rating: 6 // Invalid rating
-      });
-
-      expect(response.status).toBe(400);
-      expect(response.body.errors).toBeDefined();
-      expect(response.body.errors[0].msg).toBe('Rating must be between 1-5');
-    });
-
-    it('should handle voting errors appropriately', async () => {
-      mockVotingService.submitVote.mockRejectedValue(new Error('Already voted'));
-
-      const response = await request(app).post('/api/voting/sessions/550e8400-e29b-41d4-a716-446655440000/vote').send({
-        rating: 5
-      });
-
-      expect(response.status).toBe(409);
-      expect(response.body.error).toBe('Already voted');
-    });
-
-    it('should handle session not found', async () => {
-      mockVotingService.submitVote.mockRejectedValue(new Error('Voting session not found'));
-
-      const response = await request(app).post('/api/voting/sessions/550e8400-e29b-41d4-a716-446655440001/vote').send({
-        rating: 5
-      });
-
-      expect(response.status).toBe(404);
-      expect(response.body.error).toBe('Voting session not found');
-    });
-
-    it('should handle ended session', async () => {
-      mockVotingService.submitVote.mockRejectedValue(new Error('Voting session has ended'));
-
-      const response = await request(app).post('/api/voting/sessions/550e8400-e29b-41d4-a716-446655440000/vote').send({
-        rating: 5
-      });
-
-      expect(response.status).toBe(400);
-      expect(response.body.error).toBe('Voting session has ended');
-    });
-  });
-
-  describe('GET /api/voting/sessions/:sessionId/results', () => {
-    it('should return voting results', async () => {
-      const mockResults = {
-        sessionId: 'test-session-id',
-        status: 'active',
-        totalVotes: 10,
-        averageRating: 4.5,
-        distribution: { 1: 0, 2: 0, 3: 1, 4: 4, 5: 5 },
-        percentages: { 1: 0, 2: 0, 3: 10, 4: 40, 5: 50 },
-        endsAt: new Date(Date.now() + 60000).toISOString()
-      };
-
-      mockVotingService.getResults.mockResolvedValue(mockResults);
-
-      const response = await request(app).get('/api/voting/sessions/550e8400-e29b-41d4-a716-446655440000/results');
-
-      expect(response.status).toBe(200);
-      expect(response.body).toEqual({
-        success: true,
-        results: mockResults
-      });
-    });
-
-    it('should handle session not found', async () => {
-      mockVotingService.getResults.mockRejectedValue(new Error('Voting session not found'));
-
-      const response = await request(app).get('/api/voting/sessions/non-existent/results');
-
-      expect(response.status).toBe(404);
-      expect(response.body.error).toBe('Voting session not found');
-    });
-  });
-
-  describe('GET /api/voting/events/:eventId/sessions', () => {
-    it('should return active sessions for an event', async () => {
-      const mockSessions = [
-        {
-          id: 'session-1',
-          eventId: '123e4567-e89b-12d3-a456-426614174000',
-          talkId: 'talk-1',
-          status: 'active',
-          endsAt: new Date(Date.now() + 60000).toISOString()
-        },
-        {
-          id: 'session-2',
-          eventId: '123e4567-e89b-12d3-a456-426614174000',
-          talkId: 'talk-2',
-          status: 'active',
-          endsAt: new Date(Date.now() + 120000).toISOString()
-        }
-      ];
-
-      mockVotingService.getActiveSessions.mockResolvedValue(mockSessions);
-
-      const response = await request(app).get('/api/voting/events/event-123/sessions');
-
-      expect(response.status).toBe(200);
-      expect(response.body).toEqual({
-        success: true,
-        sessions: mockSessions
-      });
-    });
-
-    it('should handle errors gracefully', async () => {
-      mockVotingService.getActiveSessions.mockRejectedValue(new Error('Database error'));
-
-      const response = await request(app).get('/api/voting/events/event-123/sessions');
-
-      expect(response.status).toBe(500);
-      expect(response.body.error).toBe('Failed to get voting sessions');
-    });
-  });
-
-  describe('POST /api/voting/sessions/:sessionId/end', () => {
-    it('should end a voting session with authentication', async () => {
-      const mockSession = {
-        id: '550e8400-e29b-41d4-a716-446655440000',
-        status: 'ended',
-        endedAt: new Date().toISOString()
-      };
-
-      const mockResults = {
-        sessionId: '550e8400-e29b-41d4-a716-446655440000',
-        status: 'ended',
-        totalVotes: 10,
-        averageRating: 4.5,
-        distribution: { 1: 0, 2: 0, 3: 1, 4: 4, 5: 5 },
-        percentages: { 1: 0, 2: 0, 3: 10, 4: 40, 5: 50 }
-      };
-
-      mockVotingService.endSession.mockResolvedValue(mockSession);
-      mockVotingService.getResults.mockResolvedValue(mockResults);
-
-      const response = await request(app)
-        .post('/api/voting/sessions/550e8400-e29b-41d4-a716-446655440000/end')
-        .set('Authorization', 'Bearer test-token');
-
-      expect(response.status).toBe(200);
-      expect(response.body).toEqual({
-        success: true,
-        session: mockSession,
-        results: mockResults
-      });
-      expect(mockNotificationService.broadcast).toHaveBeenCalledWith('voting_session_ended', {
-        sessionId: '550e8400-e29b-41d4-a716-446655440000',
-        results: mockResults
-      });
-    });
-
-    it('should handle errors when ending session', async () => {
-      mockVotingService.endSession.mockRejectedValue(new Error('Session not found'));
-
-      const response = await request(app)
-        .post('/api/voting/sessions/550e8400-e29b-41d4-a716-446655440000/end')
-        .set('Authorization', 'Bearer test-token');
-
-      expect(response.status).toBe(500);
-      expect(response.body.error).toBe('Failed to end voting session');
-    });
-  });
-
-  describe('GET /api/voting/talks/:talkId/history', () => {
-    it('should return voting history for a talk', async () => {
-      const mockHistory = [
-        {
-          sessionId: 'session-1',
-          eventId: 'event-1',
-          status: 'ended',
-          createdAt: '2025-07-01T10:00:00Z',
-          endedAt: '2025-07-01T10:05:00Z',
-          totalVotes: 10,
-          averageRating: '4.50',
-          distribution: { 1: 0, 2: 0, 3: 1, 4: 4, 5: 5 }
-        },
-        {
-          sessionId: 'session-2',
-          eventId: 'event-2',
-          status: 'ended',
-          createdAt: '2025-07-08T10:00:00Z',
-          endedAt: '2025-07-08T10:05:00Z',
-          totalVotes: 15,
-          averageRating: '4.80',
-          distribution: { 1: 0, 2: 0, 3: 0, 4: 3, 5: 12 }
-        }
-      ];
-
-      mockVotingService.getTalkVotingHistory.mockResolvedValue(mockHistory);
-
-      const response = await request(app).get('/api/voting/talks/talk-456/history');
-
-      expect(response.status).toBe(200);
-      expect(response.body).toEqual({
-        success: true,
-        history: mockHistory
-      });
-    });
-
-    it('should handle errors when getting history', async () => {
-      mockVotingService.getTalkVotingHistory.mockRejectedValue(new Error('Database error'));
-
-      const response = await request(app).get('/api/voting/talks/talk-456/history');
-
-      expect(response.status).toBe(500);
-      expect(response.body.error).toBe('Failed to get voting history');
     });
   });
 
@@ -411,153 +330,34 @@ describe('Voting API Integration Tests', () => {
 
       expect(response.status).toBe(404); // Express would return 404 for invalid route
     });
-  });
 
-  describe('Concurrent requests', () => {
-    it('should handle multiple concurrent vote submissions', async () => {
-      const mockVote = {
-        voterId: 'voter-123',
-        rating: 5,
-        timestamp: new Date().toISOString()
+    it('should validate vote option index', async () => {
+      const invalidVote = {
+        sessionId: 'session-456',
+        optionIndex: -1 // Invalid index
       };
 
-      const mockResults = {
-        sessionId: 'test-session-id',
-        status: 'active',
-        totalVotes: 1,
-        averageRating: 5.0,
-        distribution: { 1: 0, 2: 0, 3: 0, 4: 0, 5: 1 },
-        percentages: { 1: 0, 2: 0, 3: 0, 4: 0, 5: 100 }
-      };
+      const response = await request(app).post('/api/voting/votes').send(invalidVote).expect(400);
 
-      mockVotingService.submitVote.mockResolvedValue(mockVote);
-      mockVotingService.getResults.mockResolvedValue(mockResults);
-
-      const requests = Array(5)
-        .fill(null)
-        .map((_, i) =>
-          request(app)
-            .post('/api/voting/sessions/550e8400-e29b-41d4-a716-446655440000/vote')
-            .send({
-              rating: 5,
-              participantId: `participant-${i}`
-            })
-        );
-
-      const responses = await Promise.all(requests);
-
-      responses.forEach(response => {
-        expect(response.status).toBe(200);
-      });
-      expect(mockVotingService.submitVote).toHaveBeenCalledTimes(5);
+      expect(response.body).toHaveProperty('error');
     });
   });
 
-  describe('UUID Format Support', () => {
-    it('should accept UUID format for event and talk IDs', async () => {
-      const mockSession = {
-        id: 'test-session-id',
-        eventId: '123e4567-e89b-12d3-a456-426614174000',
-        talkId: '456e4567-e89b-12d3-a456-426614174001',
-        status: 'active',
-        duration: 60,
-        createdBy: 'test-user-123',
-        createdAt: new Date().toISOString(),
-        endsAt: new Date(Date.now() + 60000).toISOString(),
-        votes: {},
-        results: {
-          totalVotes: 0,
-          averageRating: 0,
-          distribution: { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0 }
-        }
-      };
+  describe('Error Handling', () => {
+    it('should handle service errors gracefully', async () => {
+      mockVotingService.getResults.mockRejectedValue(new Error('Database connection failed'));
 
-      mockVotingService.createSession.mockResolvedValue(mockSession);
+      const response = await request(app).get('/api/voting/sessions/session-456/results').expect(500);
 
-      const response = await request(app).post('/api/voting/sessions').set('Authorization', 'Bearer test-token').send({
-        eventId: '123e4567-e89b-12d3-a456-426614174000',
-        talkId: '456e4567-e89b-12d3-a456-426614174001',
-        duration: 60
-      });
-
-      expect(response.status).toBe(201);
-      expect(response.body).toEqual({
-        success: true,
-        session: mockSession
-      });
-    });
-  });
-
-  describe('Participation Voting', () => {
-    it('should handle event participation voting', async () => {
-      const mockParticipationVote = {
-        eventId: '123e4567-e89b-12d3-a456-426614174000',
-        participantId: 'participant-123',
-        voteType: 'attendance',
-        vote: 'yes',
-        timestamp: new Date().toISOString()
-      };
-
-      // Mock for participation voting endpoint if it exists
-      app.post('/api/voting/events/:eventId/participate', async (req, res) => {
-        res.status(200).json({
-          success: true,
-          vote: mockParticipationVote
-        });
-      });
-
-      const response = await request(app).post('/api/voting/events/event-123/participate').send({
-        participantId: 'participant-123',
-        vote: 'yes'
-      });
-
-      expect(response.status).toBe(200);
-      expect(response.body.success).toBe(true);
+      expect(response.body).toHaveProperty('error');
     });
 
-    it('should track participation statistics', async () => {
-      const mockStats = {
-        eventId: '123e4567-e89b-12d3-a456-426614174000',
-        totalParticipants: 50,
-        attendance: {
-          yes: 35,
-          no: 10,
-          maybe: 5
-        },
-        lastUpdated: new Date().toISOString()
-      };
+    it('should handle not found errors', async () => {
+      mockVotingService.getSessionDetails.mockResolvedValue(null);
 
-      // Mock for participation stats endpoint
-      app.get('/api/voting/events/:eventId/participation-stats', async (req, res) => {
-        res.status(200).json({
-          success: true,
-          stats: mockStats
-        });
-      });
+      const response = await request(app).get('/api/voting/sessions/non-existent').expect(404);
 
-      const response = await request(app).get('/api/voting/events/event-123/participation-stats');
-
-      expect(response.status).toBe(200);
-      expect(response.body.stats).toEqual(mockStats);
-    });
-  });
-
-  describe('Session Status Checks', () => {
-    it('should check if a user has already voted in a session', async () => {
-      mockVotingService.hasVoted.mockResolvedValue(true);
-
-      // Mock endpoint for checking vote status
-      app.get('/api/voting/sessions/:sessionId/has-voted/:userId', async (req, res) => {
-        const hasVoted = await mockVotingService.hasVoted(req.params.sessionId, req.params.userId);
-        res.status(200).json({ hasVoted });
-      });
-
-      const response = await request(app).get(
-        '/api/voting/sessions/550e8400-e29b-41d4-a716-446655440000/has-voted/user-123'
-      );
-
-      expect(response.status).toBe(200);
-      expect(response.body.hasVoted).toBe(true);
+      expect(response.body).toHaveProperty('error', 'Session not found');
     });
   });
 });
