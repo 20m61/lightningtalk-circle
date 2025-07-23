@@ -3076,68 +3076,26 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Global function to show admin login modal
   window.showAdminLogin = () => {
-    const adminLoginModal = document.getElementById('adminLoginModal');
-    if (adminLoginModal) {
-      adminLoginModal.style.display = 'block';
-      // Focus email input
-      setTimeout(() => {
-        document.getElementById('adminEmail').focus();
-      }, 100);
+    // Googleログインのみを使用
+    if (window.googleAuth) {
+      window.googleAuth.login();
+    } else if (window.loginWithGoogle) {
+      window.loginWithGoogle();
     }
   };
 
   // Global function to close admin login modal
   window.closeAdminLogin = () => {
-    const adminLoginModal = document.getElementById('adminLoginModal');
-    if (adminLoginModal) {
-      adminLoginModal.style.display = 'none';
-      // Reset form
-      document.getElementById('adminLoginForm').reset();
-      document.getElementById('loginError').style.display = 'none';
-    }
+    // 管理者ログインモーダルは削除されたため何もしない
   };
 
-  // Admin login processing
+  // Admin login processing - Googleログインのみ使用
   window.processAdminLogin = async () => {
-    const email = document.getElementById('adminEmail').value;
-    const password = document.getElementById('adminPassword').value;
-    const errorDiv = document.getElementById('loginError');
-
-    if (!email || !password) {
-      errorDiv.textContent = 'メールアドレスとパスワードを入力してください';
-      errorDiv.style.display = 'block';
-      return;
-    }
-
-    try {
-      errorDiv.style.display = 'none';
-
-      // Simple local authentication for demo
-      if (email === 'admin@example.com' && password === 'admin123') {
-        localStorage.setItem('authToken', 'demo-admin-token');
-        localStorage.setItem('userRole', 'admin');
-
-        // Close login modal
-        window.closeAdminLogin();
-
-        // Show success notification
-        this.showNotification('ログインが成功しました！管理画面に移動しています...', 'success');
-
-        // Redirect to admin dashboard after a short delay
-        setTimeout(() => {
-          window.location.href = '/admin.html';
-        }, 1500);
-      } else {
-        errorDiv.textContent = '認証に失敗しました。\nテスト用: admin@example.com / admin123';
-        errorDiv.style.display = 'block';
-      }
-    } catch (error) {
-      this.logger.error('Login error during form submission', {
-        error: error.message,
-        category: 'authentication'
-      });
-      errorDiv.textContent = 'ログイン処理中にエラーが発生しました。';
-      errorDiv.style.display = 'block';
+    // Googleログインにリダイレクト
+    if (window.googleAuth) {
+      window.googleAuth.login();
+    } else if (window.loginWithGoogle) {
+      window.loginWithGoogle();
     }
   };
 

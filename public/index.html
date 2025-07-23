@@ -60,6 +60,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;600;700&display=swap" rel="stylesheet" />
 
     <!-- Base CSS - Foundation -->
+    <link rel="stylesheet" href="css/design-system.css" />
     <link rel="stylesheet" href="css/design-tokens.css" />
     <link rel="stylesheet" href="css/tailwind.css" />
     <link rel="stylesheet" href="css/style.css" />
@@ -71,14 +72,18 @@
     <!-- Integration CSS - Overrides -->
     <link rel="stylesheet" href="css/architecture-integration.css" />
     <link rel="stylesheet" href="css/auth.css" />
+    <link rel="stylesheet" href="css/auth-google-only.css" />
     <link rel="stylesheet" href="css/logo-integration.css" />
     <link rel="stylesheet" href="css/hero-events.css" />
     <link rel="stylesheet" href="css/mobile-optimizations.css" />
+    <link rel="stylesheet" href="css/mobile-responsive.css" />
+    <link rel="stylesheet" href="css/mobile-bottom-nav.css" />
 
     <!-- UI/UX Enhancements -->
     <link rel="stylesheet" href="css/ui-ux-enhancements.css" />
     <link rel="stylesheet" href="css/enhanced-interactions.css" />
     <link rel="stylesheet" href="css/event-modal.css" />
+    <link rel="stylesheet" href="css/modal-system.css" />
 
     <!-- Responsive Navigation System -->
     <link rel="stylesheet" href="css/responsive-navigation.css" />
@@ -130,9 +135,7 @@
         </nav>
 
         <!-- Auth Section (Desktop) -->
-        <div id="auth-header" class="auth-header" aria-label="認証">
-          <!-- This will be populated by React -->
-        </div>
+        <!-- Google Auth Container will be inserted here by JS -->
 
         <!-- Mobile Menu Toggle -->
         <button class="mobile-menu-toggle" type="button" aria-label="メニューを開く" aria-expanded="false">
@@ -586,60 +589,6 @@
       </div>
     </div>
 
-    <!-- 管理画面ログインモーダル -->
-    <div id="adminLoginModal" class="admin-login-modal">
-      <div class="admin-login-content">
-        <button class="close-btn" onclick="closeAdminLogin()">&times;</button>
-        <div class="admin-login-header">
-          <picture>
-            <source srcset="/icons/logo-footer.webp" type="image/webp" />
-            <img src="/icons/logo-footer.jpg" alt="なんでもライトニングトーク" class="admin-logo" loading="lazy" />
-          </picture>
-          <h2>🔐 管理画面ログイン</h2>
-          <p>イベントを追加・管理するには管理者権限が必要です</p>
-        </div>
-
-        <!-- Google認証ボタン（管理者向け） -->
-        <div class="google-login-section">
-          <button type="button" onclick="loginWithGoogle()" class="btn-google-login-modal">
-            <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google" />
-            管理者Googleアカウントでログイン
-          </button>
-          <div class="divider">
-            <span>または</span>
-          </div>
-        </div>
-
-        <form id="adminLoginForm" class="admin-login-form">
-          <div class="form-group">
-            <label for="adminEmail"> <i class="icon">📧</i> メールアドレス </label>
-            <input type="email" id="adminEmail" name="email" required placeholder="admin@example.com" autofocus />
-          </div>
-          <div class="form-group">
-            <label for="adminPassword"> <i class="icon">🔑</i> パスワード </label>
-            <input type="password" id="adminPassword" name="password" required placeholder="パスワードを入力" />
-          </div>
-          <div class="form-group remember-me">
-            <label>
-              <input type="checkbox" name="remember" />
-              ログイン状態を保持する
-            </label>
-          </div>
-          <div class="login-error" id="loginError" style="display: none">
-            <i class="icon">⚠️</i>
-            <span id="loginErrorMessage"></span>
-          </div>
-          <div class="form-buttons">
-            <button type="submit" class="login-btn"><i class="icon">🚀</i> ログイン</button>
-            <button type="button" class="cancel-btn" onclick="closeAdminLogin()">キャンセル</button>
-          </div>
-          <div class="login-help">
-            <p>パスワードをお忘れの場合は<a href="mailto:admin@lightningtalk.com">管理者</a>までご連絡ください</p>
-          </div>
-        </form>
-      </div>
-    </div>
-
     <!-- チャット機能 -->
     <div id="chatWidget" class="chat-widget">
       <button id="chatToggle" class="chat-toggle">
@@ -664,6 +613,7 @@
     <script src="js/logger.js"></script>
 
     <script src="js/auth.js"></script>
+    <script src="js/auth-google-only.js"></script>
     <script src="js/unified-components.js"></script>
     <!-- <script src="js/animation-manager.js"></script> -->
     <script src="js/mobile-touch-manager.js"></script>
@@ -677,12 +627,21 @@
     <script src="js/form-enhancements.js"></script>
 
     <script src="js/events-manager.js"></script>
+    <script src="js/modal-system.js"></script>
+    <script src="js/registration-modal.js"></script>
+    <script src="js/event-modal-integrated.js"></script>
     <script src="js/event-modal.js"></script>
     <script src="js/events-manager-modal.js"></script>
     <script src="js/main.js"></script>
 
     <!-- Responsive Navigation Controller -->
     <script src="js/responsive-navigation.js"></script>
+
+    <!-- PWA Installer -->
+    <script src="js/pwa-installer.js"></script>
+
+    <!-- Mobile Navigation -->
+    <script src="js/mobile-navigation.js"></script>
 
     <!-- UI/UX Integration - Load after all components -->
     <script src="js/ui-ux-integration.js"></script>
