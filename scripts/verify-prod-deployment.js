@@ -8,8 +8,7 @@ import puppeteer from 'puppeteer';
 import { promises as fs } from 'fs';
 import path from 'path';
 
-const PROD_URL =
-  'http://lightningtalk-prod-static-822063948773.s3-website-ap-northeast-1.amazonaws.com/';
+const PROD_URL = 'https://xn--6wym69a.com/';
 
 async function verifyProduction() {
   console.log('🚀 本番環境の検証を開始します...\n');
@@ -44,7 +43,7 @@ async function verifyProduction() {
     });
 
     await page.reload();
-    await page.waitForTimeout(2000);
+    await new Promise(resolve => setTimeout(resolve, 2000));
 
     if (consoleErrors.length > 0) {
       console.log('⚠️  コンソールエラー検出:');
