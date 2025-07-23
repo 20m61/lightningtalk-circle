@@ -1,0 +1,163 @@
+/**
+ * Button Contrast Fix
+ * 緑色ボタンのコントラスト問題を修正
+ */
+
+/* Primary buttons - darker green for better contrast */
+.btn-primary,
+.btn.btn-primary,
+button.btn-primary,
+.btn-success,
+a.btn-primary {
+  background-color: #15803d !important; /* Darker green */
+  color: #ffffff !important;
+  border-color: #15803d !important;
+}
+
+.btn-primary:hover,
+.btn.btn-primary:hover,
+button.btn-primary:hover,
+.btn-success:hover,
+a.btn-primary:hover {
+  background-color: #166534 !important; /* Even darker on hover */
+  border-color: #166534 !important;
+}
+
+/* Secondary buttons - darker turquoise */
+.btn-secondary,
+.btn.btn-secondary,
+button.btn-secondary,
+a.btn-secondary {
+  background-color: #0f766e !important; /* Darker turquoise */
+  color: #ffffff !important;
+  border-color: #0f766e !important;
+}
+
+.btn-secondary:hover,
+.btn.btn-secondary:hover,
+button.btn-secondary:hover,
+a.btn-secondary:hover {
+  background-color: #115e59 !important;
+  border-color: #115e59 !important;
+}
+
+/* Green colored elements - ensure contrast */
+.text-success,
+.text-green {
+  color: #15803d !important; /* Dark green for text */
+}
+
+.bg-success,
+.bg-green {
+  background-color: #15803d !important;
+  color: #ffffff !important;
+}
+
+/* Event status badges */
+.event-status.upcoming {
+  background-color: #dcfce7;
+  color: #14532d !important; /* Very dark green */
+  border: 1px solid #166534;
+}
+
+.event-status.planning {
+  background-color: #dbeafe;
+  color: #1e3a8a !important; /* Very dark blue */
+  border: 1px solid #1e40af;
+}
+
+/* Search button */
+.search-btn {
+  background-color: #15803d !important;
+  color: #ffffff !important;
+  border: 2px solid #15803d !important;
+}
+
+.search-btn:hover {
+  background-color: #166534 !important;
+  border-color: #166534 !important;
+}
+
+/* View toggle buttons */
+.view-toggle-btn {
+  background-color: #ffffff !important;
+  color: #1f2937 !important;
+  border: 2px solid #374151 !important;
+}
+
+.view-toggle-btn:hover {
+  background-color: #f3f4f6 !important;
+}
+
+.view-toggle-btn.active {
+  background-color: #1f2937 !important;
+  color: #ffffff !important;
+  border-color: #1f2937 !important;
+}
+
+/* Event card action buttons */
+.event-card .btn-primary,
+.hero-event-card .btn-primary {
+  background-color: #15803d !important;
+  color: #ffffff !important;
+}
+
+.event-card .btn-outline,
+.hero-event-card .btn-outline {
+  background-color: transparent !important;
+  color: #15803d !important;
+  border: 2px solid #15803d !important;
+}
+
+.event-card .btn-outline:hover,
+.hero-event-card .btn-outline:hover {
+  background-color: #15803d !important;
+  color: #ffffff !important;
+}
+
+/* Participation vote buttons */
+.vote-btn {
+  border: 2px solid #374151 !important;
+  color: #1f2937 !important;
+  background-color: #ffffff !important;
+}
+
+.vote-btn:hover {
+  background-color: #f3f4f6 !important;
+}
+
+.vote-btn.online-btn.active {
+  background-color: #1e40af !important;
+  color: #ffffff !important;
+  border-color: #1e40af !important;
+}
+
+.vote-btn.onsite-btn.active {
+  background-color: #7c2d12 !important;
+  color: #ffffff !important;
+  border-color: #7c2d12 !important;
+}
+
+/* Links in dark backgrounds */
+.hero a,
+.footer a,
+[class*="bg-dark"] a {
+  color: #60a5fa !important; /* Lighter blue for dark backgrounds */
+}
+
+.hero a:hover,
+.footer a:hover,
+[class*="bg-dark"] a:hover {
+  color: #93bbfc !important;
+  text-decoration: underline;
+}
+
+/* Ensure all interactive elements meet contrast requirements */
+button:disabled,
+.btn:disabled,
+[disabled] {
+  opacity: 0.7;
+  background-color: #e5e7eb !important;
+  color: #6b7280 !important;
+  cursor: not-allowed;
+}
