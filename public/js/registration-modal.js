@@ -3,348 +3,262 @@
  * 参加登録用モーダルの管理
  */
 
-class RegistrationModal {
-  constructor() {
-    this.modalId = 'registration-modal';
-    this.formId = 'registration-form';
-    this.init();
-  }
+(function () {
+  'use strict';
 
-  init() {
-    // モーダルHTMLを動的に生成
-    this.createModal();
-
-    // モーダルシステムに登録
-    window.modalSystem.register(this.modalId, {
-      onOpen: (modal, data) => this.onModalOpen(modal, data),
-      onClose: () => this.onModalClose()
-    });
-
-    // 登録ボタンのイベントリスナー設定
-    this.setupTriggers();
-
-    // フォームの送信イベント設定
-    this.setupFormHandlers();
-  }
-
-  createModal() {
-    const modal = document.createElement('div');
-    modal.id = this.modalId;
-    modal.className = 'modal modal--form modal--medium';
-    modal.innerHTML = `
-      <div class="modal__header">
-        <h2 class="modal__title">イベント参加登録</h2>
-        <button class="modal__close" data-modal-close aria-label="閉じる">
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <line x1="18" y1="6" x2="6" y2="18"></line>
-            <line x1="6" y1="6" x2="18" y2="18"></line>
-          </svg>
-        </button>
-      </div>
-      <div class="modal__body">
-        <form id="${this.formId}" class="registration-form">
-          <div class="form-group">
-            <label for="reg-name">お名前 <span class="required">*</span></label>
-            <input 
-              type="text" 
-              id="reg-name" 
-              name="name" 
-              required 
-              placeholder="山田 太郎"
-              autocomplete="name"
-            >
-          </div>
-
-          <div class="form-group">
-            <label for="reg-email">メールアドレス <span class="required">*</span></label>
-            <input 
-              type="email" 
-              id="reg-email" 
-              name="email" 
-              required 
-              placeholder="example@email.com"
-              autocomplete="email"
-            >
-          </div>
-
-          <div class="form-group">
-            <label for="reg-attendance">参加形式 <span class="required">*</span></label>
-            <select id="reg-attendance" name="attendance" required>
-              <option value="">選択してください</option>
-              <option value="onsite">会場参加</option>
-              <option value="online">オンライン参加</option>
-              <option value="hybrid">どちらでも可</option>
-            </select>
-          </div>
-
-          <div class="form-group">
-            <label for="reg-experience">ライトニングトーク経験</label>
-            <select id="reg-experience" name="experience">
-              <option value="">選択してください</option>
-              <option value="none">経験なし</option>
-              <option value="1-2">1-2回</option>
-              <option value="3-5">3-5回</option>
-              <option value="6+">6回以上</option>
-            </select>
-          </div>
-
-          <div class="form-group">
-            <label for="reg-talk-interest">発表希望</label>
-            <div class="checkbox-group">
-              <input 
-                type="checkbox" 
-                id="reg-talk-interest" 
-                name="talkInterest"
-                value="yes"
-              >
-              <label for="reg-talk-interest">ライトニングトークで発表したい</label>
-            </div>
-          </div>
-
-          <div class="form-group" id="talk-topic-group" style="display: none;">
-            <label for="reg-talk-topic">発表予定のトピック</label>
-            <input 
-              type="text" 
-              id="reg-talk-topic" 
-              name="talkTopic" 
-              placeholder="例: Reactフックスの活用方法"
-            >
-          </div>
-
-          <div class="form-group">
-            <label for="reg-dietary">食事制限・アレルギー</label>
-            <input 
-              type="text" 
-              id="reg-dietary" 
-              name="dietary" 
-              placeholder="例: ベジタリアン、卵アレルギー"
-            >
-          </div>
-
-          <div class="form-group">
-            <label for="reg-emergency-contact">緊急連絡先</label>
-            <input 
-              type="tel" 
-              id="reg-emergency-contact" 
-              name="emergencyContact" 
-              placeholder="090-1234-5678"
-              autocomplete="tel"
-            >
-          </div>
-
-          <div class="form-group">
-            <label for="reg-comments">その他コメント</label>
-            <textarea 
-              id="reg-comments" 
-              name="comments" 
-              rows="3" 
-              placeholder="ご質問やご要望があればお書きください"
-            ></textarea>
-          </div>
-
-          <div class="form-group">
-            <div class="checkbox-group">
-              <input 
-                type="checkbox" 
-                id="reg-privacy" 
-                name="privacy" 
-                required
-              >
-              <label for="reg-privacy">
-                <a href="/privacy" target="_blank">プライバシーポリシー</a>に同意します
-                <span class="required">*</span>
-              </label>
-            </div>
-          </div>
-
-          <div class="form-error" id="form-error" style="display: none;"></div>
-          <div class="form-success" id="form-success" style="display: none;"></div>
-        </form>
-      </div>
-      <div class="modal__footer">
-        <button type="button" class="btn btn--secondary" data-modal-close>
-          キャンセル
-        </button>
-        <button type="submit" form="${this.formId}" class="btn btn--primary">
-          登録する
-        </button>
-      </div>
-    `;
-
-    document.body.appendChild(modal);
-  }
-
-  setupTriggers() {
-    // 既存の登録ボタンをモーダルトリガーに変更
-    document
-      .querySelectorAll('[data-action="register-listener"], [data-action="register"]')
-      .forEach(button => {
-        button.removeAttribute('data-action');
-        button.setAttribute('data-modal-trigger', this.modalId);
-
-        // イベントIDがある場合は保持
-        const eventId = button.dataset.eventId;
-        if (eventId) {
-          button.addEventListener('click', () => {
-            this.currentEventId = eventId;
-          });
-        }
-      });
-  }
-
-  setupFormHandlers() {
-    const form = document.getElementById(this.formId);
-    const talkInterestCheckbox = document.getElementById('reg-talk-interest');
-    const talkTopicGroup = document.getElementById('talk-topic-group');
-
-    // 発表希望チェックボックスの変更を監視
-    talkInterestCheckbox.addEventListener('change', e => {
-      talkTopicGroup.style.display = e.target.checked ? 'block' : 'none';
-      if (!e.target.checked) {
-        document.getElementById('reg-talk-topic').value = '';
-      }
-    });
-
-    // フォーム送信処理
-    form.addEventListener('submit', async e => {
-      e.preventDefault();
-      await this.handleSubmit(form);
-    });
-  }
-
-  async handleSubmit(form) {
-    const formData = new FormData(form);
-    const data = Object.fromEntries(formData.entries());
-
-    // イベントIDを追加
-    if (this.currentEventId) {
-      data.eventId = this.currentEventId;
+  class RegistrationModal {
+    constructor() {
+      this.modalId = 'registration-modal';
+      this.formId = 'registration-form';
+      this.init();
     }
 
-    // エラー/成功メッセージをクリア
-    this.clearMessages();
+    init() {
+      this.setupEventListeners();
+      this.initializeForm();
+    }
 
-    // ローディング状態
-    const submitButton = form.querySelector('[type="submit"]');
-    const originalText = submitButton.textContent;
-    submitButton.disabled = true;
-    submitButton.textContent = '送信中...';
-
-    try {
-      const response = await fetch('/api/participants', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(data)
+    setupEventListeners() {
+      // 登録ボタンのクリックイベント
+      const registerBtns = document.querySelectorAll('.register-btn, #register-btn');
+      registerBtns.forEach(btn => {
+        btn.addEventListener('click', e => {
+          e.preventDefault();
+          this.openModal();
+        });
       });
 
-      const result = await response.json();
+      // モーダルの閉じるボタン
+      const modal = document.getElementById(this.modalId);
+      if (modal) {
+        const closeBtn = modal.querySelector('.modal-close');
+        if (closeBtn) {
+          closeBtn.addEventListener('click', () => this.closeModal());
+        }
 
-      if (response.ok) {
-        this.showSuccess('登録が完了しました！確認メールをお送りしました。');
+        // 背景クリックで閉じる
+        modal.addEventListener('click', e => {
+          if (e.target === modal) {
+            this.closeModal();
+          }
+        });
+      }
 
-        // フォームをリセット
-        form.reset();
+      // フォームのサブミット
+      const form = document.getElementById(this.formId);
+      if (form) {
+        form.addEventListener('submit', e => this.handleSubmit(e));
+      }
 
-        // 2秒後にモーダルを閉じる
+      // キーボードイベント
+      document.addEventListener('keydown', e => {
+        if (e.key === 'Escape' && this.isModalOpen()) {
+          this.closeModal();
+        }
+      });
+    }
+
+    initializeForm() {
+      // 参加方法のラジオボタン変更時の処理
+      const participationInputs = document.querySelectorAll('input[name="participation"]');
+      participationInputs.forEach(input => {
+        input.addEventListener('change', e => {
+          this.toggleLocationField(e.target.value);
+        });
+      });
+    }
+
+    openModal() {
+      const modal = document.getElementById(this.modalId);
+      if (modal) {
+        modal.style.display = 'flex';
+        document.body.style.overflow = 'hidden';
+
+        // フォーカス管理
         setTimeout(() => {
-          window.modalSystem.close(this.modalId);
-        }, 2000);
+          const firstInput = modal.querySelector('input:not([type="hidden"])');
+          if (firstInput) {
+            firstInput.focus();
+          }
+        }, 100);
 
-        // カスタムイベントを発火
+        // イベントをディスパッチ
         window.dispatchEvent(
-          new CustomEvent('registration:completed', {
-            detail: { participant: result.participant, eventId: data.eventId }
+          new CustomEvent('modalOpened', {
+            detail: { modalId: this.modalId }
           })
         );
-      } else {
-        throw new Error(result.error || '登録に失敗しました');
       }
-    } catch (error) {
-      console.error('Registration error:', error);
-      this.showError(error.message || 'エラーが発生しました。もう一度お試しください。');
-    } finally {
-      submitButton.disabled = false;
-      submitButton.textContent = originalText;
-    }
-  }
-
-  onModalOpen(modal, data) {
-    // モーダルが開かれたときの処理
-    if (data.eventId) {
-      this.currentEventId = data.eventId;
-
-      // イベント情報を取得して表示
-      this.loadEventInfo(data.eventId);
     }
 
-    // 最初の入力フィールドにフォーカス
-    setTimeout(() => {
-      const firstInput = modal.querySelector('input:not([type="checkbox"])');
-      if (firstInput) {
-        firstInput.focus();
+    closeModal() {
+      const modal = document.getElementById(this.modalId);
+      if (modal) {
+        modal.style.display = 'none';
+        document.body.style.overflow = '';
+
+        // フォームをリセット
+        this.resetForm();
+
+        // イベントをディスパッチ
+        window.dispatchEvent(
+          new CustomEvent('modalClosed', {
+            detail: { modalId: this.modalId }
+          })
+        );
       }
-    }, 100);
-  }
-
-  onModalClose() {
-    // モーダルが閉じられたときの処理
-    this.clearMessages();
-    this.currentEventId = null;
-
-    // フォームをリセット
-    const form = document.getElementById(this.formId);
-    if (form) {
-      form.reset();
     }
-  }
 
-  async loadEventInfo(eventId) {
-    try {
-      const response = await fetch(`/api/events/${eventId}`);
-      if (response.ok) {
-        const event = await response.json();
+    isModalOpen() {
+      const modal = document.getElementById(this.modalId);
+      return modal && modal.style.display === 'flex';
+    }
 
-        // モーダルタイトルを更新
-        const modalTitle = document.querySelector(`#${this.modalId} .modal__title`);
-        if (modalTitle) {
-          modalTitle.textContent = `「${event.title}」への参加登録`;
+    toggleLocationField(participationType) {
+      const locationGroup = document.querySelector('.location-group');
+      if (locationGroup) {
+        const input = locationGroup.querySelector('input');
+        if (participationType === 'venue') {
+          locationGroup.style.display = 'block';
+          if (input) {
+            input.required = true;
+          }
+        } else {
+          locationGroup.style.display = 'none';
+          if (input) {
+            input.required = false;
+          }
         }
       }
-    } catch (error) {
-      console.error('Failed to load event info:', error);
+    }
+
+    async handleSubmit(e) {
+      e.preventDefault();
+
+      const form = e.target;
+      const submitBtn = form.querySelector('button[type="submit"]');
+
+      // バリデーション
+      if (!this.validateForm(form)) {
+        return;
+      }
+
+      // ボタンを無効化
+      if (submitBtn) {
+        submitBtn.disabled = true;
+        submitBtn.textContent = '送信中...';
+      }
+
+      // フォームデータを収集
+      const formData = new FormData(form);
+      const data = Object.fromEntries(formData.entries());
+
+      try {
+        // APIエンドポイントへ送信
+        const response = await fetch('/api/participants/register', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(data)
+        });
+
+        const result = await response.json();
+
+        if (response.ok) {
+          this.showSuccess('登録が完了しました！確認メールをお送りしました。');
+          setTimeout(() => {
+            this.closeModal();
+          }, 3000);
+        } else {
+          throw new Error(result.message || '登録に失敗しました');
+        }
+      } catch (error) {
+        console.error('Registration error:', error);
+        this.showError(error.message || 'エラーが発生しました。もう一度お試しください。');
+      } finally {
+        // ボタンを有効化
+        if (submitBtn) {
+          submitBtn.disabled = false;
+          submitBtn.textContent = '登録する';
+        }
+      }
+    }
+
+    validateForm(form) {
+      // HTML5バリデーションを使用
+      if (!form.checkValidity()) {
+        form.reportValidity();
+        return false;
+      }
+
+      // カスタムバリデーション
+      const email = form.querySelector('input[name="email"]').value;
+      if (!this.validateEmail(email)) {
+        this.showError('有効なメールアドレスを入力してください');
+        return false;
+      }
+
+      // プライバシーポリシーの同意確認
+      const privacyCheckbox = form.querySelector('input[name="privacy"]');
+      if (privacyCheckbox && !privacyCheckbox.checked) {
+        this.showError('プライバシーポリシーに同意してください');
+        return false;
+      }
+
+      return true;
+    }
+
+    validateEmail(email) {
+      const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      return re.test(email);
+    }
+
+    showSuccess(message) {
+      const successEl = document.getElementById('form-success');
+      const errorEl = document.getElementById('form-error');
+
+      if (successEl) {
+        successEl.textContent = message;
+        successEl.style.display = 'block';
+      }
+
+      if (errorEl) {
+        errorEl.style.display = 'none';
+      }
+    }
+
+    showError(message) {
+      const errorEl = document.getElementById('form-error');
+      const successEl = document.getElementById('form-success');
+
+      if (errorEl) {
+        errorEl.textContent = message;
+        errorEl.style.display = 'block';
+      }
+
+      if (successEl) {
+        successEl.style.display = 'none';
+      }
+    }
+
+    resetForm() {
+      const form = document.getElementById(this.formId);
+      if (form) {
+        form.reset();
+        // 参加方法フィールドをリセット
+        this.toggleLocationField('online');
+      }
+
+      // メッセージを非表示
+      document.getElementById('form-error').style.display = 'none';
+      document.getElementById('form-success').style.display = 'none';
     }
   }
 
-  showError(message) {
-    const errorElement = document.getElementById('form-error');
-    errorElement.textContent = message;
-    errorElement.style.display = 'block';
-
-    // エラー時にモーダルを振動させる
-    const modal = document.getElementById(this.modalId);
-    modal.classList.add('modal--shake');
-    setTimeout(() => {
-      modal.classList.remove('modal--shake');
-    }, 300);
-  }
-
-  showSuccess(message) {
-    const successElement = document.getElementById('form-success');
-    successElement.textContent = message;
-    successElement.style.display = 'block';
-  }
-
-  clearMessages() {
-    document.getElementById('form-error').style.display = 'none';
-    document.getElementById('form-success').style.display = 'none';
-  }
-}
-
-// スタイルを追加
-const style = document.createElement('style');
-style.textContent = `
+  // スタイルを追加
+  const style = document.createElement('style');
+  style.textContent = `
   .registration-form .form-group {
     margin-bottom: var(--spacing-lg);
   }
@@ -357,40 +271,67 @@ style.textContent = `
   .registration-form .checkbox-group {
     display: flex;
     align-items: flex-start;
-    gap: var(--spacing-sm);
+    gap: 8px;
   }
 
   .registration-form .checkbox-group input[type="checkbox"] {
     margin-top: 4px;
-    width: auto;
-    cursor: pointer;
+    flex-shrink: 0;
   }
 
   .registration-form .checkbox-group label {
-    margin-bottom: 0;
-    cursor: pointer;
-    user-select: none;
+    flex: 1;
+    line-height: 1.5;
   }
 
-  .form-error {
-    background: rgba(231, 76, 60, 0.1);
-    color: var(--color-error);
-    padding: var(--spacing-sm) var(--spacing-md);
-    border-radius: var(--radius-md);
-    margin-top: var(--spacing-md);
+  .location-group {
+    display: none;
   }
 
-  .form-success {
-    background: rgba(39, 174, 96, 0.1);
+  .form-message {
+    padding: 12px 16px;
+    border-radius: 8px;
+    margin-bottom: 16px;
+    font-size: 14px;
+    display: none;
+  }
+
+  .form-message.success {
+    background-color: var(--color-success-light);
     color: var(--color-success);
-    padding: var(--spacing-sm) var(--spacing-md);
-    border-radius: var(--radius-md);
-    margin-top: var(--spacing-md);
+    border: 1px solid var(--color-success);
+  }
+
+  .form-message.error {
+    background-color: var(--color-error-light);
+    color: var(--color-error);
+    border: 1px solid var(--color-error);
+  }
+
+  /* アクセシビリティ向上 */
+  .registration-form input:focus,
+  .registration-form select:focus,
+  .registration-form textarea:focus {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 2px;
+  }
+
+  .registration-form input[aria-invalid="true"],
+  .registration-form select[aria-invalid="true"] {
+    border-color: var(--color-error);
+  }
+
+  /* レスポンシブ対応 */
+  @media (max-width: 768px) {
+    .registration-form .form-group {
+      margin-bottom: var(--spacing-md);
+    }
   }
 `;
-document.head.appendChild(style);
+  document.head.appendChild(style);
 
-// 初期化
-document.addEventListener('DOMContentLoaded', () => {
-  window.registrationModal = new RegistrationModal();
-});
+  // 初期化
+  document.addEventListener('DOMContentLoaded', () => {
+    window.registrationModal = new RegistrationModal();
+  });
+})(); // IIFE終了
