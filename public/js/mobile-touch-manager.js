@@ -3,8 +3,9 @@
  * モバイルデバイス専用のタッチインタラクション管理システム
  */
 
-class MobileTouchManager {
+class MobileTouchManager extends EventTarget {
   constructor() {
+    super();
     this.touches = new Map();
     this.gestures = new Map();
     this.touchStartTime = 0;
@@ -397,21 +398,27 @@ class MobileTouchManager {
       document.body.classList.remove('dragging');
 
       // ドラッグ終了イベントの発火
-      this.dispatchEvent('dragend', {
-        pointerType: event.pointerType,
-        target: event.target,
-        clientX: event.clientX,
-        clientY: event.clientY
+      const dragEndEvent = new CustomEvent('dragend', {
+        detail: {
+          pointerType: event.pointerType,
+          target: event.target,
+          clientX: event.clientX,
+          clientY: event.clientY
+        }
       });
+      this.dispatchEvent(dragEndEvent);
     }
 
     // カスタムイベントの発火
-    this.dispatchEvent('pointerend', {
-      pointerType: event.pointerType,
-      target: event.target,
-      pointerId: event.pointerId,
-      pressure: event.pressure || 0
+    const pointerEndEvent = new CustomEvent('pointerend', {
+      detail: {
+        pointerType: event.pointerType,
+        target: event.target,
+        pointerId: event.pointerId,
+        pressure: event.pressure || 0
+      }
     });
+    this.dispatchEvent(pointerEndEvent);
 
     // デバッグログ
     console.debug(`Mouse/Pen pointer up: ${event.pointerType}`, {

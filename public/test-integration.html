@@ -61,6 +61,13 @@
       </div>
 
       <div class="test-section">
+        <h2>統合インタラクション管理システム</h2>
+        <div id="interaction-tests">
+          <div class="test-result pending">テストを準備中...</div>
+        </div>
+      </div>
+
+      <div class="test-section">
         <h2>フロントエンド機能テスト</h2>
         <div id="frontend-tests">
           <div class="test-result pending">テストを準備中...</div>
@@ -183,6 +190,74 @@
         }
       }
 
+      // Test unified interaction manager
+      async function testInteractionManager() {
+        const interactionDiv = document.getElementById('interaction-tests');
+        interactionDiv.innerHTML = '';
+
+        const tests = [
+          {
+            name: 'Unified Interaction Manager',
+            test: () => typeof window.unifiedInteractionManager !== 'undefined'
+          },
+          {
+            name: 'Scroll Manager V2',
+            test: () => typeof window.scrollManager !== 'undefined'
+          },
+          {
+            name: 'Debug Functions',
+            test: () => typeof window.debugInteractions !== 'undefined'
+          },
+          {
+            name: 'Refresh Functions',
+            test: () => typeof window.refreshInteractions !== 'undefined'
+          },
+          {
+            name: 'Event Delegation System',
+            test: () => {
+              // イベントリスナーが正しく設定されているかチェック
+              const manager = window.unifiedInteractionManager;
+              return manager && manager.initialized === true;
+            }
+          },
+          {
+            name: 'Global Conflicts Cleanup',
+            test: () => {
+              // 競合するグローバル変数がクリーンアップされているかチェック
+              const conflicts = ['lightningTalkApp', 'LightningTalkApp', 'mobileNavigation'];
+              return conflicts.every(varName => !window[varName]);
+            }
+          }
+        ];
+
+        for (const test of tests) {
+          const testDiv = document.createElement('div');
+
+          try {
+            const result = test.test();
+            if (result) {
+              testDiv.className = 'test-result success';
+              testDiv.innerHTML = `<h3>✅ ${test.name}</h3>`;
+              testResults.frontend[test.name] = { success: true };
+              testResults.summary.passed++;
+            } else {
+              throw new Error('Test returned false');
+            }
+          } catch (error) {
+            testDiv.className = 'test-result error';
+            testDiv.innerHTML = `
+                        <h3>❌ ${test.name}</h3>
+                        <p>Error: ${error.message}</p>
+                    `;
+            testResults.frontend[test.name] = { success: false, error: error.message };
+            testResults.summary.failed++;
+          }
+
+          testResults.summary.total++;
+          interactionDiv.appendChild(testDiv);
+        }
+      }
+
       // Test frontend features
       async function testFrontendFeatures() {
         const frontendDiv = document.getElementById('frontend-tests');
@@ -279,6 +354,7 @@
       async function runAllTests() {
         await displayEnvInfo();
         await testAPIEndpoints();
+        await testInteractionManager();
         await testFrontendFeatures();
         updateSummary();
       }
@@ -286,5 +362,11 @@
       // Start tests when page loads
       window.addEventListener('DOMContentLoaded', runAllTests);
     </script>
+
+    <!-- 統合インタラクション管理システム -->
+    <script src="js/interaction-manager-unified.js"></script>
+
+    <!-- スクロール管理システム -->
+    <script src="js/scroll-fix-v2.js"></script>
   </body>
 </html>
