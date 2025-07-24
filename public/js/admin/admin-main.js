@@ -245,9 +245,13 @@ class AdminDashboard {
       }
 
       // Action buttons
-      const editBtn = card.querySelector('.btn:nth-child(2)');
-      const detailBtn = card.querySelector('.btn-primary');
+      const participantsBtn = card.querySelector('.admin-participants-btn');
+      const editBtn = card.querySelector('.admin-edit-btn');
+      const detailBtn = card.querySelector('.admin-detail-btn');
 
+      if (participantsBtn && !participantsBtn.disabled) {
+        participantsBtn.addEventListener('click', () => this.showParticipantsModal(event));
+      }
       if (editBtn) {
         editBtn.addEventListener('click', () => this.editEvent(event));
       }
@@ -290,9 +294,9 @@ class AdminDashboard {
         </div>
         
         <div class="admin-event-card__actions">
-          <button class="btn btn-sm btn-outline" ${event.status === 'draft' ? 'disabled' : ''}>参加者</button>
-          <button class="btn btn-sm btn-outline">編集</button>
-          <button class="btn btn-sm btn-primary">詳細</button>
+          <button class="btn btn-sm btn-outline admin-participants-btn" ${event.status === 'draft' || participantCount === 0 ? 'disabled' : ''}>参加者</button>
+          <button class="btn btn-sm btn-outline admin-edit-btn">編集</button>
+          <button class="btn btn-sm btn-primary admin-detail-btn">詳細</button>
         </div>
       </div>
     `;
@@ -451,18 +455,400 @@ class AdminDashboard {
   }
 
   editEvent(event) {
-    // TODO: Implement edit functionality
-    console.log('Edit event:', event);
+    this.showEditModal(event);
   }
 
   viewEventDetail(event) {
-    // TODO: Implement detail view
-    console.log('View event detail:', event);
+    this.showDetailModal(event);
   }
 
   showEventMenu(e, event) {
-    // TODO: Implement context menu
-    console.log('Show menu for event:', event);
+    e.stopPropagation();
+    this.createContextMenu(e, event);
+  }
+
+  showEditModal(event) {
+    const modal = this.createModal('イベント編集', this.renderEditForm(event));
+    
+    // フォーム送信処理
+    const form = modal.querySelector('#editEventForm');
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      await this.handleEditSubmit(e, event.id);
+    });
+  }
+
+  showDetailModal(event) {
+    const modal = this.createModal('イベント詳細', this.renderDetailView(event));
+    
+    // 参加者ボタンのハンドラー
+    const participantsBtn = modal.querySelector('.view-participants-btn');
+    if (participantsBtn) {
+      participantsBtn.addEventListener('click', () => {
+        this.closeModal();
+        this.showParticipantsModal(event);
+      });
+    }
+  }
+
+  showParticipantsModal(event) {
+    const modal = this.createModal(`参加者一覧 - ${event.title}`, this.renderParticipantsList(event));
+  }
+
+  createModal(title, content) {
+    // 既存のモーダルを削除
+    const existingModal = document.querySelector('.admin-modal');
+    if (existingModal) {
+      existingModal.remove();
+    }
+
+    const modalHtml = `
+      <div class="admin-modal">
+        <div class="admin-modal__backdrop"></div>
+        <div class="admin-modal__content">
+          <div class="admin-modal__header">
+            <h2 class="admin-modal__title">${this.escapeHtml(title)}</h2>
+            <button class="admin-modal__close" aria-label="閉じる">&times;</button>
+          </div>
+          <div class="admin-modal__body">
+            ${content}
+          </div>
+        </div>
+      </div>
+    `;
+
+    document.body.insertAdjacentHTML('beforeend', modalHtml);
+    
+    const modal = document.querySelector('.admin-modal');
+    const closeBtn = modal.querySelector('.admin-modal__close');
+    const backdrop = modal.querySelector('.admin-modal__backdrop');
+
+    // 閉じるイベント
+    closeBtn.addEventListener('click', () => this.closeModal());
+    backdrop.addEventListener('click', () => this.closeModal());
+
+    // アニメーション
+    requestAnimationFrame(() => {
+      modal.classList.add('admin-modal--open');
+    });
+
+    return modal;
+  }
+
+  closeModal() {
+    const modal = document.querySelector('.admin-modal');
+    if (modal) {
+      modal.classList.remove('admin-modal--open');
+      setTimeout(() => modal.remove(), 300);
+    }
+  }
+
+  renderEditForm(event) {
+    const statusOptions = ['draft', 'published', 'upcoming', 'ongoing', 'past']
+      .map(status => `
+        <option value="${status}" ${event.status === status ? 'selected' : ''}>
+          ${this.getStatusText(status)}
+        </option>
+      `).join('');
+
+    return `
+      <form id="editEventForm" class="admin-form">
+        <div class="admin-form__group">
+          <label for="editTitle" class="admin-form__label">イベントタイトル</label>
+          <input type="text" id="editTitle" name="title" class="admin-form__input" 
+                 value="${this.escapeHtml(event.title)}" required>
+        </div>
+
+        <div class="admin-form__group">
+          <label for="editDate" class="admin-form__label">開催日時</label>
+          <input type="datetime-local" id="editDate" name="date" class="admin-form__input" 
+                 value="${event.date ? event.date.slice(0, 16) : ''}" required>
+        </div>
+
+        <div class="admin-form__group">
+          <label for="editLocation" class="admin-form__label">開催場所</label>
+          <input type="text" id="editLocation" name="location" class="admin-form__input" 
+                 value="${this.escapeHtml(event.location || '')}" placeholder="オンライン">
+        </div>
+
+        <div class="admin-form__row">
+          <div class="admin-form__group">
+            <label for="editCapacity" class="admin-form__label">定員</label>
+            <input type="number" id="editCapacity" name="capacity" class="admin-form__input" 
+                   value="${event.capacity || ''}" min="1">
+          </div>
+
+          <div class="admin-form__group">
+            <label for="editStatus" class="admin-form__label">ステータス</label>
+            <select id="editStatus" name="status" class="admin-form__select">
+              ${statusOptions}
+            </select>
+          </div>
+        </div>
+
+        <div class="admin-form__group">
+          <label for="editDescription" class="admin-form__label">説明</label>
+          <textarea id="editDescription" name="description" class="admin-form__textarea" rows="4">${this.escapeHtml(event.description || '')}</textarea>
+        </div>
+
+        <div class="admin-form__actions">
+          <button type="button" class="btn btn-outline" onclick="window.adminDashboard.closeModal()">
+            キャンセル
+          </button>
+          <button type="submit" class="btn btn-primary">
+            保存
+          </button>
+        </div>
+      </form>
+    `;
+  }
+
+  renderDetailView(event) {
+    const participantCount = event.participants?.length || 0;
+    const capacity = event.capacity || '∞';
+    const participationRate = capacity !== '∞' ? Math.round((participantCount / capacity) * 100) : '-';
+
+    return `
+      <div class="admin-detail">
+        <div class="admin-detail__section">
+          <h3 class="admin-detail__subtitle">基本情報</h3>
+          <dl class="admin-detail__list">
+            <dt>ステータス</dt>
+            <dd><span class="admin-event-status admin-event-status--${event.status}">${this.getStatusText(event.status)}</span></dd>
+            
+            <dt>開催日時</dt>
+            <dd>${this.formatDate(event.date)}</dd>
+            
+            <dt>開催場所</dt>
+            <dd>${this.escapeHtml(event.location || 'オンライン')}</dd>
+            
+            <dt>定員</dt>
+            <dd>${capacity}名</dd>
+          </dl>
+        </div>
+
+        <div class="admin-detail__section">
+          <h3 class="admin-detail__subtitle">参加状況</h3>
+          <div class="admin-stats">
+            <div class="admin-stat-card">
+              <div class="admin-stat-value">${participantCount}</div>
+              <div class="admin-stat-label">参加者数</div>
+            </div>
+            <div class="admin-stat-card">
+              <div class="admin-stat-value">${participationRate}%</div>
+              <div class="admin-stat-label">参加率</div>
+            </div>
+          </div>
+          ${participantCount > 0 ? `
+            <button class="btn btn-primary view-participants-btn" style="margin-top: 1rem;">
+              参加者一覧を表示
+            </button>
+          ` : ''}
+        </div>
+
+        ${event.description ? `
+          <div class="admin-detail__section">
+            <h3 class="admin-detail__subtitle">説明</h3>
+            <p class="admin-detail__description">${this.escapeHtml(event.description)}</p>
+          </div>
+        ` : ''}
+
+        <div class="admin-detail__section">
+          <h3 class="admin-detail__subtitle">管理情報</h3>
+          <dl class="admin-detail__list">
+            <dt>作成日時</dt>
+            <dd>${this.formatDate(event.createdAt)}</dd>
+            
+            <dt>最終更新</dt>
+            <dd>${this.formatDate(event.updatedAt)}</dd>
+            
+            <dt>イベントID</dt>
+            <dd><code>${event.id}</code></dd>
+          </dl>
+        </div>
+      </div>
+    `;
+  }
+
+  renderParticipantsList(event) {
+    const participants = event.participants || [];
+    
+    if (participants.length === 0) {
+      return '<p class="admin-empty">参加者はまだいません</p>';
+    }
+
+    return `
+      <div class="admin-participants">
+        <div class="admin-participants__summary">
+          参加者数: ${participants.length}名 / 定員: ${event.capacity || '∞'}名
+        </div>
+        <div class="admin-participants__list">
+          ${participants.map((p, index) => `
+            <div class="admin-participant-card">
+              <div class="admin-participant-number">${index + 1}</div>
+              <div class="admin-participant-info">
+                <div class="admin-participant-name">${this.escapeHtml(p.name)}</div>
+                <div class="admin-participant-meta">
+                  <span>${this.escapeHtml(p.email)}</span>
+                  <span>登録: ${this.formatDate(p.registeredAt)}</span>
+                </div>
+              </div>
+              <div class="admin-participant-type">
+                ${p.participationType === 'online' ? 'オンライン' : 'オフライン'}
+              </div>
+            </div>
+          `).join('')}
+        </div>
+      </div>
+    `;
+  }
+
+  createContextMenu(e, event) {
+    // 既存のメニューを削除
+    const existingMenu = document.querySelector('.admin-context-menu');
+    if (existingMenu) {
+      existingMenu.remove();
+    }
+
+    const menuHtml = `
+      <div class="admin-context-menu" style="top: ${e.clientY}px; left: ${e.clientX}px;">
+        <button class="admin-context-menu__item" data-action="edit">
+          <span>編集</span>
+        </button>
+        <button class="admin-context-menu__item" data-action="duplicate">
+          <span>複製</span>
+        </button>
+        <button class="admin-context-menu__item" data-action="view">
+          <span>詳細表示</span>
+        </button>
+        <div class="admin-context-menu__divider"></div>
+        <button class="admin-context-menu__item admin-context-menu__item--danger" data-action="delete">
+          <span>削除</span>
+        </button>
+      </div>
+    `;
+
+    document.body.insertAdjacentHTML('beforeend', menuHtml);
+    
+    const menu = document.querySelector('.admin-context-menu');
+    
+    // メニュー項目のクリックハンドラー
+    menu.addEventListener('click', (e) => {
+      const item = e.target.closest('[data-action]');
+      if (!item) return;
+      
+      const action = item.dataset.action;
+      this.handleContextMenuAction(action, event);
+      menu.remove();
+    });
+
+    // 外側クリックで閉じる
+    setTimeout(() => {
+      document.addEventListener('click', () => menu.remove(), { once: true });
+    }, 0);
+  }
+
+  async handleContextMenuAction(action, event) {
+    switch (action) {
+      case 'edit':
+        this.editEvent(event);
+        break;
+      case 'duplicate':
+        this.duplicateEvent(event);
+        break;
+      case 'view':
+        this.viewEventDetail(event);
+        break;
+      case 'delete':
+        if (confirm(`「${event.title}」を削除しますか？`)) {
+          await this.deleteEvent(event.id);
+        }
+        break;
+    }
+  }
+
+  async handleEditSubmit(e, eventId) {
+    const formData = new FormData(e.target);
+    const updates = Object.fromEntries(formData);
+
+    try {
+      const token = localStorage.getItem('authToken');
+      const response = await fetch(`/api/admin/events/${eventId}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify(updates)
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to update event');
+      }
+
+      this.showSuccess('イベントを更新しました');
+      this.closeModal();
+      await this.loadEvents();
+    } catch (error) {
+      console.error('Error updating event:', error);
+      this.showError('更新に失敗しました');
+    }
+  }
+
+  async duplicateEvent(event) {
+    const newEvent = {
+      ...event,
+      title: `${event.title} (コピー)`,
+      status: 'draft',
+      id: undefined,
+      createdAt: undefined,
+      updatedAt: undefined
+    };
+
+    try {
+      const token = localStorage.getItem('authToken');
+      const response = await fetch('/api/admin/events', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify(newEvent)
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to duplicate event');
+      }
+
+      this.showSuccess('イベントを複製しました');
+      await this.loadEvents();
+    } catch (error) {
+      console.error('Error duplicating event:', error);
+      this.showError('複製に失敗しました');
+    }
+  }
+
+  async deleteEvent(eventId) {
+    try {
+      const token = localStorage.getItem('authToken');
+      const response = await fetch(`/api/admin/events/${eventId}`, {
+        method: 'DELETE',
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
+
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.message || 'Failed to delete event');
+      }
+
+      this.showSuccess('イベントを削除しました');
+      await this.loadEvents();
+    } catch (error) {
+      console.error('Error deleting event:', error);
+      this.showError(error.message || '削除に失敗しました');
+    }
   }
 
   toggleMobileMenu() {
