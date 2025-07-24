@@ -125,7 +125,7 @@
           <h1 class="login-title">管理者ログイン</h1>
         </div>
 
-        <form class="login-form" id="loginForm">
+        <form class="login-form" id="loginForm" action="#" method="post">
           <div class="form-group">
             <label for="email" class="form-label">メールアドレス</label>
             <input
@@ -176,7 +176,9 @@
         }
 
         init() {
+          console.log('Initializing login form...');
           this.form.addEventListener('submit', e => this.handleSubmit(e));
+          console.log('Submit event listener attached');
 
           // Check if already logged in
           if (localStorage.getItem('authToken')) {
@@ -185,7 +187,9 @@
         }
 
         async handleSubmit(e) {
+          console.log('Form submitted, preventing default...');
           e.preventDefault();
+          e.stopPropagation();
 
           const email = document.getElementById('email').value;
           const password = document.getElementById('password').value;
@@ -283,7 +287,13 @@
 
       // Initialize when DOM is loaded
       document.addEventListener('DOMContentLoaded', () => {
-        new AdminLogin();
+        console.log('DOM Content Loaded - Initializing login page');
+        try {
+          new AdminLogin();
+          console.log('AdminLogin initialized successfully');
+        } catch (error) {
+          console.error('Failed to initialize AdminLogin:', error);
+        }
       });
     </script>
   </body>
