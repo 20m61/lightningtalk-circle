@@ -1,0 +1,560 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ボタン・リンク インタラクションテスト</title>
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="css/base.css" />
+    <link rel="stylesheet" href="css/mobile-optimization.css" />
+
+    <style>
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 2rem;
+        background-color: #f8fafc;
+      }
+
+      .test-section {
+        background: white;
+        border-radius: 8px;
+        padding: 2rem;
+        margin-bottom: 2rem;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+      }
+
+      .test-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 1rem;
+        margin-top: 1rem;
+      }
+
+      .test-item {
+        border: 1px solid #e5e7eb;
+        border-radius: 6px;
+        padding: 1rem;
+      }
+
+      .test-button {
+        display: block;
+        width: 100%;
+        padding: 0.75rem;
+        margin-bottom: 0.5rem;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        min-height: 44px;
+        font-size: 1rem;
+        transition: all 0.2s;
+      }
+
+      .test-button:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      }
+
+      .btn-primary {
+        background-color: #3b82f6;
+        color: white;
+      }
+
+      .btn-secondary {
+        background-color: #6b7280;
+        color: white;
+      }
+
+      .btn-success {
+        background-color: #10b981;
+        color: white;
+      }
+
+      .btn-danger {
+        background-color: #ef4444;
+        color: white;
+      }
+
+      .status {
+        font-size: 0.875rem;
+        color: #6b7280;
+        margin-top: 0.5rem;
+      }
+
+      .status.success {
+        color: #10b981;
+      }
+
+      .status.error {
+        color: #ef4444;
+      }
+
+      .console-log {
+        background: #1e293b;
+        color: #e2e8f0;
+        padding: 1rem;
+        border-radius: 6px;
+        font-family: 'Monaco', 'Consolas', monospace;
+        font-size: 0.875rem;
+        max-height: 300px;
+        overflow-y: auto;
+        margin-top: 1rem;
+      }
+
+      .log-entry {
+        margin: 0.25rem 0;
+      }
+
+      .log-success {
+        color: #10b981;
+      }
+      .log-error {
+        color: #ef4444;
+      }
+      .log-info {
+        color: #3b82f6;
+      }
+
+      /* モバイルメニュー */
+      .mobile-menu-toggle {
+        display: block;
+        background: #22c55e;
+        color: white;
+        border: none;
+        font-size: 1.5rem;
+        cursor: pointer;
+        padding: 0.5rem 1rem;
+        border-radius: 4px;
+        min-height: 44px;
+      }
+
+      .mobile-menu {
+        position: fixed;
+        top: 0;
+        left: -100%;
+        width: 280px;
+        height: 100vh;
+        background: white;
+        transition: left 0.3s ease;
+        z-index: 1000;
+        padding: 2rem;
+        box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+      }
+
+      .mobile-menu--active {
+        left: 0;
+      }
+
+      .mobile-menu-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.5);
+        z-index: 999;
+        display: none;
+      }
+
+      .mobile-menu-overlay--active {
+        display: block;
+      }
+
+      /* 検索 */
+      .search-form {
+        display: flex;
+        gap: 0.5rem;
+        margin-bottom: 1rem;
+      }
+
+      .search-input {
+        flex: 1;
+        padding: 0.5rem;
+        border: 2px solid #e5e7eb;
+        border-radius: 4px;
+      }
+
+      .search-btn {
+        padding: 0.5rem 1rem;
+        background: #3b82f6;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        min-height: 44px;
+      }
+
+      /* イベント管理 */
+      .event-management-btn {
+        background: #7c3aed;
+        color: white;
+        padding: 0.75rem 1.5rem;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+        min-height: 44px;
+        font-size: 1rem;
+      }
+
+      /* ビュー切り替え */
+      .view-toggle-btn {
+        padding: 0.5rem 1rem;
+        background: #f3f4f6;
+        border: 1px solid #e5e7eb;
+        border-radius: 4px;
+        cursor: pointer;
+        min-height: 44px;
+      }
+
+      .view-toggle-btn.active {
+        background: #3b82f6;
+        color: white;
+        border-color: #3b82f6;
+      }
+
+      /* フィルター */
+      .filter-btn {
+        padding: 0.5rem 1rem;
+        background: white;
+        border: 1px solid #e5e7eb;
+        border-radius: 4px;
+        cursor: pointer;
+        min-height: 44px;
+      }
+
+      /* ページネーション */
+      .pagination-btn {
+        padding: 0.5rem 1rem;
+        background: white;
+        border: 1px solid #e5e7eb;
+        border-radius: 4px;
+        cursor: pointer;
+        min-height: 44px;
+      }
+
+      .pagination-btn:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+      }
+
+      /* モーダル */
+      .modal {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.5);
+        display: none;
+        justify-content: center;
+        align-items: center;
+        z-index: 1001;
+      }
+
+      .modal.show {
+        display: flex;
+      }
+
+      #voteModal {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.5);
+        display: none;
+        justify-content: center;
+        align-items: center;
+        z-index: 1001;
+      }
+
+      .vote-modal-content {
+        background: white;
+        border-radius: 8px;
+        padding: 2rem;
+        max-width: 500px;
+        width: 90%;
+      }
+
+      .vote-cancel-btn {
+        padding: 0.5rem 1rem;
+        background: #6b7280;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        min-height: 44px;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>🔧 ボタン・リンク インタラクションテスト</h1>
+
+    <!-- ナビゲーション系 -->
+    <div class="test-section">
+      <h2>📱 ナビゲーション系</h2>
+      <div class="test-grid">
+        <div class="test-item">
+          <h3>モバイルメニュー</h3>
+          <button class="mobile-menu-toggle">≡ メニュー</button>
+          <div class="status" id="mobile-menu-status">未テスト</div>
+        </div>
+
+        <div class="test-item">
+          <h3>検索機能</h3>
+          <form class="search-form" onsubmit="return false;">
+            <input type="text" class="search-input" placeholder="検索..." />
+            <button class="search-btn">🔍</button>
+          </form>
+          <div class="status" id="search-status">未テスト</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 管理系 -->
+    <div class="test-section">
+      <h2>⚙️ 管理系</h2>
+      <div class="test-grid">
+        <div class="test-item">
+          <h3>管理画面ログイン</h3>
+          <button class="event-management-btn" onclick="showAdminLogin()">
+            <span class="icon">⚙️</span> イベント管理
+          </button>
+          <div class="status" id="admin-login-status">未テスト</div>
+        </div>
+
+        <div class="test-item">
+          <h3>投票モーダル</h3>
+          <button class="test-button btn-primary" onclick="openVoteModal()">投票モーダルを開く</button>
+          <button class="vote-cancel-btn" onclick="closeVoteModal()">投票モーダルを閉じる</button>
+          <div class="status" id="vote-modal-status">未テスト</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 表示切替系 -->
+    <div class="test-section">
+      <h2>🎨 表示切替系</h2>
+      <div class="test-grid">
+        <div class="test-item">
+          <h3>ビュー切替</h3>
+          <button class="view-toggle-btn active" data-view="grid">⊞ グリッド</button>
+          <button class="view-toggle-btn" data-view="list">☰ リスト</button>
+          <div class="status" id="view-toggle-status">未テスト</div>
+        </div>
+
+        <div class="test-item">
+          <h3>フィルター</h3>
+          <button class="filter-btn">🔽 フィルター</button>
+          <div class="status" id="filter-status">未テスト</div>
+        </div>
+
+        <div class="test-item">
+          <h3>ページネーション</h3>
+          <button class="pagination-btn" id="prev-page">← 前へ</button>
+          <button class="pagination-btn" id="next-page">次へ →</button>
+          <div class="status" id="pagination-status">未テスト</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 基本ボタン -->
+    <div class="test-section">
+      <h2>🎯 基本ボタン</h2>
+      <div class="test-grid">
+        <div class="test-item">
+          <h3>プライマリボタン</h3>
+          <button class="test-button btn-primary" onclick="testButtonClick('primary')">プライマリ</button>
+          <div class="status" id="primary-status">未テスト</div>
+        </div>
+
+        <div class="test-item">
+          <h3>セカンダリボタン</h3>
+          <button class="test-button btn-secondary" onclick="testButtonClick('secondary')">セカンダリ</button>
+          <div class="status" id="secondary-status">未テスト</div>
+        </div>
+
+        <div class="test-item">
+          <h3>成功ボタン</h3>
+          <button class="test-button btn-success" onclick="testButtonClick('success')">成功</button>
+          <div class="status" id="success-status">未テスト</div>
+        </div>
+
+        <div class="test-item">
+          <h3>危険ボタン</h3>
+          <button class="test-button btn-danger" onclick="testButtonClick('danger')">危険</button>
+          <div class="status" id="danger-status">未テスト</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ログ表示 -->
+    <div class="test-section">
+      <h2>📊 インタラクションログ</h2>
+      <button class="test-button btn-secondary" onclick="clearLog()">ログクリア</button>
+      <div class="console-log" id="interaction-log">
+        <div class="log-entry log-info">テストページ準備完了</div>
+      </div>
+    </div>
+
+    <!-- モバイルメニュー -->
+    <div class="mobile-menu">
+      <h3>モバイルメニュー</h3>
+      <p>統合システムで管理されています</p>
+    </div>
+    <div class="mobile-menu-overlay"></div>
+
+    <!-- 投票モーダル -->
+    <div id="voteModal">
+      <div class="vote-modal-content">
+        <h3>投票モーダル</h3>
+        <p>このモーダルはテスト用です</p>
+        <button class="vote-cancel-btn" onclick="closeVoteModal()">閉じる</button>
+      </div>
+    </div>
+
+    <!-- Scripts -->
+    <!-- 統合インタラクション管理システム -->
+    <script src="js/interaction-manager-unified.js"></script>
+
+    <!-- スクロール管理システム -->
+    <script src="js/scroll-fix-v2.js"></script>
+
+    <!-- イベント管理（ビュー切替のため） -->
+    <script src="js/events-manager.js"></script>
+
+    <!-- モバイルナビゲーション -->
+    <script src="js/mobile-navigation-unified.js"></script>
+
+    <!-- 検索機能 -->
+    <script src="js/search-fix.js"></script>
+
+    <script>
+      const logContainer = document.getElementById('interaction-log');
+
+      function addLog(type, message) {
+        const timestamp = new Date().toLocaleTimeString();
+        const entry = document.createElement('div');
+        entry.className = `log-entry log-${type}`;
+        entry.textContent = `[${timestamp}] ${message}`;
+        logContainer.appendChild(entry);
+        logContainer.scrollTop = logContainer.scrollHeight;
+      }
+
+      function updateStatus(id, message, isSuccess = true) {
+        const element = document.getElementById(id);
+        if (element) {
+          element.textContent = message;
+          element.className = isSuccess ? 'status success' : 'status error';
+        }
+      }
+
+      // テスト関数
+      function testButtonClick(type) {
+        addLog('success', `${type}ボタンがクリックされました`);
+        updateStatus(`${type}-status`, '✅ 動作確認済み');
+      }
+
+      function openVoteModal() {
+        const modal = document.getElementById('voteModal');
+        if (modal) {
+          modal.style.display = 'flex';
+          addLog('info', '投票モーダルを開きました');
+          updateStatus('vote-modal-status', '✅ 開く動作確認済み');
+        }
+      }
+
+      function clearLog() {
+        logContainer.innerHTML = '';
+        addLog('info', 'ログをクリアしました');
+      }
+
+      // イベントリスナー設定
+      document.addEventListener('DOMContentLoaded', () => {
+        addLog('info', 'DOMContentLoaded: ページ初期化完了');
+
+        // モバイルメニューの状態監視
+        const observer = new MutationObserver(() => {
+          const menu = document.querySelector('.mobile-menu');
+          if (menu && menu.classList.contains('mobile-menu--active')) {
+            addLog('success', 'モバイルメニューが開きました');
+            updateStatus('mobile-menu-status', '✅ 動作確認済み');
+          }
+        });
+
+        const menu = document.querySelector('.mobile-menu');
+        if (menu) {
+          observer.observe(menu, { attributes: true, attributeFilter: ['class'] });
+        }
+
+        // 検索ボタンのクリック監視
+        const searchBtn = document.querySelector('.search-btn');
+        if (searchBtn) {
+          searchBtn.addEventListener('click', e => {
+            e.preventDefault();
+            addLog('success', '検索ボタンがクリックされました');
+            updateStatus('search-status', '✅ 動作確認済み');
+          });
+        }
+
+        // ビュー切替の監視
+        document.querySelectorAll('.view-toggle-btn').forEach(btn => {
+          btn.addEventListener('click', () => {
+            addLog('success', `ビュー切替: ${btn.dataset.view}`);
+            updateStatus('view-toggle-status', '✅ 動作確認済み');
+          });
+        });
+
+        // フィルターボタン
+        const filterBtn = document.querySelector('.filter-btn');
+        if (filterBtn) {
+          filterBtn.addEventListener('click', () => {
+            addLog('success', 'フィルターボタンがクリックされました');
+            updateStatus('filter-status', '✅ 動作確認済み');
+          });
+        }
+
+        // ページネーション
+        document.querySelectorAll('.pagination-btn').forEach(btn => {
+          btn.addEventListener('click', () => {
+            addLog('success', `ページネーション: ${btn.id}`);
+            updateStatus('pagination-status', '✅ 動作確認済み');
+          });
+        });
+
+        // 管理画面ログインの監視
+        if (window.showAdminLogin) {
+          const originalShowAdminLogin = window.showAdminLogin;
+          window.showAdminLogin = function () {
+            addLog('info', 'showAdminLogin()が呼び出されました');
+            updateStatus('admin-login-status', '✅ 関数呼び出し確認');
+            originalShowAdminLogin();
+          };
+        }
+
+        // closeVoteModalの監視
+        if (window.closeVoteModal) {
+          const originalCloseVoteModal = window.closeVoteModal;
+          window.closeVoteModal = function () {
+            addLog('info', 'closeVoteModal()が呼び出されました');
+            updateStatus('vote-modal-status', '✅ 閉じる動作確認済み');
+            originalCloseVoteModal();
+          };
+        }
+
+        addLog('success', 'イベントリスナー設定完了');
+      });
+
+      // エラー監視
+      window.addEventListener('error', e => {
+        addLog('error', `エラー: ${e.message} (${e.filename}:${e.lineno})`);
+      });
+
+      window.addEventListener('unhandledrejection', e => {
+        addLog('error', `未処理のPromise拒否: ${e.reason}`);
+      });
+    </script>
+  </body>
+</html>

@@ -8,6 +8,7 @@
     <!-- CSS -->
     <link rel="stylesheet" href="/css/base.css" />
     <link rel="stylesheet" href="/css/admin/admin-base.css" />
+    <link rel="stylesheet" href="/css/accessibility-improvements.css" />
 
     <style>
       .login-container {
@@ -122,18 +123,18 @@
       // Prevent any Cognito auth initialization early
       window.DISABLE_COGNITO_AUTH = true;
       window.skipAuth = true;
-      
+
       // Disable service worker that might interfere
       if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.getRegistrations().then(function(registrations) {
-          for(let registration of registrations) {
+        navigator.serviceWorker.getRegistrations().then(function (registrations) {
+          for (let registration of registrations) {
             console.log('Unregistering service worker:', registration.scope);
             registration.unregister();
           }
         });
       }
     </script>
-    <div class="login-container">
+    <main class="login-container">
       <div class="login-card">
         <div class="login-header">
           <div style="font-size: 2rem; margin-bottom: 1rem">⚡</div>
@@ -178,20 +179,20 @@
           <a href="/" class="login-link">← サイトに戻る</a>
         </div>
       </div>
-    </div>
+    </main>
 
     <script>
       // Disable Cognito auth for admin login page
       window.DISABLE_COGNITO_AUTH = true;
-      
+
       // Override any global auth initialization
       if (window.initAuth) {
-        window.initAuth = function() {
+        window.initAuth = function () {
           console.log('Cognito auth disabled for admin login');
           return Promise.resolve();
         };
       }
-      
+
       class AdminLogin {
         constructor() {
           this.form = document.getElementById('loginForm');
@@ -274,7 +275,7 @@
               this.showError(data.message || 'ログインに失敗しました');
             }
           } catch (error) {
-            console.error('Login error:', error);
+            console.warn('Login error:', error);
             this.showError('ネットワークエラーが発生しました: ' + (error.message || error.toString()));
           } finally {
             this.setLoading(false);
@@ -318,7 +319,7 @@
           new AdminLogin();
           console.log('AdminLogin initialized successfully');
         } catch (error) {
-          console.error('Failed to initialize AdminLogin:', error);
+          console.warn('Failed to initialize AdminLogin:', error);
         }
       });
     </script>

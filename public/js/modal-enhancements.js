@@ -7,45 +7,54 @@ class ModalEnhancementSystem {
   constructor() {
     this.activeModal = null;
     this.previousFocus = null;
-    this.focusableElements = 'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])';
+    this.focusableElements =
+      'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])';
     this.isInitialized = false;
-    
+
     this.init();
   }
 
   init() {
     if (this.isInitialized) return;
-    
+
     this.setupEventListeners();
     this.enhanceExistingModals();
     this.isInitialized = true;
-    
+
     console.log('✅ Modal Enhancement System initialized');
   }
 
   setupEventListeners() {
     // ESC キーでモーダル閉じる
-    document.addEventListener('keydown', (e) => {
+    document.addEventListener('keydown', e => {
       if (e.key === 'Escape' && this.activeModal) {
         this.closeModal(this.activeModal);
       }
     });
 
     // モーダル外クリックで閉じる（バブリング制御）
-    document.addEventListener('click', (e) => {
+    document.addEventListener('click', e => {
       if (this.activeModal && e.target === this.activeModal) {
         this.closeModal(this.activeModal);
       }
     });
 
-    // 既存のモーダル表示監視
-    const observer = new MutationObserver((mutations) => {
-      mutations.forEach((mutation) => {
+    // 既存のモーダル表示監視（初期化時のスタイル設定は無視）
+    const observer = new MutationObserver(mutations => {
+      mutations.forEach(mutation => {
         if (mutation.type === 'attributes' && mutation.attributeName === 'style') {
           const modal = mutation.target;
           if (modal.classList.contains('modal') || modal.id.includes('modal')) {
-            const isVisible = modal.style.display === 'block' || !modal.style.display.includes('none');
-            
+            // display: none が設定されている場合は無視（初期化時など）
+            if (modal.style.display === 'none') {
+              return;
+            }
+
+            const isVisible =
+              modal.style.display === 'block' ||
+              modal.style.display === 'flex' ||
+              (modal.style.display === '' && !modal.style.visibility?.includes('hidden'));
+
             if (isVisible && this.activeModal !== modal) {
               this.openModal(modal);
             } else if (!isVisible && this.activeModal === modal) {
@@ -77,7 +86,7 @@ class ModalEnhancementSystem {
       modal.setAttribute('role', 'dialog');
     }
     modal.setAttribute('aria-modal', 'true');
-    
+
     if (!modal.getAttribute('aria-labelledby')) {
       const heading = modal.querySelector('h1, h2, h3, h4, h5, h6');
       if (heading) {
@@ -101,7 +110,7 @@ class ModalEnhancementSystem {
 
     if (closeBtn) {
       closeBtn.setAttribute('aria-label', 'モーダルを閉じる');
-      closeBtn.addEventListener('click', (e) => {
+      closeBtn.addEventListener('click', e => {
         e.preventDefault();
         this.closeModal(modal);
       });
@@ -117,7 +126,7 @@ class ModalEnhancementSystem {
     closeBtn.innerHTML = '×';
     closeBtn.setAttribute('aria-label', 'モーダルを閉じる');
     closeBtn.setAttribute('type', 'button');
-    
+
     // スタイルの適用
     Object.assign(closeBtn.style, {
       position: 'absolute',
@@ -137,24 +146,24 @@ class ModalEnhancementSystem {
       justifyContent: 'center',
       transition: 'all 0.2s ease'
     });
-    
+
     closeBtn.addEventListener('mouseenter', () => {
       closeBtn.style.backgroundColor = '#f0f0f0';
       closeBtn.style.color = '#333';
     });
-    
+
     closeBtn.addEventListener('mouseleave', () => {
       closeBtn.style.backgroundColor = 'transparent';
       closeBtn.style.color = '#666';
     });
-    
+
     return closeBtn;
   }
 
   adjustTabOrder(modal) {
     // フォーカス可能な要素を取得
     const focusableElements = modal.querySelectorAll(this.focusableElements);
-    
+
     focusableElements.forEach((element, index) => {
       // 最初と最後の要素にデータ属性を追加
       if (index === 0) {
@@ -187,7 +196,7 @@ class ModalEnhancementSystem {
 
     // bodyのスクロール無効化
     document.body.style.overflow = 'hidden';
-    
+
     console.log('🔓 Modal opened with accessibility enhancements');
   }
 
@@ -232,7 +241,7 @@ class ModalEnhancementSystem {
     modal.removeEventListener('keydown', modal._focusTrapListener);
 
     // 新しいフォーカストラップリスナー
-    modal._focusTrapListener = (e) => {
+    modal._focusTrapListener = e => {
       if (e.key !== 'Tab') return;
 
       if (e.shiftKey) {
@@ -268,7 +277,7 @@ class ModalEnhancementSystem {
     // アニメーション実行
     requestAnimationFrame(() => {
       modal.style.opacity = '1';
-      
+
       if (modalContent) {
         modalContent.style.transition = 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)';
         modalContent.style.transform = 'translate(-50%, -50%) scale(1)';
@@ -278,17 +287,17 @@ class ModalEnhancementSystem {
   }
 
   animateModalClose(modal) {
-    return new Promise((resolve) => {
+    return new Promise(resolve => {
       const modalContent = modal.querySelector('.modal-content, .modal-dialog, .modal-body');
-      
+
       modal.style.opacity = '0';
-      
+
       if (modalContent) {
         modalContent.style.transition = 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)';
         modalContent.style.transform = 'translate(-50%, -50%) scale(0.9)';
         modalContent.style.opacity = '0';
       }
-      
+
       setTimeout(resolve, 300);
     });
   }
@@ -307,7 +316,8 @@ class ModalEnhancementSystem {
   }
 
   close(modalId) {
-    const modal = typeof modalId === 'string' ? document.getElementById(modalId) : modalId || this.activeModal;
+    const modal =
+      typeof modalId === 'string' ? document.getElementById(modalId) : modalId || this.activeModal;
     if (modal) {
       this.closeModal(modal);
     }

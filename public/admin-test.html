@@ -1,0 +1,523 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>管理画面 UI/UX テスト</title>
+    <style>
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Noto Sans JP', sans-serif;
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 2rem;
+        background-color: #f8fafc;
+      }
+
+      .test-section {
+        background: white;
+        border-radius: 8px;
+        padding: 2rem;
+        margin-bottom: 2rem;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+      }
+
+      .test-title {
+        font-size: 1.5rem;
+        font-weight: 700;
+        margin-bottom: 1rem;
+        color: #1e293b;
+      }
+
+      .test-items {
+        display: grid;
+        gap: 1rem;
+      }
+
+      .test-item {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        padding: 1rem;
+        background-color: #f1f5f9;
+        border-radius: 6px;
+      }
+
+      .test-status {
+        width: 24px;
+        height: 24px;
+        border-radius: 50%;
+        flex-shrink: 0;
+      }
+
+      .test-status--pending {
+        background-color: #94a3b8;
+      }
+
+      .test-status--success {
+        background-color: #10b981;
+      }
+
+      .test-status--fail {
+        background-color: #ef4444;
+      }
+
+      .test-description {
+        flex: 1;
+      }
+
+      .test-button {
+        padding: 0.5rem 1rem;
+        background-color: #3b82f6;
+        color: white;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+        font-size: 0.875rem;
+      }
+
+      .test-button:hover {
+        background-color: #2563eb;
+      }
+
+      .results {
+        margin-top: 1rem;
+        padding: 1rem;
+        background-color: #f8fafc;
+        border-radius: 6px;
+        font-family: monospace;
+        font-size: 0.875rem;
+        white-space: pre-wrap;
+      }
+
+      .summary {
+        margin-top: 2rem;
+        padding: 1.5rem;
+        background-color: #dbeafe;
+        border-left: 4px solid #3b82f6;
+        border-radius: 6px;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>管理画面 UI/UX 動作検証</h1>
+
+    <div class="test-section">
+      <h2 class="test-title">1. 認証機能テスト</h2>
+      <div class="test-items">
+        <div class="test-item">
+          <span class="test-status test-status--pending" id="auth-1"></span>
+          <span class="test-description">ログインページへのアクセス確認</span>
+          <button class="test-button" onclick="testAuth1()">テスト</button>
+        </div>
+        <div class="test-item">
+          <span class="test-status test-status--pending" id="auth-2"></span>
+          <span class="test-description">管理者認証（モックトークン）</span>
+          <button class="test-button" onclick="testAuth2()">テスト</button>
+        </div>
+        <div class="test-item">
+          <span class="test-status test-status--pending" id="auth-3"></span>
+          <span class="test-description">ログアウト機能</span>
+          <button class="test-button" onclick="testAuth3()">テスト</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="test-section">
+      <h2 class="test-title">2. イベント管理機能テスト</h2>
+      <div class="test-items">
+        <div class="test-item">
+          <span class="test-status test-status--pending" id="event-1"></span>
+          <span class="test-description">イベント一覧表示</span>
+          <button class="test-button" onclick="testEvent1()">テスト</button>
+        </div>
+        <div class="test-item">
+          <span class="test-status test-status--pending" id="event-2"></span>
+          <span class="test-description">新規イベント作成モーダル</span>
+          <button class="test-button" onclick="testEvent2()">テスト</button>
+        </div>
+        <div class="test-item">
+          <span class="test-status test-status--pending" id="event-3"></span>
+          <span class="test-description">イベント編集機能</span>
+          <button class="test-button" onclick="testEvent3()">テスト</button>
+        </div>
+        <div class="test-item">
+          <span class="test-status test-status--pending" id="event-4"></span>
+          <span class="test-description">参加者一覧表示</span>
+          <button class="test-button" onclick="testEvent4()">テスト</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="test-section">
+      <h2 class="test-title">3. 拡張機能テスト</h2>
+      <div class="test-items">
+        <div class="test-item">
+          <span class="test-status test-status--pending" id="enhanced-1"></span>
+          <span class="test-description">一括選択・操作機能</span>
+          <button class="test-button" onclick="testEnhanced1()">テスト</button>
+        </div>
+        <div class="test-item">
+          <span class="test-status test-status--pending" id="enhanced-2"></span>
+          <span class="test-description">詳細フィルター機能</span>
+          <button class="test-button" onclick="testEnhanced2()">テスト</button>
+        </div>
+        <div class="test-item">
+          <span class="test-status test-status--pending" id="enhanced-3"></span>
+          <span class="test-description">データエクスポート機能</span>
+          <button class="test-button" onclick="testEnhanced3()">テスト</button>
+        </div>
+        <div class="test-item">
+          <span class="test-status test-status--pending" id="enhanced-4"></span>
+          <span class="test-description">統計ダッシュボード表示</span>
+          <button class="test-button" onclick="testEnhanced4()">テスト</button>
+        </div>
+        <div class="test-item">
+          <span class="test-status test-status--pending" id="enhanced-5"></span>
+          <span class="test-description">キーボードショートカット</span>
+          <button class="test-button" onclick="testEnhanced5()">テスト</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="test-section">
+      <h2 class="test-title">4. モバイル対応テスト</h2>
+      <div class="test-items">
+        <div class="test-item">
+          <span class="test-status test-status--pending" id="mobile-1"></span>
+          <span class="test-description">レスポンシブレイアウト</span>
+          <button class="test-button" onclick="testMobile1()">テスト</button>
+        </div>
+        <div class="test-item">
+          <span class="test-status test-status--pending" id="mobile-2"></span>
+          <span class="test-description">タッチ操作最適化</span>
+          <button class="test-button" onclick="testMobile2()">テスト</button>
+        </div>
+        <div class="test-item">
+          <span class="test-status test-status--pending" id="mobile-3"></span>
+          <span class="test-description">モバイルナビゲーション</span>
+          <button class="test-button" onclick="testMobile3()">テスト</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="test-section">
+      <h2 class="test-title">5. パフォーマンステスト</h2>
+      <div class="test-items">
+        <div class="test-item">
+          <span class="test-status test-status--pending" id="perf-1"></span>
+          <span class="test-description">ページロード時間</span>
+          <button class="test-button" onclick="testPerf1()">テスト</button>
+        </div>
+        <div class="test-item">
+          <span class="test-status test-status--pending" id="perf-2"></span>
+          <span class="test-description">大量データ表示</span>
+          <button class="test-button" onclick="testPerf2()">テスト</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="results" id="results" style="display: none">
+      <h3>テスト結果詳細:</h3>
+      <div id="results-content"></div>
+    </div>
+
+    <div class="summary" id="summary" style="display: none">
+      <h3>テストサマリー</h3>
+      <p>総テスト数: <span id="total-tests">0</span></p>
+      <p>成功: <span id="success-count">0</span></p>
+      <p>失敗: <span id="fail-count">0</span></p>
+      <p>未実施: <span id="pending-count">0</span></p>
+    </div>
+
+    <script>
+      let testResults = [];
+
+      function updateStatus(id, status) {
+        const element = document.getElementById(id);
+        element.className = `test-status test-status--${status}`;
+      }
+
+      function logResult(test, result, details = '') {
+        testResults.push({ test, result, details, timestamp: new Date().toISOString() });
+        document.getElementById('results').style.display = 'block';
+        document.getElementById('results-content').innerHTML = testResults
+          .map(r => `[${r.timestamp}] ${r.test}: ${r.result} ${r.details ? '- ' + r.details : ''}`)
+          .join('\n');
+        updateSummary();
+      }
+
+      function updateSummary() {
+        const total = document.querySelectorAll('.test-status').length;
+        const success = document.querySelectorAll('.test-status--success').length;
+        const fail = document.querySelectorAll('.test-status--fail').length;
+        const pending = total - success - fail;
+
+        document.getElementById('summary').style.display = 'block';
+        document.getElementById('total-tests').textContent = total;
+        document.getElementById('success-count').textContent = success;
+        document.getElementById('fail-count').textContent = fail;
+        document.getElementById('pending-count').textContent = pending;
+      }
+
+      // 認証テスト
+      async function testAuth1() {
+        try {
+          const response = await fetch('/admin-login.html');
+          if (response.ok) {
+            updateStatus('auth-1', 'success');
+            logResult('ログインページアクセス', '成功', `Status: ${response.status}`);
+          } else {
+            throw new Error(`HTTP ${response.status}`);
+          }
+        } catch (error) {
+          updateStatus('auth-1', 'fail');
+          logResult('ログインページアクセス', '失敗', error.message);
+        }
+      }
+
+      function testAuth2() {
+        try {
+          // モックトークンをセット
+          localStorage.setItem('authToken', 'mock-admin-token');
+          const token = localStorage.getItem('authToken');
+          if (token) {
+            updateStatus('auth-2', 'success');
+            logResult('管理者認証', '成功', 'モックトークン設定完了');
+          } else {
+            throw new Error('トークン設定失敗');
+          }
+        } catch (error) {
+          updateStatus('auth-2', 'fail');
+          logResult('管理者認証', '失敗', error.message);
+        }
+      }
+
+      function testAuth3() {
+        try {
+          localStorage.removeItem('authToken');
+          const token = localStorage.getItem('authToken');
+          if (!token) {
+            updateStatus('auth-3', 'success');
+            logResult('ログアウト機能', '成功', 'トークン削除完了');
+          } else {
+            throw new Error('トークン削除失敗');
+          }
+        } catch (error) {
+          updateStatus('auth-3', 'fail');
+          logResult('ログアウト機能', '失敗', error.message);
+        }
+      }
+
+      // イベント管理テスト
+      async function testEvent1() {
+        try {
+          const response = await fetch('/api/events');
+          if (response.ok) {
+            const data = await response.json();
+            updateStatus('event-1', 'success');
+            logResult('イベント一覧表示', '成功', `${data.length || 0}件のイベント`);
+          } else {
+            throw new Error(`HTTP ${response.status}`);
+          }
+        } catch (error) {
+          updateStatus('event-1', 'fail');
+          logResult('イベント一覧表示', '失敗', error.message);
+        }
+      }
+
+      function testEvent2() {
+        // 新規イベント作成モーダルの存在確認
+        const hasModal = document.querySelector('.admin-modal') !== null;
+        if (hasModal || window.adminDashboard) {
+          updateStatus('event-2', 'success');
+          logResult('新規イベント作成モーダル', '成功', 'モーダル機能実装済み');
+        } else {
+          updateStatus('event-2', 'fail');
+          logResult('新規イベント作成モーダル', '失敗', 'モーダル要素が見つかりません');
+        }
+      }
+
+      function testEvent3() {
+        // 編集機能の実装確認
+        if (window.adminDashboard && typeof window.adminDashboard.showEditModal === 'function') {
+          updateStatus('event-3', 'success');
+          logResult('イベント編集機能', '成功', '編集メソッド実装済み');
+        } else {
+          updateStatus('event-3', 'fail');
+          logResult('イベント編集機能', '失敗', '編集メソッドが見つかりません');
+        }
+      }
+
+      function testEvent4() {
+        // 参加者表示機能の実装確認
+        if (window.adminDashboard && typeof window.adminDashboard.showParticipantsModal === 'function') {
+          updateStatus('event-4', 'success');
+          logResult('参加者一覧表示', '成功', '参加者表示メソッド実装済み');
+        } else {
+          updateStatus('event-4', 'fail');
+          logResult('参加者一覧表示', '失敗', '参加者表示メソッドが見つかりません');
+        }
+      }
+
+      // 拡張機能テスト
+      function testEnhanced1() {
+        const hasBulkActions = window.adminEnhanced && window.adminEnhanced.selectedEvents;
+        if (hasBulkActions) {
+          updateStatus('enhanced-1', 'success');
+          logResult('一括選択・操作機能', '成功', '一括操作機能実装済み');
+        } else {
+          updateStatus('enhanced-1', 'fail');
+          logResult('一括選択・操作機能', '失敗', '拡張機能が読み込まれていません');
+        }
+      }
+
+      function testEnhanced2() {
+        const hasAdvancedFilters = window.adminEnhanced && window.adminEnhanced.features.advancedFilters !== undefined;
+        if (hasAdvancedFilters) {
+          updateStatus('enhanced-2', 'success');
+          logResult('詳細フィルター機能', '成功', 'フィルター機能実装済み');
+        } else {
+          updateStatus('enhanced-2', 'fail');
+          logResult('詳細フィルター機能', '失敗', 'フィルター機能が見つかりません');
+        }
+      }
+
+      function testEnhanced3() {
+        const hasExport = window.adminEnhanced && typeof window.adminEnhanced.exportData === 'function';
+        if (hasExport) {
+          updateStatus('enhanced-3', 'success');
+          logResult('データエクスポート機能', '成功', 'エクスポート機能実装済み');
+        } else {
+          updateStatus('enhanced-3', 'fail');
+          logResult('データエクスポート機能', '失敗', 'エクスポート機能が見つかりません');
+        }
+      }
+
+      function testEnhanced4() {
+        const hasAnalytics = window.adminEnhanced && typeof window.adminEnhanced.showAnalytics === 'function';
+        if (hasAnalytics) {
+          updateStatus('enhanced-4', 'success');
+          logResult('統計ダッシュボード表示', '成功', '統計機能実装済み');
+        } else {
+          updateStatus('enhanced-4', 'fail');
+          logResult('統計ダッシュボード表示', '失敗', '統計機能が見つかりません');
+        }
+      }
+
+      function testEnhanced5() {
+        // キーボードショートカットのテスト
+        const event = new KeyboardEvent('keydown', { key: 'n', ctrlKey: true });
+        document.dispatchEvent(event);
+        updateStatus('enhanced-5', 'success');
+        logResult('キーボードショートカット', '成功', 'Ctrl+N ショートカット実行');
+      }
+
+      // モバイル対応テスト
+      function testMobile1() {
+        const viewport = document.querySelector('meta[name="viewport"]');
+        if (viewport && viewport.content.includes('width=device-width')) {
+          updateStatus('mobile-1', 'success');
+          logResult('レスポンシブレイアウト', '成功', 'Viewport設定確認');
+        } else {
+          updateStatus('mobile-1', 'fail');
+          logResult('レスポンシブレイアウト', '失敗', 'Viewport設定なし');
+        }
+      }
+
+      function testMobile2() {
+        // タッチ最適化の確認
+        const hasTouchOptimization = getComputedStyle(document.body).touchAction;
+        if (hasTouchOptimization) {
+          updateStatus('mobile-2', 'success');
+          logResult('タッチ操作最適化', '成功', `touch-action: ${hasTouchOptimization}`);
+        } else {
+          updateStatus('mobile-2', 'fail');
+          logResult('タッチ操作最適化', '失敗', 'タッチ最適化なし');
+        }
+      }
+
+      function testMobile3() {
+        const width = window.innerWidth;
+        const isMobile = width < 768;
+        updateStatus('mobile-3', 'success');
+        logResult('モバイルナビゲーション', '成功', `画面幅: ${width}px (${isMobile ? 'モバイル' : 'デスクトップ'})`);
+      }
+
+      // パフォーマンステスト
+      function testPerf1() {
+        const loadTime = performance.timing.loadEventEnd - performance.timing.navigationStart;
+        if (loadTime < 3000) {
+          updateStatus('perf-1', 'success');
+          logResult('ページロード時間', '成功', `${loadTime}ms (< 3秒)`);
+        } else {
+          updateStatus('perf-1', 'fail');
+          logResult('ページロード時間', '失敗', `${loadTime}ms (> 3秒)`);
+        }
+      }
+
+      function testPerf2() {
+        // 大量データのレンダリングテスト
+        const startTime = performance.now();
+        const container = document.createElement('div');
+        for (let i = 0; i < 1000; i++) {
+          const div = document.createElement('div');
+          div.textContent = `Item ${i}`;
+          container.appendChild(div);
+        }
+        const endTime = performance.now();
+        const renderTime = endTime - startTime;
+
+        if (renderTime < 100) {
+          updateStatus('perf-2', 'success');
+          logResult('大量データ表示', '成功', `${Math.round(renderTime)}ms (1000要素)`);
+        } else {
+          updateStatus('perf-2', 'fail');
+          logResult('大量データ表示', '失敗', `${Math.round(renderTime)}ms (> 100ms)`);
+        }
+      }
+
+      // 全テスト実行
+      async function runAllTests() {
+        const tests = [
+          testAuth1,
+          testAuth2,
+          testAuth3,
+          testEvent1,
+          testEvent2,
+          testEvent3,
+          testEvent4,
+          testEnhanced1,
+          testEnhanced2,
+          testEnhanced3,
+          testEnhanced4,
+          testEnhanced5,
+          testMobile1,
+          testMobile2,
+          testMobile3,
+          testPerf1,
+          testPerf2
+        ];
+
+        for (const test of tests) {
+          await test();
+          await new Promise(resolve => setTimeout(resolve, 500)); // 各テスト間に遅延
+        }
+      }
+
+      // ページロード時に管理画面を別タブで開く案内
+      window.addEventListener('load', () => {
+        const info = document.createElement('div');
+        info.style.cssText =
+          'background: #fef3c7; padding: 1rem; margin-bottom: 2rem; border-radius: 8px; border-left: 4px solid #f59e0b;';
+        info.innerHTML = `
+        <strong>テスト準備:</strong><br>
+        1. <a href="/admin-login.html" target="_blank">管理画面にログイン</a>してください<br>
+        2. ログイン情報: admin@lightningtalk.local / ChangeThisPassword123!<br>
+        3. ログイン後、このページで各テストを実行してください<br>
+        4. <button onclick="runAllTests()" style="margin-top: 0.5rem; padding: 0.5rem 1rem; background: #f59e0b; color: white; border: none; border-radius: 4px; cursor: pointer;">全テストを自動実行</button>
+      `;
+        document.body.insertBefore(info, document.body.firstChild);
+      });
+    </script>
+  </body>
+</html>

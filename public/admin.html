@@ -19,8 +19,13 @@
     <link rel="stylesheet" href="css/admin/admin-layout.css" />
     <link rel="stylesheet" href="css/admin/admin-components.css" />
     <link rel="stylesheet" href="css/admin/admin-mobile.css" />
+    <link rel="stylesheet" href="css/admin/admin-enhanced.css" />
+    <link rel="stylesheet" href="css/accessibility-improvements.css" />
   </head>
   <body class="admin-body">
+    <!-- Skip Links -->
+    <a href="#main-content" class="skip-link">メインコンテンツへスキップ</a>
+    <a href="#admin-nav" class="skip-link">ナビゲーションへスキップ</a>
     <!-- Admin Header -->
     <header class="admin-header">
       <div class="admin-header__container">
@@ -29,7 +34,7 @@
           <span class="admin-title">管理画面</span>
         </div>
 
-        <nav class="admin-nav">
+        <nav class="admin-nav" id="admin-nav">
           <button class="admin-nav__toggle" aria-label="メニュー">
             <span></span>
             <span></span>
@@ -62,7 +67,7 @@
     </nav>
 
     <!-- Main Content -->
-    <main class="admin-main">
+    <main class="admin-main" id="main-content">
       <div class="admin-container">
         <!-- Page Header -->
         <div class="admin-page-header">
@@ -218,9 +223,15 @@
     </div>
 
     <!-- Scripts -->
+    <!-- 統合インタラクション管理システム - 最優先で読み込み -->
+    <script src="js/interaction-manager-unified.js"></script>
+
+    <!-- スクロール管理システム -->
+    <script src="js/scroll-fix-v2.js"></script>
+
+    <!-- 管理画面固有スクリプト -->
     <script src="js/admin/admin-main.js"></script>
     <script src="js/admin/admin-interactions.js"></script>
-    <script src="js/scroll-fix.js"></script>
-    <script src="js/interaction-improvements.js"></script>
+    <script src="js/admin/admin-enhanced.js"></script>
   </body>
 </html>

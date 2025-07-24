@@ -2,7 +2,10 @@
 <html lang="ja">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes, viewport-fit=cover"
+    />
     <title>なんでもライトニングトーク ⚡</title>
 
     <!-- Favicon and App Icons -->
@@ -50,7 +53,7 @@
     <!-- Performance optimizations: Preload critical resources -->
     <link rel="preload" href="css/design-tokens.css" as="style" />
     <link rel="preload" href="css/style.css" as="style" />
-    <link rel="preload" href="js/main.js" as="script" />
+    <!-- main.js is disabled - removed preload -->
     <link rel="dns-prefetch" href="//fonts.googleapis.com" />
     <link rel="dns-prefetch" href="//fonts.gstatic.com" />
 
@@ -95,9 +98,18 @@
 
     <!-- Responsive Navigation System -->
     <link rel="stylesheet" href="css/responsive-navigation.css" />
-    
+
     <!-- Admin Login Link -->
     <link rel="stylesheet" href="css/admin-login-link.css" />
+
+    <!-- Unified Mobile Navigation -->
+    <link rel="stylesheet" href="css/mobile-navigation-unified.css" />
+
+    <!-- Mobile Conflicts Override (Must be last CSS) -->
+    <link rel="stylesheet" href="css/mobile-conflicts-override.css" />
+
+    <!-- Accessibility Improvements (WCAG 2.1 AA) -->
+    <link rel="stylesheet" href="css/accessibility-improvements.css" />
 
     <!-- Mobile-specific viewport meta tags -->
     <meta name="format-detection" content="telephone=no" />
@@ -119,6 +131,10 @@
     </script>
   </head>
   <body>
+    <!-- Skip Links for Accessibility -->
+    <a href="#main-content" class="skip-link">メインコンテンツへスキップ</a>
+    <a href="#all-events" class="skip-link">イベント一覧へスキップ</a>
+
     <header class="header">
       <div class="header__container">
         <!-- Logo Section -->
@@ -203,7 +219,7 @@
       </div>
     </nav>
 
-    <main>
+    <main id="main-content">
       <section id="hero" class="hero">
         <div class="container">
           <div class="floating-elements">
@@ -676,8 +692,20 @@
       </div>
     </div>
 
+    <!-- デバッグ設定 - 最優先で読み込み -->
+    <script src="js/debug-config.js"></script>
+
+    <!-- DOM キャッシュシステム -->
+    <script src="js/dom-cache.js"></script>
+
+    <!-- 統合インタラクション管理システム -->
+    <script src="js/interaction-manager-unified.js"></script>
+
     <!-- Frontend Logger - Load first for error capture -->
     <script src="js/logger.js"></script>
+
+    <!-- スクロール管理システム - 統合システムと連携 -->
+    <script src="js/scroll-fix-v2.js"></script>
 
     <!-- Auth removed - admin login only -->
     <!-- Google auth removed - admin login only -->
@@ -699,23 +727,24 @@
     <script src="js/registration-modal.js"></script>
     <script src="js/event-modal.js"></script>
     <script src="js/events-manager-modal.js"></script>
-    <script src="js/main.js"></script>
 
-    <!-- Responsive Navigation Controller -->
-    <script src="js/responsive-navigation.js"></script>
+    <!-- 競合するスクリプトを無効化 - 統合システムで代替 -->
+    <!-- <script src="js/main.js"></script> -->
+    <!-- <script src="js/responsive-navigation.js"></script> -->
+    <!-- <script src="js/mobile-navigation.js"></script> -->
+    <!-- <script src="js/ui-ux-integration.js"></script> -->
 
     <!-- PWA Installer -->
     <script src="js/pwa-installer.js"></script>
 
-    <!-- Mobile Navigation -->
-    <script src="js/mobile-navigation.js"></script>
+    <!-- 検索修正 - 統合システムと連携 -->
+    <script src="js/search-fix.js"></script>
 
-    <!-- UI/UX Integration - Load after all components -->
-    <script src="js/ui-ux-integration.js"></script>
-    
-    <!-- Interaction Fixes -->
-    <script src="js/scroll-fix.js"></script>
-    <script src="js/interaction-improvements.js"></script>
+    <!-- 統合モバイルナビゲーション -->
+    <script src="js/mobile-navigation-unified.js"></script>
+
+    <!-- 緊急スクロール修正 - 最後の砦 -->
+    <script src="js/scroll-emergency-fix.js"></script>
 
     <!-- React Components Integration - Temporarily disabled -->
     <!-- <script type="module" src="js/react-integration.js"></script> -->
