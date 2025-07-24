@@ -1,0 +1,254 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>管理者ログイン - Lightning Talk Circle</title>
+
+    <style>
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+        line-height: 1.5;
+        color: #1a1a1a;
+      }
+
+      .login-container {
+        display: flex;
+        min-height: 100vh;
+        align-items: center;
+        justify-content: center;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        padding: 1rem;
+      }
+
+      .login-card {
+        background: white;
+        border-radius: 12px;
+        box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+        max-width: 400px;
+        width: 100%;
+      }
+
+      .login-header {
+        background: linear-gradient(135deg, #ea580c 0%, #dc2626 100%);
+        padding: 2rem;
+        text-align: center;
+        color: white;
+      }
+
+      .login-title {
+        font-size: 1.5rem;
+        font-weight: bold;
+        margin: 0;
+      }
+
+      .login-form {
+        padding: 2rem;
+      }
+
+      .form-group {
+        margin-bottom: 1.5rem;
+      }
+
+      .form-label {
+        display: block;
+        font-size: 0.875rem;
+        font-weight: 500;
+        color: #374151;
+        margin-bottom: 0.5rem;
+      }
+
+      .form-input {
+        width: 100%;
+        padding: 0.75rem;
+        font-size: 1rem;
+        border: 2px solid #e5e7eb;
+        border-radius: 8px;
+        transition: border-color 0.2s;
+      }
+
+      .form-input:focus {
+        outline: none;
+        border-color: #ea580c;
+      }
+
+      .login-message {
+        padding: 0.75rem;
+        border-radius: 6px;
+        font-size: 0.875rem;
+        margin-bottom: 1rem;
+        display: none;
+      }
+
+      .login-error {
+        background-color: #fef2f2;
+        border: 1px solid #fecaca;
+        color: #dc2626;
+      }
+
+      .login-success {
+        background-color: #f0fdf4;
+        border: 1px solid #bbf7d0;
+        color: #16a34a;
+      }
+
+      .btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 44px;
+        padding: 0.75rem 1.5rem;
+        font-size: 1rem;
+        font-weight: 600;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: all 0.2s;
+        width: 100%;
+        background-color: #ea580c;
+        color: white;
+      }
+
+      .btn:hover {
+        background-color: #dc2626;
+      }
+
+      .btn:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+      }
+
+      .login-footer {
+        padding: 1rem 2rem;
+        background-color: #f9fafb;
+        text-align: center;
+      }
+
+      .login-link {
+        color: #ea580c;
+        text-decoration: none;
+        font-size: 0.875rem;
+      }
+
+      .login-link:hover {
+        text-decoration: underline;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="login-container">
+      <div class="login-card">
+        <div class="login-header">
+          <div style="font-size: 2rem; margin-bottom: 1rem">⚡</div>
+          <h1 class="login-title">管理者ログイン</h1>
+        </div>
+
+        <form class="login-form" onsubmit="handleLogin(event); return false;">
+          <div class="form-group">
+            <label for="email" class="form-label">メールアドレス</label>
+            <input
+              type="email"
+              id="email"
+              name="email"
+              class="form-input"
+              required
+              placeholder="admin@example.com"
+              value="admin@lightningtalk.local"
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="password" class="form-label">パスワード</label>
+            <input
+              type="password"
+              id="password"
+              name="password"
+              class="form-input"
+              required
+              placeholder="••••••••"
+              value="ChangeThisPassword123!"
+            />
+          </div>
+
+          <div id="loginMessage" class="login-message"></div>
+
+          <button type="submit" class="btn" id="loginButton">ログイン</button>
+        </form>
+
+        <div class="login-footer">
+          <a href="/" class="login-link">← サイトに戻る</a>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      // Standalone login handler without any external dependencies
+      function handleLogin(event) {
+        event.preventDefault();
+        
+        const email = document.getElementById('email').value;
+        const password = document.getElementById('password').value;
+        const messageDiv = document.getElementById('loginMessage');
+        const button = document.getElementById('loginButton');
+        
+        // Reset message
+        messageDiv.style.display = 'none';
+        messageDiv.className = 'login-message';
+        
+        // Disable button
+        button.disabled = true;
+        button.textContent = 'ログイン中...';
+        
+        // Simulate login check
+        setTimeout(() => {
+          if (email === 'admin@lightningtalk.local' && password === 'ChangeThisPassword123!') {
+            // Success
+            const mockToken = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6ImFkbWluLTAwMSIsImVtYWlsIjoiYWRtaW5AbGlnaHRuaW5ndGFsay5sb2NhbCIsIm5hbWUiOiLjgrfjgrnjg4bjg6DnrqHnkIbogIUiLCJyb2xlIjoiYWRtaW4iLCJleHAiOjk5OTk5OTk5OTl9';
+            localStorage.setItem('authToken', mockToken);
+            
+            messageDiv.className = 'login-message login-success';
+            messageDiv.textContent = 'ログインに成功しました！リダイレクトしています...';
+            messageDiv.style.display = 'block';
+            
+            // Redirect after 1 second
+            setTimeout(() => {
+              window.location.href = '/admin.html';
+            }, 1000);
+          } else {
+            // Error
+            messageDiv.className = 'login-message login-error';
+            messageDiv.textContent = 'メールアドレスまたはパスワードが正しくありません';
+            messageDiv.style.display = 'block';
+            
+            button.disabled = false;
+            button.textContent = 'ログイン';
+          }
+        }, 500);
+      }
+
+      // Check if already logged in
+      if (localStorage.getItem('authToken')) {
+        window.location.href = '/admin.html';
+      }
+
+      // Prevent any external auth systems
+      window.addEventListener('load', function() {
+        // Disable service workers
+        if ('serviceWorker' in navigator) {
+          navigator.serviceWorker.getRegistrations().then(function(registrations) {
+            for(let registration of registrations) {
+              registration.unregister();
+            }
+          });
+        }
+      });
+    </script>
+  </body>
+</html>
