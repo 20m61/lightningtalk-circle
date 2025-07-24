@@ -118,6 +118,21 @@
     </style>
   </head>
   <body>
+    <script>
+      // Prevent any Cognito auth initialization early
+      window.DISABLE_COGNITO_AUTH = true;
+      window.skipAuth = true;
+      
+      // Disable service worker that might interfere
+      if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.getRegistrations().then(function(registrations) {
+          for(let registration of registrations) {
+            console.log('Unregistering service worker:', registration.scope);
+            registration.unregister();
+          }
+        });
+      }
+    </script>
     <div class="login-container">
       <div class="login-card">
         <div class="login-header">
@@ -166,6 +181,17 @@
     </div>
 
     <script>
+      // Disable Cognito auth for admin login page
+      window.DISABLE_COGNITO_AUTH = true;
+      
+      // Override any global auth initialization
+      if (window.initAuth) {
+        window.initAuth = function() {
+          console.log('Cognito auth disabled for admin login');
+          return Promise.resolve();
+        };
+      }
+      
       class AdminLogin {
         constructor() {
           this.form = document.getElementById('loginForm');
