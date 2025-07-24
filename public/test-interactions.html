@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>インタラクションテスト</title>
+  <link rel="stylesheet" href="/css/admin/admin-base.css">
+  <link rel="stylesheet" href="/css/admin/admin-layout.css">
+  <link rel="stylesheet" href="/css/admin/admin-components.css">
+  <style>
+    .test-container {
+      padding: 2rem;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    
+    .test-section {
+      margin-bottom: 3rem;
+      padding: 2rem;
+      background: white;
+      border-radius: 0.5rem;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    }
+    
+    .test-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 1rem;
+      margin-top: 1rem;
+    }
+    
+    .test-card {
+      padding: 1rem;
+      border: 1px solid #e5e7eb;
+      border-radius: 0.5rem;
+    }
+    
+    .test-button {
+      display: inline-block;
+      padding: 0.75rem 1.5rem;
+      margin: 0.25rem;
+      background: #ea580c;
+      color: white;
+      border: none;
+      border-radius: 0.25rem;
+      cursor: pointer;
+      font-size: 1rem;
+    }
+    
+    .test-button:hover {
+      background: #dc2626;
+    }
+    
+    .test-input {
+      width: 100%;
+      padding: 0.5rem;
+      margin: 0.5rem 0;
+      border: 1px solid #d1d5db;
+      border-radius: 0.25rem;
+    }
+    
+    .test-result {
+      margin-top: 1rem;
+      padding: 1rem;
+      background: #f3f4f6;
+      border-radius: 0.25rem;
+      font-family: monospace;
+      font-size: 0.875rem;
+    }
+    
+    .device-info {
+      background: #e0f2fe;
+      padding: 1rem;
+      border-radius: 0.5rem;
+      margin-bottom: 2rem;
+    }
+    
+    .scroll-test {
+      height: 200px;
+      overflow-y: auto;
+      border: 2px solid #d1d5db;
+      padding: 1rem;
+      margin: 1rem 0;
+    }
+    
+    .scroll-content {
+      height: 500px;
+      background: linear-gradient(to bottom, #f3f4f6, #e5e7eb);
+    }
+  </style>
+</head>
+<body>
+  <div class="test-container">
+    <h1>インタラクションテスト</h1>
+    
+    <!-- デバイス情報 -->
+    <div class="device-info" id="deviceInfo">
+      デバイス情報を取得中...
+    </div>
+    
+    <!-- スクロールテスト -->
+    <div class="test-section">
+      <h2>1. スクロールテスト</h2>
+      <button class="test-button" onclick="testScroll()">モーダルを開く</button>
+      <button class="test-button" onclick="window.fixScroll()">スクロール修正</button>
+      <div class="test-result" id="scrollResult">ボタンをクリックしてテスト</div>
+      
+      <div class="scroll-test">
+        <div class="scroll-content">
+          <p>このエリアはスクロール可能です。</p>
+          <p>モーダルが開いている時でもスクロールできるか確認してください。</p>
+        </div>
+      </div>
+    </div>
+    
+    <!-- タッチ/クリックテスト -->
+    <div class="test-section">
+      <h2>2. タッチ/クリック反応速度</h2>
+      <div class="test-grid">
+        <div class="test-card">
+          <button class="test-button" id="tapTest">タップ/クリック</button>
+          <div class="test-result" id="tapResult">0ms</div>
+        </div>
+        <div class="test-card">
+          <button class="test-button" id="doubleTapTest">ダブルタップ/クリック</button>
+          <div class="test-result" id="doubleTapResult">待機中</div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- フォームテスト -->
+    <div class="test-section">
+      <h2>3. フォーム操作</h2>
+      <form id="testForm">
+        <input type="text" class="test-input" placeholder="テキスト入力" required>
+        <input type="email" class="test-input" placeholder="メールアドレス" required>
+        <input type="tel" class="test-input" placeholder="電話番号">
+        <textarea class="test-input" rows="3" placeholder="テキストエリア"></textarea>
+        <button type="submit" class="test-button">送信テスト</button>
+      </form>
+      <div class="test-result" id="formResult">フォームに入力してください</div>
+    </div>
+    
+    <!-- キーボードテスト -->
+    <div class="test-section">
+      <h2>4. キーボード操作</h2>
+      <p>以下のショートカットをテスト:</p>
+      <ul>
+        <li>Ctrl/Cmd + K: 検索</li>
+        <li>Alt + 1-9: クイックナビ</li>
+        <li>Tab: フォーカス移動</li>
+        <li>Escape: モーダル閉じる</li>
+      </ul>
+      <div class="test-result" id="keyboardResult">キーを押してください</div>
+    </div>
+    
+    <!-- ジェスチャーテスト（モバイル） -->
+    <div class="test-section">
+      <h2>5. タッチジェスチャー（モバイル）</h2>
+      <div style="height: 200px; background: #f3f4f6; display: flex; align-items: center; justify-content: center;">
+        <p>ここでスワイプしてください</p>
+      </div>
+      <div class="test-result" id="gestureResult">ジェスチャーを待機中</div>
+    </div>
+  </div>
+  
+  <!-- テストモーダル -->
+  <div class="admin-modal" id="testModal" style="display: none;">
+    <div class="admin-modal__backdrop"></div>
+    <div class="admin-modal__content">
+      <div class="admin-modal__header">
+        <h2 class="admin-modal__title">テストモーダル</h2>
+        <button class="admin-modal__close" onclick="closeTestModal()">&times;</button>
+      </div>
+      <div class="admin-modal__body">
+        <p>このモーダルが開いている間、背景のスクロールがロックされているか確認してください。</p>
+        <p>ESCキーまたは背景クリックで閉じることもできます。</p>
+        <div style="height: 300px; background: #e5e7eb; margin-top: 1rem;">
+          長いコンテンツ
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <script src="/js/scroll-fix.js"></script>
+  <script src="/js/interaction-improvements.js"></script>
+  <script>
+    // デバイス情報表示
+    function updateDeviceInfo() {
+      const info = {
+        viewport: `${window.innerWidth} x ${window.innerHeight}`,
+        device: window.interactionManager ? window.interactionManager.device : 'unknown',
+        userAgent: navigator.userAgent.substring(0, 50) + '...',
+        touch: 'ontouchstart' in window ? 'サポート' : '非サポート',
+        scrollLock: window.scrollManager ? `ロック数: ${window.scrollManager.lockCount}` : '未初期化'
+      };
+      
+      document.getElementById('deviceInfo').innerHTML = `
+        <strong>デバイス情報:</strong><br>
+        ビューポート: ${info.viewport}<br>
+        デバイスタイプ: ${info.device}<br>
+        タッチ: ${info.touch}<br>
+        スクロールロック: ${info.scrollLock}
+      `;
+    }
+    
+    // スクロールテスト
+    function testScroll() {
+      const modal = document.getElementById('testModal');
+      modal.style.display = 'flex';
+      modal.classList.add('admin-modal--open');
+      document.body.style.overflow = 'hidden';
+      
+      document.getElementById('scrollResult').textContent = 
+        `モーダル開: body.overflow = ${document.body.style.overflow}`;
+    }
+    
+    function closeTestModal() {
+      const modal = document.getElementById('testModal');
+      modal.classList.remove('admin-modal--open');
+      setTimeout(() => {
+        modal.style.display = 'none';
+      }, 300);
+      document.body.style.overflow = '';
+      
+      document.getElementById('scrollResult').textContent = 
+        `モーダル閉: body.overflow = '${document.body.style.overflow}'`;
+    }
+    
+    // タップテスト
+    let tapStart = 0;
+    document.getElementById('tapTest').addEventListener('touchstart', () => {
+      tapStart = performance.now();
+    });
+    
+    document.getElementById('tapTest').addEventListener('click', () => {
+      const delay = tapStart ? performance.now() - tapStart : 0;
+      document.getElementById('tapResult').textContent = `${Math.round(delay)}ms`;
+    });
+    
+    // ダブルタップテスト
+    let lastTap = 0;
+    document.getElementById('doubleTapTest').addEventListener('click', () => {
+      const now = Date.now();
+      if (now - lastTap < 300) {
+        document.getElementById('doubleTapResult').textContent = 'ダブルタップ検出!';
+      } else {
+        document.getElementById('doubleTapResult').textContent = 'シングルタップ';
+      }
+      lastTap = now;
+    });
+    
+    // フォームテスト
+    document.getElementById('testForm').addEventListener('submit', (e) => {
+      e.preventDefault();
+      document.getElementById('formResult').textContent = 'フォーム送信成功（バリデーション通過）';
+    });
+    
+    // キーボードテスト
+    document.addEventListener('keydown', (e) => {
+      const result = document.getElementById('keyboardResult');
+      if (e.ctrlKey || e.metaKey) {
+        result.textContent = `Ctrl/Cmd + ${e.key} が押されました`;
+      } else if (e.altKey) {
+        result.textContent = `Alt + ${e.key} が押されました`;
+      } else {
+        result.textContent = `${e.key} が押されました`;
+      }
+    });
+    
+    // ジェスチャーテスト
+    let touchStartX = 0;
+    let touchStartY = 0;
+    
+    document.addEventListener('touchstart', (e) => {
+      touchStartX = e.touches[0].clientX;
+      touchStartY = e.touches[0].clientY;
+    });
+    
+    document.addEventListener('touchend', (e) => {
+      const touchEndX = e.changedTouches[0].clientX;
+      const touchEndY = e.changedTouches[0].clientY;
+      const diffX = touchStartX - touchEndX;
+      const diffY = touchStartY - touchEndY;
+      
+      let gesture = '';
+      if (Math.abs(diffX) > Math.abs(diffY)) {
+        gesture = diffX > 0 ? '左スワイプ' : '右スワイプ';
+      } else if (Math.abs(diffY) > 50) {
+        gesture = diffY > 0 ? '上スワイプ' : '下スワイプ';
+      }
+      
+      if (gesture) {
+        document.getElementById('gestureResult').textContent = `${gesture} 検出 (${Math.round(diffX)}, ${Math.round(diffY)})`;
+      }
+    });
+    
+    // 初期化
+    updateDeviceInfo();
+    window.addEventListener('resize', updateDeviceInfo);
+    
+    // ESCキーでモーダルを閉じる
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        closeTestModal();
+      }
+    });
+    
+    // 背景クリックでモーダルを閉じる
+    document.querySelector('.admin-modal__backdrop').addEventListener('click', closeTestModal);
+  </script>
+</body>
+</html>
