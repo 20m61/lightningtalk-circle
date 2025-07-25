@@ -327,17 +327,15 @@ describe('UI/UX Enhancements', () => {
     });
 
     test('should support ARIA attributes', () => {
-      const mockElement = {
-        setAttribute: jest.fn(),
-        getAttribute: jest.fn()
-      };
+      // Create actual DOM element for testing
+      const element = document.createElement('div');
+      element.setAttribute('role', 'button');
+      document.body.appendChild(element);
 
-      document.querySelector.mockReturnValue(mockElement);
-
-      const element = document.querySelector('[role="button"]');
-      if (element) {
-        element.setAttribute('aria-label', 'Close modal');
-        expect(element.setAttribute).toHaveBeenCalledWith('aria-label', 'Close modal');
+      const foundElement = document.querySelector('[role="button"]');
+      if (foundElement) {
+        foundElement.setAttribute('aria-label', 'Close modal');
+        expect(foundElement.getAttribute('aria-label')).toBe('Close modal');
       }
     });
 
