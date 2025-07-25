@@ -18,6 +18,7 @@ WordPress Cocoon子テーマとの統合が完了し、デプロイメント準�
 ### 1. WordPressサイトへのデプロイ
 
 #### 方法A: WordPress管理画面から
+
 1. WordPress管理画面にログイン
 2. 外観 > テーマ > 新規追加
 3. 「テーマのアップロード」をクリック
@@ -25,6 +26,7 @@ WordPress Cocoon子テーマとの統合が完了し、デプロイメント準�
 5. 有効化
 
 #### 方法B: FTP/SFTPで直接アップロード
+
 ```bash
 # 1. ZIPファイルを解凍
 unzip lightningtalk-child-theme.zip
@@ -38,12 +40,14 @@ scp -r lightningtalk-child/ user@yourserver:/path/to/wordpress/wp-content/themes
 ### 2. 前提条件の確認
 
 #### 必要な環境
+
 - ✅ WordPress 5.0以上
-- ✅ PHP 7.4以上 
+- ✅ PHP 7.4以上
 - ✅ Cocoon親テーマ（バージョン2.6.0以上推奨）
 - ✅ mod_rewrite有効（REST API用）
 
 #### 推奨プラグイン
+
 - WP Rocket（キャッシュ）
 - Smush（画像最適化）
 - Yoast SEO（SEO対策）
@@ -51,11 +55,13 @@ scp -r lightningtalk-child/ user@yourserver:/path/to/wordpress/wp-content/themes
 ### 3. 初期設定
 
 #### パーマリンク設定
+
 1. 設定 > パーマリンク
 2. 「投稿名」を選択
 3. 変更を保存
 
 #### Lightning Talk設定
+
 1. 外観 > カスタマイズ > Lightning Talk設定
 2. API URL: `/wp-json/lightningtalk/v1/`
 3. デフォルトイベントID: `1`
@@ -65,6 +71,7 @@ scp -r lightningtalk-child/ user@yourserver:/path/to/wordpress/wp-content/themes
 ### 1. 最初のイベント作成
 
 #### イベント投稿タイプで作成
+
 1. Lightning Talk > イベント > 新規追加
 2. 基本情報を入力：
    ```
@@ -77,6 +84,7 @@ scp -r lightningtalk-child/ user@yourserver:/path/to/wordpress/wp-content/themes
 ### 2. ページ作成
 
 #### Lightning Talkメインページ
+
 1. 固定ページ > 新規追加
 2. タイトル: Lightning Talk イベント
 3. テンプレート: Lightning Talk Event Page
@@ -85,6 +93,7 @@ scp -r lightningtalk-child/ user@yourserver:/path/to/wordpress/wp-content/themes
 ### 3. メニュー設定
 
 #### ナビゲーションメニュー
+
 1. 外観 > メニュー
 2. 新規メニュー作成: メインメニュー
 3. 項目追加：
@@ -98,22 +107,26 @@ scp -r lightningtalk-child/ user@yourserver:/path/to/wordpress/wp-content/themes
 ### ページ・投稿での使用
 
 #### イベント情報表示
+
 ```
 [lightning_talk_event id="1" show="all"]
 ```
 
 #### 参加登録ボタン
+
 ```
 [lightning_talk_button type="register" text="参加申込み"]
 [lightning_talk_button type="register-speaker" text="発表申込み"]
 ```
 
 #### 発表一覧
+
 ```
 [lightning_talk_talks event_id="1" limit="10"]
 ```
 
 #### アンケート
+
 ```
 [lightning_talk_survey event_id="1"]
 ```
@@ -121,6 +134,7 @@ scp -r lightningtalk-child/ user@yourserver:/path/to/wordpress/wp-content/themes
 ## 🔒 セキュリティ設定
 
 ### .htaccess設定
+
 ```apache
 # Lightning Talk REST API用
 RewriteEngine On
@@ -135,6 +149,7 @@ Header always set X-XSS-Protection "1; mode=block"
 ```
 
 ### wp-config.php設定
+
 ```php
 // セキュリティキーの設定（WordPress.orgで生成）
 define('AUTH_KEY',         'your-unique-phrase');
@@ -151,6 +166,7 @@ define('LIGHTNINGTALK_ADMIN_EMAIL', 'admin@yoursite.com');
 ### ブランディング調整
 
 #### 色のカスタマイズ
+
 ```css
 /* 追加CSS（外観 > カスタマイズ > 追加CSS）*/
 :root {
@@ -160,6 +176,7 @@ define('LIGHTNINGTALK_ADMIN_EMAIL', 'admin@yoursite.com');
 ```
 
 #### ロゴ・アイコン設定
+
 1. 外観 > カスタマイズ > サイト基本情報
 2. サイトアイコン: ⚡ Lightning Talk アイコン
 3. ロゴ: 組織のロゴに変更
@@ -167,6 +184,7 @@ define('LIGHTNINGTALK_ADMIN_EMAIL', 'admin@yoursite.com');
 ### 機能カスタマイズ
 
 #### 追加フィールド
+
 ```php
 // functions.php に追加
 add_action('add_meta_boxes', 'add_custom_event_fields');
@@ -185,17 +203,20 @@ function add_custom_event_fields() {
 ### キャッシュ設定
 
 #### WP Rocket設定
+
 1. WP Rocket > ダッシュボード
 2. 基本 > キャッシュを有効化
 3. ファイル最適化 > CSS・JS結合
 4. プリロード > サイトマップベースのキャッシュプリロード
 
 #### 画像最適化
+
 1. Smush > 一括最適化
 2. WebP形式の有効化
 3. 遅延読み込みの設定
 
 ### CDN設定（オプション）
+
 1. Cloudflare/AWS CloudFront設定
 2. 静的ファイルのCDN配信
 3. WP Rocket > CDN設定
@@ -205,6 +226,7 @@ function add_custom_event_fields() {
 ### よくある問題と解決法
 
 #### 1. テーマが表示されない
+
 ```bash
 # ファイル権限の確認・修正
 chown -R www-data:www-data /path/to/wordpress/
@@ -212,6 +234,7 @@ chmod -R 755 /path/to/wordpress/wp-content/themes/
 ```
 
 #### 2. REST APIエラー
+
 ```bash
 # パーマリンク再設定
 # WordPress管理画面 > 設定 > パーマリンク > 変更を保存
@@ -221,11 +244,13 @@ ls -la /path/to/wordpress/.htaccess
 ```
 
 #### 3. CSS/JSが読み込まれない
+
 1. ブラウザキャッシュクリア
 2. WP Rocket等のキャッシュクリア
 3. Cocoon > 高速化 > CSS/JS最適化を一時無効化
 
 ### デバッグモード有効化
+
 ```php
 // wp-config.php
 define('WP_DEBUG', true);
@@ -239,16 +264,19 @@ define('SCRIPT_DEBUG', true);
 ### 定期メンテナンス
 
 #### 毎週
+
 - [ ] バックアップ確認
 - [ ] セキュリティアップデート
 - [ ] パフォーマンス監視
 
 #### 毎月
+
 - [ ] プラグインアップデート
 - [ ] テーマアップデート
 - [ ] データベース最適化
 
 #### 四半期
+
 - [ ] セキュリティ監査
 - [ ] パフォーマンス分析
 - [ ] 機能改善検討
@@ -256,11 +284,13 @@ define('SCRIPT_DEBUG', true);
 ### 監視項目
 
 #### パフォーマンス
+
 - ページ読み込み速度
 - データベースクエリ数
 - メモリ使用量
 
 #### セキュリティ
+
 - 不正アクセス試行
 - 脆弱性スキャン
 - SSL証明書有効期限
@@ -268,16 +298,19 @@ define('SCRIPT_DEBUG', true);
 ## 🎯 今後の展開
 
 ### Phase 1 (1ヶ月以内)
+
 - [ ] 基本機能の安定運用
 - [ ] ユーザーフィードバック収集
 - [ ] 小規模バグ修正
 
 ### Phase 2 (3ヶ月以内)
+
 - [ ] Gutenbergブロック対応
 - [ ] モバイルアプリ対応
 - [ ] 分析機能強化
 
 ### Phase 3 (6ヶ月以内)
+
 - [ ] 多言語対応
 - [ ] WooCommerce連携
 - [ ] 外部サービス連携
@@ -285,10 +318,13 @@ define('SCRIPT_DEBUG', true);
 ## 📞 サポート・連絡先
 
 ### 技術サポート
-- GitHub Issues: [Lightning Talk Circle](https://github.com/your-repo/lightningtalk-circle/issues)
+
+- GitHub Issues:
+  [Lightning Talk Circle](https://github.com/your-repo/lightningtalk-circle/issues)
 - ドキュメント: [WordPress開発ガイド](../guides/wordpress-development-guide.md)
 
 ### 緊急時対応
+
 1. サイトダウン: バックアップからの復旧
 2. セキュリティ侵害: 即座にサイト無効化
 3. データ損失: データベースバックアップ復旧

@@ -13,7 +13,12 @@
     {
       "title": "Set up documentation structure and standards",
       "body": "## Description\nEstablish a comprehensive documentation structure and standards to ensure consistency and completeness across all project documentation.\n\n## User Story\n**As a** project contributor\n**I want to** have clear documentation standards and organized structure\n**So that** I can easily find, create, and update documentation\n\n## Acceptance Criteria\n- [ ] Define documentation organization structure\n- [ ] Create documentation templates for different types (technical, user, API)\n- [ ] Implement style guide for documentation\n- [ ] Set up core repository documentation\n  - [ ] README with project overview and quick start\n  - [ ] CONTRIBUTING guide with workflow details\n  - [ ] CHANGELOG for tracking version changes\n- [ ] Implement documentation build process (if applicable)\n- [ ] Create review workflow for documentation changes\n\n## Related Documentation\n- [Documentation Guidelines](/docs/technical/documentation-guidelines.md)\n\n## Implementation Notes\n- Consider using a documentation generator for API docs\n- Implement versioning for documentation to align with software releases\n- Ensure documentation is accessible and follows accessibility guidelines\n\n## Priority\n- [x] High: Core functionality, blocking other features\n- [ ] Medium: Important but not blocking\n- [ ] Low: Nice to have",
-      "labels": ["type:documentation", "priority:high", "component:infrastructure", "status:backlog"]
+      "labels": [
+        "type:documentation",
+        "priority:high",
+        "component:infrastructure",
+        "status:backlog"
+      ]
     }
   ],
   "core_feature_issues": [
@@ -42,7 +47,12 @@
     {
       "title": "Create presenter dashboard for content management",
       "body": "## Description\nDevelop a comprehensive dashboard for presenters to manage their presentations, materials, and communication with organizers and attendees.\n\n## User Story\n**As a** presenter\n**I want to** have a central dashboard to manage my presentations\n**So that** I can easily update materials and track feedback\n\n## Acceptance Criteria\n- [ ] Overview page showing all past and upcoming presentations\n- [ ] Material management (upload, update, delete presentation files)\n- [ ] Analytics on presentation views and downloads\n- [ ] Communication center for organizer messages\n- [ ] Feedback display from attendees\n- [ ] Profile management for bio and presenter details\n- [ ] Presentation history with metrics\n\n## Related Documentation\n- [Content Management Guidelines](/docs/features/content-management.md)\n\n## Implementation Notes\n- Design with mobile responsiveness in mind\n- Implement proper access controls\n- Consider notification system for updates and messages\n\n## Priority\n- [ ] High: Core functionality, blocking other features\n- [x] Medium: Important but not blocking\n- [ ] Low: Nice to have",
-      "labels": ["type:enhancement", "priority:medium", "component:contentmanagement", "status:backlog"]
+      "labels": [
+        "type:enhancement",
+        "priority:medium",
+        "component:contentmanagement",
+        "status:backlog"
+      ]
     }
   ],
   "compliance_maintenance_issues": [

@@ -196,7 +196,6 @@ For more information on issue management:
 - [Initial Issues](/docs/project/initial-issues.md) - Template issues for
   project components
 
-
 ## 関連ドキュメント
 
 - [ローカル開発環境のセットアップ](01-local-development.md)

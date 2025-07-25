@@ -14,7 +14,8 @@
 
 ## プロジェクト概要
 
-Lightning Talk Circleは、ライトニングトークイベントを管理するための包括的なWebアプリケーションです。複数のデプロイメントモードをサポートし、柔軟な運用が可能です。
+Lightning Talk
+Circleは、ライトニングトークイベントを管理するための包括的なWebアプリケーションです。複数のデプロイメントモードをサポートし、柔軟な運用が可能です。
 
 ### 主要機能
 
@@ -123,6 +124,7 @@ lightningtalk-circle/
 ### 技術スタック
 
 #### フロントエンド
+
 - Vanilla JavaScript（ES6+）
 - CSS3（レスポンシブデザイン）
 - Socket.io（リアルタイム通信）
@@ -130,6 +132,7 @@ lightningtalk-circle/
 - DOMPurify（XSS対策）
 
 #### バックエンド
+
 - Node.js + Express.js
 - JWT認証
 - express-validator（入力検証）
@@ -137,10 +140,12 @@ lightningtalk-circle/
 - AWS SDK（オプション）
 
 #### データストレージ
+
 - ファイルベース（開発環境）
 - DynamoDB（本番環境）
 
 #### インフラ
+
 - AWS CDK
 - Docker
 - GitHub Actions
@@ -160,22 +165,26 @@ main
 ### 新機能の開発
 
 1. **イシュー作成**
+
    ```bash
    npm run create-issue
    ```
 
 2. **フィーチャーブランチ作成**
+
    ```bash
    git checkout -b feature/issue-123-description
    ```
 
 3. **開発とテスト**
+
    ```bash
    npm run dev
    npm test
    ```
 
 4. **コミット**
+
    ```bash
    git add .
    git commit -m "feat: add new feature (#123)"
@@ -197,6 +206,7 @@ main
 ```
 
 タイプ：
+
 - `feat`: 新機能
 - `fix`: バグ修正
 - `docs`: ドキュメント
@@ -206,6 +216,7 @@ main
 - `chore`: その他
 
 例：
+
 ```
 feat(auth): add Google OAuth integration
 
@@ -222,14 +233,14 @@ Closes #123
 
 ```javascript
 // Good
-const calculateTotal = (items) => {
+const calculateTotal = items => {
   return items.reduce((sum, item) => sum + item.price, 0);
 };
 
 // Bad
 function calc(i) {
   var t = 0;
-  for(var x = 0; x < i.length; x++) {
+  for (var x = 0; x < i.length; x++) {
     t += i[x].price;
   }
   return t;
@@ -252,8 +263,8 @@ try {
   return { success: true, data: result };
 } catch (error) {
   logger.error('Operation failed:', error);
-  return { 
-    success: false, 
+  return {
+    success: false,
     error: {
       code: 'OPERATION_FAILED',
       message: 'Operation could not be completed'
@@ -297,18 +308,19 @@ describe('EventService', () => {
         date: '2025-08-01',
         location: 'Tokyo'
       };
-      
+
       const result = await eventService.createEvent(eventData);
-      
+
       expect(result).toHaveProperty('id');
       expect(result.title).toBe(eventData.title);
     });
-    
+
     it('should throw error for invalid data', async () => {
       const invalidData = { title: '' };
-      
-      await expect(eventService.createEvent(invalidData))
-        .rejects.toThrow('Validation error');
+
+      await expect(eventService.createEvent(invalidData)).rejects.toThrow(
+        'Validation error'
+      );
     });
   });
 });
@@ -328,6 +340,7 @@ logger.error('Error occurred', error);
 ### 一般的な問題と解決策
 
 #### ポート競合
+
 ```bash
 # ポートを使用しているプロセスを確認
 lsof -i :3000
@@ -337,12 +350,14 @@ PORT=3001 npm run dev
 ```
 
 #### ES Modules エラー
+
 ```bash
 # ES Modulesサポートを有効にして実行
 NODE_OPTIONS='--experimental-vm-modules' npm test
 ```
 
 #### データベース接続エラー
+
 ```bash
 # 環境変数を確認
 echo $DATABASE_TYPE
@@ -362,10 +377,11 @@ DATABASE_TYPE=file npm run dev
    - chrome://inspect でアタッチ
 
 3. **ログ分析**
+
    ```bash
    # ログの確認
    tail -f logs/app.log
-   
+
    # エラーログのみ
    grep ERROR logs/app.log
    ```
@@ -387,16 +403,19 @@ npm run build:wordpress
 ### デプロイメントオプション
 
 1. **静的ホスティング**
+
    ```bash
    npm run deploy:static
    ```
 
 2. **AWS Lambda**
+
    ```bash
    npm run deploy:lambda
    ```
 
 3. **Docker**
+
    ```bash
    npm run deploy:docker
    ```
@@ -411,8 +430,10 @@ npm run build:wordpress
 ### セキュリティ
 
 1. **入力検証**
+
    ```javascript
-   router.post('/api/events',
+   router.post(
+     '/api/events',
      body('title').notEmpty().trim().escape(),
      body('date').isISO8601(),
      validateRequest,
@@ -421,6 +442,7 @@ npm run build:wordpress
    ```
 
 2. **認証・認可**
+
    ```javascript
    router.use('/api/admin/*', authenticateToken, requireAdmin);
    ```
@@ -432,10 +454,11 @@ npm run build:wordpress
 ### パフォーマンス
 
 1. **キャッシング**
+
    ```javascript
    const cache = new Map();
-   
-   const getCachedData = (key) => {
+
+   const getCachedData = key => {
      if (cache.has(key)) {
        return cache.get(key);
      }
@@ -446,13 +469,14 @@ npm run build:wordpress
    ```
 
 2. **非同期処理**
+
    ```javascript
    // Good - 並列処理
    const [events, participants] = await Promise.all([
      getEvents(),
      getParticipants()
    ]);
-   
+
    // Bad - 順次処理
    const events = await getEvents();
    const participants = await getParticipants();

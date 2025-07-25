@@ -2,7 +2,9 @@
 
 ## Overview
 
-This guide covers the comprehensive observability infrastructure for Lightning Talk Circle, including log aggregation, metrics collection, alerting, and monitoring dashboards.
+This guide covers the comprehensive observability infrastructure for Lightning
+Talk Circle, including log aggregation, metrics collection, alerting, and
+monitoring dashboards.
 
 ## Architecture
 
@@ -29,16 +31,19 @@ Custom Metrics → CloudWatch → Dashboards
 ### 1. Log Aggregation Stack
 
 **Kinesis Stream**
+
 - Stream Name: `lightningtalk-{env}-log-aggregation`
 - Retention: 1-7 days (environment dependent)
 - Encryption: KMS encrypted
 
 **Log Processing Lambda**
+
 - Function: `lightningtalk-{env}-log-processor`
 - Runtime: Node.js 18.x
 - Processes structured logs and extracts metrics
 
 **S3 Storage**
+
 - Bucket: `lightningtalk-{env}-logs-{account}`
 - Lifecycle: IA (30d) → Glacier (90d) → Deep Archive (365d)
 - Retention: 1-7 years (environment dependent)
@@ -46,6 +51,7 @@ Custom Metrics → CloudWatch → Dashboards
 ### 2. Metrics Collection
 
 **Custom Metrics Namespace**
+
 - Namespace: `lightningtalk/{environment}`
 - Collection Frequency: Every 5 minutes
 - Metrics Categories:
@@ -54,6 +60,7 @@ Custom Metrics → CloudWatch → Dashboards
   - Infrastructure Health
 
 **Key Metrics**
+
 - `ResponseTime`: API response latency
 - `ErrorCount`: Application error count
 - `ActiveRegistrations`: Current event registrations
@@ -63,10 +70,12 @@ Custom Metrics → CloudWatch → Dashboards
 ### 3. Alerting Infrastructure
 
 **SNS Topic**
+
 - Topic: `lightningtalk-{env}-alerts`
 - Email subscriptions configured via environment config
 
 **CloudWatch Alarms**
+
 - Error rate threshold alarms
 - Response time threshold alarms
 - Composite application health alarms
@@ -75,6 +84,7 @@ Custom Metrics → CloudWatch → Dashboards
 ### 4. Monitoring Dashboards
 
 **Main Dashboard Components**
+
 - Application Performance (Response time, errors)
 - Infrastructure Health (ECS, RDS metrics)
 - Business Metrics (Registrations, talks, capacity)
@@ -99,6 +109,7 @@ CLUSTER_NAME=lightningtalk-dev-cluster
 ### Log Format
 
 **Structured Log Format**
+
 ```json
 {
   "timestamp": "2024-01-15T10:30:00.000Z",
@@ -136,9 +147,9 @@ CLUSTER_NAME=lightningtalk-dev-cluster
   "metrics": {
     "namespace": "lightningtalk/dev",
     "metrics_collected": {
-      "cpu": {"measurement": ["cpu_usage_idle", "cpu_usage_user"]},
-      "disk": {"measurement": ["used_percent"]},
-      "mem": {"measurement": ["mem_used_percent"]}
+      "cpu": { "measurement": ["cpu_usage_idle", "cpu_usage_user"] },
+      "disk": { "measurement": ["used_percent"] },
+      "mem": { "measurement": ["mem_used_percent"] }
     }
   }
 }
@@ -159,6 +170,7 @@ cdk deploy lightningtalk-Observability-dev --context env=dev
 ### 2. Configure Application Logging
 
 **Node.js Application**
+
 ```javascript
 const winston = require('winston');
 const { Kinesis } = require('aws-sdk');
@@ -174,12 +186,14 @@ const logger = winston.createLogger({
     new winston.transports.Console(),
     new winston.transports.Stream({
       stream: {
-        write: (message) => {
-          kinesis.putRecord({
-            StreamName: 'lightningtalk-dev-log-aggregation',
-            Data: message,
-            PartitionKey: 'application'
-          }).promise();
+        write: message => {
+          kinesis
+            .putRecord({
+              StreamName: 'lightningtalk-dev-log-aggregation',
+              Data: message,
+              PartitionKey: 'application'
+            })
+            .promise();
         }
       }
     })
@@ -198,6 +212,7 @@ logger.info('User registered for event', {
 ```
 
 **Docker Container Logging**
+
 ```dockerfile
 # Use structured logging format
 ENV LOG_FORMAT=json
@@ -234,12 +249,14 @@ LABEL logging.options.awslogs-group="/aws/lightningtalk/dev/containers"
 ### 1. Application Performance Monitoring (APM)
 
 **Key Metrics to Monitor**
+
 - Response time percentiles (P50, P90, P99)
 - Error rates by endpoint
 - Throughput (requests per second)
 - Database query performance
 
 **Alert Thresholds**
+
 - Response time > 2s (prod), 5s (dev)
 - Error rate > 5% (prod), 10% (dev)
 - Database connections > 80% of limit
@@ -247,16 +264,19 @@ LABEL logging.options.awslogs-group="/aws/lightningtalk/dev/containers"
 ### 2. Infrastructure Monitoring
 
 **ECS Cluster Health**
+
 - CPU utilization < 80%
 - Memory utilization < 80%
 - Task running count matches desired count
 
 **Database Monitoring**
+
 - CPU utilization < 80%
 - Free memory > 1GB
 - Connection count < limit
 
 **Load Balancer Health**
+
 - Target health check success rate > 95%
 - Response time < 1s
 - HTTP 5xx errors < 1%
@@ -264,12 +284,14 @@ LABEL logging.options.awslogs-group="/aws/lightningtalk/dev/containers"
 ### 3. Business Metrics Monitoring
 
 **Event Management**
+
 - Registration conversion rate
 - Talk submission rate
 - Capacity utilization trends
 - User engagement metrics
 
 **Anomaly Detection**
+
 - Unusual registration patterns
 - Sudden spikes in talk submissions
 - Unexpected capacity utilization
@@ -331,6 +353,7 @@ LABEL logging.options.awslogs-group="/aws/lightningtalk/dev/containers"
 ### CloudWatch Insights Queries
 
 **Recent Errors**
+
 ```sql
 fields @timestamp, level, message, source
 | filter level = "ERROR"
@@ -339,6 +362,7 @@ fields @timestamp, level, message, source
 ```
 
 **Response Time Analysis**
+
 ```sql
 fields @timestamp, metadata.responseTime, metadata.statusCode
 | filter ispresent(metadata.responseTime)
@@ -346,6 +370,7 @@ fields @timestamp, metadata.responseTime, metadata.statusCode
 ```
 
 **Error Rate by Source**
+
 ```sql
 fields @timestamp, level, source
 | filter level = "ERROR"
@@ -354,6 +379,7 @@ fields @timestamp, level, source
 ```
 
 **User Activity Patterns**
+
 ```sql
 fields @timestamp, metadata.userId, message
 | filter ispresent(metadata.userId)
@@ -365,13 +391,14 @@ fields @timestamp, metadata.userId, message
 ### OpenSearch Queries (if enabled)
 
 **Full-text search across logs**
+
 ```json
 {
   "query": {
     "bool": {
       "must": [
-        {"range": {"@timestamp": {"gte": "now-1h"}}},
-        {"match": {"message": "registration failed"}}
+        { "range": { "@timestamp": { "gte": "now-1h" } } },
+        { "match": { "message": "registration failed" } }
       ]
     }
   }
@@ -379,6 +406,7 @@ fields @timestamp, metadata.userId, message
 ```
 
 **Aggregation for error analysis**
+
 ```json
 {
   "aggs": {
@@ -389,7 +417,7 @@ fields @timestamp, metadata.userId, message
       },
       "aggs": {
         "error_types": {
-          "terms": {"field": "metadata.errorType.keyword"}
+          "terms": { "field": "metadata.errorType.keyword" }
         }
       }
     }
@@ -402,11 +430,13 @@ fields @timestamp, metadata.userId, message
 ### Log Retention Strategy
 
 **Development Environment**
+
 - CloudWatch Logs: 30 days
 - S3 Storage: 1 year
 - Kinesis retention: 24 hours
 
 **Production Environment**
+
 - CloudWatch Logs: 6 months
 - S3 Storage: 7 years with lifecycle policies
 - Kinesis retention: 7 days
@@ -414,25 +444,30 @@ fields @timestamp, metadata.userId, message
 ### Metrics Optimization
 
 **High-frequency metrics** (1-minute intervals)
+
 - Critical application metrics
 - Infrastructure health metrics
 
 **Medium-frequency metrics** (5-minute intervals)
+
 - Business metrics
 - Detailed performance metrics
 
 **Low-frequency metrics** (1-hour intervals)
+
 - Trend analysis metrics
 - Capacity planning metrics
 
 ### Storage Costs
 
 **S3 Lifecycle Rules**
+
 ```
 Current → IA (30 days) → Glacier (90 days) → Deep Archive (365 days)
 ```
 
 **Log Compression**
+
 - Use GZIP compression for Kinesis Firehose
 - Enable log compression in CloudWatch agent
 
@@ -441,16 +476,19 @@ Current → IA (30 days) → Glacier (90 days) → Deep Archive (365 days)
 ### Common Issues
 
 **Missing Logs**
+
 - Check CloudWatch agent configuration
 - Verify IAM permissions for log shipping
 - Check network connectivity to CloudWatch
 
 **High Costs**
+
 - Review log retention policies
 - Optimize metric collection frequency
 - Implement log filtering to reduce volume
 
 **Alert Fatigue**
+
 - Review and tune alert thresholds
 - Implement alert suppression during maintenance
 - Use composite alarms for related metrics
@@ -458,6 +496,7 @@ Current → IA (30 days) → Glacier (90 days) → Deep Archive (365 days)
 ### Debug Commands
 
 **Check log stream status**
+
 ```bash
 aws logs describe-log-streams \
   --log-group-name "/aws/lightningtalk/dev/central" \
@@ -465,6 +504,7 @@ aws logs describe-log-streams \
 ```
 
 **View recent log events**
+
 ```bash
 aws logs tail "/aws/lightningtalk/dev/central" \
   --since "1h ago" \
@@ -472,6 +512,7 @@ aws logs tail "/aws/lightningtalk/dev/central" \
 ```
 
 **Check metric statistics**
+
 ```bash
 aws cloudwatch get-metric-statistics \
   --namespace "lightningtalk/dev" \
@@ -483,6 +524,7 @@ aws cloudwatch get-metric-statistics \
 ```
 
 **Test alerting**
+
 ```bash
 aws sns publish \
   --topic-arn "arn:aws:sns:us-east-1:123456789012:lightningtalk-dev-alerts" \
@@ -543,4 +585,6 @@ aws sns publish \
 
 ---
 
-This guide provides comprehensive coverage of the observability infrastructure for Lightning Talk Circle. For specific implementation details, refer to the CDK stacks and deployment scripts in the repository.
+This guide provides comprehensive coverage of the observability infrastructure
+for Lightning Talk Circle. For specific implementation details, refer to the CDK
+stacks and deployment scripts in the repository.

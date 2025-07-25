@@ -185,7 +185,13 @@
       "id": "chat-003",
       "title": "💬 Advanced Chat Features (Reactions, Mentions, Files)",
       "body": "## 概要\n\nチャットシステムの高度機能実装（リアクション、メンション、ファイル共有）。\n\n## 実装機能\n\n### リアクション機能\n- [ ] 絵文字リアクション\n- [ ] カスタムリアクション\n- [ ] リアクション数表示\n- [ ] リアルタイム同期\n\n### メンション機能\n- [ ] @username 検出\n- [ ] ユーザー候補表示\n- [ ] メンション通知\n- [ ] メンション履歴\n\n### ファイル共有\n- [ ] 画像アップロード（10MB制限）\n- [ ] PDF共有\n- [ ] プレビュー生成\n- [ ] ダウンロード制御\n\n### モデレーション\n- [ ] 不適切コンテンツ検出\n- [ ] メッセージ削除\n- [ ] ユーザーミュート\n- [ ] 管理者機能\n\n## 技術仕様\n\n- **ファイルストレージ**: S3 + CloudFront\n- **画像処理**: Sharp.js\n- **セキュリティ**: ファイル検証、ウイルススキャン\n- **通知**: プッシュ通知統合\n\n## 受入基準\n\n- [ ] 全機能動作確認\n- [ ] セキュリティテスト完了\n- [ ] パフォーマンステスト通過\n- [ ] モバイル最適化確認",
-      "labels": ["💬 chat-system", "🖼️ image-system", "🔔 notifications", "🔒 security", "📋 medium-priority"],
+      "labels": [
+        "💬 chat-system",
+        "🖼️ image-system",
+        "🔔 notifications",
+        "🔒 security",
+        "📋 medium-priority"
+      ],
       "milestone": "phase-2-features",
       "assignees": [],
       "state": "open"

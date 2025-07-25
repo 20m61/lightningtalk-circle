@@ -5,12 +5,12 @@ const path = require('path');
 
 // Simple color functions
 const colors = {
-  blue: (text) => `\x1b[34m${text}\x1b[0m`,
-  green: (text) => `\x1b[32m${text}\x1b[0m`,
-  yellow: (text) => `\x1b[33m${text}\x1b[0m`,
-  red: (text) => `\x1b[31m${text}\x1b[0m`,
-  gray: (text) => `\x1b[90m${text}\x1b[0m`,
-  bold: (text) => `\x1b[1m${text}\x1b[0m`
+  blue: text => `\x1b[34m${text}\x1b[0m`,
+  green: text => `\x1b[32m${text}\x1b[0m`,
+  yellow: text => `\x1b[33m${text}\x1b[0m`,
+  red: text => `\x1b[31m${text}\x1b[0m`,
+  gray: text => `\x1b[90m${text}\x1b[0m`,
+  bold: text => `\x1b[1m${text}\x1b[0m`
 };
 
 // 修正対象
@@ -32,25 +32,25 @@ const fixes = [
 ];
 
 console.log(colors.bold('🔧 最終リンク修正スクリプト'));
-console.log(colors.gray('=' .repeat(60)));
+console.log(colors.gray('='.repeat(60)));
 
 let successCount = 0;
 let errorCount = 0;
 
 fixes.forEach(fix => {
   const filePath = path.join(process.cwd(), fix.file);
-  
+
   try {
     // ファイルを読み込む
     let content = fs.readFileSync(filePath, 'utf8');
-    
+
     // リンクを修正
     if (content.includes(fix.oldLink)) {
       content = content.replace(fix.oldLink, fix.newLink);
-      
+
       // ファイルを書き戻す
       fs.writeFileSync(filePath, content);
-      
+
       console.log(colors.green('✓') + ` ${fix.file}:${fix.lineNumber}`);
       console.log(colors.gray(`  ${fix.oldLink} → ${fix.newLink}`));
       console.log(colors.gray(`  理由: ${fix.reason}`));
@@ -65,8 +65,12 @@ fixes.forEach(fix => {
   }
 });
 
-console.log(colors.gray('=' .repeat(60)));
-console.log(colors.bold(`📊 修正結果: ${colors.green(successCount + '個')}成功, ${colors.red(errorCount + '個')}失敗`));
+console.log(colors.gray('='.repeat(60)));
+console.log(
+  colors.bold(
+    `📊 修正結果: ${colors.green(successCount + '個')}成功, ${colors.red(errorCount + '個')}失敗`
+  )
+);
 
 // セキュリティREADME.mdも作成（念のため）
 const securityReadmePath = path.join(process.cwd(), 'docs/security/README.md');
@@ -90,7 +94,7 @@ Lightning Talk Circle のセキュリティ関連ドキュメントです。
 - [プロジェクト概要](../../README.md)
 - [CLAUDE.md](../../CLAUDE.md)
 `;
-  
+
   fs.writeFileSync(securityReadmePath, securityReadmeContent);
   console.log(colors.green('\n✓ セキュリティREADME.mdも作成しました'));
 }

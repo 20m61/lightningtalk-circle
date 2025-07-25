@@ -4,17 +4,17 @@ info:
   description: |
     Lightning Talk Circle is a comprehensive event management system for organizing Lightning Talk events.
     This API provides endpoints for managing events, participants, talks, and administrative functions.
-    
+
     ## Authentication
     Most endpoints require authentication using JWT tokens. Include the token in the Authorization header:
     ```
     Authorization: Bearer <your-jwt-token>
     ```
-    
+
     ## Rate Limiting
     - General endpoints: 100 requests per 15 minutes per IP
     - Registration endpoints: 5 requests per hour per IP
-    
+
     ## Error Handling
     All endpoints return consistent error responses with appropriate HTTP status codes and error messages.
   version: 1.0.0
@@ -780,7 +780,7 @@ components:
           example: 090-1234-5678
         dietaryRestrictions:
           type: string
-          example: "アレルギー: 卵、乳製品"
+          example: 'アレルギー: 卵、乳製品'
         createdAt:
           type: string
           format: date-time
@@ -815,7 +815,7 @@ components:
           example: 090-1234-5678
         dietaryRestrictions:
           type: string
-          example: "アレルギー: 卵、乳製品"
+          example: 'アレルギー: 卵、乳製品'
 
     ParticipantUpdate:
       type: object
@@ -857,7 +857,22 @@ components:
           example: event-123
         category:
           type: string
-          enum: [tech, hobby, learning, travel, food, game, lifehack, pet, garden, money, sports, music, other]
+          enum:
+            [
+              tech,
+              hobby,
+              learning,
+              travel,
+              food,
+              game,
+              lifehack,
+              pet,
+              garden,
+              money,
+              sports,
+              music,
+              other
+            ]
           example: tech
         status:
           type: string
@@ -907,7 +922,22 @@ components:
           example: event-123
         category:
           type: string
-          enum: [tech, hobby, learning, travel, food, game, lifehack, pet, garden, money, sports, music, other]
+          enum:
+            [
+              tech,
+              hobby,
+              learning,
+              travel,
+              food,
+              game,
+              lifehack,
+              pet,
+              garden,
+              money,
+              sports,
+              music,
+              other
+            ]
           example: tech
 
     TalkUpdate:
@@ -924,7 +954,22 @@ components:
           format: email
         category:
           type: string
-          enum: [tech, hobby, learning, travel, food, game, lifehack, pet, garden, money, sports, music, other]
+          enum:
+            [
+              tech,
+              hobby,
+              learning,
+              travel,
+              food,
+              game,
+              lifehack,
+              pet,
+              garden,
+              money,
+              sports,
+              music,
+              other
+            ]
         status:
           type: string
           enum: [pending, approved, rejected]
@@ -964,7 +1009,7 @@ components:
                 example: registration
               description:
                 type: string
-                example: "新規参加者登録: 山田太郎"
+                example: '新規参加者登録: 山田太郎'
               timestamp:
                 type: string
                 format: date-time
@@ -994,7 +1039,7 @@ components:
           type: array
           items:
             type: string
-          example: ["Name is required", "Email is required"]
+          example: ['Name is required', 'Email is required']
         timestamp:
           type: string
           format: date-time

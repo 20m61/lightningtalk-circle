@@ -5,12 +5,12 @@ const path = require('path');
 
 // Simple color functions for output
 const colors = {
-  blue: (text) => `\x1b[34m${text}\x1b[0m`,
-  green: (text) => `\x1b[32m${text}\x1b[0m`,
-  yellow: (text) => `\x1b[33m${text}\x1b[0m`,
-  red: (text) => `\x1b[31m${text}\x1b[0m`,
-  gray: (text) => `\x1b[90m${text}\x1b[0m`,
-  bold: (text) => `\x1b[1m${text}\x1b[0m`
+  blue: text => `\x1b[34m${text}\x1b[0m`,
+  green: text => `\x1b[32m${text}\x1b[0m`,
+  yellow: text => `\x1b[33m${text}\x1b[0m`,
+  red: text => `\x1b[31m${text}\x1b[0m`,
+  gray: text => `\x1b[90m${text}\x1b[0m`,
+  bold: text => `\x1b[1m${text}\x1b[0m`
 };
 
 class RemainingLinkFixer {
@@ -18,7 +18,7 @@ class RemainingLinkFixer {
     this.projectRoot = path.resolve(__dirname, '..');
     this.fixedCount = 0;
     this.fixes = [];
-    
+
     console.log(colors.bold('🔧 Lightning Talk Circle - 残りのリンク修正ツール'));
     console.log(colors.gray(`プロジェクトルート: ${this.projectRoot}`));
     console.log('');
@@ -46,7 +46,10 @@ class RemainingLinkFixer {
 
     // docs/deployment/DEPLOYMENT-GUIDE.md の修正
     await this.fixFile('docs/deployment/DEPLOYMENT-GUIDE.md', [
-      { old: '../guides/wordpress-development-guide.md', new: '../guides/wordpress-development-guide.md' }
+      {
+        old: '../guides/wordpress-development-guide.md',
+        new: '../guides/wordpress-development-guide.md'
+      }
     ]);
 
     // docs/deployment/DEVELOPMENT-FLOW-GUIDE.md の修正
@@ -56,7 +59,10 @@ class RemainingLinkFixer {
 
     // docs/development/README-WordPress.md の修正
     await this.fixFile('docs/development/README-WordPress.md', [
-      { old: '../guides/wordpress-development-guide.md', new: '../guides/wordpress-development-guide.md' },
+      {
+        old: '../guides/wordpress-development-guide.md',
+        new: '../guides/wordpress-development-guide.md'
+      },
       { old: '../technical/wordpress/shortcodes.md', new: '../technical/wordpress/shortcodes.md' },
       { old: '../api/reference.md', new: '../api/reference.md' },
       { old: '../guides/customization.md', new: '../guides/customization.md' }
@@ -80,7 +86,10 @@ class RemainingLinkFixer {
 
     // docs/production-logging-system.md の修正
     await this.fixFile('docs/production-logging-system.md', [
-      { old: '../security/monitoring-best-practices.md', new: './security/monitoring-best-practices.md' }
+      {
+        old: '../security/monitoring-best-practices.md',
+        new: './security/monitoring-best-practices.md'
+      }
     ]);
 
     // docs/project/ 内のファイル修正
@@ -91,7 +100,10 @@ class RemainingLinkFixer {
     await this.fixFile('docs/project/initial-issues.md', [
       { old: '../project/planning/issue-creation-plan.md', new: './issue-creation-plan.md' },
       { old: '../technical/development/ci-cd.md', new: '../technical/ci-cd.md' },
-      { old: '../technical/guides/documentation-guidelines.md', new: '../technical/documentation-guidelines.md' }
+      {
+        old: '../technical/guides/documentation-guidelines.md',
+        new: '../technical/documentation-guidelines.md'
+      }
     ]);
 
     await this.fixFile('docs/project/issue-creation-workflow.md', [
@@ -109,15 +121,24 @@ class RemainingLinkFixer {
 
     // docs/usage/automated-workflow-guide.md の修正
     await this.fixFile('docs/usage/automated-workflow-guide.md', [
-      { old: '../api/technical-specifications.md', new: '../technical/technical-specifications.md' },
+      {
+        old: '../api/technical-specifications.md',
+        new: '../technical/technical-specifications.md'
+      },
       { old: '../api/reference.md', new: '../api/reference.md' },
       { old: '../guides/troubleshooting.md', new: '../guides/troubleshooting.md' }
     ]);
 
     // README.md の修正
     await this.fixFile('README.md', [
-      { old: '../project/guides/issue-execution-guide.md', new: 'docs/project/issue-execution-guide.md' },
-      { old: '../project/guides/issue-creation-tutorial.md', new: 'docs/project/issue-creation-tutorial.md' }
+      {
+        old: '../project/guides/issue-execution-guide.md',
+        new: 'docs/project/issue-execution-guide.md'
+      },
+      {
+        old: '../project/guides/issue-creation-tutorial.md',
+        new: 'docs/project/issue-creation-tutorial.md'
+      }
     ]);
 
     // 修正レポートの生成
@@ -126,7 +147,7 @@ class RemainingLinkFixer {
 
   async fixFile(filePath, replacements) {
     const fullPath = path.join(this.projectRoot, filePath);
-    
+
     if (!fs.existsSync(fullPath)) {
       console.log(colors.red(`❌ ファイルが見つかりません: ${filePath}`));
       return;
@@ -143,7 +164,7 @@ class RemainingLinkFixer {
           console.log(colors.gray(`   ファイル: ${filePath}`));
           this.fixedCount++;
           modified = true;
-          
+
           this.fixes.push({
             file: filePath,
             old: oldPath,
@@ -169,9 +190,13 @@ class RemainingLinkFixer {
 
 ## 修正内容
 
-${this.fixes.map(fix => `### ${fix.file}
+${this.fixes
+  .map(
+    fix => `### ${fix.file}
 - \`${fix.old}\` → \`${fix.new}\`
-`).join('\n')}
+`
+  )
+  .join('\n')}
 
 ## 修正戦略
 
@@ -202,9 +227,11 @@ ${this.fixes.map(fix => `### ${fix.file}
 
     const reportPath = path.join(this.projectRoot, 'REMAINING-LINKS-FIX-REPORT.md');
     fs.writeFileSync(reportPath, reportContent);
-    
+
     console.log(colors.blue(`\n📊 修正レポートを生成しました: REMAINING-LINKS-FIX-REPORT.md`));
-    console.log(colors.bold(`\n📊 修正結果: ${colors.green(this.fixedCount + '個')}のリンクを修正しました`));
+    console.log(
+      colors.bold(`\n📊 修正結果: ${colors.green(this.fixedCount + '個')}のリンクを修正しました`)
+    );
   }
 }
 

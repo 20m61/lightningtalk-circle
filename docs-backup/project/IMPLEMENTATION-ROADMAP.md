@@ -9,10 +9,13 @@
 ## 📋 実装フェーズ詳細
 
 ### 🏗️ Phase 1: 基盤構築 (Week 1-2)
+
 **目標**: 開発環境とMonorepo基盤の完成
 
 #### Week 1: 環境セットアップ
+
 **Day 1-2: プロジェクト初期化**
+
 ```bash
 # 1. Monorepo構造作成
 npm create lightningtalk-cocoon-theme
@@ -20,7 +23,7 @@ cd lightningtalk-cocoon-theme
 
 # 2. Workspace設定
 npm init -w packages/theme
-npm init -w packages/admin-panel  
+npm init -w packages/admin-panel
 npm init -w packages/components
 
 # 3. 基本依存関係インストール
@@ -30,6 +33,7 @@ npm install -w packages/components @storybook/react-vite
 ```
 
 **Day 3-4: Docker WordPress環境**
+
 ```yaml
 # docker-compose.yml セットアップ
 # - WordPress + MySQL + Node開発環境
@@ -38,6 +42,7 @@ npm install -w packages/components @storybook/react-vite
 ```
 
 **Day 5: TypeScript設定**
+
 ```typescript
 // 共通TypeScript設定
 // WordPress型定義統合
@@ -45,7 +50,9 @@ npm install -w packages/components @storybook/react-vite
 ```
 
 #### Week 2: 基本ツールチェーン
+
 **Day 1-2: Vite WordPress統合**
+
 ```typescript
 // vite.config.ts
 // - WordPress外部依存設定
@@ -54,6 +61,7 @@ npm install -w packages/components @storybook/react-vite
 ```
 
 **Day 3-4: Storybook設定**
+
 ```typescript
 // .storybook/main.ts
 // - WordPress Mock設定
@@ -62,6 +70,7 @@ npm install -w packages/components @storybook/react-vite
 ```
 
 **Day 5: 初期CI/CD**
+
 ```yaml
 # GitHub Actions
 # - 基本ビルドテスト
@@ -70,6 +79,7 @@ npm install -w packages/components @storybook/react-vite
 ```
 
 **Week 2完了時の成果物:**
+
 - [ ] 完全なMonorepo環境
 - [ ] WordPress + Vite統合
 - [ ] Storybook起動確認
@@ -78,10 +88,13 @@ npm install -w packages/components @storybook/react-vite
 ---
 
 ### 🎨 Phase 2: コンポーネントライブラリ (Week 3-4)
+
 **目標**: Lightning Talk UIコンポーネントの完成
 
 #### Week 3: 基本コンポーネント設計
+
 **Day 1-2: デザインシステム基盤**
+
 ```typescript
 // packages/components/src/tokens/
 // - カラーパレット
@@ -94,23 +107,24 @@ export const tokens = {
   colors: {
     primary: '#FF6B35',
     secondary: '#4ECDC4',
-    success: '#10B981',
+    success: '#10B981'
   },
   typography: {
     fonts: {
-      primary: '-apple-system, BlinkMacSystemFont, sans-serif',
+      primary: '-apple-system, BlinkMacSystemFont, sans-serif'
     },
     sizes: {
       xs: '0.75rem',
       sm: '0.875rem',
       base: '1rem',
-      lg: '1.125rem',
-    },
-  },
+      lg: '1.125rem'
+    }
+  }
 };
 ```
 
 **Day 3-5: 基本UIコンポーネント**
+
 ```typescript
 // 実装対象コンポーネント
 export interface ComponentLibrary {
@@ -119,7 +133,7 @@ export interface ComponentLibrary {
   Input: InputComponent;
   Modal: ModalComponent;
   Card: CardComponent;
-  
+
   // Lightning Talk専用
   EventCard: EventCardComponent;
   ParticipantList: ParticipantListComponent;
@@ -129,7 +143,9 @@ export interface ComponentLibrary {
 ```
 
 #### Week 4: Lightning Talk専用コンポーネント
+
 **Day 1-2: イベント関連コンポーネント**
+
 ```typescript
 // EventCard.tsx + EventCard.stories.tsx
 interface EventCardProps {
@@ -146,13 +162,15 @@ interface EventCardProps {
 ```
 
 **Day 3-4: 参加者管理コンポーネント**
+
 ```typescript
 // ParticipantManager.tsx
-// TalkSubmission.tsx  
+// TalkSubmission.tsx
 // EventDashboard.tsx
 ```
 
 **Day 5: コンポーネントテスト**
+
 ```typescript
 // Vitest + Testing Library
 // Storybook Visual Testing
@@ -160,6 +178,7 @@ interface EventCardProps {
 ```
 
 **Week 4完了時の成果物:**
+
 - [ ] 15+のUIコンポーネント
 - [ ] Storybook完全ドキュメント
 - [ ] コンポーネントテストスイート
@@ -168,10 +187,13 @@ interface EventCardProps {
 ---
 
 ### 🔧 Phase 3: WordPress統合実装 (Week 4-5)
+
 **目標**: Cocoon子テーマとREST API完成
 
 #### Week 4-5 (並行): WordPress子テーマ
+
 **Day 1-2: 基本テーマ構造**
+
 ```php
 // packages/theme/
 ├── style.css              // 子テーマ定義
@@ -185,6 +207,7 @@ interface EventCardProps {
 ```
 
 **Day 3-4: カスタム投稿タイプ & API**
+
 ```php
 // Lightning Talk専用データ構造
 register_post_type('lt_event');      // イベント
@@ -193,12 +216,13 @@ register_post_type('lt_participant'); // 参加者
 
 // REST API エンドポイント
 /wp-json/lightningtalk/v1/events
-/wp-json/lightningtalk/v1/talks  
+/wp-json/lightningtalk/v1/talks
 /wp-json/lightningtalk/v1/participants
 /wp-json/lightningtalk/v1/register
 ```
 
 **Day 5: ショートコード実装**
+
 ```php
 // WordPress投稿・固定ページ用ショートコード
 [lightning_talk_event id="123"]
@@ -208,6 +232,7 @@ register_post_type('lt_participant'); // 参加者
 ```
 
 **Week 5完了時の成果物:**
+
 - [ ] 完全なCocoon子テーマ
 - [ ] カスタム投稿タイプ × 3
 - [ ] REST API エンドポイント × 5
@@ -217,10 +242,13 @@ register_post_type('lt_participant'); // 参加者
 ---
 
 ### 💻 Phase 4: 管理画面開発 (Week 5-6)
+
 **目標**: Next.js管理パネルの完成
 
 #### Week 5-6: Next.js管理アプリ
+
 **Day 1-2: 認証・ルーティング**
+
 ```typescript
 // packages/admin-panel/
 ├── pages/
@@ -237,11 +265,12 @@ register_post_type('lt_participant'); // 参加者
 ```
 
 **Day 3-4: コア管理機能**
+
 ```typescript
 // イベント管理画面
 export default function EventsPage() {
   const { events, createEvent, updateEvent } = useEvents();
-  
+
   return (
     <AdminLayout>
       <EventList events={events} />
@@ -253,7 +282,7 @@ export default function EventsPage() {
 // 参加者管理
 export default function ParticipantsPage() {
   const { participants, exportCsv } = useParticipants();
-  
+
   return (
     <AdminLayout>
       <ParticipantTable data={participants} />
@@ -264,6 +293,7 @@ export default function ParticipantsPage() {
 ```
 
 **Day 5: ダッシュボード・レポート**
+
 ```typescript
 // 統計ダッシュボード
 // リアルタイム参加者数
@@ -272,6 +302,7 @@ export default function ParticipantsPage() {
 ```
 
 **Week 6完了時の成果物:**
+
 - [ ] 完全な管理画面アプリ
 - [ ] WordPress SSO統合
 - [ ] リアルタイムダッシュボード
@@ -281,10 +312,13 @@ export default function ParticipantsPage() {
 ---
 
 ### 🧪 Phase 5: テスト・品質保証 (Week 6-7)
+
 **目標**: 包括的テストスイートの完成
 
 #### Week 6-7: テスト実装
+
 **Day 1-2: Unitテスト (Vitest)**
+
 ```typescript
 // WordPress API関数テスト
 describe('WordPress API', () => {
@@ -304,20 +338,21 @@ describe('EventCard', () => {
 ```
 
 **Day 3-4: E2Eテスト (Playwright)**
+
 ```typescript
 // WordPress全機能フロー
 test('Lightning Talk registration flow', async ({ page }) => {
   // 1. イベントページアクセス
   await page.goto('/events/sample-event');
-  
+
   // 2. 参加登録
   await page.fill('[data-testid="name"]', 'Test User');
   await page.fill('[data-testid="email"]', 'test@example.com');
   await page.click('[data-testid="register"]');
-  
+
   // 3. 確認
   await expect(page.locator('.success')).toBeVisible();
-  
+
   // 4. 管理画面確認
   await page.goto('/wp-admin/edit.php?post_type=lt_participant');
   await expect(page.getByText('Test User')).toBeVisible();
@@ -325,6 +360,7 @@ test('Lightning Talk registration flow', async ({ page }) => {
 ```
 
 **Day 5: パフォーマンス・アクセシビリティ**
+
 ```typescript
 // Lighthouse CI
 // WebVitals監視
@@ -333,6 +369,7 @@ test('Lightning Talk registration flow', async ({ page }) => {
 ```
 
 **Week 7完了時の成果物:**
+
 - [ ] Unit テスト 90%+ カバレージ
 - [ ] E2E テスト 主要フロー完全カバー
 - [ ] パフォーマンス最適化
@@ -342,10 +379,13 @@ test('Lightning Talk registration flow', async ({ page }) => {
 ---
 
 ### 🚀 Phase 6: 本番デプロイ・最適化 (Week 7-8)
+
 **目標**: 本番環境対応と運用準備
 
 #### Week 7-8: 本番化・運用準備
+
 **Day 1-2: 本番ビルド最適化**
+
 ```typescript
 // 本番用Vite設定
 export default defineConfig({
@@ -356,12 +396,12 @@ export default defineConfig({
       output: {
         manualChunks: {
           vendor: ['react', 'react-dom'],
-          wordpress: ['@wordpress/api-fetch'],
-        },
-      },
-    },
-  },
-  
+          wordpress: ['@wordpress/api-fetch']
+        }
+      }
+    }
+  }
+
   // Code Splitting
   // Tree Shaking最適化
   // CSS最小化
@@ -370,6 +410,7 @@ export default defineConfig({
 ```
 
 **Day 3-4: デプロイメント自動化**
+
 ```yaml
 # CI/CD完全自動化
 name: WordPress Theme Deploy
@@ -381,10 +422,10 @@ on:
 jobs:
   test:
     # 全テスト実行
-  
+
   build:
     # 本番ビルド
-  
+
   deploy:
     # WordPress環境デプロイ
     # ゼロダウンタイム更新
@@ -392,6 +433,7 @@ jobs:
 ```
 
 **Day 5: 監視・ログ**
+
 ```typescript
 // エラー監視 (Sentry)
 // パフォーマンス監視
@@ -400,6 +442,7 @@ jobs:
 ```
 
 **Week 8完了時の成果物:**
+
 - [ ] 本番環境デプロイ完了
 - [ ] 自動デプロイパイプライン
 - [ ] 監視・アラート設定
@@ -411,6 +454,7 @@ jobs:
 ## 📊 マイルストーン & KPI
 
 ### 技術的マイルストーン
+
 - [ ] **Week 2**: 開発環境完全自動化
 - [ ] **Week 4**: コンポーネントライブラリ完成
 - [ ] **Week 5**: WordPress統合完了
@@ -419,21 +463,22 @@ jobs:
 - [ ] **Week 8**: 本番環境稼働
 
 ### 品質KPI目標
+
 ```typescript
 interface QualityMetrics {
   // テストカバレージ
   unitTestCoverage: '>= 90%';
   e2eTestCoverage: '主要フロー100%';
-  
+
   // パフォーマンス
   lighthouseScore: '>= 90';
   firstContentfulPaint: '< 1.5s';
   largestContentfulPaint: '< 2.5s';
-  
+
   // アクセシビリティ
   wcagCompliance: 'AA準拠';
   axeViolations: '0件';
-  
+
   // セキュリティ
   vulnerabilities: '高・中リスク 0件';
   wpScanScore: 'A+';
@@ -441,6 +486,7 @@ interface QualityMetrics {
 ```
 
 ### 機能リリース計画
+
 ```typescript
 // MVP (Week 5)
 interface MVPFeatures {
@@ -450,7 +496,7 @@ interface MVPFeatures {
   cocoonIntegration: true;
 }
 
-// Full Release (Week 8)  
+// Full Release (Week 8)
 interface FullFeatures {
   advancedEventManagement: true;
   talkSubmissionSystem: true;
@@ -466,9 +512,9 @@ interface FullFeatures {
 ## ⚠️ リスク管理
 
 ### 技術リスク
+
 1. **Cocoon互換性問題**
    - 軽減策: 早期統合テスト、段階的リリース
-   
 2. **Next.js WordPress統合複雑性**
    - 軽減策: 詳細設計フェーズ、プロトタイプ検証
 
@@ -476,9 +522,9 @@ interface FullFeatures {
    - 軽減策: 継続的パフォーマンス監視、最適化スプリント
 
 ### スケジュールリスク
+
 1. **技術学習コスト**
    - 軽減策: 並行学習、ペアプログラミング
-   
 2. **統合テスト工数**
    - 軽減策: 自動化優先、段階的統合
 
@@ -487,11 +533,13 @@ interface FullFeatures {
 ## 🎯 次のアクション
 
 ### 即座に開始すべき作業
+
 1. **技術検証PoC**: 各技術の基本統合確認
 2. **開発環境準備**: Docker + WordPress + Node環境
 3. **チーム編成**: 開発・デザイン・QA役割分担
 
 ### 準備期間中の作業
+
 1. **詳細要件定義**: Lightning Talk機能仕様詳細化
 2. **デザインシステム**: Figma + Storybook連携準備
 3. **インフラ準備**: 本番環境・CI/CD環境構築

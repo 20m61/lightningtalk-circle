@@ -5,6 +5,7 @@
 ## Events
 
 ### 第一回なんでもライトニングトーク
+
 - **日程**: 2025年6月25日（水）
 - **詳細**: [first-event-details.md](./first-event-details.md)
 - **データ**: event-001 in `/server/data/events.json`

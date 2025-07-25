@@ -34,7 +34,7 @@ describe('Issue Validator', () => {
         labels: ['enhancement', 'security'],
         priority: 'high'
       };
-      
+
       expect(validateIssue(validIssue)).toBe(true);
     });
 
@@ -43,9 +43,10 @@ describe('Issue Validator', () => {
         description: 'Missing title',
         labels: ['bug']
       };
-      
-      expect(() => validateIssue(invalidIssue))
-        .toThrow('Issue title is required');
+
+      expect(() => validateIssue(invalidIssue)).toThrow(
+        'Issue title is required'
+      );
     });
   });
 });
@@ -116,15 +117,16 @@ test.describe('Issue Creation Flow', () => {
     await page.click('button[type="submit"]');
 
     // 5. 成功メッセージを確認
-    await expect(page.locator('.success-message'))
-      .toContainText('Issue created successfully');
+    await expect(page.locator('.success-message')).toContainText(
+      'Issue created successfully'
+    );
 
     // 6. GitHub API で実際に作成されたか確認
     const response = await page.request.get(
       'https://api.github.com/repos/owner/repo/issues?state=open'
     );
     const issues = await response.json();
-    
+
     expect(issues.some(issue => issue.title === 'E2E Test Issue')).toBe(true);
   });
 });
@@ -180,7 +182,7 @@ services:
     depends_on:
       - db
     ports:
-      - "3000:3000"
+      - '3000:3000'
 
   # テストデータベース
   db:
@@ -213,7 +215,7 @@ services:
   selenium:
     image: selenium/standalone-chrome:latest
     ports:
-      - "4444:4444"
+      - '4444:4444'
 
 volumes:
   test-db-data:
@@ -228,26 +230,26 @@ volumes:
 export const issueFixtures = {
   valid: {
     infrastructure: {
-      title: "Set up CI/CD pipeline",
-      description: "Configure GitHub Actions for automated testing",
-      labels: ["infrastructure", "automation"],
-      priority: "high"
+      title: 'Set up CI/CD pipeline',
+      description: 'Configure GitHub Actions for automated testing',
+      labels: ['infrastructure', 'automation'],
+      priority: 'high'
     },
     feature: {
-      title: "Add user dashboard",
-      description: "Create dashboard for user statistics",
-      labels: ["enhancement", "frontend"],
-      priority: "medium"
+      title: 'Add user dashboard',
+      description: 'Create dashboard for user statistics',
+      labels: ['enhancement', 'frontend'],
+      priority: 'medium'
     }
   },
   invalid: {
     missingTitle: {
-      description: "No title provided",
-      labels: ["bug"]
+      description: 'No title provided',
+      labels: ['bug']
     },
     emptyLabels: {
-      title: "Issue with no labels",
-      description: "This should fail validation",
+      title: 'Issue with no labels',
+      description: 'This should fail validation',
       labels: []
     }
   }
@@ -300,7 +302,7 @@ STAGED_FILES=$(git diff --cached --name-only --diff-filter=ACM | grep -E '\.(js|
 if [ -n "$STAGED_FILES" ]; then
   # 関連するテストのみ実行
   npm run test:related -- $STAGED_FILES
-  
+
   if [ $? -ne 0 ]; then
     echo "❌ Tests failed. Commit aborted."
     exit 1
@@ -330,7 +332,7 @@ import { test } from '@playwright/test';
 test.describe('Performance Tests', () => {
   test('should create 100 issues within 30 seconds', async ({ page }) => {
     const startTime = Date.now();
-    
+
     for (let i = 0; i < 100; i++) {
       await page.request.post('/api/issues', {
         data: {
@@ -340,10 +342,10 @@ test.describe('Performance Tests', () => {
         }
       });
     }
-    
+
     const endTime = Date.now();
     const duration = (endTime - startTime) / 1000;
-    
+
     expect(duration).toBeLessThan(30);
     console.log(`Created 100 issues in ${duration} seconds`);
   });
@@ -372,10 +374,7 @@ export default {
       statements: 80
     }
   },
-  testMatch: [
-    '**/tests/**/*.test.js',
-    '**/tests/**/*.spec.js'
-  ],
+  testMatch: ['**/tests/**/*.test.js', '**/tests/**/*.spec.js'],
   setupFilesAfterEnv: ['<rootDir>/tests/setup.js']
 };
 ```

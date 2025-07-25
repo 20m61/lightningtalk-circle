@@ -16,6 +16,7 @@
 **症状**: `Error: listen EADDRINUSE: address already in use :::3000`
 
 **解決方法**:
+
 ```bash
 # 使用中のポートを確認
 lsof -i :3000
@@ -32,6 +33,7 @@ PORT=3001 npm run dev
 **症状**: `npm ERR! peer dep missing`
 
 **解決方法**:
+
 ```bash
 # node_modulesを削除して再インストール
 rm -rf node_modules package-lock.json
@@ -46,6 +48,7 @@ npm install --legacy-peer-deps
 **症状**: `SyntaxError: Cannot use import statement outside a module`
 
 **解決方法**:
+
 ```bash
 # ES Modulesサポートを有効化
 NODE_OPTIONS='--experimental-vm-modules' npm test
@@ -58,9 +61,11 @@ NODE_OPTIONS='--experimental-vm-modules' npm test
 
 ### Docker権限エラー
 
-**症状**: `permission denied while trying to connect to the Docker daemon socket`
+**症状**:
+`permission denied while trying to connect to the Docker daemon socket`
 
 **解決方法**:
+
 ```bash
 # Dockerグループに追加
 sudo usermod -aG docker $USER
@@ -77,6 +82,7 @@ newgrp docker
 **症状**: `ECONNREFUSED 127.0.0.1:5432`
 
 **解決方法**:
+
 ```bash
 # PostgreSQLが起動しているか確認
 docker ps | grep postgres
@@ -93,6 +99,7 @@ echo $DATABASE_URL
 **症状**: ファイル変更が反映されない
 
 **解決方法**:
+
 ```bash
 # nodemonの設定を確認
 cat nodemon.json
@@ -109,6 +116,7 @@ sudo sysctl -p
 **症状**: `UnauthorizedError: Missing credentials`
 
 **解決方法**:
+
 ```bash
 # AWS認証情報を確認
 aws sts get-caller-identity
@@ -126,6 +134,7 @@ aws iam get-role --role-name lightningtalk-app-role
 **症状**: 更新が反映されない
 
 **解決方法**:
+
 ```bash
 # キャッシュを無効化
 aws cloudfront create-invalidation \
@@ -141,6 +150,7 @@ aws cloudfront create-invalidation \
 **症状**: `ProvisionedThroughputExceededException`
 
 **解決方法**:
+
 ```bash
 # 現在の容量を確認
 aws dynamodb describe-table --table-name Events
@@ -159,6 +169,7 @@ aws application-autoscaling register-scalable-target \
 ### 遅いAPI応答
 
 **診断**:
+
 ```javascript
 // パフォーマンス測定ミドルウェア
 app.use((req, res, next) => {
@@ -172,6 +183,7 @@ app.use((req, res, next) => {
 ```
 
 **最適化**:
+
 1. データベースクエリの最適化
 2. Redis キャッシングの実装
 3. N+1クエリの解消
@@ -180,6 +192,7 @@ app.use((req, res, next) => {
 ### メモリリーク
 
 **診断**:
+
 ```bash
 # Node.jsヒープダンプ
 node --inspect server.js
@@ -191,6 +204,7 @@ clinic doctor -- node server.js
 ```
 
 **対策**:
+
 - イベントリスナーの適切な削除
 - 大きなオブジェクトの参照解放
 - ストリームの適切なクローズ
@@ -198,6 +212,7 @@ clinic doctor -- node server.js
 ### 高CPU使用率
 
 **診断**:
+
 ```bash
 # CPU プロファイリング
 node --prof server.js
@@ -206,6 +221,7 @@ node --prof-process isolate-*.log > profile.txt
 ```
 
 **対策**:
+
 - 重い計算処理のWorker Thread化
 - 非効率なループの最適化
 - 正規表現の最適化
@@ -214,17 +230,21 @@ node --prof-process isolate-*.log > profile.txt
 
 ### CORS エラー
 
-**症状**: `Access to fetch at '...' from origin '...' has been blocked by CORS policy`
+**症状**:
+`Access to fetch at '...' from origin '...' has been blocked by CORS policy`
 
 **解決方法**:
+
 ```javascript
 // CORS設定を確認
-app.use(cors({
-  origin: process.env.CORS_ORIGINS?.split(',') || '*',
-  credentials: true,
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization']
-}));
+app.use(
+  cors({
+    origin: process.env.CORS_ORIGINS?.split(',') || '*',
+    credentials: true,
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization']
+  })
+);
 ```
 
 ### JWT検証エラー
@@ -232,6 +252,7 @@ app.use(cors({
 **症状**: `JsonWebTokenError: invalid signature`
 
 **解決方法**:
+
 1. JWT_SECRETが環境間で一致しているか確認
 2. トークンの有効期限を確認
 3. トークンの形式を確認（Bearer prefix）
@@ -241,6 +262,7 @@ app.use(cors({
 **症状**: `429 Too Many Requests`
 
 **解決方法**:
+
 ```javascript
 // レート制限の設定を調整
 const limiter = rateLimit({
@@ -301,11 +323,13 @@ aws dynamodb query \
 ### サービス停止時
 
 1. **ヘルスチェック確認**
+
    ```bash
    curl http://localhost:3000/api/health
    ```
 
 2. **ログ確認**
+
    ```bash
    tail -f logs/error.log
    ```
@@ -332,6 +356,7 @@ aws dynamodb query \
 3. メール: support@lightningtalk.example.com
 
 必要な情報：
+
 - エラーメッセージ
 - 再現手順
 - 環境情報（OS、Node.jsバージョンなど）

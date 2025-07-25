@@ -3,7 +3,7 @@ info:
   title: Lightning Talk Event Management API
   description: |
     ライトニングトークイベント管理システムのREST API
-    
+
     このAPIは以下の機能を提供します：
     - イベント管理 (作成、編集、削除)
     - 参加者管理 (登録、編集、リスト表示)
@@ -107,7 +107,7 @@ paths:
                     example: true
                   message:
                     type: string
-                    example: "イベントが正常に作成されました"
+                    example: 'イベントが正常に作成されました'
                   data:
                     $ref: '#/components/schemas/Event'
         '400':
@@ -183,7 +183,7 @@ paths:
                     example: true
                   message:
                     type: string
-                    example: "イベントが正常に更新されました"
+                    example: 'イベントが正常に更新されました'
                   data:
                     $ref: '#/components/schemas/Event'
         '400':
@@ -224,7 +224,7 @@ paths:
                     example: true
                   message:
                     type: string
-                    example: "イベントが正常に削除されました"
+                    example: 'イベントが正常に削除されました'
         '401':
           $ref: '#/components/responses/Unauthorized'
         '403':
@@ -260,7 +260,7 @@ paths:
                     example: true
                   message:
                     type: string
-                    example: "参加登録が完了しました"
+                    example: '参加登録が完了しました'
                   data:
                     $ref: '#/components/schemas/Participant'
         '400':
@@ -277,7 +277,7 @@ paths:
                     example: false
                   message:
                     type: string
-                    example: "すでに登録されているメールアドレスです"
+                    example: 'すでに登録されているメールアドレスです'
         '500':
           $ref: '#/components/responses/InternalServerError'
 
@@ -356,7 +356,7 @@ paths:
                     example: true
                   message:
                     type: string
-                    example: "発表が正常に提出されました"
+                    example: '発表が正常に提出されました'
                   data:
                     $ref: '#/components/schemas/Talk'
         '400':
@@ -442,17 +442,17 @@ paths:
               properties:
                 event:
                   type: string
-                  example: "custom_notification"
+                  example: 'custom_notification'
                 message:
                   type: string
-                  example: "カスタム通知メッセージ"
+                  example: 'カスタム通知メッセージ'
                 type:
                   type: string
                   enum: [info, warning, error, success]
                   default: info
                 topic:
                   type: string
-                  example: "general"
+                  example: 'general'
       responses:
         '200':
           description: 送信成功
@@ -466,13 +466,13 @@ paths:
                     example: true
                   message:
                     type: string
-                    example: "通知が正常に送信されました"
+                    example: '通知が正常に送信されました'
                   event:
                     type: string
-                    example: "custom_notification"
+                    example: 'custom_notification'
                   topic:
                     type: string
-                    example: "general"
+                    example: 'general'
         '400':
           $ref: '#/components/responses/BadRequest'
         '401':
@@ -533,7 +533,7 @@ paths:
                     example: true
                   message:
                     type: string
-                    example: "5件のイベントが正常に作成されました"
+                    example: '5件のイベントが正常に作成されました'
                   data:
                     type: object
                     properties:
@@ -615,7 +615,7 @@ paths:
                     example: true
                   message:
                     type: string
-                    example: "並行イベント管理情報を取得しました"
+                    example: '並行イベント管理情報を取得しました'
                   data:
                     type: object
                     properties:
@@ -747,7 +747,7 @@ paths:
                 properties:
                   status:
                     type: string
-                    example: "healthy"
+                    example: 'healthy'
                   timestamp:
                     type: string
                     format: date-time
@@ -755,19 +755,19 @@ paths:
                     type: number
                   version:
                     type: string
-                    example: "1.0.0"
+                    example: '1.0.0'
                   services:
                     type: object
                     properties:
                       database:
                         type: string
-                        example: "connected"
+                        example: 'connected'
                       email:
                         type: string
-                        example: "ready"
+                        example: 'ready'
                       notifications:
                         type: string
-                        example: "active"
+                        example: 'active'
         '503':
           description: サービス不可
           content:
@@ -777,7 +777,7 @@ paths:
                 properties:
                   status:
                     type: string
-                    example: "unhealthy"
+                    example: 'unhealthy'
                   timestamp:
                     type: string
                     format: date-time
@@ -793,30 +793,30 @@ components:
       properties:
         id:
           type: string
-          example: "event-001"
+          example: 'event-001'
         title:
           type: string
-          example: "第1回 なんでもライトニングトーク"
+          example: '第1回 なんでもライトニングトーク'
         description:
           type: string
-          example: "5分間で世界を変える！あなたの「なんでも」を聞かせて！"
+          example: '5分間で世界を変える！あなたの「なんでも」を聞かせて！'
         date:
           type: string
           format: date-time
-          example: "2025-06-25T19:00:00+09:00"
+          example: '2025-06-25T19:00:00+09:00'
         endDate:
           type: string
           format: date-time
-          example: "2025-06-25T22:00:00+09:00"
+          example: '2025-06-25T22:00:00+09:00'
         venue:
           type: object
           properties:
             name:
               type: string
-              example: "新宿某所"
+              example: '新宿某所'
             address:
               type: string
-              example: "詳細は6月20日に確定予定"
+              example: '詳細は6月20日に確定予定'
             capacity:
               type: integer
               example: 50
@@ -825,11 +825,11 @@ components:
               example: true
             onlineUrl:
               type: string
-              example: "https://meet.google.com/ycp-sdec-xsr"
+              example: 'https://meet.google.com/ycp-sdec-xsr'
         status:
           type: string
           enum: [upcoming, ongoing, completed, cancelled]
-          example: "upcoming"
+          example: 'upcoming'
         registrationOpen:
           type: boolean
           example: true
@@ -861,20 +861,20 @@ components:
           type: string
           minLength: 1
           maxLength: 200
-          example: "テストイベント"
+          example: 'テストイベント'
         description:
           type: string
           minLength: 1
           maxLength: 1000
-          example: "テスト用のイベントです"
+          example: 'テスト用のイベントです'
         date:
           type: string
           format: date-time
-          example: "2025-12-01T19:00:00Z"
+          example: '2025-12-01T19:00:00Z'
         endDate:
           type: string
           format: date-time
-          example: "2025-12-01T22:00:00Z"
+          example: '2025-12-01T22:00:00Z'
         venue:
           type: object
           required:
@@ -882,10 +882,10 @@ components:
           properties:
             name:
               type: string
-              example: "テスト会場"
+              example: 'テスト会場'
             address:
               type: string
-              example: "東京都新宿区"
+              example: '東京都新宿区'
             capacity:
               type: integer
               minimum: 1
@@ -895,7 +895,7 @@ components:
               default: false
             onlineUrl:
               type: string
-              example: "https://meet.google.com/test"
+              example: 'https://meet.google.com/test'
         status:
           type: string
           enum: [upcoming, ongoing, completed, cancelled]
@@ -953,31 +953,31 @@ components:
       properties:
         id:
           type: string
-          example: "participant-001"
+          example: 'participant-001'
         name:
           type: string
-          example: "テスト太郎"
+          example: 'テスト太郎'
         email:
           type: string
           format: email
-          example: "test@example.com"
+          example: 'test@example.com'
         eventId:
           type: string
-          example: "event-001"
+          example: 'event-001'
         participationType:
           type: string
           enum: [online, offline]
-          example: "online"
+          example: 'online'
         organization:
           type: string
-          example: "テスト会社"
+          example: 'テスト会社'
         location:
           type: string
-          example: "東京都"
+          example: '東京都'
         experienceLevel:
           type: string
           enum: [beginner, intermediate, advanced]
-          example: "intermediate"
+          example: 'intermediate'
         registeredAt:
           type: string
           format: date-time
@@ -994,73 +994,73 @@ components:
           type: string
           minLength: 1
           maxLength: 100
-          example: "テスト太郎"
+          example: 'テスト太郎'
         email:
           type: string
           format: email
-          example: "test@example.com"
+          example: 'test@example.com'
         eventId:
           type: string
-          example: "event-001"
+          example: 'event-001'
         participationType:
           type: string
           enum: [online, offline]
-          example: "online"
+          example: 'online'
         organization:
           type: string
           maxLength: 200
-          example: "テスト会社"
+          example: 'テスト会社'
         location:
           type: string
           maxLength: 100
-          example: "東京都"
+          example: '東京都'
         experienceLevel:
           type: string
           enum: [beginner, intermediate, advanced]
-          example: "intermediate"
+          example: 'intermediate'
         emergencyContact:
           type: string
-          example: "090-1234-5678"
+          example: '090-1234-5678'
         dietaryRestrictions:
           type: string
-          example: "ベジタリアン"
+          example: 'ベジタリアン'
 
     Talk:
       type: object
       properties:
         id:
           type: string
-          example: "talk-001"
+          example: 'talk-001'
         title:
           type: string
-          example: "JavaScriptの新機能紹介"
+          example: 'JavaScriptの新機能紹介'
         description:
           type: string
-          example: "ES2025の新機能を簡単に紹介します"
+          example: 'ES2025の新機能を簡単に紹介します'
         speakerName:
           type: string
-          example: "発表太郎"
+          example: '発表太郎'
         speakerEmail:
           type: string
           format: email
-          example: "speaker@example.com"
+          example: 'speaker@example.com'
         eventId:
           type: string
-          example: "event-001"
+          example: 'event-001'
         category:
           type: string
-          example: "技術"
+          example: '技術'
         duration:
           type: integer
           example: 5
         status:
           type: string
           enum: [pending, confirmed, rejected]
-          example: "pending"
+          example: 'pending'
         experienceLevel:
           type: string
           enum: [first_time, experienced]
-          example: "experienced"
+          example: 'experienced'
         submittedAt:
           type: string
           format: date-time
@@ -1078,28 +1078,28 @@ components:
           type: string
           minLength: 1
           maxLength: 200
-          example: "JavaScriptの新機能紹介"
+          example: 'JavaScriptの新機能紹介'
         description:
           type: string
           minLength: 1
           maxLength: 1000
-          example: "ES2025の新機能を簡単に紹介します"
+          example: 'ES2025の新機能を簡単に紹介します'
         speakerName:
           type: string
           minLength: 1
           maxLength: 100
-          example: "発表太郎"
+          example: '発表太郎'
         speakerEmail:
           type: string
           format: email
-          example: "speaker@example.com"
+          example: 'speaker@example.com'
         eventId:
           type: string
-          example: "event-001"
+          example: 'event-001'
         category:
           type: string
           maxLength: 50
-          example: "技術"
+          example: '技術'
         duration:
           type: integer
           minimum: 1
@@ -1112,7 +1112,7 @@ components:
         requirements:
           type: string
           maxLength: 500
-          example: "プロジェクターとスクリーン"
+          example: 'プロジェクターとスクリーン'
 
     EventStatistics:
       type: object
@@ -1271,10 +1271,10 @@ components:
           example: false
         message:
           type: string
-          example: "エラーが発生しました"
+          example: 'エラーが発生しました'
         error:
           type: string
-          example: "詳細エラー情報"
+          example: '詳細エラー情報'
         timestamp:
           type: string
           format: date-time
@@ -1287,7 +1287,7 @@ components:
           example: false
         message:
           type: string
-          example: "バリデーションエラー"
+          example: 'バリデーションエラー'
         errors:
           type: array
           items:
@@ -1295,13 +1295,13 @@ components:
             properties:
               field:
                 type: string
-                example: "email"
+                example: 'email'
               message:
                 type: string
-                example: "有効なメールアドレスを入力してください"
+                example: '有効なメールアドレスを入力してください'
               value:
                 type: string
-                example: "invalid-email"
+                example: 'invalid-email'
 
   responses:
     BadRequest:
@@ -1323,7 +1323,7 @@ components:
                 example: false
               message:
                 type: string
-                example: "認証が必要です"
+                example: '認証が必要です'
 
     Forbidden:
       description: アクセスが禁止されています
@@ -1337,7 +1337,7 @@ components:
                 example: false
               message:
                 type: string
-                example: "この操作を実行する権限がありません"
+                example: 'この操作を実行する権限がありません'
 
     NotFound:
       description: リソースが見つかりません
@@ -1351,7 +1351,7 @@ components:
                 example: false
               message:
                 type: string
-                example: "指定されたリソースが見つかりません"
+                example: '指定されたリソースが見つかりません'
 
     InternalServerError:
       description: サーバー内部エラー

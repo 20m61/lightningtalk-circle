@@ -15,7 +15,8 @@
 
 ## システム概要
 
-Lightning Talk Circleは、ライトニングトークイベントの管理を包括的にサポートするWebアプリケーションです。
+Lightning Talk
+Circleは、ライトニングトークイベントの管理を包括的にサポートするWebアプリケーションです。
 
 ### 主要コンポーネント
 
@@ -25,30 +26,30 @@ graph TB
         WEB[Web Browser]
         MOBILE[Mobile Browser]
     end
-    
+
     subgraph "CDN Layer"
         CF[CloudFront]
         S3[S3 Static Assets]
     end
-    
+
     subgraph "Application Layer"
         ALB[Application Load Balancer]
         ECS[ECS Fargate]
         LAMBDA[Lambda Functions]
     end
-    
+
     subgraph "Data Layer"
         DYNAMO[DynamoDB]
         S3_DATA[S3 Data Storage]
         REDIS[Redis Cache]
     end
-    
+
     subgraph "External Services"
         COGNITO[AWS Cognito]
         SES[AWS SES]
         GITHUB[GitHub API]
     end
-    
+
     WEB --> CF
     MOBILE --> CF
     CF --> S3
@@ -67,16 +68,19 @@ graph TB
 ### マルチティアアーキテクチャ
 
 #### 1. プレゼンテーション層
+
 - **静的アセット**: CloudFront + S3
 - **動的コンテンツ**: Server-Side Rendering (SSR)
 - **リアルタイム通信**: WebSocket (Socket.io)
 
 #### 2. アプリケーション層
+
 - **API サーバー**: Node.js + Express.js
 - **認証**: AWS Cognito + JWT
 - **バックグラウンド処理**: AWS Lambda
 
 #### 3. データ層
+
 - **プライマリDB**: DynamoDB
 - **キャッシュ**: Redis
 - **ファイルストレージ**: S3
@@ -92,41 +96,42 @@ graph TB
 
 ### フロントエンド
 
-| 技術 | バージョン | 用途 |
-|------|-----------|------|
-| HTML5 | - | マークアップ |
-| CSS3 | - | スタイリング |
-| JavaScript | ES6+ | インタラクティブ機能 |
-| Socket.io | 4.x | リアルタイム通信 |
-| Google Maps API | v3 | 地図表示 |
-| DOMPurify | 3.x | XSS対策 |
+| 技術            | バージョン | 用途                 |
+| --------------- | ---------- | -------------------- |
+| HTML5           | -          | マークアップ         |
+| CSS3            | -          | スタイリング         |
+| JavaScript      | ES6+       | インタラクティブ機能 |
+| Socket.io       | 4.x        | リアルタイム通信     |
+| Google Maps API | v3         | 地図表示             |
+| DOMPurify       | 3.x        | XSS対策              |
 
 ### バックエンド
 
-| 技術 | バージョン | 用途 |
-|------|-----------|------|
-| Node.js | 18.x LTS | ランタイム |
-| Express.js | 4.x | Webフレームワーク |
-| AWS SDK | 3.x | AWSサービス連携 |
-| jsonwebtoken | 9.x | JWT処理 |
-| bcrypt | 5.x | パスワードハッシュ |
-| express-validator | 7.x | 入力検証 |
-| helmet | 7.x | セキュリティヘッダー |
+| 技術              | バージョン | 用途                 |
+| ----------------- | ---------- | -------------------- |
+| Node.js           | 18.x LTS   | ランタイム           |
+| Express.js        | 4.x        | Webフレームワーク    |
+| AWS SDK           | 3.x        | AWSサービス連携      |
+| jsonwebtoken      | 9.x        | JWT処理              |
+| bcrypt            | 5.x        | パスワードハッシュ   |
+| express-validator | 7.x        | 入力検証             |
+| helmet            | 7.x        | セキュリティヘッダー |
 
 ### インフラストラクチャ
 
-| 技術 | 用途 |
-|------|------|
-| AWS CDK | Infrastructure as Code |
-| Docker | コンテナ化 |
-| GitHub Actions | CI/CD |
-| CloudWatch | 監視・ロギング |
+| 技術           | 用途                   |
+| -------------- | ---------------------- |
+| AWS CDK        | Infrastructure as Code |
+| Docker         | コンテナ化             |
+| GitHub Actions | CI/CD                  |
+| CloudWatch     | 監視・ロギング         |
 
 ## データモデル
 
 ### DynamoDB テーブル設計
 
 #### Events テーブル
+
 ```json
 {
   "TableName": "Events",
@@ -155,6 +160,7 @@ graph TB
 ```
 
 #### Participants テーブル
+
 ```json
 {
   "TableName": "Participants",
@@ -180,6 +186,7 @@ graph TB
 ```
 
 #### Talks テーブル
+
 ```json
 {
   "TableName": "Talks",
@@ -264,6 +271,7 @@ graph TB
 ### レスポンス形式
 
 #### 成功レスポンス
+
 ```json
 {
   "success": true,
@@ -278,6 +286,7 @@ graph TB
 ```
 
 #### エラーレスポンス
+
 ```json
 {
   "success": false,
@@ -297,6 +306,7 @@ graph TB
 ### 認証・認可
 
 #### AWS Cognito統合
+
 ```javascript
 // Cognito設定
 const cognitoConfig = {
@@ -308,7 +318,7 @@ const cognitoConfig = {
 // JWT検証ミドルウェア
 const verifyToken = async (req, res, next) => {
   const token = req.headers.authorization?.split(' ')[1];
-  
+
   try {
     const decoded = await cognitoVerifier.verify(token);
     req.user = decoded;
@@ -323,22 +333,24 @@ const verifyToken = async (req, res, next) => {
 
 ```javascript
 // Helmet.js設定
-app.use(helmet({
-  contentSecurityPolicy: {
-    directives: {
-      defaultSrc: ["'self'"],
-      styleSrc: ["'self'", "'unsafe-inline'"],
-      scriptSrc: ["'self'", "https://maps.googleapis.com"],
-      imgSrc: ["'self'", "data:", "https:"],
-      connectSrc: ["'self'", "wss:", "https:"]
+app.use(
+  helmet({
+    contentSecurityPolicy: {
+      directives: {
+        defaultSrc: ["'self'"],
+        styleSrc: ["'self'", "'unsafe-inline'"],
+        scriptSrc: ["'self'", 'https://maps.googleapis.com'],
+        imgSrc: ["'self'", 'data:', 'https:'],
+        connectSrc: ["'self'", 'wss:', 'https:']
+      }
+    },
+    hsts: {
+      maxAge: 31536000,
+      includeSubDomains: true,
+      preload: true
     }
-  },
-  hsts: {
-    maxAge: 31536000,
-    includeSubDomains: true,
-    preload: true
-  }
-}));
+  })
+);
 ```
 
 ### 入力検証
@@ -378,45 +390,48 @@ const registrationLimiter = rateLimit({
 ### 最適化戦略
 
 #### 1. キャッシング
+
 ```javascript
 // Redis キャッシング
 const cacheMiddleware = (duration = 300) => {
   return async (req, res, next) => {
     const key = `cache:${req.originalUrl}`;
     const cached = await redis.get(key);
-    
+
     if (cached) {
       return res.json(JSON.parse(cached));
     }
-    
+
     res.sendResponse = res.json;
-    res.json = (body) => {
+    res.json = body => {
       redis.setex(key, duration, JSON.stringify(body));
       res.sendResponse(body);
     };
-    
+
     next();
   };
 };
 ```
 
 #### 2. データベース最適化
+
 - 適切なインデックス設計
 - バッチ処理の活用
 - 並列クエリの実行
 
 #### 3. アセット最適化
+
 - 画像の遅延読み込み
 - CSS/JSの圧縮・結合
 - CDN配信
 
 ### パフォーマンス目標
 
-| メトリクス | 目標値 |
-|-----------|--------|
-| ページロード時間 | < 3秒 |
-| API レスポンス時間 | < 200ms |
-| Time to First Byte | < 600ms |
+| メトリクス             | 目標値  |
+| ---------------------- | ------- |
+| ページロード時間       | < 3秒   |
+| API レスポンス時間     | < 200ms |
+| Time to First Byte     | < 600ms |
 | First Contentful Paint | < 1.8秒 |
 
 ## スケーラビリティ
@@ -424,6 +439,7 @@ const cacheMiddleware = (duration = 300) => {
 ### 水平スケーリング
 
 #### ECS オートスケーリング
+
 ```yaml
 AutoScalingTarget:
   MinCapacity: 2
@@ -433,6 +449,7 @@ AutoScalingTarget:
 ```
 
 #### DynamoDB オートスケーリング
+
 ```yaml
 ReadCapacity:
   Min: 5
@@ -455,24 +472,26 @@ WriteCapacity:
 ### CloudWatch統合
 
 #### カスタムメトリクス
+
 ```javascript
 // メトリクス送信
-await cloudWatch.putMetricData({
-  Namespace: 'LightningTalkCircle',
-  MetricData: [
-    {
-      MetricName: 'EventRegistrations',
-      Value: 1,
-      Unit: 'Count',
-      Dimensions: [
-        { Name: 'EventId', Value: eventId }
-      ]
-    }
-  ]
-}).promise();
+await cloudWatch
+  .putMetricData({
+    Namespace: 'LightningTalkCircle',
+    MetricData: [
+      {
+        MetricName: 'EventRegistrations',
+        Value: 1,
+        Unit: 'Count',
+        Dimensions: [{ Name: 'EventId', Value: eventId }]
+      }
+    ]
+  })
+  .promise();
 ```
 
 #### アラーム設定
+
 - CPU使用率 > 80%
 - メモリ使用率 > 85%
 - エラーレート > 1%
@@ -555,4 +574,5 @@ aws ecs update-service \
 
 ## まとめ
 
-この技術仕様書は、Lightning Talk Circleシステムの技術的な詳細を包括的に記述しています。継続的な更新と改善により、システムの信頼性、パフォーマンス、セキュリティを維持・向上させていきます。
+この技術仕様書は、Lightning Talk
+Circleシステムの技術的な詳細を包括的に記述しています。継続的な更新と改善により、システムの信頼性、パフォーマンス、セキュリティを維持・向上させていきます。

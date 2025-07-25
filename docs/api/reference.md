@@ -4,7 +4,9 @@
 
 ## 概要
 
-Lightning Talk Circle APIは、ライトニングトークイベントの管理に必要なすべての機能を提供するRESTful APIです。
+Lightning Talk Circle
+APIは、ライトニングトークイベントの管理に必要なすべての機能を提供するRESTful
+APIです。
 
 ### ベースURL
 
@@ -31,9 +33,11 @@ Authorization: Bearer <your-jwt-token>
 ### 認証 (Authentication)
 
 #### POST /api/auth/register
+
 新規ユーザー登録
 
 **リクエストボディ:**
+
 ```json
 {
   "email": "user@example.com",
@@ -43,6 +47,7 @@ Authorization: Bearer <your-jwt-token>
 ```
 
 **レスポンス:**
+
 ```json
 {
   "token": "jwt-token",
@@ -55,9 +60,11 @@ Authorization: Bearer <your-jwt-token>
 ```
 
 #### POST /api/auth/login
+
 ユーザーログイン
 
 **リクエストボディ:**
+
 ```json
 {
   "email": "user@example.com",
@@ -66,9 +73,11 @@ Authorization: Bearer <your-jwt-token>
 ```
 
 #### POST /api/auth/google
+
 Google OAuth認証
 
 **リクエストボディ:**
+
 ```json
 {
   "idToken": "google-id-token"
@@ -78,14 +87,17 @@ Google OAuth認証
 ### イベント管理 (Events)
 
 #### GET /api/events
+
 イベント一覧取得
 
 **クエリパラメータ:**
+
 - `status`: active | past | upcoming
 - `limit`: 取得件数 (デフォルト: 10)
 - `offset`: オフセット (デフォルト: 0)
 
 **レスポンス:**
+
 ```json
 {
   "events": [
@@ -107,11 +119,13 @@ Google OAuth認証
 ```
 
 #### POST /api/events
+
 新規イベント作成（管理者のみ）
 
 **認証:** 必須（管理者権限）
 
 **リクエストボディ:**
+
 ```json
 {
   "title": "Lightning Talk #2",
@@ -124,9 +138,11 @@ Google OAuth認証
 ```
 
 #### GET /api/events/:id
+
 イベント詳細取得
 
 **レスポンス:**
+
 ```json
 {
   "id": "event-id",
@@ -156,11 +172,13 @@ Google OAuth認証
 ### 参加者管理 (Participants)
 
 #### POST /api/events/:eventId/participants
+
 イベント参加登録
 
 **認証:** 必須
 
 **リクエストボディ:**
+
 ```json
 {
   "attendanceType": "in-person" | "online",
@@ -173,6 +191,7 @@ Google OAuth認証
 ```
 
 #### GET /api/events/:eventId/participants
+
 参加者一覧取得（管理者のみ）
 
 **認証:** 必須（管理者権限）
@@ -180,11 +199,13 @@ Google OAuth認証
 ### トーク管理 (Talks)
 
 #### POST /api/events/:eventId/talks
+
 トーク申し込み
 
 **認証:** 必須
 
 **リクエストボディ:**
+
 ```json
 {
   "title": "5分で分かるTypeScript",
@@ -195,19 +216,23 @@ Google OAuth認証
 ```
 
 #### GET /api/talks/:id
+
 トーク詳細取得
 
 #### PUT /api/talks/:id
+
 トーク情報更新（発表者本人または管理者）
 
 ### 管理機能 (Admin)
 
 #### GET /api/admin/dashboard
+
 管理ダッシュボード情報取得
 
 **認証:** 必須（管理者権限）
 
 **レスポンス:**
+
 ```json
 {
   "stats": {
@@ -230,9 +255,11 @@ Google OAuth認証
 ### モニタリング (Monitoring)
 
 #### GET /api/monitoring/health
+
 ヘルスチェック
 
 **レスポンス:**
+
 ```json
 {
   "status": "healthy",
@@ -247,6 +274,7 @@ Google OAuth認証
 ```
 
 #### GET /api/monitoring/metrics
+
 メトリクス取得
 
 **認証:** 必須（管理者権限）
@@ -269,14 +297,14 @@ Google OAuth認証
 
 ### 一般的なエラーコード
 
-| コード | HTTPステータス | 説明 |
-|--------|---------------|------|
-| UNAUTHORIZED | 401 | 認証が必要です |
-| FORBIDDEN | 403 | アクセス権限がありません |
-| NOT_FOUND | 404 | リソースが見つかりません |
-| VALIDATION_ERROR | 400 | 入力検証エラー |
-| RATE_LIMIT_EXCEEDED | 429 | レート制限を超過しました |
-| INTERNAL_ERROR | 500 | サーバー内部エラー |
+| コード              | HTTPステータス | 説明                     |
+| ------------------- | -------------- | ------------------------ |
+| UNAUTHORIZED        | 401            | 認証が必要です           |
+| FORBIDDEN           | 403            | アクセス権限がありません |
+| NOT_FOUND           | 404            | リソースが見つかりません |
+| VALIDATION_ERROR    | 400            | 入力検証エラー           |
+| RATE_LIMIT_EXCEEDED | 429            | レート制限を超過しました |
+| INTERNAL_ERROR      | 500            | サーバー内部エラー       |
 
 ## SDKとツール
 
@@ -340,6 +368,7 @@ curl https://api.lightningtalk.example.com/api/events \
 ## 変更履歴
 
 ### v1.0.0 (2025-07-25)
+
 - 初回リリース
 - 基本的なイベント管理機能
 - Google OAuth認証対応

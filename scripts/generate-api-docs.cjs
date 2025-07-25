@@ -8,23 +8,23 @@ const execPromise = util.promisify(exec);
 
 // Simple color functions
 const colors = {
-  blue: (text) => `\x1b[34m${text}\x1b[0m`,
-  green: (text) => `\x1b[32m${text}\x1b[0m`,
-  yellow: (text) => `\x1b[33m${text}\x1b[0m`,
-  red: (text) => `\x1b[31m${text}\x1b[0m`,
-  gray: (text) => `\x1b[90m${text}\x1b[0m`,
-  bold: (text) => `\x1b[1m${text}\x1b[0m`
+  blue: text => `\x1b[34m${text}\x1b[0m`,
+  green: text => `\x1b[32m${text}\x1b[0m`,
+  yellow: text => `\x1b[33m${text}\x1b[0m`,
+  red: text => `\x1b[31m${text}\x1b[0m`,
+  gray: text => `\x1b[90m${text}\x1b[0m`,
+  bold: text => `\x1b[1m${text}\x1b[0m`
 };
 
 async function generateApiDocs() {
   console.log(colors.bold('📚 API Documentation Generator'));
-  console.log(colors.gray('=' .repeat(60)));
+  console.log(colors.gray('='.repeat(60)));
 
   try {
     // APIエンドポイントの情報を収集
     const routesDir = path.join(__dirname, '../server/routes');
     const routeFiles = fs.readdirSync(routesDir).filter(f => f.endsWith('.js'));
-    
+
     console.log(colors.blue(`\n🔍 ${routeFiles.length}個のAPIルートファイルを発見`));
 
     // APIドキュメントのテンプレート
@@ -384,12 +384,12 @@ curl https://api.lightningtalk.example.com/api/events \\
     // ファイルを保存
     const outputPath = path.join(__dirname, '../docs/api/reference.md');
     fs.writeFileSync(outputPath, apiDoc);
-    
+
     console.log(colors.green(`✅ APIドキュメントを生成しました: ${outputPath}`));
-    
+
     // OpenAPI仕様も生成
     console.log(colors.blue('\n🔧 OpenAPI仕様を生成中...'));
-    
+
     try {
       // サーバーが起動している場合は実際のスペックを取得
       const { stdout } = await execPromise('curl -s http://localhost:3000/api/docs/openapi.json');
@@ -397,9 +397,10 @@ curl https://api.lightningtalk.example.com/api/events \\
       fs.writeFileSync(openApiPath, stdout);
       console.log(colors.green(`✅ OpenAPI仕様を保存しました: ${openApiPath}`));
     } catch (error) {
-      console.log(colors.yellow('⚠️  サーバーが起動していないため、OpenAPI仕様の取得をスキップしました'));
+      console.log(
+        colors.yellow('⚠️  サーバーが起動していないため、OpenAPI仕様の取得をスキップしました')
+      );
     }
-    
   } catch (error) {
     console.error(colors.red(`❌ エラー: ${error.message}`));
     process.exit(1);

@@ -52,7 +52,7 @@ function showLoginModal() {
 // ログイン状態に応じてUIを変更
 function updateUIForAuth() {
   const isAuthenticated = !!localStorage.getItem('id_token');
-  
+
   if (isAuthenticated) {
     // ログイン済み: 参加登録ボタンを表示
     document.querySelector('.register-btn').style.display = 'block';
@@ -75,9 +75,7 @@ function updateUIForAuth() {
       <!-- 既存のナビゲーション -->
     </nav>
     <div class="auth-section">
-      <button id="authButton" class="auth-button">
-        ログイン / 登録
-      </button>
+      <button id="authButton" class="auth-button">ログイン / 登録</button>
     </div>
   </div>
 </header>
@@ -96,7 +94,7 @@ class AuthStateManager {
   checkAuthState() {
     const token = localStorage.getItem('id_token');
     const user = localStorage.getItem('currentUser');
-    
+
     if (token && user) {
       this.showAuthenticatedState(JSON.parse(user));
     } else {
@@ -134,7 +132,7 @@ async function handleRegistration(eventId) {
     window.location.href = '/user-login.html';
     return;
   }
-  
+
   // 認証済みの場合は登録処理を続行
   const user = JSON.parse(localStorage.getItem('currentUser'));
   const registrationData = {
@@ -143,7 +141,7 @@ async function handleRegistration(eventId) {
     email: user.email,
     name: user.name
   };
-  
+
   // API呼び出し
   await submitRegistration(registrationData);
 }
@@ -167,16 +165,19 @@ async function handleRegistration(eventId) {
 ## 移行計画
 
 ### フェーズ1: 基本実装（現在）
+
 - [x] 管理者ログイン分離
 - [x] ユーザーログインページ作成
 - [ ] メインページへの統合
 
 ### フェーズ2: 機能拡張
+
 - [ ] ユーザープロフィール機能
 - [ ] 参加履歴表示
 - [ ] トーク申し込み管理
 
 ### フェーズ3: 最適化
+
 - [ ] SSO（シングルサインオン）
 - [ ] モバイルアプリ対応
 - [ ] 多要素認証（MFA）

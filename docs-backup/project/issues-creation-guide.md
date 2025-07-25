@@ -1,6 +1,7 @@
 # Creating GitHub Issues
 
-This document provides instructions for creating GitHub issues for the Lightning Talk Circle project using the prepared data and scripts.
+This document provides instructions for creating GitHub issues for the Lightning
+Talk Circle project using the prepared data and scripts.
 
 ## Prerequisites
 
@@ -22,11 +23,13 @@ npm install @octokit/rest dotenv
 GITHUB_TOKEN=your_personal_access_token
 ```
 
-Replace `your_personal_access_token` with a valid GitHub token that has permissions to create issues in the repository.
+Replace `your_personal_access_token` with a valid GitHub token that has
+permissions to create issues in the repository.
 
 ## Issue Data Structure
 
-All issues to be created are defined in the `/docs/project/issues-data.json` file. The issues are organized into four categories:
+All issues to be created are defined in the `/docs/project/issues-data.json`
+file. The issues are organized into four categories:
 
 - Infrastructure/Foundation Issues (P0)
 - Core Feature Issues (P1)
@@ -65,9 +68,11 @@ After running the script, verify that:
 
 ## Label Setup
 
-Before running the script, ensure that all required labels exist in the repository. The script does not create missing labels.
+Before running the script, ensure that all required labels exist in the
+repository. The script does not create missing labels.
 
-Required labels are defined in the [Issue Labels](/docs/project/issue-labels.md) document.
+Required labels are defined in the [Issue Labels](/docs/project/issue-labels.md)
+document.
 
 ## Manual Creation Alternative
 
@@ -89,4 +94,6 @@ If issues occur during creation:
 - Ensure you have stable internet connectivity
 - Check the console output for specific error messages
 
-For any problems, refer to the [GitHub REST API documentation](https://docs.github.com/en/rest/reference/issues) for additional troubleshooting.
+For any problems, refer to the
+[GitHub REST API documentation](https://docs.github.com/en/rest/reference/issues)
+for additional troubleshooting.

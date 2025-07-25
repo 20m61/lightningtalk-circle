@@ -1,6 +1,8 @@
 # Issue Implementation Steps
 
-This document provides the final concrete steps to implement the planned issues in GitHub. This is the culmination of all the planning, documentation, and tools we've created.
+This document provides the final concrete steps to implement the planned issues
+in GitHub. This is the culmination of all the planning, documentation, and tools
+we've created.
 
 ## Prerequisites
 
@@ -13,7 +15,8 @@ This document provides the final concrete steps to implement the planned issues 
 If you don't already have a GitHub token with appropriate permissions:
 
 1. Log in to your GitHub account
-2. Go to Settings > Developer settings > Personal access tokens > Tokens (classic)
+2. Go to Settings > Developer settings > Personal access tokens > Tokens
+   (classic)
 3. Click "Generate new token" (classic)
 4. Give your token a descriptive name
 5. Select the `repo` scope
@@ -23,12 +26,14 @@ If you don't already have a GitHub token with appropriate permissions:
 ## Step 2: Set Up the Environment
 
 1. Clone the repository (if not already done):
+
    ```bash
    git clone https://github.com/20m61/lightningtalk-circle.git
    cd lightningtalk-circle
    ```
 
 2. Install the required dependencies:
+
    ```bash
    npm install @octokit/rest dotenv
    ```
@@ -40,7 +45,8 @@ If you don't already have a GitHub token with appropriate permissions:
 
 ## Step 3: Set Up GitHub Labels
 
-Before creating issues, establish the standardized label system using either method:
+Before creating issues, establish the standardized label system using either
+method:
 
 ### Option A: Using GitHub Actions (Recommended)
 
@@ -75,6 +81,7 @@ curl -X POST -H "Authorization: token YOUR_TOKEN" \
 6. Click "Run workflow"
 
 The workflow will:
+
 - Run the issue creation script automatically
 - Create all issues defined in the data file
 - Apply appropriate labels to each issue
@@ -89,6 +96,7 @@ node scripts/create-issues.js
 ```
 
 The script will:
+
 - Check for existing issues in the repository
 - Prompt for confirmation before creating new issues
 - Create all issues defined in the data file
@@ -100,7 +108,7 @@ If you prefer to create issues manually:
 
 1. **Create infrastructure/foundation issues**:
    - Go to the repository's "Issues" tab
-   - Click "New issue" 
+   - Click "New issue"
    - Select the appropriate template
    - Copy content from the `issues-data.json` file
    - Apply appropriate labels
@@ -108,13 +116,14 @@ If you prefer to create issues manually:
    - Repeat for all infrastructure issues
 
 2. **Create core feature issues**:
-   - Follow the same process, using content from the "core_feature_issues" section
-   
+   - Follow the same process, using content from the "core_feature_issues"
+     section
 3. **Create enhancement and optimization issues**:
-   - Follow the same process, using content from the "enhancement_optimization_issues" section
-   
+   - Follow the same process, using content from the
+     "enhancement_optimization_issues" section
 4. **Create compliance and maintenance issues**:
-   - Follow the same process, using content from the "compliance_maintenance_issues" section
+   - Follow the same process, using content from the
+     "compliance_maintenance_issues" section
 
 ## Step 5: Verify Issue Creation
 
@@ -127,7 +136,9 @@ After creating all issues:
    - Complete acceptance criteria
    - Well-formatted content
 
-3. Use the [Issue Verification Checklist](/docs/project/issue-verification-checklist.md) to validate consistency
+3. Use the
+   [Issue Verification Checklist](/docs/project/issue-verification-checklist.md)
+   to validate consistency
 
 ## Step 6: Organize Project Board (Optional)
 
@@ -147,4 +158,5 @@ To better visualize and manage the issues:
 5. ✅ Verify issue quality and consistency
 6. ✅ Organize issues in project board (optional)
 
-By following these concrete implementation steps, you will complete the issue creation process for the Lightning Talk Circle project.
+By following these concrete implementation steps, you will complete the issue
+creation process for the Lightning Talk Circle project.

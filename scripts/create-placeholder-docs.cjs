@@ -5,11 +5,11 @@ const path = require('path');
 
 // Simple color functions
 const colors = {
-  blue: (text) => `\x1b[34m${text}\x1b[0m`,
-  green: (text) => `\x1b[32m${text}\x1b[0m`,
-  yellow: (text) => `\x1b[33m${text}\x1b[0m`,
-  gray: (text) => `\x1b[90m${text}\x1b[0m`,
-  bold: (text) => `\x1b[1m${text}\x1b[0m`
+  blue: text => `\x1b[34m${text}\x1b[0m`,
+  green: text => `\x1b[32m${text}\x1b[0m`,
+  yellow: text => `\x1b[33m${text}\x1b[0m`,
+  gray: text => `\x1b[90m${text}\x1b[0m`,
+  bold: text => `\x1b[1m${text}\x1b[0m`
 };
 
 class PlaceholderCreator {
@@ -17,7 +17,7 @@ class PlaceholderCreator {
     this.projectRoot = path.resolve(__dirname, '..');
     this.docsDir = path.join(this.projectRoot, 'docs');
     this.createdCount = 0;
-    
+
     console.log(colors.bold('📝 Lightning Talk Circle - プレースホルダードキュメント作成ツール'));
     console.log(colors.gray(`プロジェクトルート: ${this.projectRoot}`));
     console.log('');
@@ -197,7 +197,11 @@ ${description}
       '環境設定の概要とクイックスタートガイドです。'
     );
 
-    console.log(colors.bold(`\n📊 作成結果: ${colors.green(this.createdCount + '個')}のプレースホルダーファイルを作成しました`));
+    console.log(
+      colors.bold(
+        `\n📊 作成結果: ${colors.green(this.createdCount + '個')}のプレースホルダーファイルを作成しました`
+      )
+    );
     console.log(colors.blue('\n💡 次のステップ:'));
     console.log('1. npm run docs:check-links で再検証');
     console.log('2. 必要に応じて実際のコンテンツを追加');

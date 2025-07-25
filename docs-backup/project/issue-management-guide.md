@@ -1,34 +1,43 @@
 # Issue Management and Creation Guide
 
-This document provides a comprehensive overview of the issue management system for the Lightning Talk Circle project. It serves as the starting point for understanding how to create, manage, and track issues throughout the project lifecycle.
+This document provides a comprehensive overview of the issue management system
+for the Lightning Talk Circle project. It serves as the starting point for
+understanding how to create, manage, and track issues throughout the project
+lifecycle.
 
 ## 📚 Documentation Structure
 
 The issue management system is documented in the following files:
 
-| Document | Purpose |
-|----------|---------|
-| [Issue Creation Plan](./issue-creation-plan.md) | Outlines the issues to be created, organized by category and priority |
-| [Issue Examples](/docs/project/issue-examples.md) | Provides examples of well-formatted issues of various types |
-| [Initial Issues](/docs/project/initial-issues.md) | Contains the content for the first set of GitHub issues to be created |
-| [Issue Management Workflow](/docs/project/issue-management-workflow.md) | Describes the workflow for managing issues throughout their lifecycle |
-| [Issue Labels](/docs/project/issue-labels.md) | Defines the standard labels to be used for GitHub issues |
-| [Issue Verification Checklist](/docs/project/issue-verification-checklist.md) | Provides a checklist to ensure issues maintain consistent formatting |
-| [Issue Implementation Guide](/docs/project/issue-implementation-guide.md) | Provides step-by-step instructions for creating the planned issues |
-| [Issue Execution Guide](/docs/project/issue-execution-guide.md) | A concise execution checklist to implement the issue creation process |
-| [Issue Implementation Steps](/docs/project/issue-implementation-steps.md) | Provides concrete steps for executing the issue creation |
-| [Issue Creation Checklist](/docs/project/issue-creation-checklist.md) | A final verification checklist to ensure all issues are created properly |
+| Document                                                                      | Purpose                                                                  |
+| ----------------------------------------------------------------------------- | ------------------------------------------------------------------------ |
+| [Issue Creation Plan](./issue-creation-plan.md)                               | Outlines the issues to be created, organized by category and priority    |
+| [Issue Examples](/docs/project/issue-examples.md)                             | Provides examples of well-formatted issues of various types              |
+| [Initial Issues](/docs/project/initial-issues.md)                             | Contains the content for the first set of GitHub issues to be created    |
+| [Issue Management Workflow](/docs/project/issue-management-workflow.md)       | Describes the workflow for managing issues throughout their lifecycle    |
+| [Issue Labels](/docs/project/issue-labels.md)                                 | Defines the standard labels to be used for GitHub issues                 |
+| [Issue Verification Checklist](/docs/project/issue-verification-checklist.md) | Provides a checklist to ensure issues maintain consistent formatting     |
+| [Issue Implementation Guide](/docs/project/issue-implementation-guide.md)     | Provides step-by-step instructions for creating the planned issues       |
+| [Issue Execution Guide](/docs/project/issue-execution-guide.md)               | A concise execution checklist to implement the issue creation process    |
+| [Issue Implementation Steps](/docs/project/issue-implementation-steps.md)     | Provides concrete steps for executing the issue creation                 |
+| [Issue Creation Checklist](/docs/project/issue-creation-checklist.md)         | A final verification checklist to ensure all issues are created properly |
 
 ## 🛠️ Tools and Resources
 
 The following tools are provided to help implement the issue management system:
 
-- **Label Configuration**: `.github/labels.yml` defines all issue labels in a format compatible with GitHub Actions
-- **Label Setup Workflow**: `.github/workflows/setup-labels.yml` automates the creation of issue labels
-- **Issue Creation Workflow**: `.github/workflows/create-issues.yml` automates the creation of issues from data
-- **Issue Creation Script**: `scripts/create-issues.js` automates the creation of issues from the issues data file
-- **Issue Verification Script**: `scripts/verify-issues.js` verifies that all expected issues exist and are correctly configured
-- **Issue Data**: `docs/project/issues-data.json` contains the structured data for all planned issues
+- **Label Configuration**: `.github/labels.yml` defines all issue labels in a
+  format compatible with GitHub Actions
+- **Label Setup Workflow**: `.github/workflows/setup-labels.yml` automates the
+  creation of issue labels
+- **Issue Creation Workflow**: `.github/workflows/create-issues.yml` automates
+  the creation of issues from data
+- **Issue Creation Script**: `scripts/create-issues.js` automates the creation
+  of issues from the issues data file
+- **Issue Verification Script**: `scripts/verify-issues.js` verifies that all
+  expected issues exist and are correctly configured
+- **Issue Data**: `docs/project/issues-data.json` contains the structured data
+  for all planned issues
 
 ## 🚀 Getting Started
 
@@ -41,11 +50,16 @@ The following tools are provided to help implement the issue management system:
 5. Enter "yes" in the confirmation field
 6. Click "Run workflow"
 
-This will create all the standard labels defined in the `.github/labels.yml` file.
+This will create all the standard labels defined in the `.github/labels.yml`
+file.
 
 ### Step 2: Create Initial Issues
 
-Follow the [Issue Implementation Steps](/docs/project/issue-implementation-steps.md) for concrete steps to create all issues and use the [Issue Creation Checklist](/docs/project/issue-creation-checklist.md) to verify your implementation. You can either:
+Follow the
+[Issue Implementation Steps](/docs/project/issue-implementation-steps.md) for
+concrete steps to create all issues and use the
+[Issue Creation Checklist](/docs/project/issue-creation-checklist.md) to verify
+your implementation. You can either:
 
 - Use the automated workflow approach (recommended):
   1. Go to the "Actions" tab
@@ -59,7 +73,9 @@ Follow the [Issue Implementation Steps](/docs/project/issue-implementation-steps
 
 - Create issues manually using the templates and content provided
 
-For detailed instructions, refer to the [Issue Implementation Guide](/docs/project/issue-implementation-guide.md) and [Issue Creation Execution Guide](./issue-execution-guide.md).
+For detailed instructions, refer to the
+[Issue Implementation Guide](/docs/project/issue-implementation-guide.md) and
+[Issue Creation Execution Guide](./issue-execution-guide.md).
 
 ### Step 3: Set Up Project Board (Optional)
 
@@ -76,11 +92,13 @@ To better visualize and manage the workflow:
 The standard workflow for creating new issues is:
 
 1. **Identify the need** for a new issue
-2. **Select the appropriate template** (Feature Request, Bug Report, or General Issue)
+2. **Select the appropriate template** (Feature Request, Bug Report, or General
+   Issue)
 3. **Complete the template** with detailed information
 4. **Apply appropriate labels** from all required categories
 5. **Add to project board** if using GitHub Projects
-6. **Verify** the issue meets all quality standards using the verification checklist
+6. **Verify** the issue meets all quality standards using the verification
+   checklist
 
 ## 🔍 Issue Management Best Practices
 
@@ -102,4 +120,6 @@ To keep the issue management system effective:
 
 ---
 
-By following this guide and utilizing the provided tools and documentation, the Lightning Talk Circle project will maintain a consistent, organized, and effective issue management system throughout its development lifecycle.
+By following this guide and utilizing the provided tools and documentation, the
+Lightning Talk Circle project will maintain a consistent, organized, and
+effective issue management system throughout its development lifecycle.

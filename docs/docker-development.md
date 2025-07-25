@@ -13,18 +13,21 @@ Lightning Talk Circleのローカル開発環境構築ガイド
 ## 環境構成
 
 ### 本番環境 (発表.com)
+
 - **URL**: https://発表.com (https://xn--6wym69a.com)
 - **インフラ**: AWS Lambda, DynamoDB, CloudFront, Cognito
 - **デプロイ**: `npm run cdk:deploy:prod`
 - **環境ファイル**: `.env.production`
 
 ### 開発環境 (dev.発表.com)
+
 - **URL**: https://dev.発表.com (https://dev.xn--6wym69a.com)
 - **インフラ**: AWS開発スタック（本番と同様の構成）
 - **デプロイ**: `npm run cdk:deploy:dev`
 - **環境ファイル**: `.env.development`
 
 ### ローカル環境 (Docker)
+
 - **URL**: http://localhost:3000
 - **インフラ**: Docker Compose（すべてのサービスをローカルで実行）
 - **起動**: `./scripts/docker-env.sh start local`
@@ -33,12 +36,14 @@ Lightning Talk Circleのローカル開発環境構築ガイド
 ## Docker環境の構成
 
 ### 基本サービス (docker-compose.yml)
+
 - **app**: Node.jsアプリケーション
 - **postgres**: PostgreSQLデータベース
 - **redis**: セッション管理・キャッシング
 - **pgadmin**: データベース管理UI
 
 ### 拡張サービス (docker-compose.local.yml)
+
 - **mailhog**: メールテスト (SMTP: 1025, UI: 8025)
 - **minio**: S3互換オブジェクトストレージ (API: 9000, Console: 9001)
 - **localstack**: AWSサービスシミュレーション (Gateway: 4566)
@@ -47,6 +52,7 @@ Lightning Talk Circleのローカル開発環境構築ガイド
 - **redis-commander**: Redis管理UI (8082)
 
 ### オプションサービス
+
 - **wordpress**: WordPressテーマ開発 (8888)
 - **prometheus**: メトリクス収集 (9090)
 - **grafana**: 監視ダッシュボード (3005)
@@ -55,6 +61,7 @@ Lightning Talk Circleのローカル開発環境構築ガイド
 ## クイックスタート
 
 ### 1. 環境の初期化
+
 ```bash
 # Docker環境の初期化
 ./scripts/docker-env.sh init
@@ -67,6 +74,7 @@ Lightning Talk Circleのローカル開発環境構築ガイド
 ```
 
 ### 2. Docker環境の起動
+
 ```bash
 # 基本的なローカル環境
 ./scripts/docker-env.sh start local
@@ -79,6 +87,7 @@ docker-compose -f docker-compose.yml -f docker-compose.local.yml --profile wordp
 ```
 
 ### 3. サービスへのアクセス
+
 - **アプリケーション**: http://localhost:3001
 - **pgAdmin**: http://localhost:8080 (admin@lightningtalk.local / admin)
 - **MailHog**: http://localhost:8025
@@ -89,6 +98,7 @@ docker-compose -f docker-compose.yml -f docker-compose.local.yml --profile wordp
 ## 環境管理スクリプト
 
 ### docker-env.sh
+
 Docker環境を管理するためのメインスクリプト
 
 ```bash
@@ -103,6 +113,7 @@ Docker環境を管理するためのメインスクリプト
 ```
 
 ### env-switch.sh
+
 環境設定を切り替えるスクリプト
 
 ```bash
@@ -122,6 +133,7 @@ Docker環境を管理するためのメインスクリプト
 LocalStackは以下のAWSサービスをローカルでシミュレートします：
 
 ### 自動初期化
+
 `scripts/localstack/`内のスクリプトが自動的に実行され、以下が作成されます：
 
 1. **DynamoDBテーブル**
@@ -142,6 +154,7 @@ LocalStackは以下のAWSサービスをローカルでシミュレートしま�
    - テストユーザー: admin@localhost / LocalAdmin123!
 
 ### LocalStack CLIの使用
+
 ```bash
 # DynamoDBテーブル一覧
 docker-compose exec localstack awslocal dynamodb list-tables
@@ -156,13 +169,16 @@ docker-compose exec localstack awslocal cognito-idp list-user-pools --max-result
 ## データベース設定
 
 ### ファイルベース（デフォルト）
+
 ```env
 DATABASE_TYPE=file
 ```
+
 - `data/`ディレクトリにJSONファイルとして保存
 - 設定不要で即座に使用可能
 
 ### PostgreSQL
+
 ```env
 DATABASE_TYPE=postgresql
 POSTGRES_HOST=postgres
@@ -173,6 +189,7 @@ POSTGRES_PASSWORD=lightningtalk123
 ```
 
 ### DynamoDB Local
+
 ```env
 DATABASE_TYPE=dynamodb
 DYNAMODB_ENDPOINT=http://dynamodb-local:8000
@@ -181,6 +198,7 @@ DYNAMODB_ENDPOINT=http://dynamodb-local:8000
 ## 開発ワークフロー
 
 ### 1. 機能開発
+
 ```bash
 # 環境起動
 ./scripts/docker-env.sh start local
@@ -193,20 +211,24 @@ DYNAMODB_ENDPOINT=http://dynamodb-local:8000
 ```
 
 ### 2. メール機能のテスト
+
 - MailHogがすべてのメールをキャプチャ
 - http://localhost:8025 でメールを確認
 
 ### 3. S3機能のテスト
+
 - MinIOがS3 APIを提供
 - http://localhost:9001 でファイルを管理
 
 ### 4. AWS機能のテスト
+
 - LocalStackがAWSサービスをシミュレート
 - 環境変数`USE_LOCAL_AWS=true`で自動的にLocalStackを使用
 
 ## トラブルシューティング
 
 ### ポート競合
+
 ```bash
 # 使用中のポートを確認
 lsof -i :3000
@@ -217,6 +239,7 @@ PORT=3002
 ```
 
 ### 権限エラー
+
 ```bash
 # 権限を修正
 ./scripts/docker-env.sh init
@@ -226,6 +249,7 @@ docker-compose -f docker-compose.local.yml --profile init run --rm init-permissi
 ```
 
 ### コンテナが起動しない
+
 ```bash
 # ログを確認
 docker-compose logs app
@@ -236,6 +260,7 @@ docker-compose up -d app
 ```
 
 ### LocalStackの問題
+
 ```bash
 # LocalStackを再起動
 docker-compose restart localstack

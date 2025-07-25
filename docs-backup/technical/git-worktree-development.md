@@ -2,7 +2,8 @@
 
 ## 概要
 
-Git worktree を使用することで、複数のブランチを同時に異なるディレクトリで作業でき、ブランチ切り替えの手間を削減し、並行開発を効率化できます。
+Git
+worktree を使用することで、複数のブランチを同時に異なるディレクトリで作業でき、ブランチ切り替えの手間を削減し、並行開発を効率化できます。
 
 ## Git Worktree の基本
 
@@ -75,7 +76,7 @@ services:
       - .:/app
       - /app/node_modules
     ports:
-      - "3000:3000"
+      - '3000:3000'
     environment:
       - NODE_ENV=development
       - BRANCH=main
@@ -89,7 +90,7 @@ services:
       - ../lightningtalk-worktrees/feature-x:/app
       - /app/node_modules
     ports:
-      - "3001:3000"
+      - '3001:3000'
     environment:
       - NODE_ENV=development
       - BRANCH=feature
@@ -271,7 +272,7 @@ name: Multi-Branch Testing
 
 on:
   pull_request:
-    branches: [ main, develop ]
+    branches: [main, develop]
 
 jobs:
   test:
@@ -279,21 +280,21 @@ jobs:
     strategy:
       matrix:
         branch: [main, develop]
-    
+
     steps:
-    - uses: actions/checkout@v3
-      with:
-        fetch-depth: 0
-    
-    - name: Setup worktree
-      run: |
-        git worktree add ../test-${{ matrix.branch }} origin/${{ matrix.branch }}
-    
-    - name: Run tests in Docker
-      run: |
-        docker-compose run --rm \
-          -e BRANCH=${{ matrix.branch }} \
-          test-runner
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Setup worktree
+        run: |
+          git worktree add ../test-${{ matrix.branch }} origin/${{ matrix.branch }}
+
+      - name: Run tests in Docker
+        run: |
+          docker-compose run --rm \
+            -e BRANCH=${{ matrix.branch }} \
+            test-runner
 ```
 
 ## トラブルシューティング
@@ -301,12 +302,14 @@ jobs:
 ### よくある問題と解決策
 
 1. **Worktree がロックされる**
+
    ```bash
    # ロックファイルを削除
    rm .git/worktrees/*/locked
    ```
 
 2. **Docker ボリュームの競合**
+
    ```bash
    # ボリュームをクリーンアップ
    docker-compose down -v

@@ -3,6 +3,7 @@
 ## 🚀 WordPress サイト: https://発表.com への実装ガイド
 
 ### 📋 準備完了項目
+
 - ✅ Lightning Talk Child Theme (lightningtalk-child-theme.zip)
 - ✅ 全ショートコード実装（チャット・緊急連絡先・地図リンク含む）
 - ✅ Cocoon親テーマとの完全統合
@@ -21,6 +22,7 @@
    - パスワード: `fytbuh-3repRu-nucbyf`
 
 2. **テーマアップロード**
+
    ```
    外観 > テーマ > 新規追加 > テーマのアップロード
    ファイル選択: lightningtalk-child-theme.zip
@@ -36,11 +38,13 @@
 ## ⚙️ ステップ 2: 初期設定
 
 ### パーマリンク設定
+
 ```
 設定 > パーマリンク > 投稿名 > 変更を保存
 ```
 
 ### Lightning Talk カスタマイザー設定
+
 ```
 外観 > カスタマイズ > Lightning Talk設定
 - API URL: /wp-json/lightningtalk/v1/
@@ -54,14 +58,16 @@
 ### イベント投稿タイプの作成
 
 1. **管理画面から**
+
    ```
    Lightning Talk > Lightning Talkイベント > 新規追加
    ```
 
 2. **イベント詳細入力**
+
    ```
    タイトル: 第1回 なんでもライトニングトーク
-   
+
    カスタムフィールド:
    - event_date: 2025-06-25 19:00:00
    - venue_name: 新宿会場
@@ -74,9 +80,10 @@
    ```
 
 3. **コンテンツ（説明文）**
+
    ```
    5分間で世界を変える！あなたの「なんでも」を聞かせて！
-   
+
    技術、趣味、日常の発見、面白い話題... 何でも大歓迎！
    当日参加・飛び入り発表も歓迎です。
    ```
@@ -88,6 +95,7 @@
 ### 固定ページ作成
 
 1. **新規固定ページ**
+
    ```
    固定ページ > 新規追加
    タイトル: Lightning Talk イベント
@@ -95,6 +103,7 @@
    ```
 
 2. **ページテンプレート選択**
+
    ```
    ページ属性 > テンプレート: Lightning Talk Event Page
    ```
@@ -104,8 +113,8 @@
    ```html
    <!-- ヒーローセクション -->
    <div class="hero-section">
-   <h1>⚡ なんでもライトニングトーク</h1>
-   <p>5分間で世界を変える！あなたの「なんでも」を聞かせて！</p>
+     <h1>⚡ なんでもライトニングトーク</h1>
+     <p>5分間で世界を変える！あなたの「なんでも」を聞かせて！</p>
    </div>
 
    <!-- イベント情報表示 -->
@@ -115,17 +124,17 @@
    <h2>🚀 参加方法</h2>
 
    <div class="participation-cards">
-   <div class="card">
-   <h3>👥 聴講参加</h3>
-   <p>様々な発表を聞いて楽しもう！</p>
-   [lightning_talk_button type="register-listener" text="聴講参加登録"]
-   </div>
+     <div class="card">
+       <h3>👥 聴講参加</h3>
+       <p>様々な発表を聞いて楽しもう！</p>
+       [lightning_talk_button type="register-listener" text="聴講参加登録"]
+     </div>
 
-   <div class="card">
-   <h3>🎤 発表申込み</h3>
-   <p>5分間であなたの「なんでも」を発表！</p>
-   [lightning_talk_button type="register-speaker" text="発表申込み"]
-   </div>
+     <div class="card">
+       <h3>🎤 発表申込み</h3>
+       <p>5分間であなたの「なんでも」を発表！</p>
+       [lightning_talk_button type="register-speaker" text="発表申込み"]
+     </div>
    </div>
 
    <!-- アンケートセクション -->
@@ -148,12 +157,14 @@
 ### ナビゲーションメニュー作成
 
 1. **メニュー作成**
+
    ```
    外観 > メニュー > 新規作成
    メニュー名: メインメニュー
    ```
 
 2. **メニュー項目追加**
+
    ```
    - ホーム (固定ページ)
    - Lightning Talk (作成した固定ページ)
@@ -173,68 +184,73 @@
 ### Cocoon設定との統合
 
 1. **Cocoon > 全体設定**
+
    ```
    サイトキーカラー: #ffd700 (Lightning Talk アクセントカラー)
    ```
 
 2. **追加CSS（外観 > カスタマイズ > 追加CSS）**
+
    ```css
    /* Lightning Talk 専用スタイル調整 */
    .lightningtalk-container {
-       margin: 20px 0;
+     margin: 20px 0;
    }
 
    .lt-event-card {
-       background: linear-gradient(45deg, #ff6b6b, #ffd93d);
-       color: white;
-       padding: 30px;
-       border-radius: 15px;
-       margin: 20px 0;
+     background: linear-gradient(45deg, #ff6b6b, #ffd93d);
+     color: white;
+     padding: 30px;
+     border-radius: 15px;
+     margin: 20px 0;
    }
 
    .lt-btn {
-       background: var(--lt-primary-gradient, linear-gradient(45deg, #ff6b6b, #ffd93d));
-       color: white;
-       border: none;
-       padding: 12px 24px;
-       border-radius: 25px;
-       cursor: pointer;
-       font-weight: bold;
-       transition: transform 0.2s;
-       text-decoration: none;
-       display: inline-block;
+     background: var(
+       --lt-primary-gradient,
+       linear-gradient(45deg, #ff6b6b, #ffd93d)
+     );
+     color: white;
+     border: none;
+     padding: 12px 24px;
+     border-radius: 25px;
+     cursor: pointer;
+     font-weight: bold;
+     transition: transform 0.2s;
+     text-decoration: none;
+     display: inline-block;
    }
 
    .lt-btn:hover {
-       transform: scale(1.05);
+     transform: scale(1.05);
    }
 
    .chat-widget {
-       position: fixed;
-       bottom: 20px;
-       right: 20px;
-       z-index: 1000;
+     position: fixed;
+     bottom: 20px;
+     right: 20px;
+     z-index: 1000;
    }
 
    .emergency-contact {
-       background: #ffe6e6;
-       border: 2px solid #ff9999;
-       border-radius: 10px;
-       padding: 15px;
-       margin: 15px 0;
+     background: #ffe6e6;
+     border: 2px solid #ff9999;
+     border-radius: 10px;
+     padding: 15px;
+     margin: 15px 0;
    }
 
    .phone-link {
-       font-size: 1.2em;
-       font-weight: bold;
-       color: #e74c3c;
-       text-decoration: none;
+     font-size: 1.2em;
+     font-weight: bold;
+     color: #e74c3c;
+     text-decoration: none;
    }
 
    .map-link {
-       color: #3498db;
-       font-weight: bold;
-       text-decoration: none;
+     color: #3498db;
+     font-weight: bold;
+     text-decoration: none;
    }
    ```
 
@@ -254,6 +270,7 @@
    - [x] 地図リンク
 
 2. **REST API テスト**
+
    ```
    https://発表.com/wp-json/lightningtalk/v1/events
    https://発表.com/wp-json/lightningtalk/v1/events/1
@@ -271,6 +288,7 @@
 ### 発表データ作成
 
 1. **発表投稿タイプでサンプル作成**
+
    ```
    Lightning Talk > Lightning Talk発表 > 新規追加
 
@@ -296,6 +314,7 @@
 ## 🔒 ステップ 9: セキュリティ設定
 
 ### .htaccess 設定（FTPアクセス必要な場合）
+
 ```apache
 # Lightning Talk REST API用
 RewriteEngine On
@@ -314,17 +333,20 @@ Header always set X-XSS-Protection "1; mode=block"
 ## ✅ デプロイメント完了チェックリスト
 
 ### 基本設定
+
 - [ ] Lightning Talk Child Theme アップロード・有効化
 - [ ] パーマリンク設定変更
 - [ ] Lightning Talk カスタマイザー設定
 
 ### コンテンツ作成
+
 - [ ] 第1回イベント作成
 - [ ] Lightning Talk メインページ作成
 - [ ] ナビゲーションメニュー設定
 - [ ] サンプル発表データ作成
 
 ### 機能確認
+
 - [ ] 全ショートコード動作確認
 - [ ] REST API エンドポイント確認
 - [ ] チャットウィジェット動作確認
@@ -333,6 +355,7 @@ Header always set X-XSS-Protection "1; mode=block"
 - [ ] レスポンシブ表示確認
 
 ### 運用準備
+
 - [ ] 管理画面操作説明
 - [ ] 参加者管理方法説明
 - [ ] バックアップ設定
@@ -341,15 +364,19 @@ Header always set X-XSS-Protection "1; mode=block"
 
 ## 🎉 実装完了！
 
-**Lightning Talk WordPress システムの全機能が https://発表.com で利用可能になります。**
+**Lightning Talk
+WordPress システムの全機能が https://発表.com で利用可能になります。**
 
 ### 📞 サポート
+
 問題が発生した場合は：
+
 1. WordPress管理画面 > ダッシュボード で互換性ステータス確認
 2. デバッグモード有効化（wp-config.php）
 3. ブラウザ開発者ツールでエラー確認
 
 ### 🚀 次のステップ
+
 1. 実際のイベント告知開始
 2. 参加者からのフィードバック収集
 3. 必要に応じた機能追加・改善

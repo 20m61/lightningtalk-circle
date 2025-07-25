@@ -2,7 +2,8 @@
 
 ## Overview
 
-This guide explains how to manage sensitive information (credentials, API keys, etc.) for the Lightning Talk Circle project across different environments.
+This guide explains how to manage sensitive information (credentials, API keys,
+etc.) for the Lightning Talk Circle project across different environments.
 
 ## Environment Strategy
 
@@ -25,11 +26,13 @@ For local development, use `.env.local` (not tracked by git):
 For team collaboration, consider these options:
 
 #### Option A: Password Manager (Recommended for small teams)
+
 - Use a team password manager (1Password, Bitwarden, etc.)
 - Share credentials securely with team members
 - Each developer creates their own `.env.local`
 
 #### Option B: Encrypted Vault
+
 ```bash
 # Using git-crypt (example)
 git-crypt init
@@ -38,6 +41,7 @@ git-crypt add-gpg-user YOUR_GPG_KEY
 ```
 
 #### Option C: Environment Variables
+
 ```bash
 # Set in your shell profile
 export LIGHTNINGTALK_JWT_SECRET="your-secret"
@@ -57,6 +61,7 @@ env:
 ```
 
 To add/update secrets:
+
 1. Go to Settings → Secrets and variables → Actions
 2. Add repository secrets
 3. Use in workflows with `${{ secrets.SECRET_NAME }}`
@@ -75,33 +80,38 @@ const secret = await secretsManager.getSecretValue({ SecretId: JWT_SECRET_ARN })
 
 ## Credential Types and Storage
 
-| Credential Type | Local Dev | CI/CD | Production |
-|----------------|-----------|--------|------------|
-| JWT/Session Secrets | `.env.local` | GitHub Secrets | AWS Secrets Manager |
+| Credential Type       | Local Dev    | CI/CD          | Production          |
+| --------------------- | ------------ | -------------- | ------------------- |
+| JWT/Session Secrets   | `.env.local` | GitHub Secrets | AWS Secrets Manager |
 | WordPress Credentials | `.env.local` | GitHub Secrets | AWS Secrets Manager |
-| Database Credentials | `.env.local` | GitHub Secrets | AWS RDS IAM Auth |
-| API Keys (External) | `.env.local` | GitHub Secrets | AWS Secrets Manager |
-| Emergency Contact | `.env.local` | GitHub Secrets | AWS Parameter Store |
+| Database Credentials  | `.env.local` | GitHub Secrets | AWS RDS IAM Auth    |
+| API Keys (External)   | `.env.local` | GitHub Secrets | AWS Secrets Manager |
+| Emergency Contact     | `.env.local` | GitHub Secrets | AWS Parameter Store |
 
 ## Security Best Practices
 
 ### 1. Credential Rotation
+
 - Rotate production secrets every 90 days
 - Use different credentials for each environment
 - Automate rotation where possible
 
 ### 2. Access Control
+
 - Limit access to production secrets
 - Use IAM roles for AWS access
 - Enable MFA for GitHub accounts
 
 ### 3. Monitoring
+
 - Enable AWS CloudTrail for secret access logs
 - Monitor GitHub audit logs
 - Set up alerts for unauthorized access
 
 ### 4. Emergency Procedures
+
 If credentials are exposed:
+
 1. Immediately rotate affected credentials
 2. Review access logs
 3. Update all environments
@@ -110,6 +120,7 @@ If credentials are exposed:
 ## Quick Reference
 
 ### Generate New Secrets
+
 ```bash
 # JWT and Session secrets
 npm run generate-secrets
@@ -122,12 +133,14 @@ openssl rand -base64 32
 ```
 
 ### Check Current Configuration
+
 ```bash
 # Verify environment (without showing secrets)
 node -e "console.log(Object.keys(process.env).filter(k => k.includes('SECRET')).map(k => k + '=' + (process.env[k] ? '[SET]' : '[NOT SET]')).join('\n'))"
 ```
 
 ### Migration from .env files
+
 ```bash
 # After removing .env files from git
 ./scripts/setup-local-env.sh
@@ -163,4 +176,7 @@ aws secretsmanager create-secret --name lightningtalk/prod/jwt --secret-string "
 
 ## Conclusion
 
-By following this guide, you can securely manage credentials across all environments while maintaining security and ease of development. Remember: never commit real credentials to git, always use environment-specific secrets, and rotate credentials regularly.
+By following this guide, you can securely manage credentials across all
+environments while maintaining security and ease of development. Remember: never
+commit real credentials to git, always use environment-specific secrets, and
+rotate credentials regularly.

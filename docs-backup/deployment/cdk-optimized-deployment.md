@@ -2,7 +2,9 @@
 
 ## Overview
 
-This guide covers the deployment process for the optimized CDK stack architecture, which consolidates infrastructure from 6 stacks into 4 optimized stacks.
+This guide covers the deployment process for the optimized CDK stack
+architecture, which consolidates infrastructure from 6 stacks into 4 optimized
+stacks.
 
 ## Prerequisites
 
@@ -188,6 +190,7 @@ cdk destroy LightningTalkCognito-prod
 The optimized stacks implement several cost-saving measures:
 
 ### Development Environment
+
 - **DynamoDB**: On-Demand billing (saves ~$20/month)
 - **Lambda**: 512MB memory allocation
 - **CloudFront**: PriceClass_100 (North America/Europe only)
@@ -195,6 +198,7 @@ The optimized stacks implement several cost-saving measures:
 - **Logs**: 1-week retention
 
 ### Production Environment
+
 - **DynamoDB**: Provisioned with Auto Scaling
 - **Lambda**: 1024MB memory with reserved concurrency
 - **CloudFront**: PriceClass_All for global coverage
@@ -206,6 +210,7 @@ The optimized stacks implement several cost-saving measures:
 ### CloudWatch Dashboard
 
 Access the dashboard at:
+
 ```
 https://ap-northeast-1.console.aws.amazon.com/cloudwatch/home?region=ap-northeast-1#dashboards:name=Lightning-Talk-Circle-[env]
 ```
@@ -222,6 +227,7 @@ https://ap-northeast-1.console.aws.amazon.com/cloudwatch/home?region=ap-northeas
 ### Common Issues
 
 1. **Lambda Layer Too Large**
+
    ```bash
    cd layers/dependencies
    # Edit package.json to remove unnecessary packages
@@ -245,12 +251,14 @@ https://ap-northeast-1.console.aws.amazon.com/cloudwatch/home?region=ap-northeas
 If issues occur during migration:
 
 1. **Immediate Rollback**
+
    ```bash
    # Update DNS back to old CloudFront
    # No data changes needed if using same backend
    ```
 
 2. **Data Rollback**
+
    ```bash
    # If data was migrated
    ./scripts/migrate-data.sh prod-new prod
@@ -294,6 +302,7 @@ If issues occur during migration:
 ## Support
 
 For issues or questions:
+
 1. Check CloudWatch Logs
 2. Review this documentation
 3. Create GitHub issue: https://github.com/20m61/lightningtalk-circle/issues

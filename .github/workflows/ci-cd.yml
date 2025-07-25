@@ -3,15 +3,15 @@ name: CI/CD Pipeline
 on:
   push:
     branches: [main, develop]
-    tags: ["v*"]
+    tags: ['v*']
   pull_request:
     branches: [main]
   workflow_dispatch:
     inputs:
       release_type:
-        description: "Release type"
+        description: 'Release type'
         required: true
-        default: "patch"
+        default: 'patch'
         type: choice
         options:
           - patch
@@ -19,7 +19,7 @@ on:
           - major
 
 env:
-  NODE_VERSION: "20"
+  NODE_VERSION: '20'
   REGISTRY: ghcr.io
   IMAGE_NAME: ${{ github.repository }}
 
@@ -60,7 +60,7 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
-          cache: "npm"
+          cache: 'npm'
 
       - name: Install dependencies
         run: npm ci
@@ -121,7 +121,7 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
-          cache: "npm"
+          cache: 'npm'
 
       - name: Install dependencies
         run: npm ci
@@ -152,7 +152,7 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
-          cache: "npm"
+          cache: 'npm'
 
       - name: Install dependencies
         run: npm ci
@@ -160,7 +160,7 @@ jobs:
       - name: Build and Package All Artifacts
         run: |
           npm run build:all
-          
+
       - name: Upload Build Artifacts
         uses: actions/upload-artifact@v4
         with:
@@ -265,7 +265,7 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
-          cache: "npm"
+          cache: 'npm'
 
       - name: Install dependencies
         run: npm ci
@@ -314,7 +314,7 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
-          cache: "npm"
+          cache: 'npm'
 
       - name: Configure Git
         run: |
@@ -422,7 +422,7 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
-          cache: "npm"
+          cache: 'npm'
 
       - name: Install dependencies
         run: npm ci
@@ -436,16 +436,16 @@ jobs:
         run: |
           VERSION="${{ needs.versioning.outputs.new-version }}"
           VERSION_NO_V=${VERSION#v}
-          
+
           # Get artifact paths from build-artifacts structure
           STATIC_ZIP=$(find build-artifacts/static/latest -name "*.zip" | head -1)
           WP_CHILD_ZIP=$(find build-artifacts/wordpress/latest -name "lightningtalk-child-*.zip" | head -1)
           WP_MODERN_ZIP=$(find build-artifacts/wordpress/latest -name "lightningtalk-modern-*.zip" | head -1)
-          
+
           echo "static-zip=$STATIC_ZIP" >> $GITHUB_OUTPUT
           echo "wp-child-zip=$WP_CHILD_ZIP" >> $GITHUB_OUTPUT
           echo "wp-modern-zip=$WP_MODERN_ZIP" >> $GITHUB_OUTPUT
-          
+
           echo "Found artifacts:"
           echo "  Static: $STATIC_ZIP"
           echo "  WP Child: $WP_CHILD_ZIP" 
@@ -670,7 +670,7 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
-          cache: "npm"
+          cache: 'npm'
 
       - name: Install dependencies
         run: npm ci

@@ -88,7 +88,7 @@
     "env:validate": "node scripts/env-manager.cjs validate",
     "env:dev": "node scripts/env-manager.cjs switch development",
     "env:dev:docker": "node scripts/env-manager.cjs switch development docker",
-    "env:staging": "node scripts/env-manager.cjs switch staging", 
+    "env:staging": "node scripts/env-manager.cjs switch staging",
     "env:prod": "node scripts/env-manager.cjs switch production",
     "start:dev": "npm run env:dev && npm run dev",
     "start:dev:docker": "npm run env:dev:docker && npm run dev",

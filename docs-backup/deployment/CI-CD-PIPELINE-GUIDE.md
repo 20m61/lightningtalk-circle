@@ -2,9 +2,11 @@
 
 ## 🚀 CI/CD Architecture Overview
 
-Lightning Talk Circleの本番デプロイメントパイプラインは、GitHub Actionsを使用してフルオートメーション化されています。
+Lightning Talk Circleの本番デプロイメントパイプラインは、GitHub
+Actionsを使用してフルオートメーション化されています。
 
 ### Pipeline Structure
+
 ```
 GitHub Actions Workflow
 ├── Test Stage           # 単体・統合テスト + セキュリティ監査
@@ -18,6 +20,7 @@ GitHub Actions Workflow
 ## 🔧 Required GitHub Secrets
 
 ### Production Environment
+
 ```bash
 # Database & Infrastructure
 DATABASE_URL="postgresql://user:pass@host:5432/lightningtalk"
@@ -64,6 +67,7 @@ GRAFANA_PASSWORD="secure_grafana_password"
 ```
 
 ### Staging Environment
+
 ```bash
 # Similar to production but with staging-specific values
 STAGING_URL="https://staging.your-domain.com"
@@ -74,87 +78,95 @@ DATABASE_URL="postgresql://staging_user:pass@staging_host:5432/lightningtalk_sta
 ## 📋 Deployment Workflow
 
 ### 1. Automated Testing (Every Push/PR)
+
 ```yaml
 # Triggered on: push to main/develop, PR to main
 Jobs:
-- Unit Tests (Jest)
-- Integration Tests (with PostgreSQL + Redis)
-- Security Audit (npm audit + Snyk)
-- Code Quality (ESLint + Prettier)
-- Coverage Report (80% threshold)
+  - Unit Tests (Jest)
+  - Integration Tests (with PostgreSQL + Redis)
+  - Security Audit (npm audit + Snyk)
+  - Code Quality (ESLint + Prettier)
+  - Coverage Report (80% threshold)
 ```
 
 ### 2. Build & Package (Main Branch)
+
 ```yaml
 # Triggered on: push to main
 Jobs:
-- Build WordPress Theme
-- Build Application Assets
-- Create Docker Image
-- Push to GitHub Container Registry
-- Multi-architecture Support (amd64, arm64)
+  - Build WordPress Theme
+  - Build Application Assets
+  - Create Docker Image
+  - Push to GitHub Container Registry
+  - Multi-architecture Support (amd64, arm64)
 ```
 
 ### 3. Staging Deployment (Develop Branch)
+
 ```yaml
 # Triggered on: push to develop
 Jobs:
-- Deploy to Staging Environment
-- Run Health Checks
-- Integration Testing
-- Performance Testing
+  - Deploy to Staging Environment
+  - Run Health Checks
+  - Integration Testing
+  - Performance Testing
 ```
 
 ### 4. Production Deployment (Main Branch)
+
 ```yaml
 # Triggered on: push to main (after manual approval)
 Jobs:
-- Database Backup
-- Blue-Green Deployment
-- Health Checks
-- Rollback on Failure
-- Slack Notification
+  - Database Backup
+  - Blue-Green Deployment
+  - Health Checks
+  - Rollback on Failure
+  - Slack Notification
 ```
 
 ### 5. WordPress Theme Deployment
+
 ```yaml
 # Triggered on: push to main (WordPress changes)
 Jobs:
-- Build Theme Package
-- Deploy to WordPress Site
-- Theme Activation
-- Health Check
+  - Build Theme Package
+  - Deploy to WordPress Site
+  - Theme Activation
+  - Health Check
 ```
 
 ## 🏗️ Infrastructure Setup
 
 ### Docker Production Stack
+
 ```yaml
 Services:
-- App: Node.js Application (lightningtalk-circle)
-- Database: PostgreSQL 15 (persistent data)
-- Cache: Redis 7 (sessions + email queue)
-- Reverse Proxy: Nginx (SSL termination + load balancing)
-- Monitoring: Prometheus + Grafana + Loki
-- Log Aggregation: Promtail
+  - App: Node.js Application (lightningtalk-circle)
+  - Database: PostgreSQL 15 (persistent data)
+  - Cache: Redis 7 (sessions + email queue)
+  - Reverse Proxy: Nginx (SSL termination + load balancing)
+  - Monitoring: Prometheus + Grafana + Loki
+  - Log Aggregation: Promtail
 ```
 
 ### Server Requirements
+
 ```yaml
 Minimum Specifications:
-- CPU: 2 cores
-- RAM: 4GB
-- Storage: 20GB SSD
-- Network: 1Gbps
+  - CPU: 2 cores
+  - RAM: 4GB
+  - Storage: 20GB SSD
+  - Network: 1Gbps
 
 Recommended Production:
-- CPU: 4 cores
-- RAM: 8GB
-- Storage: 50GB SSD
-- Backup: 100GB additional storage
+  - CPU: 4 cores
+  - RAM: 8GB
+  - Storage: 50GB SSD
+  - Backup: 100GB additional storage
 ```
 
 ### SSL Certificate Setup
+
 ```bash
 # Using Let's Encrypt (Certbot)
 sudo certbot certonly --webroot \
@@ -170,6 +182,7 @@ sudo crontab -e
 ## 🚀 Deployment Commands
 
 ### Manual Deployment
+
 ```bash
 # Production deployment
 ./scripts/deploy.sh production
@@ -182,6 +195,7 @@ sudo crontab -e
 ```
 
 ### Docker Operations
+
 ```bash
 # Start production stack
 docker-compose -f docker/docker-compose.production.yml up -d
@@ -201,6 +215,7 @@ docker-compose -f docker/docker-compose.production.yml up -d --force-recreate
 ```
 
 ### Monitoring Commands
+
 ```bash
 # Application metrics
 curl https://your-domain.com/api/health/metrics
@@ -218,6 +233,7 @@ docker-compose logs --tail=100 app postgres redis
 ## 📊 Monitoring & Observability
 
 ### Health Check Endpoints
+
 ```javascript
 GET /api/health           # Basic health check
 GET /api/health/detailed  # Comprehensive system info
@@ -227,48 +243,52 @@ GET /api/health/metrics   # Performance metrics
 ```
 
 ### Monitoring Dashboard (Grafana)
+
 ```yaml
 Dashboards:
-- Application Performance: Response time, throughput, errors
-- Infrastructure: CPU, Memory, Disk, Network
-- Database: Connections, queries, locks, performance
-- Email Queue: Queue depth, processing rate, failures
-- Business Metrics: Events, participants, registrations
+  - Application Performance: Response time, throughput, errors
+  - Infrastructure: CPU, Memory, Disk, Network
+  - Database: Connections, queries, locks, performance
+  - Email Queue: Queue depth, processing rate, failures
+  - Business Metrics: Events, participants, registrations
 ```
 
 ### Alerting Thresholds
+
 ```yaml
 Critical Alerts:
-- Application down (health check failure)
-- Database connection failure
-- High error rate (>5% in 5 minutes)
-- High memory usage (>90%)
+  - Application down (health check failure)
+  - Database connection failure
+  - High error rate (>5% in 5 minutes)
+  - High memory usage (>90%)
 
 Warning Alerts:
-- High response time (>2 seconds)
-- Email queue backlog (>100 emails)
-- Low disk space (<20%)
-- Certificate expiration (30 days)
+  - High response time (>2 seconds)
+  - Email queue backlog (>100 emails)
+  - Low disk space (<20%)
+  - Certificate expiration (30 days)
 ```
 
 ### Log Management
+
 ```yaml
 Log Sources:
-- Application: Express.js access/error logs
-- Database: PostgreSQL slow queries, errors
-- Nginx: Access logs, security events
-- System: Docker container logs, system metrics
+  - Application: Express.js access/error logs
+  - Database: PostgreSQL slow queries, errors
+  - Nginx: Access logs, security events
+  - System: Docker container logs, system metrics
 
 Log Retention:
-- Application logs: 30 days
-- Access logs: 90 days
-- Error logs: 1 year
-- Audit logs: 2 years
+  - Application logs: 30 days
+  - Access logs: 90 days
+  - Error logs: 1 year
+  - Audit logs: 2 years
 ```
 
 ## 🔒 Security Configuration
 
 ### Environment Security
+
 ```bash
 # Firewall configuration (ufw)
 sudo ufw allow 22        # SSH
@@ -288,6 +308,7 @@ docker run --security-opt=no-new-privileges \
 ```
 
 ### SSL/TLS Configuration
+
 ```nginx
 # Strong SSL configuration
 ssl_protocols TLSv1.2 TLSv1.3;
@@ -304,6 +325,7 @@ add_header X-XSS-Protection "1; mode=block" always;
 ```
 
 ### Database Security
+
 ```sql
 -- Create application-specific user
 CREATE USER lightningtalk_app WITH PASSWORD 'secure_password';
@@ -318,6 +340,7 @@ ALTER TABLE events ENABLE ROW LEVEL SECURITY;
 ## 🚨 Disaster Recovery
 
 ### Backup Strategy
+
 ```bash
 # Automated daily backups
 #!/bin/bash
@@ -338,6 +361,7 @@ aws s3 sync "$BACKUP_DIR" s3://your-backup-bucket/lightningtalk/
 ```
 
 ### Recovery Process
+
 ```bash
 # 1. Stop application
 docker-compose down
@@ -356,6 +380,7 @@ curl -f https://your-domain.com/api/health
 ```
 
 ### Rollback Procedure
+
 ```bash
 # Quick rollback to previous Docker image
 docker-compose pull previous-tag
@@ -371,21 +396,25 @@ echo "maintenance" > /var/www/html/maintenance.flag
 ## 📈 Performance Optimization
 
 ### Application Tuning
+
 ```javascript
 // Node.js optimization
-process.env.UV_THREADPOOL_SIZE = '16';  // Increase thread pool
-process.env.NODE_OPTIONS = '--max-old-space-size=2048';  // Increase heap size
+process.env.UV_THREADPOOL_SIZE = '16'; // Increase thread pool
+process.env.NODE_OPTIONS = '--max-old-space-size=2048'; // Increase heap size
 
 // Express.js optimization
-app.use(compression());  // Gzip compression
-app.use(helmet());       // Security headers
-app.use(express.static('public', {
-    maxAge: '1y',        // Static asset caching
+app.use(compression()); // Gzip compression
+app.use(helmet()); // Security headers
+app.use(
+  express.static('public', {
+    maxAge: '1y', // Static asset caching
     etag: true
-}));
+  })
+);
 ```
 
 ### Database Optimization
+
 ```sql
 -- Indexing strategy
 CREATE INDEX CONCURRENTLY idx_events_date ON events(event_date);
@@ -402,6 +431,7 @@ ALTER SYSTEM SET shared_buffers = '256MB';
 ```
 
 ### Nginx Optimization
+
 ```nginx
 # Worker processes
 worker_processes auto;
@@ -421,6 +451,7 @@ proxy_cache_path /var/cache/nginx levels=1:2 keys_zone=my_cache:10m max_size=10g
 ## 📋 Production Deployment Checklist
 
 ### Pre-Deployment
+
 - [ ] All GitHub Secrets configured
 - [ ] SSL certificates installed and valid
 - [ ] Database backup completed
@@ -430,6 +461,7 @@ proxy_cache_path /var/cache/nginx levels=1:2 keys_zone=my_cache:10m max_size=10g
 - [ ] Team notification sent
 
 ### Deployment
+
 - [ ] CI/CD pipeline executed successfully
 - [ ] Docker images built and pushed
 - [ ] Database migration completed
@@ -438,6 +470,7 @@ proxy_cache_path /var/cache/nginx levels=1:2 keys_zone=my_cache:10m max_size=10g
 - [ ] Monitoring alerts configured
 
 ### Post-Deployment
+
 - [ ] Application functionality verified
 - [ ] Performance metrics within SLA
 - [ ] Email service operational
@@ -447,6 +480,7 @@ proxy_cache_path /var/cache/nginx levels=1:2 keys_zone=my_cache:10m max_size=10g
 - [ ] Team notification sent
 
 ### Performance Validation
+
 - [ ] Response time < 2 seconds (95th percentile)
 - [ ] Error rate < 1%
 - [ ] Database queries < 100ms

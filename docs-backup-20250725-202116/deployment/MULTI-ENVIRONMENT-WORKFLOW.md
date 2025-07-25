@@ -143,7 +143,7 @@ npm run rollback:dev
 echo "Follow manual rollback procedures in documentation"
 
 # 本番環境のロールバック（承認必要・慎重に実施）
-npm run rollback:prod  
+npm run rollback:prod
 echo "Contact operations team for production rollback"
 ```
 

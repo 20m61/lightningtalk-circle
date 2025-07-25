@@ -1,12 +1,14 @@
 # WCAG 2.1 AA 準拠ガイド
 
-Lightning Talk Circle プロジェクトは WCAG 2.1 AA レベルでのアクセシビリティ準拠を目指しています。
+Lightning Talk Circle プロジェクトは WCAG 2.1
+AA レベルでのアクセシビリティ準拠を目指しています。
 
 ## 概要
 
 ### 実装済み機能
 
 #### 1. 知覚可能性 (Perceivable)
+
 - **テキストの代替手段**
   - 全画像に適切なalt属性を設定
   - 装飾画像には空のalt属性を指定
@@ -23,6 +25,7 @@ Lightning Talk Circle プロジェクトは WCAG 2.1 AA レベルでのアクセ
   - ユーザー設定によるフォントサイズ調整（12px-24px）
 
 #### 2. 操作可能性 (Operable)
+
 - **キーボードアクセシビリティ**
   - 全ての機能をキーボードで操作可能
   - 論理的なTab順序の設定
@@ -39,6 +42,7 @@ Lightning Talk Circle プロジェクトは WCAG 2.1 AA レベルでのアクセ
   - データ保存の確認ダイアログ
 
 #### 3. 理解可能性 (Understandable)
+
 - **明確な情報構造**
   - 論理的な見出し構造（H1-H6）
   - ランドマークロールの適切な使用
@@ -51,6 +55,7 @@ Lightning Talk Circle プロジェクトは WCAG 2.1 AA レベルでのアクセ
   - 必須フィールドの明示
 
 #### 4. 頑健性 (Robust)
+
 - **セマンティックHTML**
   - 適切なHTML要素の使用
   - WAI-ARIA属性の正しい実装
@@ -64,6 +69,7 @@ Lightning Talk Circle プロジェクトは WCAG 2.1 AA レベルでのアクセ
 ## 実装詳細
 
 ### JavaScript実装
+
 ```javascript
 // /public/js/accessibility.js
 - AccessibilityEnhancer クラス
@@ -74,6 +80,7 @@ Lightning Talk Circle プロジェクトは WCAG 2.1 AA レベルでのアクセ
 ```
 
 ### CSS実装
+
 ```css
 /* /public/css/accessibility.css */
 - スクリーンリーダー専用スタイル
@@ -84,23 +91,24 @@ Lightning Talk Circle プロジェクトは WCAG 2.1 AA レベルでのアクセ
 ```
 
 ### React/TypeScript実装
+
 ```typescript
 // /lightningtalk-modern/packages/theme/src/hooks/useAccessibility.ts
-- アクセシビリティ状態管理
-- フォーカス管理フック
-- ARIA属性管理
-- スクリーンリーダー通知
-
-// /lightningtalk-modern/packages/theme/src/components/AccessibilityProvider.tsx
-- アプリケーション全体のアクセシビリティ機能提供
-- ユーザー設定コントロール
-- フォーカストラップコンポーネント
-- ライブリージョンコンポーネント
+-アクセシビリティ状態管理 -
+  フォーカス管理フック -
+  ARIA属性管理 -
+  スクリーンリーダー通知 -
+  // /lightningtalk-modern/packages/theme/src/components/AccessibilityProvider.tsx
+  アプリケーション全体のアクセシビリティ機能提供 -
+  ユーザー設定コントロール -
+  フォーカストラップコンポーネント -
+  ライブリージョンコンポーネント;
 ```
 
 ## 検証とテスト
 
 ### 自動テスト
+
 ```javascript
 // /tests/accessibility/wcag-compliance.test.js
 - axe-core による自動アクセシビリティ検証
@@ -113,6 +121,7 @@ Lightning Talk Circle プロジェクトは WCAG 2.1 AA レベルでのアクセ
 ### 手動テスト項目
 
 #### 基本チェックリスト
+
 - [ ] キーボードのみでの全機能利用
 - [ ] スクリーンリーダーでの音声読み上げ
 - [ ] 200%ズームでのレイアウト確認
@@ -120,6 +129,7 @@ Lightning Talk Circle プロジェクトは WCAG 2.1 AA レベルでのアクセ
 - [ ] モーション削減設定での動作確認
 
 #### スクリーンリーダーテスト
+
 - **推奨ツール**
   - NVDA (Windows)
   - JAWS (Windows)
@@ -129,6 +139,7 @@ Lightning Talk Circle プロジェクトは WCAG 2.1 AA レベルでのアクセ
   - VoiceOver (iOS)
 
 #### 検証ツール
+
 - **axe DevTools** - ブラウザ拡張機能
 - **WAVE** - Web Accessibility Evaluation Tool
 - **Lighthouse** - Chrome DevTools内蔵
@@ -137,6 +148,7 @@ Lightning Talk Circle プロジェクトは WCAG 2.1 AA レベルでのアクセ
 ## ユーザー設定機能
 
 ### アクセシビリティコントロール
+
 右上の車椅子アイコンからアクセス可能：
 
 1. **ハイコントラストモード**
@@ -152,13 +164,15 @@ Lightning Talk Circle プロジェクトは WCAG 2.1 AA レベルでのアクセ
    - ベースフォントサイズの変更
 
 ### 設定の保存
+
 - ローカルストレージに設定を保存
 - ページリロード時に設定を復元
-- システム設定（prefers-*）の尊重
+- システム設定（prefers-\*）の尊重
 
 ## 継続的改善
 
 ### 定期的な検証
+
 1. **月次検証**
    - 新機能のアクセシビリティ確認
    - 自動テストの実行
@@ -170,6 +184,7 @@ Lightning Talk Circle プロジェクトは WCAG 2.1 AA レベルでのアクセ
    - WCAG ガイドラインの更新確認
 
 ### 改善計画
+
 - **短期目標**
   - 音声ナビゲーション機能の追加
   - 多言語対応でのアクセシビリティ確保
@@ -185,6 +200,7 @@ Lightning Talk Circle プロジェクトは WCAG 2.1 AA レベルでのアクセ
 ### よくある問題と解決策
 
 #### フォーカスが見えない
+
 ```css
 /* keyboard navigation クラスが適用されていない場合 */
 *:focus-visible {
@@ -194,6 +210,7 @@ Lightning Talk Circle プロジェクトは WCAG 2.1 AA レベルでのアクセ
 ```
 
 #### スクリーンリーダーで読み上げられない
+
 ```html
 <!-- aria-label または aria-labelledby の追加 -->
 <button aria-label="メニューを開く">☰</button>
@@ -203,6 +220,7 @@ Lightning Talk Circle プロジェクトは WCAG 2.1 AA レベルでのアクセ
 ```
 
 #### モーダルからフォーカスが外れる
+
 ```javascript
 // フォーカストラップの実装確認
 const focusableElements = modal.querySelectorAll(focusableSelectors);
@@ -212,6 +230,7 @@ const focusableElements = modal.querySelectorAll(focusableSelectors);
 ### サポート
 
 #### 報告方法
+
 アクセシビリティの問題を発見した場合：
 
 1. **GitHub Issues** での報告
@@ -224,6 +243,7 @@ const focusableElements = modal.querySelectorAll(focusableSelectors);
    - 機密性の高い情報がある場合
 
 #### 対応時間
+
 - **重大な問題**: 24時間以内
 - **一般的な問題**: 1週間以内
 - **改善提案**: 月次レビューで検討
@@ -231,16 +251,19 @@ const focusableElements = modal.querySelectorAll(focusableSelectors);
 ## 参考資料
 
 ### WCAG 2.1 ガイドライン
+
 - [WCAG 2.1 クイックリファレンス](https://www.w3.org/WAI/WCAG21/quickref/)
 - [WCAG 2.1 達成基準](https://www.w3.org/TR/WCAG21/)
 - [WAI-ARIA 1.1 仕様](https://www.w3.org/TR/wai-aria-1.1/)
 
 ### 日本語リソース
+
 - [JIS X 8341-3:2016](https://www.jisc.go.jp/)
 - [ウェブアクセシビリティ基盤委員会](https://waic.jp/)
 - [総務省 みんなの公共サイト運用ガイドライン](https://www.soumu.go.jp/main_sosiki/joho_tsusin/b_free/guideline.html)
 
 ### 開発ツール
+
 - [axe-core](https://github.com/dequelabs/axe-core)
 - [eslint-plugin-jsx-a11y](https://github.com/jsx-eslint/eslint-plugin-jsx-a11y)
 - [Pa11y](https://pa11y.org/)

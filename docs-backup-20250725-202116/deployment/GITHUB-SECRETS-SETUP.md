@@ -8,7 +8,8 @@
 
 #### Required GitHub Repository Secrets
 
-Navigate to: **Settings → Secrets and variables → Actions → New repository secret**
+Navigate to: **Settings → Secrets and variables → Actions → New repository
+secret**
 
 ```bash
 # WordPress Production Configuration
@@ -44,7 +45,8 @@ GOOGLE_ANALYTICS_ID=G-XXXXXXXXXX
 ### GitHub Personal Access Token Setup
 
 1. **Create Personal Access Token**:
-   - Go to GitHub Settings → Developer settings → Personal access tokens → Tokens (classic)
+   - Go to GitHub Settings → Developer settings → Personal access tokens →
+     Tokens (classic)
    - Click "Generate new token (classic)"
    - Select scopes:
      - ✅ `repo` (Full control of private repositories)
@@ -56,6 +58,7 @@ GOOGLE_ANALYTICS_ID=G-XXXXXXXXXX
 ### Deployment Environment Secrets
 
 #### Staging Environment (Optional)
+
 ```bash
 STAGING_DATABASE_URL=postgresql://staging_user:staging_pass@staging-db:5432/lightningtalk_staging
 STAGING_REDIS_URL=redis://staging-redis:6379
@@ -63,6 +66,7 @@ STAGING_WP_SITE_URL=https://staging.lightningtalk.com
 ```
 
 #### Production Environment
+
 ```bash
 PROD_DATABASE_URL=postgresql://prod_user:prod_pass@prod-db:5432/lightningtalk_prod
 PROD_REDIS_URL=redis://prod-redis:6379
@@ -79,6 +83,7 @@ PROD_REDIS_URL=redis://prod-redis:6379
 ### Validation
 
 After configuring secrets, verify by running:
+
 ```bash
 # This should pass once secrets are configured
 npm run validate-config
@@ -87,6 +92,7 @@ npm run validate-config
 ### Emergency Procedures
 
 **If secrets are compromised:**
+
 1. Immediately revoke all tokens
 2. Generate new secrets using the commands above
 3. Update GitHub repository secrets
@@ -95,6 +101,6 @@ npm run validate-config
 
 ---
 
-**Status**: ⚠️ PENDING CONFIGURATION
-**Priority**: 🚨 CRITICAL - Required before any deployment
-**Next Steps**: Configure GitHub Secrets → Test deployment pipeline
+**Status**: ⚠️ PENDING CONFIGURATION **Priority**: 🚨 CRITICAL - Required before
+any deployment **Next Steps**: Configure GitHub Secrets → Test deployment
+pipeline

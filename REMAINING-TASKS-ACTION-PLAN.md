@@ -6,24 +6,26 @@
 
 ## 📋 エグゼクティブサマリー
 
-本計画は、Lightning Talk Circleプロジェクトの残タスクを業界ベストプラクティスに基づいて体系的に対応するためのアクションプランです。リスク軽減、自動化、段階的移行を重視した実践的アプローチを採用しています。
+本計画は、Lightning Talk
+Circleプロジェクトの残タスクを業界ベストプラクティスに基づいて体系的に対応するためのアクションプランです。リスク軽減、自動化、段階的移行を重視した実践的アプローチを採用しています。
 
 ## 🎯 優先度マトリクス
 
-| タスク | 影響度 | 工数 | 優先順位 | 対応時期 |
-|-------|--------|------|----------|----------|
-| 壊れたリンク修正（33個） | 🔴 Critical | 中（2-3日） | P1 | 今週 |
-| CloudFront OAI設定完了 | 🔴 Critical | 低（1日） | P2 | 今週 |
-| CLAUDE.md更新 | 🟡 High | 低（0.5日） | P3 | 今週 |
-| ドキュメント実移行 | 🟡 High | 中（3-4日） | P4 | 来週 |
-| Lambda/Docker検証 | 🟡 High | 中（2-3日） | P5 | 再来週 |
-| ソースコード最適化 | 🟢 Medium | 高（1週間） | P6 | 来月 |
+| タスク                   | 影響度      | 工数        | 優先順位 | 対応時期 |
+| ------------------------ | ----------- | ----------- | -------- | -------- |
+| 壊れたリンク修正（33個） | 🔴 Critical | 中（2-3日） | P1       | 今週     |
+| CloudFront OAI設定完了   | 🔴 Critical | 低（1日）   | P2       | 今週     |
+| CLAUDE.md更新            | 🟡 High     | 低（0.5日） | P3       | 今週     |
+| ドキュメント実移行       | 🟡 High     | 中（3-4日） | P4       | 来週     |
+| Lambda/Docker検証        | 🟡 High     | 中（2-3日） | P5       | 再来週   |
+| ソースコード最適化       | 🟢 Medium   | 高（1週間） | P6       | 来月     |
 
 ## 🔴 Phase 1: 即時対応項目（今週実施）
 
 ### 1.1 壊れたリンクの体系的修正
 
 #### 自動修正スクリプトの強化
+
 ```javascript
 // scripts/fix-broken-links.js
 #!/usr/bin/env node
@@ -41,17 +43,17 @@ class LinkFixer {
       '/docs/project/issue-creation-plan.md': '/docs-new/project/planning/issue-creation.md',
       'docs/wordpress-development-guide.md': 'docs-new/development/wordpress/guide.md'
     };
-    
+
     this.redirects = new Map();
   }
 
   async fixBrokenLinks() {
     console.log('🔧 壊れたリンクの自動修正を開始...');
-    
+
     // Step 1: 自動修正可能なリンクを一括修正
     const report = JSON.parse(fs.readFileSync('./LINK-CHECK-REPORT.json'));
     let fixedCount = 0;
-    
+
     for (const brokenLink of report.brokenLinks) {
       if (this.fixes[brokenLink.url]) {
         await this.replaceLink(
@@ -62,18 +64,18 @@ class LinkFixer {
         fixedCount++;
       }
     }
-    
+
     console.log(`✅ ${fixedCount}個のリンクを自動修正しました`);
-    
+
     // Step 2: 残りのリンクに対してリダイレクトマップを生成
     this.generateRedirectMap(report.brokenLinks.filter(
       link => !this.fixes[link.url]
     ));
-    
+
     // Step 3: 修正レポートの生成
     this.generateFixReport();
   }
-  
+
   generateRedirectMap(remainingLinks) {
     const redirects = {};
     remainingLinks.forEach(link => {
@@ -83,7 +85,7 @@ class LinkFixer {
         redirects[link.url] = suggestions[0];
       }
     });
-    
+
     fs.writeFileSync('./docs-redirects.json', JSON.stringify(redirects, null, 2));
     console.log('📝 リダイレクトマップを生成しました: docs-redirects.json');
   }
@@ -95,6 +97,7 @@ fixer.fixBrokenLinks();
 ```
 
 #### 手動修正が必要なリンクの対応手順
+
 ```bash
 # 1. 自動修正の実行
 node scripts/fix-broken-links.js
@@ -109,12 +112,14 @@ cat LINK-CHECK-REPORT.md | grep "❌" | grep -v "Auto-fixed"
 ### 1.2 CLAUDE.md の AI最適化更新
 
 #### 更新内容
-```markdown
+
+````markdown
 # CLAUDE.md 追加セクション
 
 ## 🆕 新機能（v1.8.0 - 2025年7月）
 
 ### ビルドアーティファクト管理
+
 ```bash
 # 全アーティファクトのビルド
 npm run build:all
@@ -132,8 +137,10 @@ build-artifacts/
 ├── wordpress/v1.8.0/
 └── docker/v1.8.0/
 ```
+````
 
 ### 環境設定管理
+
 ```bash
 # 環境切り替え（インタラクティブ）
 npm run env:switch
@@ -149,6 +156,7 @@ npm run env:backup
 ```
 
 ### ドキュメント管理
+
 ```bash
 # ドキュメント移行（ドライラン）
 npm run docs:migrate:dry-run
@@ -163,17 +171,22 @@ npm run docs:check-links:fix
 ## 🚨 既知の問題と対処法
 
 ### 問題: ES Modules エラー
+
 ```
 ReferenceError: require is not defined in ES module scope
 ```
+
 **対処**: スクリプトを.cjs拡張子に変更
 
 ### 問題: 壊れたドキュメントリンク（33個）
+
 **対処**: `npm run docs:check-links:fix` を実行
 
 ### 問題: CloudFront アクセス不可
+
 **対処**: OAI設定の完了待ち（作業中）
-```
+
+````
 
 ## 🟡 Phase 2: 短期対応項目（来週実施）
 
@@ -229,9 +242,10 @@ git add -A
 git commit -m "docs: ドキュメント構造の最適化移行完了"
 
 echo "✅ ドキュメント移行が正常に完了しました！"
-```
+````
 
 #### リダイレクト設定
+
 ```nginx
 # nginx設定例（静的サイトホスティング用）
 location ~ ^/docs/(.*)$ {
@@ -252,6 +266,7 @@ if (docRedirects[window.location.pathname]) {
 ### 2.2 Lambda/Dockerビルド検証フレームワーク
 
 #### 包括的テストスイート
+
 ```javascript
 // test/build-system.test.js
 const { exec } = require('child_process');
@@ -265,7 +280,8 @@ describe('Build System Validation', () => {
     });
 
     test('Lambda package should be created', () => {
-      const packagePath = 'build-artifacts/lambda/latest/lightningtalk-lambda-*.zip';
+      const packagePath =
+        'build-artifacts/lambda/latest/lightningtalk-lambda-*.zip';
       expect(fs.existsSync(packagePath)).toBe(true);
     });
 
@@ -289,7 +305,9 @@ describe('Build System Validation', () => {
     });
 
     test('Docker image should pass security scan', async () => {
-      const scanResult = await execAsync('docker scan lightningtalk-circle:latest');
+      const scanResult = await execAsync(
+        'docker scan lightningtalk-circle:latest'
+      );
       expect(scanResult.vulnerabilities.high).toBe(0);
       expect(scanResult.vulnerabilities.critical).toBe(0);
     });
@@ -302,6 +320,7 @@ describe('Build System Validation', () => {
 ### 3.1 技術的負債の体系的管理
 
 #### 負債追跡システムの実装
+
 ```javascript
 // scripts/tech-debt-tracker.js
 class TechDebtTracker {
@@ -340,32 +359,33 @@ class TechDebtTracker {
 ### 3.2 継続的改善プロセス
 
 #### 自動化パイプライン
+
 ```yaml
 # .github/workflows/continuous-improvement.yml
 name: Continuous Improvement
 
 on:
   schedule:
-    - cron: '0 9 * * MON'  # 毎週月曜日9時
+    - cron: '0 9 * * MON' # 毎週月曜日9時
 
 jobs:
   analyze:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      
+
       - name: Run link checker
         run: npm run docs:check-links
-        
+
       - name: Analyze build times
         run: npm run analyze:build-times
-        
+
       - name: Check dependencies
         run: npm audit
-        
+
       - name: Generate improvement report
         run: npm run generate:improvement-report
-        
+
       - name: Create issues for findings
         run: npm run create:improvement-issues
 ```
@@ -373,18 +393,21 @@ jobs:
 ## 📊 成功指標とKPI
 
 ### 短期目標（2週間）
+
 - ✅ 壊れたリンク: 33個 → 0個
 - ✅ ドキュメント移行: 100%完了
 - ✅ ビルド成功率: 100%
 - ✅ CLAUDE.md更新: 完了
 
 ### 中期目標（1ヶ月）
+
 - 📈 ビルド時間: 30%短縮
 - 📈 テストカバレッジ: 80% → 90%
 - 📈 技術的負債: 20%削減
 - 📈 ドキュメント品質スコア: 95%以上
 
 ### 長期目標（3ヶ月）
+
 - 🎯 完全自動化されたCI/CDパイプライン
 - 🎯 ゼロダウンタイムデプロイメント
 - 🎯 包括的な監視・アラートシステム
@@ -393,14 +416,16 @@ jobs:
 ## 🚨 リスク管理
 
 ### リスクマトリクス
-| リスク | 発生確率 | 影響度 | 軽減策 |
-|--------|----------|--------|--------|
-| ドキュメント移行失敗 | 低 | 高 | 段階的移行、完全バックアップ |
-| ビルド破損 | 中 | 高 | ロールバック手順、テスト強化 |
-| リンク修正ミス | 中 | 中 | 自動検証、リダイレクト設定 |
-| チーム混乱 | 低 | 中 | 明確な文書化、段階的導入 |
+
+| リスク               | 発生確率 | 影響度 | 軽減策                       |
+| -------------------- | -------- | ------ | ---------------------------- |
+| ドキュメント移行失敗 | 低       | 高     | 段階的移行、完全バックアップ |
+| ビルド破損           | 中       | 高     | ロールバック手順、テスト強化 |
+| リンク修正ミス       | 中       | 中     | 自動検証、リダイレクト設定   |
+| チーム混乱           | 低       | 中     | 明確な文書化、段階的導入     |
 
 ### ロールバック手順
+
 ```bash
 #!/bin/bash
 # scripts/emergency-rollback.sh
@@ -427,6 +452,7 @@ echo "✅ ロールバック完了: $LATEST_BACKUP"
 ## 📅 実施スケジュール
 
 ### Week 1（今週）
+
 - [月] 壊れたリンクの自動修正実行
 - [火] 手動リンク修正完了
 - [水] CLAUDE.md更新
@@ -434,12 +460,14 @@ echo "✅ ロールバック完了: $LATEST_BACKUP"
 - [金] Phase 1完了レビュー
 
 ### Week 2（来週）
+
 - [月] ドキュメント移行準備
 - [火-水] 段階的ドキュメント移行
 - [木] Lambda/Dockerテスト環境構築
 - [金] Phase 2完了レビュー
 
 ### Week 3-4（再来週〜）
+
 - 技術的負債管理システム導入
 - 継続的改善プロセス確立
 - ソースコード構造最適化計画
@@ -447,10 +475,11 @@ echo "✅ ロールバック完了: $LATEST_BACKUP"
 ## 🎯 次のアクション
 
 1. **本日実施**
+
    ```bash
    # 壊れたリンクの自動修正
    node scripts/fix-broken-links.js
-   
+
    # CLAUDE.md更新の準備
    cp CLAUDE.md CLAUDE.md.backup
    ```
@@ -465,6 +494,7 @@ echo "✅ ロールバック完了: $LATEST_BACKUP"
    - ドキュメント移行の準備
 
 ---
+
 **生成日**: 2025年7月25日  
 **プロジェクト**: Lightning Talk Circle v1.8.0  
 **ベストプラクティス準拠**: ✅

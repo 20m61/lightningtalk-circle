@@ -6,12 +6,12 @@ const crypto = require('crypto');
 
 // Simple color functions
 const colors = {
-  blue: (text) => `\x1b[34m${text}\x1b[0m`,
-  green: (text) => `\x1b[32m${text}\x1b[0m`,
-  yellow: (text) => `\x1b[33m${text}\x1b[0m`,
-  red: (text) => `\x1b[31m${text}\x1b[0m`,
-  gray: (text) => `\x1b[90m${text}\x1b[0m`,
-  bold: (text) => `\x1b[1m${text}\x1b[0m`
+  blue: text => `\x1b[34m${text}\x1b[0m`,
+  green: text => `\x1b[32m${text}\x1b[0m`,
+  yellow: text => `\x1b[33m${text}\x1b[0m`,
+  red: text => `\x1b[31m${text}\x1b[0m`,
+  gray: text => `\x1b[90m${text}\x1b[0m`,
+  bold: text => `\x1b[1m${text}\x1b[0m`
 };
 
 class DuplicateFinder {
@@ -42,7 +42,7 @@ class DuplicateFinder {
 
   findDuplicates() {
     console.log(colors.bold('🔍 重複ファイル検索ツール'));
-    console.log(colors.gray('=' .repeat(60)));
+    console.log(colors.gray('='.repeat(60)));
 
     // 既知の重複ファイル
     const knownDuplicates = [
@@ -56,29 +56,24 @@ class DuplicateFinder {
       },
       {
         original: 'docs/api/reference.md',
-        duplicates: [
-          'docs-new/api/reference.md'
-        ]
+        duplicates: ['docs-new/api/reference.md']
       }
     ];
 
     // プロジェクト固有のファイルを収集
-    const projectFiles = [
-      'docs/project/*.md',
-      'docs-new/legacy/project/*.md'
-    ];
+    const projectFiles = ['docs/project/*.md', 'docs-new/legacy/project/*.md'];
 
     // ファイルハッシュマップを作成
     const fileHashes = new Map();
-    
+
     console.log(colors.blue('\n📊 ファイル分析中...'));
-    
+
     // 既知の重複をチェック
     knownDuplicates.forEach(dup => {
       const originalPath = path.join(this.projectRoot, dup.original);
       if (fs.existsSync(originalPath)) {
         const originalHash = this.getFileHash(originalPath);
-        
+
         dup.duplicates.forEach(dupPath => {
           const fullDupPath = path.join(this.projectRoot, dupPath);
           if (fs.existsSync(fullDupPath)) {
@@ -96,14 +91,14 @@ class DuplicateFinder {
     });
 
     // プレースホルダーファイルを検出
-    const checkPlaceholders = (dir) => {
+    const checkPlaceholders = dir => {
       if (!fs.existsSync(dir)) return;
-      
+
       const items = fs.readdirSync(dir);
       items.forEach(item => {
         const fullPath = path.join(dir, item);
         const stat = fs.statSync(fullPath);
-        
+
         if (stat.isDirectory()) {
           checkPlaceholders(fullPath);
         } else if (item.endsWith('.md') && this.isPlaceholder(fullPath)) {
@@ -117,17 +112,17 @@ class DuplicateFinder {
     checkPlaceholders(path.join(this.projectRoot, 'docs-new'));
 
     // 空のディレクトリを検出
-    const checkEmptyDirs = (dir) => {
+    const checkEmptyDirs = dir => {
       if (!fs.existsSync(dir)) return;
-      
+
       const items = fs.readdirSync(dir);
-      
+
       if (items.length === 0) {
         const relativePath = path.relative(this.projectRoot, dir);
         this.emptyDirs.push(relativePath);
         return;
       }
-      
+
       items.forEach(item => {
         const fullPath = path.join(dir, item);
         const stat = fs.statSync(fullPath);
@@ -143,7 +138,7 @@ class DuplicateFinder {
 
   generateReport() {
     console.log(colors.bold('\n📋 重複ファイルレポート'));
-    console.log(colors.gray('=' .repeat(60)));
+    console.log(colors.gray('='.repeat(60)));
 
     if (this.duplicates.length > 0) {
       console.log(colors.yellow('\n⚠️  重複ファイル:'));
@@ -188,7 +183,7 @@ echo "✅ クリーンアップ完了"
     fs.writeFileSync(scriptPath, cleanupScript);
     fs.chmodSync(scriptPath, '755');
 
-    console.log(colors.gray('\n' + '=' .repeat(60)));
+    console.log(colors.gray('\n' + '='.repeat(60)));
     console.log(colors.bold('📊 サマリー:'));
     console.log(`  重複ファイル: ${colors.red(this.duplicates.length + '個')}`);
     console.log(`  プレースホルダー: ${colors.yellow(this.placeholders.length + '個')}`);

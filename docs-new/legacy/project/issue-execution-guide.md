@@ -1,6 +1,8 @@
 # Issue Creation Execution Guide
 
-This document provides the final implementation steps to execute the issue creation process for the Lightning Talk Circle project. It serves as a concise execution checklist based on all the documentation and tools already developed.
+This document provides the final implementation steps to execute the issue
+creation process for the Lightning Talk Circle project. It serves as a concise
+execution checklist based on all the documentation and tools already developed.
 
 ## Prerequisites
 
@@ -30,22 +32,26 @@ Choose one of the following methods to create the issues:
 #### Option A: Automated Creation (Recommended)
 
 1. Clone the repository (if not already done):
+
    ```bash
    git clone https://github.com/20m61/lightningtalk-circle.git
    cd lightningtalk-circle
    ```
 
 2. Install the required dependencies:
+
    ```bash
    npm install @octokit/rest dotenv
    ```
 
 3. Create a `.env` file with your GitHub token:
+
    ```bash
    echo "GITHUB_TOKEN=your_personal_access_token" > .env
    ```
 
 4. Run the issue creation script:
+
    ```bash
    node scripts/create-issues.js
    ```
@@ -56,7 +62,8 @@ Choose one of the following methods to create the issues:
 
 If you prefer to create issues manually or encounter issues with the script:
 
-1. Follow the detailed steps in [Issue Implementation Guide](/docs/project/issue-implementation-guide.md)
+1. Follow the detailed steps in
+   [Issue Implementation Guide](/docs/project/issue-implementation-guide.md)
 2. Create each issue type by type, following the priority order:
    - Infrastructure/foundation issues
    - Core feature issues
@@ -74,7 +81,9 @@ After creating all issues:
    - Complete acceptance criteria
    - Well-formatted content
 
-3. Use the [Issue Verification Checklist](/docs/project/issue-verification-checklist.md) to validate consistency
+3. Use the
+   [Issue Verification Checklist](/docs/project/issue-verification-checklist.md)
+   to validate consistency
 
 ### 4. Organize Project Board (Optional)
 
@@ -129,4 +138,6 @@ The following issues have been prepared for creation:
    - Regularly update issue status as work progresses
    - Use the project board to visualize workflow
 
-By following this execution guide, you will complete the issue creation process and establish a solid foundation for the Lightning Talk Circle project's development.
+By following this execution guide, you will complete the issue creation process
+and establish a solid foundation for the Lightning Talk Circle project's
+development.

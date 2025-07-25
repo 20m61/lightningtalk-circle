@@ -1,6 +1,7 @@
 # DynamoDB Rollback Procedure
 
-This document outlines the rollback procedure for reverting from DynamoDB to the file-based database system.
+This document outlines the rollback procedure for reverting from DynamoDB to the
+file-based database system.
 
 ## Prerequisites
 
@@ -15,29 +16,30 @@ This document outlines the rollback procedure for reverting from DynamoDB to the
 If the application experiences issues after migrating to DynamoDB:
 
 1. **Immediate Rollback (< 24 hours)**
+
    ```bash
    # Stop the application
    npm run stop
-   
+
    # Run the rollback command
    npm run migrate-to-dynamodb rollback
-   
+
    # Update environment variables
    export DATABASE_TYPE=file
-   
+
    # Restart the application
    npm run start
    ```
 
-2. **Rollback with Data Preservation**
-   If new data was added after migration:
+2. **Rollback with Data Preservation** If new data was added after migration:
+
    ```bash
    # Export current DynamoDB data
    npm run export-dynamodb-data
-   
+
    # Run rollback
    npm run migrate-to-dynamodb rollback
-   
+
    # Merge new data (manual process)
    npm run merge-data-manual
    ```
@@ -52,6 +54,7 @@ If DynamoDB performance doesn't meet expectations:
    - Analyze request latency
 
 2. **Temporary Mitigation**
+
    ```bash
    # Switch to on-demand billing if using provisioned
    aws dynamodb update-table \
@@ -59,8 +62,7 @@ If DynamoDB performance doesn't meet expectations:
      --billing-mode PAY_PER_REQUEST
    ```
 
-3. **Full Rollback**
-   Follow Scenario 1 procedures
+3. **Full Rollback** Follow Scenario 1 procedures
 
 ### Scenario 3: Cost Issues
 
@@ -76,8 +78,7 @@ If DynamoDB costs exceed budget:
    - Remove unnecessary GSIs
    - Implement caching layer
 
-3. **Rollback if Necessary**
-   Follow Scenario 1 procedures
+3. **Rollback if Necessary** Follow Scenario 1 procedures
 
 ## Step-by-Step Rollback Procedure
 
@@ -240,16 +241,17 @@ echo "Data exported to ${EXPORT_DIR}"
 2. **Backup Retention**: Keep migration backups for at least 30 days
 3. **Testing**: Always test rollback procedure in staging first
 4. **Communication**: Notify stakeholders before and after rollback
-5. **Documentation**: Document the reason for rollback and any issues encountered
+5. **Documentation**: Document the reason for rollback and any issues
+   encountered
 
 ## Rollback Decision Matrix
 
-| Issue Type | Severity | Recommended Action | Rollback? |
-|------------|----------|-------------------|-----------|
-| Data Loss | Critical | Immediate rollback | Yes |
-| Performance | High | Optimize first | Maybe |
-| Cost | Medium | Review usage | Maybe |
-| Minor Bugs | Low | Fix in place | No |
+| Issue Type  | Severity | Recommended Action | Rollback? |
+| ----------- | -------- | ------------------ | --------- |
+| Data Loss   | Critical | Immediate rollback | Yes       |
+| Performance | High     | Optimize first     | Maybe     |
+| Cost        | Medium   | Review usage       | Maybe     |
+| Minor Bugs  | Low      | Fix in place       | No        |
 
 ## Post-Rollback Actions
 

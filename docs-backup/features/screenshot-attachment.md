@@ -2,7 +2,9 @@
 
 ## 概要
 
-Lightning Talk CircleプロジェクトにPR（Pull Request）用のスクリーンショット添付機能を実装しました。この機能により、開発者はスクリーンショットを簡単にS3にアップロードし、GitHub PRコメントとして投稿できます。
+Lightning Talk CircleプロジェクトにPR（Pull
+Request）用のスクリーンショット添付機能を実装しました。この機能により、開発者はスクリーンショットを簡単にS3にアップロードし、GitHub
+PRコメントとして投稿できます。
 
 ## アーキテクチャ
 
@@ -33,7 +35,7 @@ Lightning Talk CircleプロジェクトにPR（Pull Request）用のスクリー
 ### 2. Lambda Function (cdk/lambda/presigned-url/)
 
 - **アップロード用URL生成**: POST /upload-url
-- **ダウンロード用URL生成**: GET /download-url  
+- **ダウンロード用URL生成**: GET /download-url
 - **ヘルスチェック**: GET /health
 - **ファイル形式検証**: PNG, JPG, GIF, WebP対応
 - **サイズ制限**: dev 10MB、prod 20MB
@@ -69,6 +71,7 @@ Lightning Talk CircleプロジェクトにPR（Pull Request）用のスクリー
 ### 2. API経由での使用
 
 #### 署名付きURL取得
+
 ```javascript
 const response = await fetch('/api/screenshots/upload-url', {
   method: 'POST',
@@ -86,6 +89,7 @@ const { data } = await response.json();
 ```
 
 #### S3へのアップロード
+
 ```javascript
 await fetch(data.uploadUrl, {
   method: 'PUT',
@@ -95,15 +99,14 @@ await fetch(data.uploadUrl, {
 ```
 
 #### PRコメント投稿
+
 ```javascript
 await fetch('/api/screenshots/post-to-pr', {
   method: 'POST',
   headers: { 'Content-Type': 'application/json' },
   body: JSON.stringify({
     prNumber: 123,
-    screenshots: [
-      { url: data.downloadUrl, filename: 'screenshot.png' }
-    ],
+    screenshots: [{ url: data.downloadUrl, filename: 'screenshot.png' }],
     message: 'スクリーンショットを添付しました',
     userId: 'user123'
   })
@@ -206,28 +209,37 @@ npx cdk deploy LTC-ScreenshotStorage-dev --app "node bin/cdk-optimized.js" -c en
 ### 1. よくある問題
 
 #### アップロードが失敗する
+
 ```
 Error: Failed to generate presigned URL
 ```
+
 **解決策**:
+
 1. Lambda関数が正しくデプロイされているか確認
 2. IAMロールの権限を確認
 3. S3バケットが存在するか確認
 
 #### PRコメント投稿が失敗する
+
 ```
 Error: Pull request not found
 ```
+
 **解決策**:
+
 1. `GITHUB_TOKEN`が設定されているか確認
 2. トークンの権限が適切か確認
 3. PR番号が正しいか確認
 
 #### ファイル形式エラー
+
 ```
 Error: File extension not allowed
 ```
+
 **解決策**:
+
 1. 対応形式（PNG, JPG, GIF, WebP）を使用
 2. ファイル名に特殊文字が含まれていないか確認
 

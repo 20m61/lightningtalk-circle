@@ -181,7 +181,7 @@ npm run build:all            # 全てのビルド成果物を作成
 
 # 個別パッケージング
 npm run package:static       # 静的サイトパッケージング
-npm run package:lambda       # Lambda関数パッケージング  
+npm run package:lambda       # Lambda関数パッケージング
 npm run package:wp-themes    # WordPressテーマパッケージング
 npm run package:docker       # Dockerイメージパッケージング
 

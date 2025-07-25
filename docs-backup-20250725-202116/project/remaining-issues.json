@@ -17,7 +17,11 @@
       "technical_details": {
         "affected_files": ["tests/unit/services/websocket.test.js", "server/websocket.js"],
         "root_cause": "未調査",
-        "proposed_solutions": ["afterEachでの適切なソケットクローズ処理", "テストタイムアウトの延長", "モックの改善"]
+        "proposed_solutions": [
+          "afterEachでの適切なソケットクローズ処理",
+          "テストタイムアウトの延長",
+          "モックの改善"
+        ]
       }
     },
     {
@@ -60,7 +64,12 @@
         "メモリプロファイリングレポートの作成"
       ],
       "technical_details": {
-        "areas_to_check": ["WebSocket接続管理", "イベントリスナーの解放", "データベース接続プール", "キャッシュ管理"],
+        "areas_to_check": [
+          "WebSocket接続管理",
+          "イベントリスナーの解放",
+          "データベース接続プール",
+          "キャッシュ管理"
+        ],
         "tools": ["heapdump", "clinic.js", "Chrome DevTools"]
       }
     },
@@ -78,7 +87,11 @@
       ],
       "technical_details": {
         "symptoms": "git diffで大量の削除が表示される",
-        "possible_causes": ["npm/nodeバージョンの不一致", "不適切な.gitignore設定", "package-lock.jsonの競合"]
+        "possible_causes": [
+          "npm/nodeバージョンの不一致",
+          "不適切な.gitignore設定",
+          "package-lock.jsonの競合"
+        ]
       }
     },
     {
@@ -98,7 +111,12 @@
           "main.js": "+425 lines",
           "style.css": "+504 lines"
         },
-        "optimization_targets": ["コード分割の実装", "Tree shakingの適用", "CSS purgeの実装", "画像の遅延読み込み"]
+        "optimization_targets": [
+          "コード分割の実装",
+          "Tree shakingの適用",
+          "CSS purgeの実装",
+          "画像の遅延読み込み"
+        ]
       }
     },
     {

@@ -2,9 +2,11 @@
 
 ## 🔒 Security Implementation Overview
 
-Lightning Talk CircleのAPIには、包括的なセキュリティ対策と入力検証が実装されています。
+Lightning Talk
+CircleのAPIには、包括的なセキュリティ対策と入力検証が実装されています。
 
 ### Security Architecture
+
 ```
 Request Flow
 ├── Rate Limiting           # IP-based request limiting
@@ -19,6 +21,7 @@ Request Flow
 ## 🛡️ Input Validation Rules
 
 ### Event Validation
+
 ```javascript
 // Event Creation/Update
 {
@@ -28,7 +31,7 @@ Request Flow
   endDate: "Optional, after start date, max 24h duration",
   venue: {
     name: "2-100 characters, escaped",
-    address: "5-200 characters, escaped", 
+    address: "5-200 characters, escaped",
     capacity: "1-10000 integer",
     onlineUrl: "Valid HTTP/HTTPS URL (if online=true)"
   },
@@ -39,6 +42,7 @@ Request Flow
 ```
 
 ### Participant Validation
+
 ```javascript
 // Registration
 {
@@ -57,6 +61,7 @@ Request Flow
 ```
 
 ### Talk Submission Validation
+
 ```javascript
 // Talk Proposals
 {
@@ -75,11 +80,12 @@ Request Flow
 ## 🚦 Rate Limiting Configuration
 
 ### Endpoint-Specific Limits
+
 ```javascript
 // API Rate Limits
 General API:       100 requests / 15 minutes
 Registration:      5 attempts / hour
-Email Operations:  10 requests / hour  
+Email Operations:  10 requests / hour
 Admin Operations:  50 requests / 10 minutes
 
 // WordPress Integration
@@ -88,6 +94,7 @@ Config Updates:    10 requests / hour
 ```
 
 ### Implementation
+
 ```javascript
 // Rate limiter with security logging
 export const rateLimiters = {
@@ -114,11 +121,12 @@ export const rateLimiters = {
 ## 🔐 CORS Security Configuration
 
 ### Environment-Specific Origins
+
 ```javascript
 // Production CORS
 origin: [
   'https://xn--6wym69a.com',
-  'https://www.xn--6wym69a.com', 
+  'https://www.xn--6wym69a.com',
   'https://発表.com',
   'https://www.発表.com'
 ],
@@ -141,6 +149,7 @@ origin: [
 ```
 
 ### Dynamic CORS Validation
+
 ```javascript
 // Origin validation with logging
 origin: (origin, callback) => {
@@ -150,17 +159,18 @@ origin: (origin, callback) => {
     console.warn('CORS: Blocked request from:', origin);
     callback(new Error('Not allowed by CORS policy'));
   }
-}
+};
 ```
 
 ## 🛡️ Security Headers
 
 ### Comprehensive Header Protection
+
 ```javascript
 // Security headers applied to all responses
 {
   'X-Content-Type-Options': 'nosniff',
-  'X-Frame-Options': 'SAMEORIGIN', 
+  'X-Frame-Options': 'SAMEORIGIN',
   'X-XSS-Protection': '1; mode=block',
   'Referrer-Policy': 'strict-origin-when-cross-origin',
   'Permissions-Policy': 'camera=(), microphone=(), geolocation=()',
@@ -170,6 +180,7 @@ origin: (origin, callback) => {
 ```
 
 ### Content Security Policy
+
 ```javascript
 // CSP Configuration
 {
@@ -187,9 +198,10 @@ origin: (origin, callback) => {
 ## 🧹 Input Sanitization
 
 ### XSS Prevention
+
 ```javascript
 // Null byte removal
-const removeNullBytes = (obj) => {
+const removeNullBytes = obj => {
   if (typeof obj === 'string') {
     return obj.replace(/\0/g, '');
   }
@@ -198,28 +210,30 @@ const removeNullBytes = (obj) => {
 };
 
 // HTML escaping for user content
-body('description').trim().escape()
-body('notes').trim().isLength({max: 1000}).escape()
+body('description').trim().escape();
+body('notes').trim().isLength({ max: 1000 }).escape();
 ```
 
 ### SQL Injection Prevention
+
 ```javascript
 // Parameter validation patterns
-param('id').matches(/^[a-zA-Z0-9\-_]{3,50}$/)
-query('q').trim().isLength({min: 1, max: 100}).escape()
+param('id').matches(/^[a-zA-Z0-9\-_]{3,50}$/);
+query('q').trim().isLength({ min: 1, max: 100 }).escape();
 
 // Suspicious pattern detection
 const suspiciousPatterns = [
   /\.\.\//, // Path traversal
-  /<script/i, // XSS attempts  
+  /<script/i, // XSS attempts
   /union.*select/i, // SQL injection
-  /javascript:/i, // Javascript protocol
+  /javascript:/i // Javascript protocol
 ];
 ```
 
 ## 📁 File Upload Security
 
 ### File Validation Rules
+
 ```javascript
 // File constraints
 maxSize: 10MB
@@ -233,7 +247,7 @@ suspiciousPatterns: [
 
 // Validation process
 1. File size check (max 10MB)
-2. Extension whitelist validation  
+2. Extension whitelist validation
 3. MIME type verification
 4. Malicious pattern detection
 5. Virus scanning (future enhancement)
@@ -242,6 +256,7 @@ suspiciousPatterns: [
 ## 🔑 API Authentication
 
 ### API Key Validation
+
 ```javascript
 // Protected endpoints
 /api/admin/*     - Requires X-API-Key header
@@ -263,6 +278,7 @@ if (!validKeys.includes(apiKey)) {
 ```
 
 ### Key Management
+
 ```bash
 # Environment variables
 API_KEYS="key1,key2,key3"
@@ -278,9 +294,10 @@ SESSION_SECRET="64-byte-secure-random-string"
 ## 📊 Security Monitoring
 
 ### Request Logging
+
 ```javascript
 // Suspicious activity detection
-const isSuspicious = suspiciousPatterns.some(pattern => 
+const isSuspicious = suspiciousPatterns.some(pattern =>
   pattern.test(`${req.method} ${req.url} ${JSON.stringify(req.body)}`)
 );
 
@@ -297,6 +314,7 @@ if (isSuspicious) {
 ```
 
 ### Performance Monitoring
+
 ```javascript
 // Slow request detection
 res.on('finish', () => {
@@ -315,6 +333,7 @@ res.on('finish', () => {
 ## 🚨 Error Handling
 
 ### Secure Error Responses
+
 ```javascript
 // Production error handler
 if (process.env.NODE_ENV === 'production') {
@@ -336,6 +355,7 @@ if (process.env.NODE_ENV === 'production') {
 ```
 
 ### Validation Error Format
+
 ```javascript
 // Consistent validation error structure
 {
@@ -357,17 +377,16 @@ if (process.env.NODE_ENV === 'production') {
 ## 🔍 Testing Security
 
 ### Validation Testing
+
 ```javascript
 // Jest test examples
 describe('Input Validation', () => {
   test('should reject XSS attempts in title', async () => {
-    const response = await request(app)
-      .post('/api/events')
-      .send({
-        title: '<script>alert("xss")</script>',
-        description: 'Test event'
-      });
-    
+    const response = await request(app).post('/api/events').send({
+      title: '<script>alert("xss")</script>',
+      description: 'Test event'
+    });
+
     expect(response.status).toBe(400);
     expect(response.body.errors).toContainEqual(
       expect.objectContaining({
@@ -384,17 +403,18 @@ describe('Input Validation', () => {
         .post('/api/participants/register')
         .send(validRegistrationData);
     }
-    
+
     const response = await request(app)
       .post('/api/participants/register')
       .send(validRegistrationData);
-    
+
     expect(response.status).toBe(429);
   });
 });
 ```
 
 ### Security Scan Integration
+
 ```bash
 # npm audit integration
 npm run security:audit    # Run security audit
@@ -409,6 +429,7 @@ snyk monitor              # Monitor for new issues
 ## 📋 Security Checklist
 
 ### Pre-Deployment Security Audit
+
 - [ ] All inputs validated and sanitized
 - [ ] Rate limiting configured for all endpoints
 - [ ] CORS properly configured for environment
@@ -423,6 +444,7 @@ snyk monitor              # Monitor for new issues
 - [ ] Dependencies updated and audited
 
 ### Runtime Security Monitoring
+
 - [ ] Request rate monitoring
 - [ ] Failed authentication attempts tracking
 - [ ] Suspicious pattern detection
@@ -432,6 +454,7 @@ snyk monitor              # Monitor for new issues
 - [ ] API key usage monitoring
 
 ### Regular Security Maintenance
+
 - [ ] Weekly dependency updates
 - [ ] Monthly security audits
 - [ ] Quarterly penetration testing

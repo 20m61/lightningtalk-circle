@@ -5,12 +5,12 @@ const path = require('path');
 
 // Simple color functions
 const colors = {
-  blue: (text) => `\x1b[34m${text}\x1b[0m`,
-  green: (text) => `\x1b[32m${text}\x1b[0m`,
-  yellow: (text) => `\x1b[33m${text}\x1b[0m`,
-  red: (text) => `\x1b[31m${text}\x1b[0m`,
-  gray: (text) => `\x1b[90m${text}\x1b[0m`,
-  bold: (text) => `\x1b[1m${text}\x1b[0m`
+  blue: text => `\x1b[34m${text}\x1b[0m`,
+  green: text => `\x1b[32m${text}\x1b[0m`,
+  yellow: text => `\x1b[33m${text}\x1b[0m`,
+  red: text => `\x1b[31m${text}\x1b[0m`,
+  gray: text => `\x1b[90m${text}\x1b[0m`,
+  bold: text => `\x1b[1m${text}\x1b[0m`
 };
 
 // 中優先度ドキュメントの定義
@@ -770,7 +770,7 @@ aws dynamodb query \\
 ];
 
 console.log(colors.bold('📚 中優先度ドキュメント作成'));
-console.log(colors.gray('=' .repeat(60)));
+console.log(colors.gray('='.repeat(60)));
 
 let successCount = 0;
 let errorCount = 0;
@@ -779,15 +779,15 @@ mediumPriorityDocs.forEach(doc => {
   try {
     const fullPath = path.join(process.cwd(), doc.path);
     const dir = path.dirname(fullPath);
-    
+
     // ディレクトリが存在しない場合は作成
     if (!fs.existsSync(dir)) {
       fs.mkdirSync(dir, { recursive: true });
     }
-    
+
     // ファイルを作成
     fs.writeFileSync(fullPath, doc.content);
-    
+
     console.log(colors.green('✓') + ` ${doc.path}`);
     console.log(colors.gray(`  タイトル: ${doc.title}`));
     successCount++;
@@ -797,5 +797,9 @@ mediumPriorityDocs.forEach(doc => {
   }
 });
 
-console.log(colors.gray('=' .repeat(60)));
-console.log(colors.bold(`📊 作成結果: ${colors.green(successCount + '個')}成功, ${colors.red(errorCount + '個')}エラー`));
+console.log(colors.gray('='.repeat(60)));
+console.log(
+  colors.bold(
+    `📊 作成結果: ${colors.green(successCount + '個')}成功, ${colors.red(errorCount + '個')}エラー`
+  )
+);

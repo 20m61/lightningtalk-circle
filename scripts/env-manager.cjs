@@ -10,12 +10,12 @@ const path = require('path');
 
 // Simple color functions without chalk dependency
 const colors = {
-  blue: (text) => `\x1b[34m${text}\x1b[0m`,
-  green: (text) => `\x1b[32m${text}\x1b[0m`,
-  yellow: (text) => `\x1b[33m${text}\x1b[0m`,
-  red: (text) => `\x1b[31m${text}\x1b[0m`,
-  gray: (text) => `\x1b[90m${text}\x1b[0m`,
-  bold: (text) => `\x1b[1m${text}\x1b[0m`
+  blue: text => `\x1b[34m${text}\x1b[0m`,
+  green: text => `\x1b[32m${text}\x1b[0m`,
+  yellow: text => `\x1b[33m${text}\x1b[0m`,
+  red: text => `\x1b[31m${text}\x1b[0m`,
+  gray: text => `\x1b[90m${text}\x1b[0m`,
+  bold: text => `\x1b[1m${text}\x1b[0m`
 };
 
 class EnvironmentManager {
@@ -31,16 +31,16 @@ class EnvironmentManager {
    * @param {string} mode - Mode (local, docker, etc.)
    */
   loadEnvironment(environment, mode = 'local') {
-    console.log(colors.blue(`🔄 Switching to environment: ${environment}${mode !== 'local' ? ` (${mode})` : ''}`));
+    console.log(
+      colors.blue(
+        `🔄 Switching to environment: ${environment}${mode !== 'local' ? ` (${mode})` : ''}`
+      )
+    );
 
     // Backup current .env if it exists
     this.backupCurrentEnv();
 
-    const configs = [
-      'shared/base.env',
-      'shared/security.env',
-      'shared/features.env'
-    ];
+    const configs = ['shared/base.env', 'shared/security.env', 'shared/features.env'];
 
     // Add environment-specific config
     const envFile = mode === 'local' ? 'local.env' : `${mode}.env`;
@@ -71,9 +71,13 @@ class EnvironmentManager {
     // Write to .env
     fs.writeFileSync('.env', envContent);
 
-    console.log(colors.green(`✅ Environment switched to: ${colors.bold(environment)}${mode !== 'local' ? ` (${mode})` : ''}`));
+    console.log(
+      colors.green(
+        `✅ Environment switched to: ${colors.bold(environment)}${mode !== 'local' ? ` (${mode})` : ''}`
+      )
+    );
     console.log(colors.gray(`📁 Configuration saved to: .env`));
-    
+
     // Show environment info
     this.showEnvironmentInfo(environment, mode);
   }
@@ -92,7 +96,7 @@ class EnvironmentManager {
 
     const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
     const backupPath = path.join(this.backupDir, `.env.${timestamp}`);
-    
+
     fs.copyFileSync('.env', backupPath);
     console.log(colors.gray(`💾 Backed up current .env to: ${backupPath}`));
   }
@@ -101,18 +105,17 @@ class EnvironmentManager {
    * List available environments
    */
   listEnvironments() {
-    const environments = fs.readdirSync(this.envDir)
-      .filter(dir => {
-        const dirPath = path.join(this.envDir, dir);
-        return fs.statSync(dirPath).isDirectory() && dir !== 'shared';
-      });
-    
+    const environments = fs.readdirSync(this.envDir).filter(dir => {
+      const dirPath = path.join(this.envDir, dir);
+      return fs.statSync(dirPath).isDirectory() && dir !== 'shared';
+    });
+
     console.log(colors.blue('📋 Available environments:'));
-    
+
     environments.forEach(env => {
       const envPath = path.join(this.envDir, env);
       const files = fs.readdirSync(envPath).filter(f => f.endsWith('.env'));
-      
+
       console.log(colors.green(`  ${env}`));
       files.forEach(file => {
         const mode = file.replace('.env', '');
@@ -150,7 +153,7 @@ class EnvironmentManager {
    */
   showEnvironmentInfo(environment, mode) {
     const envPath = path.join(this.envDir, environment, `${mode === 'local' ? 'local' : mode}.env`);
-    
+
     if (!fs.existsSync(envPath)) {
       return;
     }
@@ -212,7 +215,7 @@ class EnvironmentManager {
    */
   createTemplate(environment) {
     const envPath = path.join(this.envDir, environment);
-    
+
     if (fs.existsSync(envPath)) {
       console.log(colors.yellow(`⚠ Environment ${environment} already exists`));
       return;
@@ -282,7 +285,7 @@ switch (command) {
     }
     manager.loadEnvironment(arg1, arg2);
     break;
-    
+
   case 'list':
     manager.listEnvironments();
     break;
@@ -290,7 +293,7 @@ switch (command) {
   case 'current':
     manager.showCurrentEnvironment();
     break;
-    
+
   case 'validate':
     if (!arg1) {
       console.error(colors.red('❌ Error: Environment name required'));
@@ -312,7 +315,7 @@ switch (command) {
   case '-h':
     manager.showHelp();
     break;
-    
+
   default:
     if (command) {
       console.error(colors.red(`❌ Unknown command: ${command}`));

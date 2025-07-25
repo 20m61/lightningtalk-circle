@@ -2,7 +2,8 @@
 
 ## 概要
 
-このガイドでは、Lightning Talk Circleアプリケーションの監視とアラート設定について説明します。
+このガイドでは、Lightning Talk
+Circleアプリケーションの監視とアラート設定について説明します。
 
 ## CloudWatch統合
 
@@ -29,10 +30,12 @@ const cloudWatchLogs = new AWS.CloudWatchLogs({
 });
 
 // ログストリーム作成
-await cloudWatchLogs.createLogStream({
-  logGroupName: process.env.CLOUDWATCH_LOG_GROUP,
-  logStreamName: `${process.env.NODE_ENV}-${Date.now()}`
-}).promise();
+await cloudWatchLogs
+  .createLogStream({
+    logGroupName: process.env.CLOUDWATCH_LOG_GROUP,
+    logStreamName: `${process.env.NODE_ENV}-${Date.now()}`
+  })
+  .promise();
 ```
 
 ### メトリクス設定
@@ -47,18 +50,22 @@ await cloudWatchLogs.createLogStream({
 
 ```javascript
 // カスタムメトリクス送信
-await cloudWatch.putMetricData({
-  Namespace: 'LightningTalkCircle',
-  MetricData: [{
-    MetricName: 'APICallCount',
-    Value: 1,
-    Unit: 'Count',
-    Dimensions: [
-      { Name: 'Environment', Value: process.env.NODE_ENV },
-      { Name: 'Endpoint', Value: req.path }
+await cloudWatch
+  .putMetricData({
+    Namespace: 'LightningTalkCircle',
+    MetricData: [
+      {
+        MetricName: 'APICallCount',
+        Value: 1,
+        Unit: 'Count',
+        Dimensions: [
+          { Name: 'Environment', Value: process.env.NODE_ENV },
+          { Name: 'Endpoint', Value: req.path }
+        ]
+      }
     ]
-  }]
-}).promise();
+  })
+  .promise();
 ```
 
 ## アラーム設定
@@ -66,6 +73,7 @@ await cloudWatch.putMetricData({
 ### 重要なアラーム
 
 #### 1. CPU使用率
+
 ```yaml
 AlarmName: HighCPUUtilization
 MetricName: CPUUtilization
@@ -76,6 +84,7 @@ Period: 300
 ```
 
 #### 2. メモリ使用率
+
 ```yaml
 AlarmName: HighMemoryUtilization
 MetricName: MemoryUtilization
@@ -86,6 +95,7 @@ Period: 300
 ```
 
 #### 3. エラー率
+
 ```yaml
 AlarmName: HighErrorRate
 MetricName: ErrorRate
@@ -96,6 +106,7 @@ Period: 300
 ```
 
 #### 4. レスポンス時間
+
 ```yaml
 AlarmName: SlowResponseTime
 MetricName: ResponseTime
@@ -137,6 +148,7 @@ npm run cdk:deploy:monitoring
 ### CloudWatch Insights クエリ
 
 #### エラーログ検索
+
 ```sql
 fields @timestamp, @message
 | filter @message like /ERROR/
@@ -145,6 +157,7 @@ fields @timestamp, @message
 ```
 
 #### 遅いAPIリクエスト
+
 ```sql
 fields @timestamp, method, path, responseTime
 | filter responseTime > 1000
@@ -153,6 +166,7 @@ fields @timestamp, method, path, responseTime
 ```
 
 #### ユーザーアクティビティ
+
 ```sql
 fields @timestamp, userId, action
 | filter action in ["login", "register", "createEvent"]
@@ -194,12 +208,14 @@ open http://localhost:3000/api/monitoring/dashboard
 ```javascript
 // 開発環境用ログ設定
 if (process.env.NODE_ENV === 'development') {
-  logger.add(new winston.transports.Console({
-    format: winston.format.combine(
-      winston.format.colorize(),
-      winston.format.simple()
-    )
-  }));
+  logger.add(
+    new winston.transports.Console({
+      format: winston.format.combine(
+        winston.format.colorize(),
+        winston.format.simple()
+      )
+    })
+  );
 }
 ```
 

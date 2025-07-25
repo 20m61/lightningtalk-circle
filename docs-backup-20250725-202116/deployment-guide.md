@@ -2,7 +2,9 @@
 
 ## Overview
 
-This guide provides comprehensive instructions for deploying Lightning Talk Circle to production using AWS CDK with enterprise-grade infrastructure including security, monitoring, disaster recovery, and observability.
+This guide provides comprehensive instructions for deploying Lightning Talk
+Circle to production using AWS CDK with enterprise-grade infrastructure
+including security, monitoring, disaster recovery, and observability.
 
 ## Prerequisites
 
@@ -59,11 +61,12 @@ cp cdk/lib/shared/config.dev.ts cdk/lib/shared/config.prod.ts
 ```
 
 Edit `config.prod.ts`:
+
 ```typescript
 export const prodConfig: EnvironmentConfig = {
   appName: 'lightningtalk',
   domain: 'lightningtalk.com',
-  
+
   database: {
     instanceClass: 'db.r6g.large',
     allocatedStorage: 100,
@@ -72,7 +75,7 @@ export const prodConfig: EnvironmentConfig = {
     deletionProtection: true,
     monitoringInterval: 60
   },
-  
+
   api: {
     desiredCount: 3,
     maxCapacity: 10,
@@ -84,20 +87,20 @@ export const prodConfig: EnvironmentConfig = {
       scaleDownCooldown: 300
     }
   },
-  
+
   security: {
     enableWaf: true,
     enableGuardDuty: true,
     allowedIpRanges: ['0.0.0.0/0'], // Configure as needed
     sslPolicy: 'ELBSecurityPolicy-TLS-1-2-2017-01'
   },
-  
+
   monitoring: {
     logRetentionDays: 365,
     alertEmail: 'alerts@lightningtalk.com',
     enableDetailedMonitoring: true
   },
-  
+
   wordpress: {
     enabled: false // Enable if WordPress theme is needed
   }
@@ -151,11 +154,13 @@ DOCKER_REGISTRY=123456789012.dkr.ecr.us-east-1.amazonaws.com
 ### Phase 1: Foundation Infrastructure
 
 1. **Bootstrap CDK**
+
    ```bash
    cdk bootstrap aws://123456789012/us-east-1
    ```
 
 2. **Deploy Database Stack**
+
    ```bash
    cdk deploy lightningtalk-Database-prod \
      --context env=prod \
@@ -172,21 +177,23 @@ DOCKER_REGISTRY=123456789012.dkr.ecr.us-east-1.amazonaws.com
 ### Phase 2: Application Infrastructure
 
 4. **Build and Push Docker Image**
+
    ```bash
    # Build optimized production image
    docker build -t lightningtalk-api:prod -f Dockerfile.optimized .
-   
+
    # Tag and push to ECR
    aws ecr get-login-password --region us-east-1 | \
      docker login --username AWS --password-stdin 123456789012.dkr.ecr.us-east-1.amazonaws.com
-   
+
    docker tag lightningtalk-api:prod \
      123456789012.dkr.ecr.us-east-1.amazonaws.com/lightningtalk-api:prod
-   
+
    docker push 123456789012.dkr.ecr.us-east-1.amazonaws.com/lightningtalk-api:prod
    ```
 
 5. **Deploy API Stack**
+
    ```bash
    cdk deploy lightningtalk-Api-prod \
      --context env=prod \
@@ -203,6 +210,7 @@ DOCKER_REGISTRY=123456789012.dkr.ecr.us-east-1.amazonaws.com
 ### Phase 3: Monitoring and Observability
 
 7. **Deploy Observability Stack**
+
    ```bash
    cdk deploy lightningtalk-Observability-prod \
      --context env=prod \
@@ -260,6 +268,7 @@ aws route53 change-resource-record-sets \
 ```
 
 Example `route53-changes.json`:
+
 ```json
 {
   "Changes": [
@@ -469,24 +478,28 @@ aws rds failover-db-cluster \
 ### Common Issues
 
 **Application Not Starting**
+
 1. Check ECS service logs
 2. Verify environment variables
 3. Check database connectivity
 4. Review security group rules
 
 **High Response Times**
+
 1. Check database performance
 2. Review auto-scaling configuration
 3. Analyze application bottlenecks
 4. Consider caching implementation
 
 **SSL Certificate Issues**
+
 1. Verify certificate validation
 2. Check DNS configuration
 3. Review CloudFront settings
 4. Validate certificate renewal
 
 **Database Connection Issues**
+
 1. Check security group rules
 2. Verify database status
 3. Review connection pool settings
@@ -495,6 +508,7 @@ aws rds failover-db-cluster \
 ### Emergency Procedures
 
 **Application Rollback**
+
 ```bash
 # Rollback to previous version
 cdk deploy lightningtalk-Api-prod \
@@ -504,6 +518,7 @@ cdk deploy lightningtalk-Api-prod \
 ```
 
 **Database Emergency**
+
 ```bash
 # Create immediate backup
 aws rds create-db-cluster-snapshot \
@@ -517,6 +532,7 @@ aws rds restore-db-cluster-from-snapshot \
 ```
 
 **Scale Up Resources**
+
 ```bash
 # Scale up ECS service
 aws ecs update-service \
@@ -659,4 +675,7 @@ aws rds modify-db-cluster \
 
 ---
 
-This deployment guide provides a comprehensive approach to production deployment with enterprise-grade security, monitoring, and operational procedures. Follow each phase carefully and validate at each step to ensure a successful production deployment.
+This deployment guide provides a comprehensive approach to production deployment
+with enterprise-grade security, monitoring, and operational procedures. Follow
+each phase carefully and validate at each step to ensure a successful production
+deployment.

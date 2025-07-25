@@ -2,7 +2,8 @@
 
 ## 概要
 
-Lightning Talk Circle プロジェクトの自動ワークフローシステムは、自然言語の指示から自動的にworktree作成、開発、テスト、PR作成、レビュー、マージまでを実行する統合システムです。
+Lightning Talk
+Circle プロジェクトの自動ワークフローシステムは、自然言語の指示から自動的にworktree作成、開発、テスト、PR作成、レビュー、マージまでを実行する統合システムです。
 
 ## 🚀 クイックスタート
 
@@ -252,33 +253,37 @@ graph LR
 ### よくある問題
 
 1. **テストが失敗する**
+
    ```bash
    # 手動でテストを実行して確認
    npm test
-   
+
    # 特定のテストのみ実行
    npm run test:unit
    ```
 
 2. **品質ゲートで失敗**
+
    ```bash
    # 詳細な品質レポートを確認
    npm run quality --export detailed-report.json
    ```
 
 3. **GitHub APIエラー**
+
    ```bash
    # トークンの確認
    echo $GITHUB_TOKEN
-   
+
    # 権限確認（repo, workflow権限が必要）
    ```
 
 4. **Worktreeエラー**
+
    ```bash
    # Worktreeクリーンアップ
    npm run worktree clean
-   
+
    # 手動削除
    git worktree prune
    ```
@@ -384,4 +389,4 @@ npm run workflow execute --help
 
 ---
 
-*このガイドは自動ワークフローシステム v1.0.0 対応版です*
+_このガイドは自動ワークフローシステム v1.0.0 対応版です_

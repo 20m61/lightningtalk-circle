@@ -1,6 +1,8 @@
 # Complete Issue Implementation Guide
 
-This guide provides a step-by-step process for implementing all planned issues for the Lightning Talk Circle project, taking into account potential GitHub Actions issues and providing robust alternatives.
+This guide provides a step-by-step process for implementing all planned issues
+for the Lightning Talk Circle project, taking into account potential GitHub
+Actions issues and providing robust alternatives.
 
 ## Implementation Flowchart
 
@@ -39,13 +41,13 @@ Before creating issues, set up the standardized label system.
 If GitHub Actions encounters issues:
 
 1. Install GitHub CLI and authenticate:
+
    ```bash
    # Install GitHub CLI (varies by platform)
    gh auth login
    ```
 
-2. For each label in `.github/labels.yml`:
-   Create the label manually:
+2. For each label in `.github/labels.yml`: Create the label manually:
    ```bash
    gh label create "priority:high" --color "D93F0B" --description "P1 issues with high importance" --force
    ```
@@ -64,6 +66,7 @@ With labels in place, create the defined issues.
 6. Click "Run workflow" to execute
 
 The workflow includes:
+
 - Retry logic to handle transient failures
 - Fallback to GitHub CLI if the primary method fails
 - Detailed error reporting
@@ -74,11 +77,13 @@ If GitHub Actions is not available:
 
 1. Clone the repository
 2. Install dependencies:
+
    ```bash
    npm install @octokit/rest dotenv chalk
    ```
 
 3. Create `.env` file with GitHub token:
+
    ```
    GITHUB_TOKEN=your_personal_access_token
    ```
@@ -93,6 +98,7 @@ If GitHub Actions is not available:
 For a simpler approach:
 
 1. Make the script executable:
+
    ```bash
    chmod +x scripts/create-issues-local.sh
    ```
@@ -123,6 +129,7 @@ node scripts/verify-issues.js
 ```
 
 This will:
+
 - Compare created issues against expected issues
 - Check labels and metadata
 - Report any discrepancies
@@ -157,13 +164,18 @@ Once all issues are created, organize them for efficient development.
 #### 1. GitHub Actions: 400 Bad Request
 
 **Solution:**
-- Check troubleshooting guide: [GitHub Actions Troubleshooting](/docs/project/github-actions-troubleshooting.md)
-- Configure actions setup steps to run before firewall: [Actions setup steps](https://gh.io/copilot/actions-setup-steps)
-- Add URLs to firewall allow list: [Firewall config](https://gh.io/copilot/firewall-config)
+
+- Check troubleshooting guide:
+  [GitHub Actions Troubleshooting](/docs/project/github-actions-troubleshooting.md)
+- Configure actions setup steps to run before firewall:
+  [Actions setup steps](https://gh.io/copilot/actions-setup-steps)
+- Add URLs to firewall allow list:
+  [Firewall config](https://gh.io/copilot/firewall-config)
 
 #### 2. Rate Limiting
 
 **Solution:**
+
 - Use the category parameter to create issues in batches
 - Add delays between API calls when using scripts
 - Distribute creation over multiple runs
@@ -171,6 +183,7 @@ Once all issues are created, organize them for efficient development.
 #### 3. Permission Issues
 
 **Solution:**
+
 - Ensure the GitHub token has write permissions for issues
 - In repository settings, ensure Actions have "Read and write permissions"
 
