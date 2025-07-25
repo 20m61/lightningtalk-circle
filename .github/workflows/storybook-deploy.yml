@@ -96,7 +96,7 @@ jobs:
           echo "📦 Storybook build size: $BUILD_SIZE"
 
       - name: 📊 Upload Coverage Reports
-        uses: codecov/codecov-action@v4
+        uses: codecov/codecov-action@v5
         with:
           file: lightningtalk-modern/packages/components/coverage/lcov.info
           fail_ci_if_error: false
