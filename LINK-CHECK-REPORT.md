@@ -1,17 +1,31 @@
 # Documentation Link Check Report
 
-**Generated:** 2025-07-25T20:23:27.139Z **Files checked:** 184 **Total links:**
-270 **Broken links:** 0
+**Generated:** 2025-07-25T22:16:06.316Z **Files checked:** 182 **Total links:**
+264 **Broken links:** 1
 
 ## Summary
 
-✅ All links are working correctly!
+❌ Found 1 broken link(s)
+
+## Broken Links
+
+### docs/monitoring/MONITORING-SETUP.md:263
+
+- **Link text:** CDKモニタリングスタック
+- **URL:** ../../cdk/lib/monitoring-stack.ts
+- **Resolved path:**
+  /home/ec2-user/workspace/lightningtalk-circle/cdk/lib/monitoring-stack.ts
+
+## How to Fix
+
+1. Review the broken links listed above
+2. Update the links to point to the correct files
+3. Run this check again with: `npm run docs:check-links`
+4. Use `npm run docs:check-links --fix` for automatic fixes (when possible)
 
 ## Files Checked
 
-- docs-new/api/reference.md
 - docs-new/deployment/authentication-setup.md
-- docs-new/development/claude-instructions.md
 - docs-new/legacy/project/CLAUDE.md
 - docs-new/legacy/project/IMPLEMENTATION-ROADMAP.md
 - docs-new/legacy/project/ISSUE-SUMMARY-20250712.md
