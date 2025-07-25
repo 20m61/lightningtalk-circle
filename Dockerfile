@@ -2,7 +2,7 @@
 # Multi-stage build for optimized production image
 
 # Build stage
-FROM node:18-alpine AS builder
+FROM node:24-alpine AS builder
 
 # Set working directory
 WORKDIR /app
@@ -20,7 +20,7 @@ COPY . .
 RUN npm run wp:build
 
 # Production stage
-FROM node:18-alpine AS production
+FROM node:24-alpine AS production
 
 # Install security updates
 RUN apk update && apk upgrade && apk add --no-cache \
