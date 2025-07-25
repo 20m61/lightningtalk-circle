@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UI/UX Demo - Lightning Talk Circle</title>
+    <style>
+        /* Base Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: #f5f5f5;
+        }
+        
+        .demo-section {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 2rem;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        h2 {
+            margin-bottom: 1.5rem;
+            color: #22c55e;
+        }
+        
+        /* Progressive Image Demo */
+        .progressive-image-demo {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+        }
+        
+        .image-stage {
+            text-align: center;
+        }
+        
+        .image-placeholder {
+            width: 100%;
+            height: 200px;
+            background: linear-gradient(45deg, #e0e0e0 25%, #f0f0f0 25%, #f0f0f0 50%, #e0e0e0 50%, #e0e0e0 75%, #f0f0f0 75%, #f0f0f0);
+            background-size: 20px 20px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            color: #666;
+        }
+        
+        .image-blur {
+            filter: blur(20px);
+            transform: scale(1.1);
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300"><rect fill="%2322c55e" width="400" height="300"/><text x="200" y="150" text-anchor="middle" fill="white" font-size="24">なんでもLT</text></svg>');
+            background-size: cover;
+        }
+        
+        .image-clear {
+            filter: none;
+            transform: scale(1);
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300"><rect fill="%2322c55e" width="400" height="300"/><circle cx="200" cy="120" r="50" fill="white"/><text x="200" y="200" text-anchor="middle" fill="white" font-size="32" font-weight="bold">なんでもLT</text><text x="200" y="230" text-anchor="middle" fill="white" font-size="16">Lightning Talk Circle</text></svg>');
+            background-size: cover;
+            transition: all 0.3s ease;
+        }
+        
+        /* Ripple Effect Demo */
+        .ripple-demo {
+            display: flex;
+            gap: 2rem;
+            align-items: center;
+        }
+        
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-primary {
+            background: #22c55e;
+            color: white;
+        }
+        
+        .btn-secondary {
+            background: #64748b;
+            color: white;
+        }
+        
+        .ripple {
+            position: absolute;
+            width: 100px;
+            height: 100px;
+            background: rgba(255, 255, 255, 0.5);
+            border-radius: 50%;
+            transform: translate(-50%, -50%) scale(0);
+            animation: ripple-animation 0.6s ease-out;
+            pointer-events: none;
+        }
+        
+        @keyframes ripple-animation {
+            to {
+                transform: translate(-50%, -50%) scale(4);
+                opacity: 0;
+            }
+        }
+        
+        /* 3D Card Demo */
+        .card-3d-demo {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 2rem;
+        }
+        
+        .card-3d {
+            background: white;
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+            transform-style: preserve-3d;
+        }
+        
+        .card-3d.hover {
+            transform: perspective(1000px) rotateX(-10deg) rotateY(10deg) scale(1.05);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+        }
+        
+        .card-gloss {
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent 30%, rgba(255, 255, 255, 0.3) 50%, transparent 70%);
+            transform: rotate(45deg);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        
+        .card-3d.hover .card-gloss {
+            opacity: 1;
+        }
+        
+        /* Form Validation Demo */
+        .form-demo {
+            max-width: 600px;
+        }
+        
+        .form-field {
+            margin-bottom: 1.5rem;
+            position: relative;
+        }
+        
+        .form-field label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+        
+        .form-field input {
+            width: 100%;
+            padding: 12px 40px 12px 16px;
+            border: 2px solid #e0e0e0;
+            border-radius: 6px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+        }
+        
+        .form-field input.is-valid {
+            border-color: #22c55e;
+        }
+        
+        .form-field input.is-invalid {
+            border-color: #ef4444;
+        }
+        
+        .validation-icon {
+            position: absolute;
+            right: 12px;
+            top: 42px;
+            width: 20px;
+            height: 20px;
+        }
+        
+        .validation-icon.success {
+            color: #22c55e;
+        }
+        
+        .validation-icon.error {
+            color: #ef4444;
+        }
+        
+        .field-error {
+            margin-top: 0.5rem;
+            color: #ef4444;
+            font-size: 14px;
+        }
+        
+        .form-progress {
+            margin-bottom: 2rem;
+        }
+        
+        .progress-bar {
+            height: 8px;
+            background: #e0e0e0;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: #22c55e;
+            width: 60%;
+            transition: width 0.3s ease;
+        }
+        
+        .autosave-indicator {
+            display: inline-block;
+            padding: 6px 12px;
+            background: #22c55e;
+            color: white;
+            border-radius: 4px;
+            font-size: 14px;
+            margin-top: 1rem;
+        }
+        
+        /* Dark Mode Demo */
+        .dark-mode-demo {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 2rem;
+        }
+        
+        .theme-preview {
+            padding: 2rem;
+            border-radius: 8px;
+            text-align: center;
+        }
+        
+        .theme-light {
+            background: white;
+            color: #333;
+            border: 2px solid #e0e0e0;
+        }
+        
+        .theme-dark {
+            background: #1a202c;
+            color: #e2e8f0;
+            border: 2px solid #2d3748;
+        }
+        
+        .dark-mode-toggle {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 8px 16px;
+            background: #f3f4f6;
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        
+        .theme-dark .dark-mode-toggle {
+            background: #374151;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <!-- Progressive Image Loading Demo -->
+    <div class="demo-section">
+        <h2>1. Progressive Image Loading（プログレッシブ画像読み込み）</h2>
+        <div class="progressive-image-demo">
+            <div class="image-stage">
+                <h3>読み込み前</h3>
+                <div class="image-placeholder">
+                    プレースホルダー
+                </div>
+                <p>低解像度プレースホルダー</p>
+            </div>
+            <div class="image-stage">
+                <h3>読み込み中</h3>
+                <div class="image-placeholder image-blur">
+                </div>
+                <p>ぼかし効果で表示</p>
+            </div>
+            <div class="image-stage">
+                <h3>読み込み完了</h3>
+                <div class="image-placeholder image-clear">
+                </div>
+                <p>高解像度画像</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Ripple Effect Demo -->
+    <div class="demo-section">
+        <h2>2. Ripple Effects（リップルエフェクト）</h2>
+        <div class="ripple-demo">
+            <button class="btn btn-primary">
+                プライマリボタン
+                <span class="ripple" style="left: 50%; top: 50%;"></span>
+            </button>
+            <button class="btn btn-secondary">
+                セカンダリボタン
+            </button>
+            <p>ボタンクリック時に波紋エフェクトが広がります</p>
+        </div>
+    </div>
+
+    <!-- 3D Card Effect Demo -->
+    <div class="demo-section">
+        <h2>3. 3D Card Hover Effect（3Dカードホバー効果）</h2>
+        <div class="card-3d-demo">
+            <div class="card-3d">
+                <h3>通常状態</h3>
+                <p>マウスオーバーで3D効果を確認</p>
+                <div class="card-gloss"></div>
+            </div>
+            <div class="card-3d hover">
+                <h3>ホバー状態</h3>
+                <p>3D変形と光沢効果</p>
+                <div class="card-gloss"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Form Validation Demo -->
+    <div class="demo-section">
+        <h2>4. Enhanced Form Validation（強化されたフォーム検証）</h2>
+        <div class="form-demo">
+            <div class="form-progress">
+                <div class="progress-bar">
+                    <div class="progress-fill"></div>
+                </div>
+                <p>フォーム完成度: 60%</p>
+            </div>
+            
+            <div class="form-field">
+                <label>メールアドレス（有効）</label>
+                <input type="email" value="user@example.com" class="is-valid">
+                <span class="validation-icon success">✓</span>
+            </div>
+            
+            <div class="form-field">
+                <label>メールアドレス（無効）</label>
+                <input type="email" value="invalid-email" class="is-invalid">
+                <span class="validation-icon error">✗</span>
+                <div class="field-error">有効なメールアドレスを入力してください</div>
+            </div>
+            
+            <div class="autosave-indicator">
+                💾 自動保存されました（30秒前）
+            </div>
+        </div>
+    </div>
+
+    <!-- Dark Mode Demo -->
+    <div class="demo-section">
+        <h2>5. Dark Mode Toggle（ダークモード切り替え）</h2>
+        <div class="dark-mode-demo">
+            <div class="theme-preview theme-light">
+                <h3>☀️ ライトモード</h3>
+                <p>明るい背景に暗い文字</p>
+                <button class="dark-mode-toggle">
+                    ☀️ Light
+                </button>
+            </div>
+            <div class="theme-preview theme-dark">
+                <h3>🌙 ダークモード</h3>
+                <p>暗い背景に明るい文字</p>
+                <button class="dark-mode-toggle">
+                    🌙 Dark
+                </button>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

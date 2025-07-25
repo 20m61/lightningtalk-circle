@@ -177,7 +177,7 @@ app.use((req, res) => {
 // Export handler for Lambda
 const handler = serverless(app);
 
-export const lambdaHandler = async (event, context) => {
+export const lambdaHandler = async(event, context) => {
   const startTime = Date.now();
 
   // Log Lambda invocation details

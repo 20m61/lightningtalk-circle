@@ -539,22 +539,22 @@ export class DatabaseService extends EventEmitter {
         // Handle operators like { $gte: value }
         return Object.entries(value).every(([operator, operatorValue]) => {
           switch (operator) {
-            case '$gte':
-              return item[key] >= operatorValue;
-            case '$lte':
-              return item[key] <= operatorValue;
-            case '$gt':
-              return item[key] > operatorValue;
-            case '$lt':
-              return item[key] < operatorValue;
-            case '$ne':
-              return item[key] !== operatorValue;
-            case '$in':
-              return Array.isArray(operatorValue) && operatorValue.includes(item[key]);
-            case '$nin':
-              return Array.isArray(operatorValue) && !operatorValue.includes(item[key]);
-            default:
-              return false;
+          case '$gte':
+            return item[key] >= operatorValue;
+          case '$lte':
+            return item[key] <= operatorValue;
+          case '$gt':
+            return item[key] > operatorValue;
+          case '$lt':
+            return item[key] < operatorValue;
+          case '$ne':
+            return item[key] !== operatorValue;
+          case '$in':
+            return Array.isArray(operatorValue) && operatorValue.includes(item[key]);
+          case '$nin':
+            return Array.isArray(operatorValue) && !operatorValue.includes(item[key]);
+          default:
+            return false;
           }
         });
       }
@@ -573,7 +573,7 @@ export class DatabaseService extends EventEmitter {
       clearTimeout(this.saveTimeout);
     }
 
-    this.saveTimeout = setTimeout(async () => {
+    this.saveTimeout = setTimeout(async() => {
       const collectionsToSave = Array.from(this.saveQueue.keys());
       this.saveQueue.clear();
 

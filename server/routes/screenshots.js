@@ -65,7 +65,7 @@ router.post(
     body('prNumber').isInt({ min: 1 }).withMessage('Valid PR number is required'),
     body('userId').isString().isLength({ min: 1, max: 100 }).withMessage('User ID is required')
   ],
-  async (req, res) => {
+  async(req, res) => {
     try {
       // Check validation errors
       const errors = validationResult(req);
@@ -139,7 +139,7 @@ router.get(
       .isLength({ min: 1, max: 500 })
       .withMessage('Valid file key is required')
   ],
-  async (req, res) => {
+  async(req, res) => {
     try {
       // Check validation errors
       const errors = validationResult(req);
@@ -217,7 +217,7 @@ router.post(
       .withMessage('Message too long (max 1000 characters)'),
     body('userId').isString().isLength({ min: 1, max: 100 }).withMessage('User ID is required')
   ],
-  async (req, res) => {
+  async(req, res) => {
     try {
       // Check validation errors
       const errors = validationResult(req);
@@ -314,7 +314,7 @@ router.post(
 router.get(
   '/list',
   [query('prNumber').isInt({ min: 1 }).withMessage('Valid PR number is required')],
-  async (req, res) => {
+  async(req, res) => {
     try {
       // Check validation errors
       const errors = validationResult(req);
@@ -379,7 +379,7 @@ router.get(
  * Health check for screenshot service
  * GET /api/screenshots/health
  */
-router.get('/health', async (req, res) => {
+router.get('/health', async(req, res) => {
   try {
     const health = {
       status: 'healthy',

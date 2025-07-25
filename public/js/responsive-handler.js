@@ -421,11 +421,11 @@ class ResponsiveHandler {
     const tapElements = document.querySelectorAll('a, button, input, select, textarea, .clickable');
 
     tapElements.forEach(element => {
-      element.addEventListener('touchstart', function () {
+      element.addEventListener('touchstart', function() {
         this.classList.add('touch-active');
       });
 
-      element.addEventListener('touchend', function () {
+      element.addEventListener('touchend', function() {
         this.classList.remove('touch-active');
       });
     });

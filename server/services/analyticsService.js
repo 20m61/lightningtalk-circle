@@ -466,18 +466,18 @@ class AnalyticsService {
       });
 
       switch (reportType) {
-        case 'summary':
-          return this.generateSummaryReport(stats);
-        case 'detailed':
-          return this.generateDetailedReport(stats);
-        case 'executive':
-          return this.generateExecutiveReport(stats);
-        case 'participant':
-          return this.generateParticipantReport(stats);
-        case 'speaker':
-          return this.generateSpeakerReport(stats);
-        default:
-          throw new Error('Invalid report type');
+      case 'summary':
+        return this.generateSummaryReport(stats);
+      case 'detailed':
+        return this.generateDetailedReport(stats);
+      case 'executive':
+        return this.generateExecutiveReport(stats);
+      case 'participant':
+        return this.generateParticipantReport(stats);
+      case 'speaker':
+        return this.generateSpeakerReport(stats);
+      default:
+        throw new Error('Invalid report type');
       }
     } catch (error) {
       logger.error('Failed to generate report:', error);

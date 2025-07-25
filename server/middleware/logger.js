@@ -31,7 +31,7 @@ export const logger = (req, res, next) => {
 
   // Override res.end to log response
   const originalEnd = res.end;
-  res.end = function (chunk, encoding) {
+  res.end = function(chunk, encoding) {
     const duration = Date.now() - start;
     const size = res.get('Content-Length') || (chunk ? chunk.length : 0);
 

@@ -1,0 +1,261 @@
+/**
+ * Admin Mobile Styles
+ * モバイルファーストの最適化スタイル
+ */
+
+/* ========================================
+   Mobile First Base
+   ======================================== */
+
+@media (max-width: 767px) {
+  /* Adjust spacing for mobile */
+  .admin-main {
+    padding: var(--space-4) 0 var(--space-20) 0;
+  }
+
+  .admin-container {
+    padding: 0 var(--space-3);
+  }
+
+  /* Stack page header on mobile */
+  .admin-page-header {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .admin-page-title {
+    font-size: var(--font-size-xl);
+    margin-bottom: var(--space-3);
+  }
+
+  .admin-create-btn {
+    width: 100%;
+    justify-content: center;
+  }
+
+  /* Full width search */
+  .admin-search {
+    width: 100%;
+  }
+
+  /* Stack filters vertically */
+  .admin-filter-group {
+    flex-direction: column;
+  }
+
+  /* Event card optimizations */
+  .admin-event-card__header {
+    padding: var(--space-3);
+  }
+
+  .admin-event-card__body {
+    padding: var(--space-3);
+  }
+
+  .admin-event-card__actions {
+    padding: var(--space-3);
+    flex-wrap: wrap;
+  }
+
+  .admin-event-card__actions .btn {
+    flex: 1;
+    min-width: calc(50% - var(--space-1));
+  }
+
+  /* Modal adjustments */
+  .admin-modal {
+    padding: var(--space-2);
+  }
+
+  .admin-modal__content {
+    margin: var(--space-4) auto;
+  }
+
+  .admin-modal__header {
+    padding: var(--space-4);
+  }
+
+  .admin-form {
+    padding: var(--space-4);
+  }
+
+  /* Responsive form layout */
+  .admin-form__row {
+    flex-direction: column;
+  }
+}
+
+/* ========================================
+   Touch Optimizations
+   ======================================== */
+
+@media (hover: none) and (pointer: coarse) {
+  /* Larger touch targets */
+  .admin-event-menu {
+    width: 44px;
+    height: 44px;
+  }
+
+  /* Better spacing for touch */
+  .admin-nav__link {
+    min-height: 48px;
+    padding: 0 var(--space-5);
+  }
+
+  .admin-filter__select,
+  .admin-search__input {
+    min-height: 48px;
+    font-size: 16px; /* Prevent zoom on iOS */
+  }
+
+  /* Touch feedback */
+  .btn:active,
+  .admin-event-card:active {
+    transform: scale(0.98);
+  }
+}
+
+/* ========================================
+   Small Mobile (< 375px)
+   ======================================== */
+
+@media (max-width: 374px) {
+  .admin-header__brand {
+    gap: var(--space-2);
+  }
+
+  .admin-logo {
+    height: 32px;
+  }
+
+  .admin-title {
+    font-size: var(--font-size-base);
+  }
+
+  .admin-event-card__actions .btn {
+    min-width: 100%;
+    margin-bottom: var(--space-2);
+  }
+
+  .admin-event-card__actions .btn:last-child {
+    margin-bottom: 0;
+  }
+}
+
+/* ========================================
+   Landscape Orientation
+   ======================================== */
+
+@media (max-width: 767px) and (orientation: landscape) {
+  .admin-header {
+    position: relative;
+  }
+
+  .admin-mobile-nav {
+    height: 48px;
+  }
+
+  .admin-mobile-nav__link {
+    height: 48px;
+    font-size: 0.7rem;
+  }
+
+  .admin-main {
+    min-height: calc(100vh - 64px - 48px);
+  }
+}
+
+/* ========================================
+   iOS Safe Areas
+   ======================================== */
+
+@supports (padding: env(safe-area-inset-bottom)) {
+  .admin-mobile-nav {
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+
+  .admin-main {
+    padding-bottom: calc(var(--space-20) + env(safe-area-inset-bottom));
+  }
+}
+
+/* ========================================
+   Performance Optimizations
+   ======================================== */
+
+@media (max-width: 767px) {
+  /* Reduce animations on mobile */
+  * {
+    animation-duration: 0.2s !important;
+  }
+
+  /* Optimize shadows */
+  .admin-event-card {
+    box-shadow: var(--shadow-xs);
+  }
+
+  .admin-event-card:hover {
+    box-shadow: var(--shadow-sm);
+  }
+
+  /* Simplify backgrounds */
+  .admin-header {
+    backdrop-filter: none;
+  }
+}
+
+/* ========================================
+   Swipe Actions (Progressive Enhancement)
+   ======================================== */
+
+@media (hover: none) and (pointer: coarse) {
+  .admin-event-card {
+    position: relative;
+    overflow: hidden;
+  }
+
+  /* Swipe to reveal actions */
+  .admin-event-card__swipe-actions {
+    position: absolute;
+    top: 0;
+    right: -100%;
+    bottom: 0;
+    width: 100%;
+    background: linear-gradient(to left, var(--color-error-500), var(--color-warning-500));
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    padding: 0 var(--space-4);
+    transition: transform 0.3s ease;
+  }
+
+  .admin-event-card.swiped .admin-event-card__swipe-actions {
+    transform: translateX(-100%);
+  }
+}
+
+/* ========================================
+   Offline Mode Indicators
+   ======================================== */
+
+.admin-offline-banner {
+  display: none;
+  position: fixed;
+  top: 64px;
+  left: 0;
+  right: 0;
+  background-color: var(--color-warning-500);
+  color: var(--color-neutral-0);
+  text-align: center;
+  padding: var(--space-2);
+  font-size: var(--font-size-sm);
+  z-index: var(--z-index-banner);
+}
+
+body.offline .admin-offline-banner {
+  display: block;
+}
+
+body.offline .admin-main {
+  padding-top: calc(var(--space-4) + 32px);
+}

@@ -1,0 +1,194 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Cognito Hosted UI Test</title>
+    <style>
+      body {
+        font-family: 'Arial', sans-serif;
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 20px;
+        background-color: #f5f5f5;
+      }
+      .container {
+        background: white;
+        padding: 30px;
+        border-radius: 10px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      }
+      .btn {
+        background: #4285f4;
+        color: white;
+        border: none;
+        padding: 12px 24px;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 16px;
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        text-decoration: none;
+        margin: 10px;
+      }
+      .btn:hover {
+        background: #3367d6;
+      }
+      .info {
+        background: #d1ecf1;
+        color: #0c5460;
+        border: 1px solid #bee5eb;
+        padding: 15px;
+        border-radius: 5px;
+        margin: 20px 0;
+      }
+      .code {
+        background: #f8f9fa;
+        padding: 10px;
+        border-radius: 5px;
+        font-family: monospace;
+        margin: 10px 0;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>🔐 Cognito Hosted UI Test</h1>
+
+      <div class="info">
+        <p><strong>手順：</strong></p>
+        <ol>
+          <li>下のボタンをクリックしてCognito Hosted UIでGoogle認証をテストします</li>
+          <li>認証後、URLパラメータにコードが含まれて戻ってきます</li>
+          <li>そのコードを使ってトークン交換をテストします</li>
+        </ol>
+      </div>
+
+      <h3>認証テスト</h3>
+      <a id="google-login-btn" class="btn" href="#" target="_blank">
+        <img
+          src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg"
+          width="20"
+          height="20"
+          alt="Google"
+        />
+        Cognito Hosted UI でGoogleログイン
+      </a>
+
+      <h3>認証URL</h3>
+      <div class="code" id="auth-url"></div>
+
+      <h3>手動テスト用リダイレクトURI</h3>
+      <div class="code">
+        Google Cloud Console で以下のリダイレクトURIを設定してください：<br /><br />
+        <strong>https://lightningtalk-auth-dev.auth.ap-northeast-1.amazoncognito.com/oauth2/idpresponse</strong>
+      </div>
+
+      <h3>URLパラメータ確認</h3>
+      <div id="url-params" class="info">
+        <p>現在のURLパラメータ:</p>
+        <div id="params-display"></div>
+      </div>
+
+      <h3>トークン交換テスト</h3>
+      <button id="exchange-token-btn" class="btn" style="background: #28a745; display: none">
+        認証コードをトークンに交換
+      </button>
+      <div id="token-result" class="info" style="display: none"></div>
+    </div>
+
+    <script>
+      const COGNITO_CONFIG = {
+        userPoolId: 'ap-northeast-1_PHRdkumdl',
+        clientId: '5t48tpbh5qe26otojkfq1rf0ls',
+        region: 'ap-northeast-1',
+        domain: 'lightningtalk-auth-dev.auth.ap-northeast-1.amazoncognito.com',
+        apiEndpoint: 'http://localhost:3333/api'
+      };
+
+      // 認証URLを生成
+      const authUrl =
+        `https://${COGNITO_CONFIG.domain}/oauth2/authorize?` +
+        `client_id=${COGNITO_CONFIG.clientId}&` +
+        'response_type=code&' +
+        'scope=email+openid+profile&' +
+        `redirect_uri=${encodeURIComponent('https://lightningtalk-auth-dev.auth.ap-northeast-1.amazoncognito.com/oauth2/idpresponse')}&` +
+        'identity_provider=Google';
+
+      // UIにURLを表示
+      document.getElementById('auth-url').textContent = authUrl;
+      document.getElementById('google-login-btn').href = authUrl;
+
+      // URLパラメータを表示
+      function displayUrlParams() {
+        const urlParams = new URLSearchParams(window.location.search);
+        const paramsDiv = document.getElementById('params-display');
+
+        if (urlParams.toString()) {
+          const params = {};
+          for (const [key, value] of urlParams) {
+            params[key] = value;
+          }
+          paramsDiv.innerHTML = '<pre>' + JSON.stringify(params, null, 2) + '</pre>';
+
+          // 認証コードが含まれている場合
+          if (urlParams.get('code')) {
+            document.getElementById('exchange-token-btn').style.display = 'inline-flex';
+          }
+        } else {
+          paramsDiv.textContent = 'URLパラメータはありません';
+        }
+      }
+
+      // トークン交換
+      async function exchangeToken() {
+        const urlParams = new URLSearchParams(window.location.search);
+        const code = urlParams.get('code');
+
+        if (!code) {
+          alert('認証コードが見つかりません');
+          return;
+        }
+
+        document.getElementById('token-result').style.display = 'block';
+        document.getElementById('token-result').innerHTML = '🔄 トークンを交換中...';
+
+        try {
+          const response = await fetch(`${COGNITO_CONFIG.apiEndpoint}/auth/callback`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ code })
+          });
+
+          const result = await response.json();
+
+          if (response.ok) {
+            document.getElementById('token-result').innerHTML = `
+                        <h4>✅ トークン交換成功!</h4>
+                        <pre>${JSON.stringify(result, null, 2)}</pre>
+                    `;
+          } else {
+            document.getElementById('token-result').innerHTML = `
+                        <h4>❌ トークン交換失敗</h4>
+                        <pre>${JSON.stringify(result, null, 2)}</pre>
+                    `;
+          }
+        } catch (error) {
+          document.getElementById('token-result').innerHTML = `
+                    <h4>❌ エラー</h4>
+                    <p>${error.message}</p>
+                `;
+        }
+      }
+
+      // イベントリスナー
+      document.getElementById('exchange-token-btn').addEventListener('click', exchangeToken);
+
+      // 初期化
+      displayUrlParams();
+    </script>
+  </body>
+</html>

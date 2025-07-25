@@ -68,10 +68,10 @@ function createFeatureBranch(branchName) {
   execCommand(`git checkout -b ${featureBranchName}`);
 
   log('✅ Feature branch created successfully!', 'green');
-  log(`💡 Next steps:`, 'bright');
-  log(`   1. Start developing: npm run dev`, 'cyan');
-  log(`   2. Make changes and commit`, 'cyan');
-  log(`   3. Create PR: npm run dev:pr`, 'cyan');
+  log('💡 Next steps:', 'bright');
+  log('   1. Start developing: npm run dev', 'cyan');
+  log('   2. Make changes and commit', 'cyan');
+  log('   3. Create PR: npm run dev:pr', 'cyan');
 }
 
 /**
@@ -312,39 +312,39 @@ const command = process.argv[2];
 const args = process.argv.slice(3);
 
 switch (command) {
-  case 'feature':
-    createFeatureBranch(args[0]);
-    break;
-  case 'hot':
-    startDevServer(false);
-    break;
-  case 'seed':
-    startDevServer(true);
-    break;
-  case 'health':
-    runHealthCheck();
-    break;
-  case 'pr':
-    createPullRequest();
-    break;
-  case 'env':
-    showEnvironmentInfo();
-    break;
-  case 'aliases':
-    showAliases();
-    break;
-  case 'clean':
-    cleanBuildArtifacts();
-    break;
-  case 'reset':
-    resetToDeveloper();
-    break;
-  default:
-    log('🚀 Lightning Talk Circle - Development Workflow Helper', 'bright');
-    log('');
-    showAliases();
-    log('');
-    log('💡 Usage: node scripts/dev-workflow.js <command> [args]', 'yellow');
+case 'feature':
+  createFeatureBranch(args[0]);
+  break;
+case 'hot':
+  startDevServer(false);
+  break;
+case 'seed':
+  startDevServer(true);
+  break;
+case 'health':
+  runHealthCheck();
+  break;
+case 'pr':
+  createPullRequest();
+  break;
+case 'env':
+  showEnvironmentInfo();
+  break;
+case 'aliases':
+  showAliases();
+  break;
+case 'clean':
+  cleanBuildArtifacts();
+  break;
+case 'reset':
+  resetToDeveloper();
+  break;
+default:
+  log('🚀 Lightning Talk Circle - Development Workflow Helper', 'bright');
+  log('');
+  showAliases();
+  log('');
+  log('💡 Usage: node scripts/dev-workflow.js <command> [args]', 'yellow');
 }
 
 export {

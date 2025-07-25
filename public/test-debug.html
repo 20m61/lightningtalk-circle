@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Debug Test - Lightning Talk Circle</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        padding: 20px;
+        max-width: 800px;
+        margin: 0 auto;
+      }
+      .test-result {
+        margin: 10px 0;
+        padding: 10px;
+        border-left: 4px solid #4a90e2;
+        background: #f0f8ff;
+      }
+      .error {
+        border-color: #e74c3c;
+        background: #fdf2f2;
+      }
+      .success {
+        border-color: #27ae60;
+        background: #f0fdf4;
+      }
+      .hero-section {
+        padding: 20px;
+        text-align: center;
+        background: #f8f9fa;
+        margin: 20px 0;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>詳細デバッグテスト</h1>
+
+    <div id="test-results"></div>
+
+    <div class="hero-section">
+      <h2>ヒーローセクション</h2>
+    </div>
+
+    <script>
+      function log(message, type = 'info') {
+        const results = document.getElementById('test-results');
+        const div = document.createElement('div');
+        div.className = `test-result ${type}`;
+        div.innerHTML = `<strong>${new Date().toLocaleTimeString()}</strong>: ${message}`;
+        results.appendChild(div);
+        console.log(message);
+      }
+
+      // エラーキャッチ
+      window.addEventListener('error', e => {
+        log(`Global Error: ${e.message} at ${e.filename}:${e.lineno}`, 'error');
+      });
+
+      window.addEventListener('unhandledrejection', e => {
+        log(`Unhandled Promise Rejection: ${e.reason}`, 'error');
+      });
+
+      document.addEventListener('DOMContentLoaded', () => {
+        log('DOM loaded');
+
+        // Try to manually create the app
+        try {
+          log('Attempting to create LightningTalkApp instance...');
+
+          if (typeof window.LightningTalkApp === 'function') {
+            log('LightningTalkApp class found, creating instance...');
+            const testApp = new window.LightningTalkApp();
+            log('✓ LightningTalkApp instance created successfully!', 'success');
+            window.testLightningTalkApp = testApp;
+
+            if (testApp.handleAction) {
+              log('✓ handleAction method available', 'success');
+            } else {
+              log('✗ handleAction method not found', 'error');
+            }
+          } else {
+            log('✗ LightningTalkApp class not found', 'error');
+          }
+        } catch (error) {
+          log(`✗ Error creating LightningTalkApp: ${error.message}`, 'error');
+          log(`Stack: ${error.stack}`, 'error');
+        }
+      });
+    </script>
+
+    <!-- Logger only first -->
+    <script src="js/logger.js"></script>
+    <script>
+      // Debug logger loading
+      if (window.Logger) {
+        console.log('✓ Logger loaded successfully');
+      } else {
+        console.log('✗ Logger failed to load');
+      }
+    </script>
+
+    <!-- Main script -->
+    <script src="js/main.js"></script>
+  </body>
+</html>

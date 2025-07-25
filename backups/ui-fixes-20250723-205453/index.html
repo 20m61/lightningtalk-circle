@@ -1,0 +1,699 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>なんでもライトニングトーク ⚡</title>
+
+    <!-- Favicon and App Icons -->
+    <link rel="icon" type="image/x-icon" href="/favicon.ico" />
+    <link rel="icon" type="image/png" sizes="16x16" href="/icons/favicon-16x16.png" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/icons/favicon-32x32.png" />
+    <link rel="icon" type="image/png" sizes="96x96" href="/icons/favicon-96x96.png" />
+
+    <!-- Apple Touch Icons -->
+    <link rel="apple-touch-icon" sizes="57x57" href="/icons/apple-touch-icon-57x57.png" />
+    <link rel="apple-touch-icon" sizes="60x60" href="/icons/apple-touch-icon-60x60.png" />
+    <link rel="apple-touch-icon" sizes="72x72" href="/icons/apple-touch-icon-72x72.png" />
+    <link rel="apple-touch-icon" sizes="76x76" href="/icons/apple-touch-icon-76x76.png" />
+    <link rel="apple-touch-icon" sizes="114x114" href="/icons/apple-touch-icon-114x114.png" />
+    <link rel="apple-touch-icon" sizes="120x120" href="/icons/apple-touch-icon-120x120.png" />
+    <link rel="apple-touch-icon" sizes="144x144" href="/icons/apple-touch-icon-144x144.png" />
+    <link rel="apple-touch-icon" sizes="152x152" href="/icons/apple-touch-icon-152x152.png" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/icons/apple-touch-icon-180x180.png" />
+
+    <!-- Android Chrome Icons -->
+    <link rel="manifest" href="/manifest.json" />
+
+    <!-- Microsoft Tiles -->
+    <meta name="msapplication-config" content="/browserconfig.xml" />
+    <meta name="msapplication-TileColor" content="#22c55e" />
+    <meta name="msapplication-TileImage" content="/icons/mstile-144x144.png" />
+
+    <!-- Theme Colors -->
+    <meta name="theme-color" content="#22c55e" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+    <meta name="apple-mobile-web-app-title" content="LT Circle" />
+
+    <!-- Social Media Meta Tags -->
+    <meta property="og:title" content="なんでもライトニングトーク ⚡" />
+    <meta
+      property="og:description"
+      content="5分で伝える、みんなのアイデア。ライトニングトークイベントの参加・管理プラットフォーム"
+    />
+    <meta property="og:image" content="/icons/logo-optimized.jpg" />
+    <meta property="og:type" content="website" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:image" content="/icons/logo-optimized.jpg" />
+
+    <!-- Performance optimizations: Preload critical resources -->
+    <link rel="preload" href="css/design-tokens.css" as="style" />
+    <link rel="preload" href="css/style.css" as="style" />
+    <link rel="preload" href="js/main.js" as="script" />
+    <link rel="dns-prefetch" href="//fonts.googleapis.com" />
+    <link rel="dns-prefetch" href="//fonts.gstatic.com" />
+
+    <!-- Optimized font loading -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;600;700&display=swap" rel="stylesheet" />
+
+    <!-- Base CSS - Foundation -->
+    <link rel="stylesheet" href="css/design-system.css" />
+    <link rel="stylesheet" href="css/design-tokens.css" />
+    <link rel="stylesheet" href="css/tailwind.css" />
+    <link rel="stylesheet" href="css/style.css" />
+
+    <!-- Component CSS - Building blocks -->
+    <link rel="stylesheet" href="css/components/button.css" />
+    <link rel="stylesheet" href="css/components/card.css" />
+
+    <!-- Integration CSS - Overrides -->
+    <link rel="stylesheet" href="css/architecture-integration.css" />
+    <link rel="stylesheet" href="css/auth.css" />
+    <link rel="stylesheet" href="css/auth-google-only.css" />
+    <link rel="stylesheet" href="css/logo-integration.css" />
+    <link rel="stylesheet" href="css/hero-events.css" />
+    <link rel="stylesheet" href="css/mobile-optimizations.css" />
+    <link rel="stylesheet" href="css/mobile-responsive.css" />
+    <link rel="stylesheet" href="css/mobile-bottom-nav.css" />
+
+    <!-- UI/UX Enhancements -->
+    <link rel="stylesheet" href="css/ui-ux-enhancements.css" />
+    <link rel="stylesheet" href="css/enhanced-interactions.css" />
+    <link rel="stylesheet" href="css/event-modal.css" />
+    <link rel="stylesheet" href="css/modal-system.css" />
+
+    <!-- UI/UX Enhancement Fixes -->
+    <link rel="stylesheet" href="css/contrast-enhancements.css" />
+    <link rel="stylesheet" href="css/layout-enhancements.css" />
+    <link rel="stylesheet" href="css/button-enhancements.css" />
+
+    <!-- Responsive Navigation System -->
+    <link rel="stylesheet" href="css/responsive-navigation.css" />
+
+    <!-- Mobile-specific viewport meta tags -->
+    <meta name="format-detection" content="telephone=no" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="apple-touch-fullscreen" content="yes" />
+
+    <!-- Frontend Logger Configuration -->
+    <meta name="environment" content="development" />
+    <meta name="api-endpoint" content="/api" />
+    <script>
+      // Logger configuration
+      window.APP_CONFIG = {
+        environment: 'development',
+        apiEndpoint: 'https://wf6gf7eisk.execute-api.ap-northeast-1.amazonaws.com/dev/api',
+        enableLogging: true
+      };
+    </script>
+  </head>
+  <body>
+    <header class="header">
+      <div class="header__container">
+        <!-- Logo Section -->
+        <div class="logo-container">
+          <picture>
+            <source srcset="/icons/logo-header.webp" type="image/webp" />
+            <img src="/icons/logo-header.jpg" alt="なんでもライトニングトーク" class="logo-image" loading="eager" />
+          </picture>
+          <div class="logo-text">なんでもLT</div>
+        </div>
+
+        <!-- Desktop Navigation -->
+        <nav class="nav-links" role="navigation" aria-label="メインナビゲーション">
+          <!-- Primary Navigation (Always visible on tablet+) -->
+          <a href="#hero" class="nav-link nav-item--primary">イベント</a>
+          <a href="#event-detail" class="nav-link nav-item--primary">現在のイベント</a>
+
+          <!-- Secondary Navigation (Tablet+) -->
+          <a href="/presentations.html" class="nav-link nav-item--secondary">アーカイブ</a>
+          <a href="#about" class="nav-link nav-item--secondary">LTとは</a>
+
+          <!-- Tertiary Navigation (Desktop only) -->
+          <a href="#join" class="nav-link nav-item--tertiary">参加方法</a>
+          <a href="#contact" class="nav-link nav-item--tertiary">お問い合わせ</a>
+        </nav>
+
+        <!-- Auth Section (Desktop) -->
+        <!-- Google Auth Container will be inserted here by JS -->
+
+        <!-- Mobile Menu Toggle -->
+        <button class="mobile-menu-toggle" type="button" aria-label="メニューを開く" aria-expanded="false">
+          <span class="mobile-menu-toggle__line"></span>
+          <span class="mobile-menu-toggle__line"></span>
+          <span class="mobile-menu-toggle__line"></span>
+        </button>
+      </div>
+    </header>
+
+    <!-- Mobile Menu Overlay -->
+    <div class="mobile-menu-overlay"></div>
+
+    <!-- Mobile Menu Panel -->
+    <nav class="mobile-menu" role="navigation" aria-label="モバイルメインナビゲーション">
+      <ul class="mobile-menu__list">
+        <li class="mobile-menu__item">
+          <a href="#hero" class="mobile-menu__link">🎉 イベント一覧</a>
+        </li>
+        <li class="mobile-menu__item">
+          <a href="#event-detail" class="mobile-menu__link">⚡ 現在のイベント</a>
+        </li>
+        <li class="mobile-menu__item">
+          <a href="/presentations.html" class="mobile-menu__link">📚 アーカイブ</a>
+        </li>
+        <li class="mobile-menu__item">
+          <a href="#about" class="mobile-menu__link">💡 ライトニングトークとは</a>
+        </li>
+        <li class="mobile-menu__item">
+          <a href="#join" class="mobile-menu__link">🚀 参加方法</a>
+        </li>
+        <li class="mobile-menu__item">
+          <a href="#contact" class="mobile-menu__link">📧 お問い合わせ</a>
+        </li>
+      </ul>
+
+      <!-- Mobile Auth Section -->
+      <div class="mobile-menu__auth" id="auth-mobile">
+        <!-- This will be populated by React for mobile -->
+      </div>
+    </nav>
+
+    <main>
+      <section id="hero" class="hero">
+        <div class="container">
+          <div class="floating-elements">
+            <div class="floating-sun">☀️</div>
+            <div class="floating-cat character">😸</div>
+            <div class="floating-flower">🌸</div>
+          </div>
+          <div class="hero-logo-section">
+            <picture>
+              <source srcset="/icons/logo-hero.webp" type="image/webp" />
+              <img src="/icons/logo-hero.jpg" alt="なんでもライトニングトーク" class="hero-logo" loading="lazy" />
+            </picture>
+            <h1>なんでもライトニングトーク ⚡</h1>
+          </div>
+          <p>5分間で世界を変える！あなたの「なんでも」を聞かせて！</p>
+
+          <!-- イベント一覧を目立つ場所に配置 -->
+          <div class="hero-events-preview">
+            <div class="hero-events-header">
+              <h2 class="hero-events-title">🎉 開催予定のイベント</h2>
+              <div class="hero-events-filter">
+                <button class="filter-btn active" data-filter="all">すべて</button>
+                <button class="filter-btn" data-filter="upcoming">開催予定</button>
+                <button class="filter-btn" data-filter="planning">企画中</button>
+                <button class="filter-btn" data-filter="past">過去のイベント</button>
+              </div>
+            </div>
+
+            <div id="hero-events-grid" class="hero-events-grid">
+              <!-- イベントはJavaScriptで動的に読み込み -->
+              <div class="loading-placeholder">
+                <div class="loading-spinner"></div>
+                <p>イベント情報を読み込み中...</p>
+              </div>
+            </div>
+
+            <div class="hero-events-actions">
+              <button class="btn btn-outline" id="load-more-events" style="display: none">さらに表示する</button>
+              <a href="#all-events" class="btn btn-secondary">すべてのイベントを見る</a>
+            </div>
+          </div>
+
+          <div class="hero-cta">
+            <a href="#event-detail" class="btn btn-primary btn-lg">第1回イベント詳細を見る 🚀</a>
+            <a href="#join" class="btn btn-secondary btn-lg">参加方法を確認する 📋</a>
+          </div>
+        </div>
+      </section>
+
+      <!-- 全イベント一覧セクション -->
+      <section id="all-events" class="all-events-section">
+        <div class="container">
+          <div class="section-header">
+            <h2 class="section-title">📅 すべてのイベント</h2>
+            <p class="section-description">過去から未来まで、なんでもライトニングトークのイベント一覧です</p>
+          </div>
+
+          <div class="events-filter-bar">
+            <div class="filter-group">
+              <label>ステータス:</label>
+              <select id="status-filter">
+                <option value="all">すべて</option>
+                <option value="upcoming">開催予定</option>
+                <option value="ongoing">開催中</option>
+                <option value="past">終了</option>
+                <option value="planning">企画中</option>
+              </select>
+            </div>
+
+            <div class="filter-group">
+              <label>開催形式:</label>
+              <select id="format-filter">
+                <option value="all">すべて</option>
+                <option value="onsite">現地開催</option>
+                <option value="online">オンライン</option>
+                <option value="hybrid">ハイブリッド</option>
+              </select>
+            </div>
+
+            <div class="filter-group">
+              <label>年月:</label>
+              <select id="date-filter">
+                <option value="all">すべて</option>
+                <option value="2025-07">2025年7月</option>
+                <option value="2025-08">2025年8月</option>
+                <option value="2025-09">2025年9月</option>
+              </select>
+            </div>
+
+            <div class="search-group">
+              <input type="text" id="event-search" placeholder="イベントを検索..." />
+              <button class="search-btn">🔍</button>
+            </div>
+          </div>
+
+          <div class="events-view-toggle">
+            <button class="view-toggle-btn active" data-view="grid"><span class="icon">⊞</span> グリッド</button>
+            <button class="view-toggle-btn" data-view="list"><span class="icon">☰</span> リスト</button>
+          </div>
+
+          <div id="all-events-container" class="events-container grid-view">
+            <!-- イベントはJavaScriptで動的に読み込み -->
+            <div class="loading-placeholder">
+              <div class="loading-spinner"></div>
+              <p>イベント情報を読み込み中...</p>
+            </div>
+          </div>
+
+          <div class="events-pagination">
+            <button class="pagination-btn" id="prev-page" disabled>← 前へ</button>
+            <span class="pagination-info"> <span id="current-page">1</span> / <span id="total-pages">1</span> </span>
+            <button class="pagination-btn" id="next-page">次へ →</button>
+          </div>
+        </div>
+      </section>
+
+      <section id="event-detail" class="event-info">
+        <div class="container">
+          <h2 class="section-title">🎉 第1回 なんでもライトニングトーク 🎉</h2>
+
+          <div class="event-card fade-in">
+            <div class="date-highlight">📅 2025年7月15日（火） 19:00〜</div>
+
+            <!-- Countdown Timer -->
+            <div class="countdown-container">
+              <h4>⏰ イベントまであと</h4>
+              <div id="countdown" class="countdown-timer">
+                <div class="countdown-unit">
+                  <span class="countdown-number" id="days">00</span>
+                  <span class="countdown-label">日</span>
+                </div>
+                <div class="countdown-unit">
+                  <span class="countdown-number" id="hours">00</span>
+                  <span class="countdown-label">時間</span>
+                </div>
+                <div class="countdown-unit">
+                  <span class="countdown-number" id="minutes">00</span>
+                  <span class="countdown-label">分</span>
+                </div>
+                <div class="countdown-unit">
+                  <span class="countdown-number" id="seconds">00</span>
+                  <span class="countdown-label">秒</span>
+                </div>
+              </div>
+              <div id="countdown-message" class="countdown-message"></div>
+            </div>
+
+            <h3>開催情報</h3>
+
+            <div class="venue-status">
+              <h4>📍 会場について</h4>
+              <p><strong>新宿某所</strong>（6月20日に詳細確定予定）</p>
+              <p>
+                <a href="https://maps.app.goo.gl/51TFv825jmuBsjbq5?g_st=ic" target="_blank" class="map-link"
+                  >🗺️ 地図を見る</a
+                >
+              </p>
+              <p>当日参加・飛び入り発表も大歓迎です！🎤</p>
+            </div>
+
+            <div class="emergency-contact">
+              <h4>📞 緊急連絡先</h4>
+              <a href="tel:080-4540-7479" class="phone-link">
+                <span class="phone-icon">☎️</span>
+                080-4540-7479
+              </a>
+            </div>
+
+            <!-- 参加意向投票セクション -->
+            <div class="participation-vote-section">
+              <h3>🗳️ 参加意向調査</h3>
+              <div class="vote-container" data-event-id="2025-06-14">
+                <div class="vote-stats">
+                  <div class="vote-stat online">
+                    <span class="vote-icon">💻</span>
+                    <span class="vote-label">オンライン参加</span>
+                    <span class="vote-count" id="online-count">0</span>人
+                  </div>
+                  <div class="vote-stat onsite">
+                    <span class="vote-icon">🏢</span>
+                    <span class="vote-label">現地参加</span>
+                    <span class="vote-count" id="onsite-count">0</span>人
+                  </div>
+                </div>
+                <div class="vote-buttons flex flex--justify-center">
+                  <button class="btn btn-outline vote-btn online-btn" data-type="online">
+                    💻 オンラインで参加予定
+                  </button>
+                  <button class="btn btn-outline vote-btn onsite-btn" data-type="onsite">🏢 現地で参加予定</button>
+                </div>
+                <div class="vote-message" id="vote-message"></div>
+              </div>
+            </div>
+
+            <div class="online-info">
+              <h4>💻 オンライン参加も可能！</h4>
+              <p><strong>時間:</strong> 18:30〜22:00 (JST)</p>
+              <p>
+                <strong>Google Meet:</strong>
+                <a href="https://meet.google.com/ycp-sdec-xsr" target="_blank">参加リンク</a>
+              </p>
+            </div>
+
+            <div class="action-buttons">
+              <!-- React Registration Button -->
+              <div id="registration-button"></div>
+
+              <!-- React Participant Counter -->
+              <div id="participant-counter"></div>
+
+              <!-- Survey Section: Counter display is controlled in main.js config.showSurveyCounters (default: false) -->
+              <div class="survey-section">
+                <h4>💭 当日参加アンケート</h4>
+                <div class="survey-buttons flex flex--justify-center">
+                  <button id="onlineBtn" class="btn btn-secondary survey-btn" data-action="survey-online">
+                    💻 オンライン参加 <span id="onlineCount" class="count">0</span>
+                  </button>
+                  <button id="offlineBtn" class="btn btn-secondary survey-btn" data-action="survey-offline">
+                    🏢 現地参加 <span id="offlineCount" class="count">0</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="about" class="about-lt">
+        <div class="container">
+          <h2 class="section-title">⚡ ライトニングトークって何？</h2>
+
+          <div class="lt-intro">
+            <div class="intro-card">
+              <h3>🎯 ライトニングトークとは</h3>
+              <p>
+                <strong>5分間</strong>という短い時間で行うプレゼンテーション！<br />
+                テーマは自由、形式も自由、<strong>「なんでも」</strong>OKです！<br />
+                技術、趣味、日常の発見、面白い話題... 何でも大歓迎！🌟
+              </p>
+            </div>
+          </div>
+
+          <h3 class="timeline-title">📚 ライトニングトークの歴史</h3>
+
+          <div class="timeline">
+            <div class="timeline-item fade-in">
+              <div class="timeline-dot"></div>
+              <div class="timeline-content">
+                <h4>🏁 1997年</h4>
+                <p>Perl Conference でライトニングトークが誕生！技術者コミュニティから生まれた文化です。</p>
+              </div>
+            </div>
+
+            <div class="timeline-item fade-in">
+              <div class="timeline-dot"></div>
+              <div class="timeline-content">
+                <h4>🌍 2000年代</h4>
+                <p>世界中の技術カンファレンスに広がり、5分間で効果的に情報を伝える手法として確立。</p>
+              </div>
+            </div>
+
+            <div class="timeline-item fade-in">
+              <div class="timeline-dot"></div>
+              <div class="timeline-content">
+                <h4>🇯🇵 2000年代後半</h4>
+                <p>日本の技術コミュニティにも導入され、多くの勉強会やカンファレンスで定番に。</p>
+              </div>
+            </div>
+
+            <div class="timeline-item fade-in">
+              <div class="timeline-dot"></div>
+              <div class="timeline-content">
+                <h4>🚀 現在</h4>
+                <p>技術分野を超えて様々な領域に拡大。短時間で的確に伝える技術として注目！</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="lt-benefits">
+            <h4>💡 ライトニングトークの魅力</h4>
+            <div class="benefits-grid">
+              <div class="benefit-item">⏰ <strong>短時間集中</strong><br />5分だから緊張しすぎない！</div>
+              <div class="benefit-item">🎤 <strong>気軽な発表</strong><br />完璧でなくても大丈夫！</div>
+              <div class="benefit-item">🌟 <strong>多様性</strong><br />様々な話題が聞ける！</div>
+              <div class="benefit-item">🤝 <strong>交流促進</strong><br />新しい出会いとつながり！</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="join" class="participation">
+        <div class="container">
+          <h2 class="section-title">🚀 参加方法</h2>
+
+          <div class="participation-grid">
+            <div class="participation-card fade-in" data-type="listener">
+              <div class="card-icon">👥</div>
+              <h3>聴講参加</h3>
+              <p>
+                様々な発表を聞いて楽しもう！<br />
+                新しい発見や学びがいっぱい！
+              </p>
+              <p class="card-note">現地参加・オンライン参加どちらでもOK</p>
+              <button class="btn btn-primary" data-action="register-listener">参加登録</button>
+            </div>
+
+            <div class="participation-card fade-in" data-type="speaker">
+              <div class="card-icon">🎤</div>
+              <h3>事前発表申込み</h3>
+              <p>
+                5分間のライトニングトークで<br />
+                あなたの「なんでも」を発表！
+              </p>
+              <p class="card-note">技術・趣味・日常・なんでもOK！</p>
+              <button class="btn btn-primary" data-action="register-speaker">発表申込み</button>
+            </div>
+
+            <div class="participation-card fade-in" data-type="walkin">
+              <div class="card-icon">⚡</div>
+              <h3>当日飛び入り発表</h3>
+              <p>
+                思い立ったらその場で発表！<br />
+                スポンテイニアスな発表も大歓迎！
+              </p>
+              <p class="card-note">準備不要！思いついたことを5分で！</p>
+              <button class="btn btn-outline" data-action="walkin-info">詳細を見る</button>
+            </div>
+          </div>
+
+          <div class="topics-showcase">
+            <h3>📋 発表テーマ例</h3>
+            <div class="topics-grid">
+              <div class="topic-item" data-category="tech">💻 プログラミング・技術</div>
+              <div class="topic-item" data-category="hobby">🎨 趣味・アート・創作</div>
+              <div class="topic-item" data-category="learning">📚 読書・学習体験</div>
+              <div class="topic-item" data-category="travel">🌍 旅行・文化体験</div>
+              <div class="topic-item" data-category="food">🍳 料理・グルメ</div>
+              <div class="topic-item" data-category="game">🎮 ゲーム・エンタメ</div>
+              <div class="topic-item" data-category="lifehack">💡 ライフハック・効率化</div>
+              <div class="topic-item" data-category="pet">🐱 ペット・動物</div>
+              <div class="topic-item" data-category="garden">🌱 ガーデニング・植物</div>
+              <div class="topic-item" data-category="money">📈 投資・副業</div>
+              <div class="topic-item" data-category="sports">🏃‍♂️ スポーツ・健康</div>
+              <div class="topic-item" data-category="music">🎵 音楽・演奏</div>
+            </div>
+            <p class="topics-note">...などなど、本当になんでもOK！あなたの「これ話したい！」を聞かせてください 🌟</p>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer id="contact">
+      <div class="container">
+        <div class="footer-logo-section">
+          <picture>
+            <source srcset="/icons/logo-footer.webp" type="image/webp" />
+            <img src="/icons/logo-footer.jpg" alt="なんでもライトニングトーク" class="footer-logo" loading="lazy" />
+          </picture>
+          <h3>✨ なんでもライトニングトーク</h3>
+        </div>
+        <p>5分間で世界が広がる。あなたの参加をお待ちしています！</p>
+        <div class="footer-links">
+          <a href="/privacy.html">プライバシーポリシー</a>
+          <a href="/terms.html">利用規約</a>
+          <a href="/contact.html">お問い合わせ</a>
+        </div>
+        <p class="copyright">© 2025 なんでもライトニングトーク. All rights reserved.</p>
+
+        <!-- Event Management Button -->
+        <div class="event-management-section">
+          <button class="event-management-btn" onclick="showAdminLogin()">
+            <span class="icon">⚙️</span>
+            イベント管理
+          </button>
+        </div>
+      </div>
+    </footer>
+
+    <!-- モーダル -->
+    <div id="registerModal" class="modal">
+      <div class="modal-content">
+        <span class="close">&times;</span>
+        <div id="modalBody"></div>
+      </div>
+    </div>
+
+    <!-- 投票名前入力モーダル -->
+    <div id="voteModal" class="vote-modal">
+      <div class="vote-modal-content">
+        <div class="vote-modal-header">
+          <h3>参加意向を教えてください</h3>
+          <p id="vote-type-text"></p>
+        </div>
+        <form id="voteForm" class="vote-form">
+          <div class="vote-form-group">
+            <label for="voteName">お名前 (必須)</label>
+            <input type="text" id="voteName" name="name" required placeholder="山田太郎" maxlength="50" />
+          </div>
+          <div class="vote-form-group">
+            <label for="voteEmail">メールアドレス (任意)</label>
+            <input type="email" id="voteEmail" name="email" placeholder="example@email.com" maxlength="100" />
+          </div>
+          <div class="vote-form-buttons">
+            <button type="submit" class="vote-submit-btn">投票する</button>
+            <button type="button" class="vote-cancel-btn" onclick="closeVoteModal()">キャンセル</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- チャット機能 -->
+    <div id="chatWidget" class="chat-widget">
+      <button id="chatToggle" class="chat-toggle">
+        💬 <span class="chat-notification-badge" style="display: none">●</span>
+      </button>
+      <div id="chatContainer" class="chat-container" style="display: none">
+        <div class="chat-header">
+          <h4>💬 イベントチャット</h4>
+          <button class="chat-close">&times;</button>
+        </div>
+        <div id="chatMessages" class="chat-messages">
+          <div class="chat-welcome">ようこそ！質問や感想をお気軽にどうぞ 🌟</div>
+        </div>
+        <div class="chat-input-container">
+          <input type="text" id="chatInput" class="chat-input" placeholder="メッセージを入力..." maxlength="200" />
+          <button id="chatSend" class="chat-send">送信</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Registration Modal -->
+    <div id="registration-modal" class="modal modal--medium" data-modal="registration-modal" style="display: none">
+      <div class="modal__header">
+        <h2 class="modal__title">イベント参加登録</h2>
+        <button class="modal__close" data-modal-close aria-label="閉じる">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
+      </div>
+      <div class="modal__body">
+        <form id="registration-form" class="registration-form">
+          <div class="form-group">
+            <label for="reg-name">お名前 <span class="required">*</span></label>
+            <input type="text" id="reg-name" name="name" required placeholder="山田 太郎" />
+          </div>
+          <div class="form-group">
+            <label for="reg-email">メールアドレス <span class="required">*</span></label>
+            <input type="email" id="reg-email" name="email" required placeholder="example@email.com" />
+          </div>
+          <div class="form-group">
+            <label for="reg-phone">電話番号</label>
+            <input type="tel" id="reg-phone" name="phone" placeholder="090-1234-5678" />
+          </div>
+          <div class="form-group">
+            <label for="reg-comment">コメント・質問など</label>
+            <textarea
+              id="reg-comment"
+              name="comment"
+              rows="3"
+              placeholder="ご質問やご要望があればお書きください"
+            ></textarea>
+          </div>
+          <div class="form-actions">
+            <button type="submit" class="btn btn-primary">登録する</button>
+            <button type="button" class="btn btn-secondary" data-modal-close>キャンセル</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- Frontend Logger - Load first for error capture -->
+    <script src="js/logger.js"></script>
+
+    <script src="js/auth.js"></script>
+    <script src="js/auth-google-only.js"></script>
+    <script src="js/unified-components.js"></script>
+    <!-- <script src="js/animation-manager.js"></script> -->
+    <script src="js/mobile-touch-manager.js"></script>
+    <script src="js/mobile-components.js"></script>
+    <!-- <script src="js/mobile-performance-optimizer.js"></script> -->
+
+    <!-- UI/UX Enhancement Scripts -->
+    <script src="js/modal-enhancements.js"></script>
+    <script src="js/progressive-image.js"></script>
+    <script src="js/micro-interactions.js"></script>
+    <script src="js/modal-functionality-fix.js"></script>
+    <script src="js/form-enhancements.js"></script>
+
+    <script src="js/events-manager.js"></script>
+    <script src="js/modal-system.js"></script>
+    <script src="js/registration-modal.js"></script>
+    <script src="js/event-modal.js"></script>
+    <script src="js/events-manager-modal.js"></script>
+    <script src="js/main.js"></script>
+
+    <!-- Responsive Navigation Controller -->
+    <script src="js/responsive-navigation.js"></script>
+
+    <!-- PWA Installer -->
+    <script src="js/pwa-installer.js"></script>
+
+    <!-- Mobile Navigation -->
+    <script src="js/mobile-navigation.js"></script>
+
+    <!-- UI/UX Integration - Load after all components -->
+    <script src="js/ui-ux-integration.js"></script>
+
+    <!-- React Components Integration - Temporarily disabled -->
+    <!-- <script type="module" src="js/react-integration.js"></script> -->
+  </body>
+</html>

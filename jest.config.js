@@ -6,6 +6,7 @@
 export default {
   testEnvironment: 'jsdom',
   transform: {},
+  setupFiles: ['<rootDir>/tests/setup/setImmediate-polyfill.js'],
   setupFilesAfterEnv: ['<rootDir>/jest.setup.cjs'],
   testMatch: [
     '**/tests/unit/*.test.js',

@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Event Modal Demo - Lightning Talk Circle</title>
+    
+    <!-- Base CSS -->
+    <link rel="stylesheet" href="css/design-tokens.css" />
+    <link rel="stylesheet" href="css/style.css" />
+    <link rel="stylesheet" href="css/event-modal.css" />
+    
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #f5f5f5;
+            padding: 2rem;
+        }
+        
+        .demo-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .demo-header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+        
+        .demo-header h1 {
+            color: #22c55e;
+            margin-bottom: 1rem;
+        }
+        
+        .demo-events {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+        
+        .demo-event-card {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .demo-event-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+        }
+        
+        .demo-event-card h3 {
+            color: #1f2937;
+            margin-bottom: 0.5rem;
+        }
+        
+        .demo-event-meta {
+            display: flex;
+            gap: 1rem;
+            font-size: 0.875rem;
+            color: #6b7280;
+            margin-bottom: 1rem;
+        }
+        
+        .demo-event-status {
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+        
+        .status-upcoming {
+            background: #dbeafe;
+            color: #1e40af;
+        }
+        
+        .status-planning {
+            background: #f3e8ff;
+            color: #6b21a8;
+        }
+        
+        .status-past {
+            background: #e5e7eb;
+            color: #4b5563;
+        }
+        
+        .demo-instructions {
+            background: #f0fdf4;
+            border: 2px solid #22c55e;
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+        
+        .demo-instructions h2 {
+            color: #22c55e;
+            margin-bottom: 1rem;
+        }
+        
+        .demo-instructions ul {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .demo-instructions li {
+            padding: 0.5rem 0;
+            padding-left: 2rem;
+            position: relative;
+        }
+        
+        .demo-instructions li::before {
+            content: '✓';
+            position: absolute;
+            left: 0;
+            color: #22c55e;
+            font-weight: bold;
+        }
+        
+        /* Dark mode demo */
+        .dark-mode-section {
+            background: #1a202c;
+            color: #e2e8f0;
+            padding: 2rem;
+            border-radius: 12px;
+            margin-top: 2rem;
+        }
+        
+        .dark-mode-section .demo-event-card {
+            background: #2d3748;
+            color: #e2e8f0;
+        }
+        
+        .dark-mode-section .demo-event-card h3 {
+            color: #f9fafb;
+        }
+    </style>
+</head>
+<body>
+    <div class="demo-container">
+        <div class="demo-header">
+            <h1>🎯 Event Modal Demo</h1>
+            <p>イベント詳細モーダルのデモンストレーション</p>
+        </div>
+
+        <div class="demo-instructions">
+            <h2>📱 レスポンシブモーダルの特徴</h2>
+            <ul>
+                <li>デスクトップ: センター表示、全情報を一画面に表示</li>
+                <li>タブレット: コンパクトな2カラムレイアウト</li>
+                <li>モバイル: 下から出現、タブ切り替えでスクロールなし</li>
+                <li>スワイプジェスチャー: 下スワイプで閉じる、横スワイプでタブ切替</li>
+                <li>キーボード操作: ESCで閉じる、矢印キーでタブ移動</li>
+                <li>アクセシビリティ: フォーカストラップ、スクリーンリーダー対応</li>
+            </ul>
+        </div>
+
+        <h2>🎉 イベント一覧（クリックで詳細表示）</h2>
+        <div class="demo-events">
+            <div class="demo-event-card" onclick="openDemoModal('event1')">
+                <span class="demo-event-status status-upcoming">開催予定</span>
+                <h3>第1回 なんでもライトニングトーク</h3>
+                <div class="demo-event-meta">
+                    <span>📅 2025年7月15日</span>
+                    <span>🏢 ハイブリッド</span>
+                </div>
+                <p>技術、趣味、日常の発見など、なんでもテーマのライトニングトークイベント</p>
+            </div>
+
+            <div class="demo-event-card" onclick="openDemoModal('event2')">
+                <span class="demo-event-status status-planning">企画中</span>
+                <h3>第2回 なんでもライトニングトーク</h3>
+                <div class="demo-event-meta">
+                    <span>📅 2025年8月12日</span>
+                    <span>💻 オンライン</span>
+                </div>
+                <p>第2回目のライトニングトークイベント。さらに充実したコンテンツを予定</p>
+            </div>
+
+            <div class="demo-event-card" onclick="openDemoModal('event3')">
+                <span class="demo-event-status status-past">終了</span>
+                <h3>プレイベント - LTの練習会</h3>
+                <div class="demo-event-meta">
+                    <span>📅 2025年6月20日</span>
+                    <span>🏢 現地開催</span>
+                </div>
+                <p>本番に向けた練習会。初心者歓迎のカジュアルなイベント</p>
+            </div>
+        </div>
+
+        <div class="dark-mode-section">
+            <h2>🌙 ダークモードでの表示</h2>
+            <div class="demo-events">
+                <div class="demo-event-card" onclick="openDemoModal('event1')">
+                    <span class="demo-event-status status-upcoming">開催予定</span>
+                    <h3>第1回 なんでもライトニングトーク</h3>
+                    <div class="demo-event-meta">
+                        <span>📅 2025年7月15日</span>
+                        <span>🏢 ハイブリッド</span>
+                    </div>
+                    <p>ダークモードでも見やすいデザイン</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="js/event-modal.js"></script>
+    <script>
+        // Demo event data
+        const demoEvents = {
+            event1: {
+                id: 'event1',
+                title: '第1回 なんでもライトニングトーク',
+                date: '2025-07-15',
+                time: '19:00〜22:00',
+                venue: '新宿某所（6月20日に詳細確定）',
+                format: 'hybrid',
+                status: 'upcoming',
+                capacity: 50,
+                registeredCount: 23,
+                description: `
+                    <p>記念すべき第1回のライトニングトークイベントです！</p>
+                    <p>技術、趣味、日常の発見など、テーマは「なんでも」OK。5分間で皆さんの情熱を共有しましょう。</p>
+                    <ul>
+                        <li>🎤 1人5分のライトニングトーク</li>
+                        <li>🌟 テーマは完全自由</li>
+                        <li>👥 初心者大歓迎</li>
+                        <li>🍕 懇親会あり</li>
+                    </ul>
+                `,
+                schedule: [
+                    { time: '18:30', content: '開場・受付開始' },
+                    { time: '19:00', content: '開会の挨拶・趣旨説明' },
+                    { time: '19:15', content: 'ライトニングトーク（前半）' },
+                    { time: '20:00', content: '休憩・交流タイム' },
+                    { time: '20:15', content: 'ライトニングトーク（後半）' },
+                    { time: '21:00', content: '懇親会・ネットワーキング' }
+                ],
+                participants: {
+                    total: 23,
+                    online: 14,
+                    onsite: 9
+                }
+            },
+            event2: {
+                id: 'event2',
+                title: '第2回 なんでもライトニングトーク',
+                date: '2025-08-12',
+                time: '19:00〜22:00',
+                venue: 'オンライン開催',
+                format: 'online',
+                status: 'planning',
+                capacity: 100,
+                registeredCount: 0,
+                description: `
+                    <p>第2回は完全オンラインで開催！</p>
+                    <p>全国どこからでも参加可能。より多くの方と繋がれるイベントを目指します。</p>
+                `,
+                participants: {
+                    total: 0,
+                    online: 0,
+                    onsite: 0
+                }
+            },
+            event3: {
+                id: 'event3',
+                title: 'プレイベント - LTの練習会',
+                date: '2025-06-20',
+                time: '19:00〜21:00',
+                venue: '渋谷コワーキングスペース',
+                format: 'onsite',
+                status: 'past',
+                capacity: 20,
+                registeredCount: 18,
+                description: `
+                    <p>本番前の練習会として開催されたプレイベント。</p>
+                    <p>和やかな雰囲気の中、参加者全員が初めてのLTに挑戦しました。</p>
+                `,
+                participants: {
+                    total: 18,
+                    online: 0,
+                    onsite: 18
+                },
+                notes: '<p>このイベントは終了しました。次回のイベントにぜひご参加ください！</p>'
+            }
+        };
+
+        // Function to open modal with demo data
+        function openDemoModal(eventId) {
+            const eventData = demoEvents[eventId];
+            if (eventData && window.eventModal) {
+                window.eventModal.open(eventData);
+            }
+        }
+
+        // Listen for registration events
+        window.addEventListener('openRegistration', (e) => {
+            alert(`参加登録: ${e.detail.event.title}`);
+        });
+
+        window.addEventListener('openSurvey', (e) => {
+            alert(`参加意向調査: ${e.detail.event.title}`);
+        });
+
+        // Mobile viewport height fix
+        function setViewportHeight() {
+            const vh = window.innerHeight * 0.01;
+            document.documentElement.style.setProperty('--vh', `${vh}px`);
+        }
+
+        setViewportHeight();
+        window.addEventListener('resize', setViewportHeight);
+    </script>
+</body>
+</html>

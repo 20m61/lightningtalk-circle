@@ -227,37 +227,37 @@ class MapsSystem {
         
         <div class="venue-details">
           ${
-            venue.address
-              ? `
+  venue.address
+    ? `
             <div class="venue-address">
               <span class="icon">📍</span>
               <span>${venue.address}</span>
             </div>
           `
-              : ''
-          }
+    : ''
+}
           
           ${
-            eventData.datetime
-              ? `
+  eventData.datetime
+    ? `
             <div class="event-time">
               <span class="icon">🕐</span>
               <span>${new Date(eventData.datetime).toLocaleString('ja-JP')}</span>
             </div>
           `
-              : ''
-          }
+    : ''
+}
           
           ${
-            venue.phone
-              ? `
+  venue.phone
+    ? `
             <div class="venue-phone">
               <span class="icon">📞</span>
               <a href="tel:${venue.phone}">${venue.phone}</a>
             </div>
           `
-              : ''
-          }
+    : ''
+}
         </div>
 
         <div class="venue-actions">
@@ -270,24 +270,24 @@ class MapsSystem {
         </div>
 
         ${
-          emergencyContacts.length > 0
-            ? `
+  emergencyContacts.length > 0
+    ? `
           <div class="emergency-contacts">
             <h4>🚨 緊急連絡先</h4>
             ${emergencyContacts
-              .map(
-                contact => `
+    .map(
+      contact => `
               <div class="emergency-contact">
                 <span class="contact-name">${contact.name}</span>
                 <a href="tel:${contact.phone}" class="contact-phone">${contact.phone}</a>
               </div>
             `
-              )
-              .join('')}
+    )
+    .join('')}
           </div>
         `
-            : ''
-        }
+    : ''
+}
       </div>
     `;
   }

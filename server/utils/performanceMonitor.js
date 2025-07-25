@@ -6,6 +6,16 @@
 import { EventEmitter } from 'events';
 import { createLogger } from './logger.js';
 
+// Polyfill for setImmediate in Node.js v22+
+if (typeof setImmediate === 'undefined') {
+  global.setImmediate = function (callback, ...args) {
+    return setTimeout(callback, 0, ...args);
+  };
+  global.clearImmediate = function (id) {
+    return clearTimeout(id);
+  };
+}
+
 const logger = createLogger('performance-monitor');
 
 export class PerformanceMonitor extends EventEmitter {

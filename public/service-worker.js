@@ -3,7 +3,7 @@
  * オフライン対応、キャッシュ戦略、バックグラウンド同期を実装
  */
 
-const CACHE_VERSION = 'v1.0.0';
+const CACHE_VERSION = 'v1.1.0';
 const CACHE_NAME = `lightningtalk-${CACHE_VERSION}`;
 const RUNTIME_CACHE = 'lightningtalk-runtime';
 
@@ -13,15 +13,29 @@ const STATIC_RESOURCES = [
   '/index.html',
   '/offline.html',
   '/manifest.json',
+  '/css/design-system.css',
   '/css/design-tokens.css',
   '/css/style.css',
+  '/css/modal-system.css',
+  '/css/auth-google-only.css',
+  '/css/mobile-responsive.css',
+  '/css/mobile-bottom-nav.css',
   '/css/components/button.css',
   '/css/components/card.css',
   '/js/main.js',
   '/js/auth.js',
+  '/js/auth-google-only.js',
+  '/js/modal-system.js',
+  '/js/registration-modal.js',
+  '/js/event-modal-integrated.js',
+  '/js/pwa-installer.js',
+  '/js/mobile-navigation.js',
   '/icons/favicon-32x32.png',
   '/icons/android-chrome-192x192.png',
-  '/icons/android-chrome-512x512.png'
+  '/icons/android-chrome-512x512.png',
+  '/icons/shortcut-events.png',
+  '/icons/shortcut-register.png',
+  '/icons/shortcut-speaker.png'
 ];
 
 // キャッシュ戦略の定義
@@ -136,6 +150,9 @@ self.addEventListener('fetch', event => {
     responsePromise = CACHE_STRATEGIES.networkFirst(request);
   } else if (request.destination === 'image') {
     responsePromise = CACHE_STRATEGIES.staleWhileRevalidate(request);
+  } else if (request.mode === 'navigate' || request.destination === 'document') {
+    // ナビゲーションリクエスト（HTMLページ）はネットワークファーストで処理
+    responsePromise = CACHE_STRATEGIES.networkFirst(request);
   } else {
     responsePromise = CACHE_STRATEGIES.cacheFirst(request);
   }

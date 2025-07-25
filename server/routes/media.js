@@ -156,7 +156,7 @@ router.post(
       .isLength({ max: 500 })
       .withMessage('Caption must be 500 characters or less')
   ],
-  async (req, res) => {
+  async(req, res) => {
     try {
       const errors = validationResult(req);
       if (!errors.isEmpty()) {
@@ -264,7 +264,7 @@ router.get(
       .isIn(['webp', 'jpeg', 'png'])
       .withMessage('Format must be one of: webp, jpeg, png')
   ],
-  async (req, res) => {
+  async(req, res) => {
     try {
       const errors = validationResult(req);
       if (!errors.isEmpty()) {
@@ -339,7 +339,7 @@ router.get(
 router.delete(
   '/images/:imageId',
   [param('imageId').isString().notEmpty().withMessage('Image ID is required')],
-  async (req, res) => {
+  async(req, res) => {
     try {
       const errors = validationResult(req);
       if (!errors.isEmpty()) {
@@ -446,7 +446,7 @@ router.get(
     query('offset').optional().isInt({ min: 0 }).toInt().withMessage('Offset must be 0 or greater'),
     query('uploadedBy').optional().isString().withMessage('UploadedBy must be a string')
   ],
-  async (req, res) => {
+  async(req, res) => {
     try {
       const errors = validationResult(req);
       if (!errors.isEmpty()) {
@@ -542,7 +542,7 @@ router.post(
     param('eventId').isString().notEmpty().withMessage('Event ID is required'),
     body('imageId').isString().notEmpty().withMessage('Image ID is required')
   ],
-  async (req, res) => {
+  async(req, res) => {
     try {
       const errors = validationResult(req);
       if (!errors.isEmpty()) {
@@ -639,7 +639,7 @@ router.post(
       .withMessage('ImageIds must be an array with 1-50 items'),
     body('imageIds.*').isString().notEmpty().withMessage('Each image ID must be a non-empty string')
   ],
-  async (req, res) => {
+  async(req, res) => {
     try {
       const errors = validationResult(req);
       if (!errors.isEmpty()) {
@@ -761,7 +761,7 @@ router.put(
       .isLength({ max: 500 })
       .withMessage('Caption must be less than 500 characters')
   ],
-  async (req, res) => {
+  async(req, res) => {
     try {
       const errors = validationResult(req);
       if (!errors.isEmpty()) {
@@ -851,7 +851,7 @@ router.put(
  *       200:
  *         description: Service health status
  */
-router.get('/health', async (req, res) => {
+router.get('/health', async(req, res) => {
   try {
     const health = await imageService.healthCheck();
     const stats = imageService.getStats();

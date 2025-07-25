@@ -29,7 +29,7 @@ router.post(
       .normalizeEmail()
       .withMessage('Invalid email format')
   ],
-  async (req, res) => {
+  async(req, res) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
       return res.status(400).json({ errors: errors.array() });
@@ -85,7 +85,7 @@ router.post(
 );
 
 // Get vote counts for an event
-router.get('/events/:eventId', param('eventId').notEmpty(), async (req, res) => {
+router.get('/events/:eventId', param('eventId').notEmpty(), async(req, res) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     return res.status(400).json({ errors: errors.array() });
@@ -122,7 +122,7 @@ router.post(
       .withMessage('Duration must be between 30-300 seconds')
       .toInt()
   ],
-  async (req, res) => {
+  async(req, res) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
       return res.status(400).json({ errors: errors.array() });
@@ -175,7 +175,7 @@ router.post(
       .trim()
       .escape()
   ],
-  async (req, res) => {
+  async(req, res) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
       return res.status(400).json({ errors: errors.array() });
@@ -231,7 +231,7 @@ router.post(
 );
 
 // Get voting results
-router.get('/sessions/:sessionId/results', param('sessionId').notEmpty(), async (req, res) => {
+router.get('/sessions/:sessionId/results', param('sessionId').notEmpty(), async(req, res) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     return res.status(400).json({ errors: errors.array() });
@@ -262,7 +262,7 @@ router.get('/sessions/:sessionId/results', param('sessionId').notEmpty(), async 
 });
 
 // Get active voting sessions for an event
-router.get('/events/:eventId/sessions', param('eventId').notEmpty(), async (req, res) => {
+router.get('/events/:eventId/sessions', param('eventId').notEmpty(), async(req, res) => {
   try {
     const { eventId } = req.params;
     const { votingService } = req.app.locals;
@@ -287,7 +287,7 @@ router.post(
   '/sessions/:sessionId/end',
   authenticateToken,
   param('sessionId').notEmpty(),
-  async (req, res) => {
+  async(req, res) => {
     try {
       const { sessionId } = req.params;
       const { votingService, notificationService } = req.app.locals;
@@ -317,7 +317,7 @@ router.post(
 );
 
 // Get voting history for a talk
-router.get('/talks/:talkId/history', param('talkId').notEmpty(), async (req, res) => {
+router.get('/talks/:talkId/history', param('talkId').notEmpty(), async(req, res) => {
   try {
     const { talkId } = req.params;
     const { votingService } = req.app.locals;
@@ -344,7 +344,7 @@ router.get('/talks/:talkId/history', param('talkId').notEmpty(), async (req, res
 router.get(
   '/participation/:eventId',
   param('eventId').notEmpty().withMessage('Event ID is required'),
-  async (req, res) => {
+  async(req, res) => {
     try {
       const { eventId } = req.params;
       const { votingService } = req.app.locals;

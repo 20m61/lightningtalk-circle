@@ -1,0 +1,1380 @@
+{
+  "summary": {
+    "timestamp": "2025-07-22T14:50:49.173Z",
+    "totalDevices": 15,
+    "passedDevices": 0,
+    "failedDevices": 15,
+    "totalTests": 180,
+    "passedTests": 135,
+    "failedTests": 45,
+    "successRate": 75,
+    "deviceSuccessRate": 0
+  },
+  "devices": [
+    {
+      "name": "iPhone 12 Pro",
+      "spec": {
+        "width": 390,
+        "height": 844,
+        "dpr": 3,
+        "touch": true,
+        "name": "iPhone 12 Pro"
+      },
+      "tests": [
+        {
+          "category": "navigation",
+          "name": "Header visibility",
+          "passed": true
+        },
+        {
+          "category": "navigation",
+          "name": "Logo display",
+          "passed": true
+        },
+        {
+          "category": "navigation",
+          "name": "Navigation structure",
+          "passed": true
+        },
+        {
+          "category": "navigation",
+          "name": "Mobile menu toggle (mobile only)",
+          "passed": true
+        },
+        {
+          "category": "layout",
+          "name": "Content overflow check",
+          "passed": true
+        },
+        {
+          "category": "layout",
+          "name": "Touch target sizes",
+          "passed": false
+        },
+        {
+          "category": "layout",
+          "name": "Typography readability",
+          "passed": false
+        },
+        {
+          "category": "interactions",
+          "name": "Mobile menu functionality",
+          "passed": false,
+          "error": "page.waitForTimeout is not a function"
+        },
+        {
+          "category": "interactions",
+          "name": "Keyboard navigation",
+          "passed": true
+        },
+        {
+          "category": "interactions",
+          "name": "Focus visibility",
+          "passed": true
+        },
+        {
+          "category": "accessibility",
+          "name": "ARIA labels",
+          "passed": true
+        },
+        {
+          "category": "accessibility",
+          "name": "Color contrast",
+          "passed": true
+        }
+      ],
+      "screenshots": ["./device-validation-results/screenshots/iPhone_12_Pro.png"],
+      "performance": {
+        "loadTime": 4129,
+        "jsHeapUsedSize": 2,
+        "jsHeapTotalSize": 3,
+        "domContentLoaded": 134.5,
+        "firstContentfulPaint": 1346.0999999996275,
+        "layoutShift": 0,
+        "timeToInteractive": 0
+      },
+      "issues": [
+        "Touch targets too small: 1 elements",
+        "Layout: Touch target sizes failed",
+        "Layout: Typography readability failed",
+        "Interaction: Mobile menu functionality error - page.waitForTimeout is not a function"
+      ],
+      "passed": 9,
+      "failed": 3
+    },
+    {
+      "name": "iPhone 14 Pro Max",
+      "spec": {
+        "width": 430,
+        "height": 932,
+        "dpr": 3,
+        "touch": true,
+        "name": "iPhone 14 Pro Max"
+      },
+      "tests": [
+        {
+          "category": "navigation",
+          "name": "Header visibility",
+          "passed": true
+        },
+        {
+          "category": "navigation",
+          "name": "Logo display",
+          "passed": true
+        },
+        {
+          "category": "navigation",
+          "name": "Navigation structure",
+          "passed": true
+        },
+        {
+          "category": "navigation",
+          "name": "Mobile menu toggle (mobile only)",
+          "passed": true
+        },
+        {
+          "category": "layout",
+          "name": "Content overflow check",
+          "passed": true
+        },
+        {
+          "category": "layout",
+          "name": "Touch target sizes",
+          "passed": false
+        },
+        {
+          "category": "layout",
+          "name": "Typography readability",
+          "passed": false
+        },
+        {
+          "category": "interactions",
+          "name": "Mobile menu functionality",
+          "passed": false,
+          "error": "page.waitForTimeout is not a function"
+        },
+        {
+          "category": "interactions",
+          "name": "Keyboard navigation",
+          "passed": true
+        },
+        {
+          "category": "interactions",
+          "name": "Focus visibility",
+          "passed": true
+        },
+        {
+          "category": "accessibility",
+          "name": "ARIA labels",
+          "passed": true
+        },
+        {
+          "category": "accessibility",
+          "name": "Color contrast",
+          "passed": true
+        }
+      ],
+      "screenshots": ["./device-validation-results/screenshots/iPhone_14_Pro_Max.png"],
+      "performance": {
+        "loadTime": 3683,
+        "jsHeapUsedSize": 2,
+        "jsHeapTotalSize": 3,
+        "domContentLoaded": 161.70000000018626,
+        "firstContentfulPaint": 1029.7999999998137,
+        "layoutShift": 0,
+        "timeToInteractive": 0.09999999962747097
+      },
+      "issues": [
+        "Touch targets too small: 1 elements",
+        "Layout: Touch target sizes failed",
+        "Layout: Typography readability failed",
+        "Interaction: Mobile menu functionality error - page.waitForTimeout is not a function"
+      ],
+      "passed": 9,
+      "failed": 3
+    },
+    {
+      "name": "iPhone SE",
+      "spec": {
+        "width": 375,
+        "height": 667,
+        "dpr": 2,
+        "touch": true,
+        "name": "iPhone SE (3rd gen)"
+      },
+      "tests": [
+        {
+          "category": "navigation",
+          "name": "Header visibility",
+          "passed": true
+        },
+        {
+          "category": "navigation",
+          "name": "Logo display",
+          "passed": true
+        },
+        {
+          "category": "navigation",
+          "name": "Navigation structure",
+          "passed": true
+        },
+        {
+          "category": "navigation",
+          "name": "Mobile menu toggle (mobile only)",
+          "passed": true
+        },
+        {
+          "category": "layout",
+          "name": "Content overflow check",
+          "passed": true
+        },
+        {
+          "category": "layout",
+          "name": "Touch target sizes",
+          "passed": false
+        },
+        {
+          "category": "layout",
+          "name": "Typography readability",
+          "passed": false
+        },
+        {
+          "category": "interactions",
+          "name": "Mobile menu functionality",
+          "passed": false,
+          "error": "page.waitForTimeout is not a function"
+        },
+        {
+          "category": "interactions",
+          "name": "Keyboard navigation",
+          "passed": true
+        },
+        {
+          "category": "interactions",
+          "name": "Focus visibility",
+          "passed": true
+        },
+        {
+          "category": "accessibility",
+          "name": "ARIA labels",
+          "passed": true
+        },
+        {
+          "category": "accessibility",
+          "name": "Color contrast",
+          "passed": true
+        }
+      ],
+      "screenshots": ["./device-validation-results/screenshots/iPhone_SE.png"],
+      "performance": {
+        "loadTime": 3207,
+        "jsHeapUsedSize": 2,
+        "jsHeapTotalSize": 3,
+        "domContentLoaded": 122,
+        "firstContentfulPaint": 813.5999999996275,
+        "layoutShift": 0,
+        "timeToInteractive": 0
+      },
+      "issues": [
+        "Touch targets too small: 1 elements",
+        "Layout: Touch target sizes failed",
+        "Layout: Typography readability failed",
+        "Interaction: Mobile menu functionality error - page.waitForTimeout is not a function"
+      ],
+      "passed": 9,
+      "failed": 3
+    },
+    {
+      "name": "Galaxy S21",
+      "spec": {
+        "width": 360,
+        "height": 800,
+        "dpr": 3,
+        "touch": true,
+        "name": "Samsung Galaxy S21"
+      },
+      "tests": [
+        {
+          "category": "navigation",
+          "name": "Header visibility",
+          "passed": true
+        },
+        {
+          "category": "navigation",
+          "name": "Logo display",
+          "passed": true
+        },
+        {
+          "category": "navigation",
+          "name": "Navigation structure",
+          "passed": true
+        },
+        {
+          "category": "navigation",
+          "name": "Mobile menu toggle (mobile only)",
+          "passed": true
+        },
+        {
+          "category": "layout",
+          "name": "Content overflow check",
+          "passed": true
+        },
+        {
+          "category": "layout",
+          "name": "Touch target sizes",
+          "passed": false
+        },
+        {
+          "category": "layout",
+          "name": "Typography readability",
+          "passed": false
+        },
+        {
+          "category": "interactions",
+          "name": "Mobile menu functionality",
+          "passed": false,
+          "error": "page.waitForTimeout is not a function"
+        },
+        {
+          "category": "interactions",
+          "name": "Keyboard navigation",
+          "passed": true
+        },
+        {
+          "category": "interactions",
+          "name": "Focus visibility",
+          "passed": true
+        },
+        {
+          "category": "accessibility",
+          "name": "ARIA labels",
+          "passed": true
+        },
+        {
+          "category": "accessibility",
+          "name": "Color contrast",
+          "passed": true
+        }
+      ],
+      "screenshots": ["./device-validation-results/screenshots/Galaxy_S21.png"],
+      "performance": {
+        "loadTime": 3198,
+        "jsHeapUsedSize": 1,
+        "jsHeapTotalSize": 3,
+        "domContentLoaded": 104.5,
+        "firstContentfulPaint": 785.4000000003725,
+        "layoutShift": 0,
+        "timeToInteractive": 0.09999999962747097
+      },
+      "issues": [
+        "Touch targets too small: 1 elements",
+        "Layout: Touch target sizes failed",
+        "Layout: Typography readability failed",
+        "Interaction: Mobile menu functionality error - page.waitForTimeout is not a function"
+      ],
+      "passed": 9,
+      "failed": 3
+    },
+    {
+      "name": "Pixel 7",
+      "spec": {
+        "width": 393,
+        "height": 851,
+        "dpr": 2.75,
+        "touch": true,
+        "name": "Google Pixel 7"
+      },
+      "tests": [
+        {
+          "category": "navigation",
+          "name": "Header visibility",
+          "passed": true
+        },
+        {
+          "category": "navigation",
+          "name": "Logo display",
+          "passed": true
+        },
+        {
+          "category": "navigation",
+          "name": "Navigation structure",
+          "passed": true
+        },
+        {
+          "category": "navigation",
+          "name": "Mobile menu toggle (mobile only)",
+          "passed": true
+        },
+        {
+          "category": "layout",
+          "name": "Content overflow check",
+          "passed": true
+        },
+        {
+          "category": "layout",
+          "name": "Touch target sizes",
+          "passed": false
+        },
+        {
+          "category": "layout",
+          "name": "Typography readability",
+          "passed": false
+        },
+        {
+          "category": "interactions",
+          "name": "Mobile menu functionality",
+          "passed": false,
+          "error": "page.waitForTimeout is not a function"
+        },
+        {
+          "category": "interactions",
+          "name": "Keyboard navigation",
+          "passed": true
+        },
+        {
+          "category": "interactions",
+          "name": "Focus visibility",
+          "passed": true
+        },
+        {
+          "category": "accessibility",
+          "name": "ARIA labels",
+          "passed": true
+        },
+        {
+          "category": "accessibility",
+          "name": "Color contrast",
+          "passed": true
+        }
+      ],
+      "screenshots": ["./device-validation-results/screenshots/Pixel_7.png"],
+      "performance": {
+        "loadTime": 3610,
+        "jsHeapUsedSize": 1,
+        "jsHeapTotalSize": 2,
+        "domContentLoaded": 139,
+        "firstContentfulPaint": 948,
+        "layoutShift": 0,
+        "timeToInteractive": 0
+      },
+      "issues": [
+        "Touch targets too small: 1 elements",
+        "Layout: Touch target sizes failed",
+        "Layout: Typography readability failed",
+        "Interaction: Mobile menu functionality error - page.waitForTimeout is not a function"
+      ],
+      "passed": 9,
+      "failed": 3
+    },
+    {
+      "name": "iPad Pro 11\"",
+      "spec": {
+        "width": 834,
+        "height": 1194,
+        "dpr": 2,
+        "touch": true,
+        "name": "iPad Pro 11\" (M2)"
+      },
+      "tests": [
+        {
+          "category": "navigation",
+          "name": "Header visibility",
+          "passed": true
+        },
+        {
+          "category": "navigation",
+          "name": "Logo display",
+          "passed": true
+        },
+        {
+          "category": "navigation",
+          "name": "Navigation structure",
+          "passed": true
+        },
+        {
+          "category": "navigation",
+          "name": "Mobile menu toggle (mobile only)",
+          "passed": true
+        },
+        {
+          "category": "layout",
+          "name": "Content overflow check",
+          "passed": true
+        },
+        {
+          "category": "layout",
+          "name": "Touch target sizes",
+          "passed": false
+        },
+        {
+          "category": "layout",
+          "name": "Typography readability",
+          "passed": false
+        },
+        {
+          "category": "interactions",
+          "name": "Mobile menu functionality",
+          "passed": true
+        },
+        {
+          "category": "interactions",
+          "name": "Keyboard navigation",
+          "passed": false,
+          "error": "page.waitForTimeout is not a function"
+        },
+        {
+          "category": "interactions",
+          "name": "Focus visibility",
+          "passed": true
+        },
+        {
+          "category": "accessibility",
+          "name": "ARIA labels",
+          "passed": true
+        },
+        {
+          "category": "accessibility",
+          "name": "Color contrast",
+          "passed": true
+        }
+      ],
+      "screenshots": ["./device-validation-results/screenshots/iPad_Pro_11_.png"],
+      "performance": {
+        "loadTime": 3577,
+        "jsHeapUsedSize": 1,
+        "jsHeapTotalSize": 3,
+        "domContentLoaded": 167.29999999981374,
+        "firstContentfulPaint": 484.40000000037253,
+        "layoutShift": 0,
+        "timeToInteractive": 0
+      },
+      "issues": [
+        "Touch targets too small: 1 elements",
+        "Layout: Touch target sizes failed",
+        "Layout: Typography readability failed",
+        "Interaction: Keyboard navigation error - page.waitForTimeout is not a function"
+      ],
+      "passed": 9,
+      "failed": 3
+    },
+    {
+      "name": "iPad Air",
+      "spec": {
+        "width": 820,
+        "height": 1180,
+        "dpr": 2,
+        "touch": true,
+        "name": "iPad Air (5th gen)"
+      },
+      "tests": [
+        {
+          "category": "navigation",
+          "name": "Header visibility",
+          "passed": true
+        },
+        {
+          "category": "navigation",
+          "name": "Logo display",
+          "passed": true
+        },
+        {
+          "category": "navigation",
+          "name": "Navigation structure",
+          "passed": true
+        },
+        {
+          "category": "navigation",
+          "name": "Mobile menu toggle (mobile only)",
+          "passed": true
+        },
+        {
+          "category": "layout",
+          "name": "Content overflow check",
+          "passed": true
+        },
+        {
+          "category": "layout",
+          "name": "Touch target sizes",
+          "passed": false
+        },
+        {
+          "category": "layout",
+          "name": "Typography readability",
+          "passed": false
+        },
+        {
+          "category": "interactions",
+          "name": "Mobile menu functionality",
+          "passed": true
+        },
+        {
+          "category": "interactions",
+          "name": "Keyboard navigation",
+          "passed": false,
+          "error": "page.waitForTimeout is not a function"
+        },
+        {
+          "category": "interactions",
+          "name": "Focus visibility",
+          "passed": true
+        },
+        {
+          "category": "accessibility",
+          "name": "ARIA labels",
+          "passed": true
+        },
+        {
+          "category": "accessibility",
+          "name": "Color contrast",
+          "passed": true
+        }
+      ],
+      "screenshots": ["./device-validation-results/screenshots/iPad_Air.png"],
+      "performance": {
+        "loadTime": 3806,
+        "jsHeapUsedSize": 2,
+        "jsHeapTotalSize": 3,
+        "domContentLoaded": 213.8999999994412,
+        "firstContentfulPaint": 970.7999999998137,
+        "layoutShift": 0,
+        "timeToInteractive": 0
+      },
+      "issues": [
+        "Touch targets too small: 1 elements",
+        "Layout: Touch target sizes failed",
+        "Layout: Typography readability failed",
+        "Interaction: Keyboard navigation error - page.waitForTimeout is not a function"
+      ],
+      "passed": 9,
+      "failed": 3
+    },
+    {
+      "name": "Galaxy Tab S8",
+      "spec": {
+        "width": 753,
+        "height": 1037,
+        "dpr": 2,
+        "touch": true,
+        "name": "Galaxy Tab S8"
+      },
+      "tests": [
+        {
+          "category": "navigation",
+          "name": "Header visibility",
+          "passed": true
+        },
+        {
+          "category": "navigation",
+          "name": "Logo display",
+          "passed": true
+        },
+        {
+          "category": "navigation",
+          "name": "Navigation structure",
+          "passed": true
+        },
+        {
+          "category": "navigation",
+          "name": "Mobile menu toggle (mobile only)",
+          "passed": true
+        },
+        {
+          "category": "layout",
+          "name": "Content overflow check",
+          "passed": true
+        },
+        {
+          "category": "layout",
+          "name": "Touch target sizes",
+          "passed": false
+        },
+        {
+          "category": "layout",
+          "name": "Typography readability",
+          "passed": false
+        },
+        {
+          "category": "interactions",
+          "name": "Mobile menu functionality",
+          "passed": false,
+          "error": "page.waitForTimeout is not a function"
+        },
+        {
+          "category": "interactions",
+          "name": "Keyboard navigation",
+          "passed": true
+        },
+        {
+          "category": "interactions",
+          "name": "Focus visibility",
+          "passed": true
+        },
+        {
+          "category": "accessibility",
+          "name": "ARIA labels",
+          "passed": true
+        },
+        {
+          "category": "accessibility",
+          "name": "Color contrast",
+          "passed": true
+        }
+      ],
+      "screenshots": ["./device-validation-results/screenshots/Galaxy_Tab_S8.png"],
+      "performance": {
+        "loadTime": 3108,
+        "jsHeapUsedSize": 2,
+        "jsHeapTotalSize": 3,
+        "domContentLoaded": 129.20000000018626,
+        "firstContentfulPaint": 796.3999999994412,
+        "layoutShift": 0,
+        "timeToInteractive": 0
+      },
+      "issues": [
+        "Touch targets too small: 1 elements",
+        "Layout: Touch target sizes failed",
+        "Layout: Typography readability failed",
+        "Interaction: Mobile menu functionality error - page.waitForTimeout is not a function"
+      ],
+      "passed": 9,
+      "failed": 3
+    },
+    {
+      "name": "Surface Pro 9",
+      "spec": {
+        "width": 912,
+        "height": 1368,
+        "dpr": 2,
+        "touch": true,
+        "name": "Surface Pro 9"
+      },
+      "tests": [
+        {
+          "category": "navigation",
+          "name": "Header visibility",
+          "passed": true
+        },
+        {
+          "category": "navigation",
+          "name": "Logo display",
+          "passed": true
+        },
+        {
+          "category": "navigation",
+          "name": "Navigation structure",
+          "passed": true
+        },
+        {
+          "category": "navigation",
+          "name": "Mobile menu toggle (mobile only)",
+          "passed": true
+        },
+        {
+          "category": "layout",
+          "name": "Content overflow check",
+          "passed": true
+        },
+        {
+          "category": "layout",
+          "name": "Touch target sizes",
+          "passed": false
+        },
+        {
+          "category": "layout",
+          "name": "Typography readability",
+          "passed": false
+        },
+        {
+          "category": "interactions",
+          "name": "Mobile menu functionality",
+          "passed": true
+        },
+        {
+          "category": "interactions",
+          "name": "Keyboard navigation",
+          "passed": false,
+          "error": "page.waitForTimeout is not a function"
+        },
+        {
+          "category": "interactions",
+          "name": "Focus visibility",
+          "passed": true
+        },
+        {
+          "category": "accessibility",
+          "name": "ARIA labels",
+          "passed": true
+        },
+        {
+          "category": "accessibility",
+          "name": "Color contrast",
+          "passed": true
+        }
+      ],
+      "screenshots": ["./device-validation-results/screenshots/Surface_Pro_9.png"],
+      "performance": {
+        "loadTime": 3233,
+        "jsHeapUsedSize": 2,
+        "jsHeapTotalSize": 3,
+        "domContentLoaded": 95.20000000018626,
+        "firstContentfulPaint": 929.9000000003725,
+        "layoutShift": 0,
+        "timeToInteractive": 0
+      },
+      "issues": [
+        "Touch targets too small: 1 elements",
+        "Layout: Touch target sizes failed",
+        "Layout: Typography readability failed",
+        "Interaction: Keyboard navigation error - page.waitForTimeout is not a function"
+      ],
+      "passed": 9,
+      "failed": 3
+    },
+    {
+      "name": "MacBook Air 13\"",
+      "spec": {
+        "width": 1440,
+        "height": 900,
+        "dpr": 2,
+        "touch": false,
+        "name": "MacBook Air 13\" (M2)"
+      },
+      "tests": [
+        {
+          "category": "navigation",
+          "name": "Header visibility",
+          "passed": true
+        },
+        {
+          "category": "navigation",
+          "name": "Logo display",
+          "passed": true
+        },
+        {
+          "category": "navigation",
+          "name": "Navigation structure",
+          "passed": true
+        },
+        {
+          "category": "navigation",
+          "name": "Mobile menu toggle (mobile only)",
+          "passed": true
+        },
+        {
+          "category": "layout",
+          "name": "Content overflow check",
+          "passed": true
+        },
+        {
+          "category": "layout",
+          "name": "Touch target sizes",
+          "passed": false
+        },
+        {
+          "category": "layout",
+          "name": "Typography readability",
+          "passed": false
+        },
+        {
+          "category": "interactions",
+          "name": "Mobile menu functionality",
+          "passed": true
+        },
+        {
+          "category": "interactions",
+          "name": "Keyboard navigation",
+          "passed": false,
+          "error": "page.waitForTimeout is not a function"
+        },
+        {
+          "category": "interactions",
+          "name": "Focus visibility",
+          "passed": true
+        },
+        {
+          "category": "accessibility",
+          "name": "ARIA labels",
+          "passed": true
+        },
+        {
+          "category": "accessibility",
+          "name": "Color contrast",
+          "passed": true
+        }
+      ],
+      "screenshots": ["./device-validation-results/screenshots/MacBook_Air_13_.png"],
+      "performance": {
+        "loadTime": 2721,
+        "jsHeapUsedSize": 1,
+        "jsHeapTotalSize": 2,
+        "domContentLoaded": 71.59999999962747,
+        "firstContentfulPaint": 809.6000000005588,
+        "layoutShift": 0,
+        "timeToInteractive": 0
+      },
+      "issues": [
+        "Touch targets too small: 1 elements",
+        "Layout: Touch target sizes failed",
+        "Layout: Typography readability failed",
+        "Interaction: Keyboard navigation error - page.waitForTimeout is not a function"
+      ],
+      "passed": 9,
+      "failed": 3
+    },
+    {
+      "name": "MacBook Pro 14\"",
+      "spec": {
+        "width": 1512,
+        "height": 982,
+        "dpr": 2,
+        "touch": false,
+        "name": "MacBook Pro 14\""
+      },
+      "tests": [
+        {
+          "category": "navigation",
+          "name": "Header visibility",
+          "passed": true
+        },
+        {
+          "category": "navigation",
+          "name": "Logo display",
+          "passed": true
+        },
+        {
+          "category": "navigation",
+          "name": "Navigation structure",
+          "passed": true
+        },
+        {
+          "category": "navigation",
+          "name": "Mobile menu toggle (mobile only)",
+          "passed": true
+        },
+        {
+          "category": "layout",
+          "name": "Content overflow check",
+          "passed": true
+        },
+        {
+          "category": "layout",
+          "name": "Touch target sizes",
+          "passed": false
+        },
+        {
+          "category": "layout",
+          "name": "Typography readability",
+          "passed": false
+        },
+        {
+          "category": "interactions",
+          "name": "Mobile menu functionality",
+          "passed": true
+        },
+        {
+          "category": "interactions",
+          "name": "Keyboard navigation",
+          "passed": false,
+          "error": "page.waitForTimeout is not a function"
+        },
+        {
+          "category": "interactions",
+          "name": "Focus visibility",
+          "passed": true
+        },
+        {
+          "category": "accessibility",
+          "name": "ARIA labels",
+          "passed": true
+        },
+        {
+          "category": "accessibility",
+          "name": "Color contrast",
+          "passed": true
+        }
+      ],
+      "screenshots": ["./device-validation-results/screenshots/MacBook_Pro_14_.png"],
+      "performance": {
+        "loadTime": 2623,
+        "jsHeapUsedSize": 1,
+        "jsHeapTotalSize": 2,
+        "domContentLoaded": 107.29999999981374,
+        "firstContentfulPaint": 330,
+        "layoutShift": 0,
+        "timeToInteractive": 0
+      },
+      "issues": [
+        "Touch targets too small: 1 elements",
+        "Layout: Touch target sizes failed",
+        "Layout: Typography readability failed",
+        "Interaction: Keyboard navigation error - page.waitForTimeout is not a function"
+      ],
+      "passed": 9,
+      "failed": 3
+    },
+    {
+      "name": "Surface Laptop",
+      "spec": {
+        "width": 1536,
+        "height": 1024,
+        "dpr": 1.5,
+        "touch": true,
+        "name": "Surface Laptop Studio"
+      },
+      "tests": [
+        {
+          "category": "navigation",
+          "name": "Header visibility",
+          "passed": true
+        },
+        {
+          "category": "navigation",
+          "name": "Logo display",
+          "passed": true
+        },
+        {
+          "category": "navigation",
+          "name": "Navigation structure",
+          "passed": true
+        },
+        {
+          "category": "navigation",
+          "name": "Mobile menu toggle (mobile only)",
+          "passed": true
+        },
+        {
+          "category": "layout",
+          "name": "Content overflow check",
+          "passed": true
+        },
+        {
+          "category": "layout",
+          "name": "Touch target sizes",
+          "passed": false
+        },
+        {
+          "category": "layout",
+          "name": "Typography readability",
+          "passed": false
+        },
+        {
+          "category": "interactions",
+          "name": "Mobile menu functionality",
+          "passed": true
+        },
+        {
+          "category": "interactions",
+          "name": "Keyboard navigation",
+          "passed": false,
+          "error": "page.waitForTimeout is not a function"
+        },
+        {
+          "category": "interactions",
+          "name": "Focus visibility",
+          "passed": true
+        },
+        {
+          "category": "accessibility",
+          "name": "ARIA labels",
+          "passed": true
+        },
+        {
+          "category": "accessibility",
+          "name": "Color contrast",
+          "passed": true
+        }
+      ],
+      "screenshots": ["./device-validation-results/screenshots/Surface_Laptop.png"],
+      "performance": {
+        "loadTime": 2977,
+        "jsHeapUsedSize": 2,
+        "jsHeapTotalSize": 3,
+        "domContentLoaded": 145.30000000074506,
+        "firstContentfulPaint": 756.4000000003725,
+        "layoutShift": 0,
+        "timeToInteractive": 0
+      },
+      "issues": [
+        "Touch targets too small: 1 elements",
+        "Layout: Touch target sizes failed",
+        "Layout: Typography readability failed",
+        "Interaction: Keyboard navigation error - page.waitForTimeout is not a function"
+      ],
+      "passed": 9,
+      "failed": 3
+    },
+    {
+      "name": "Desktop FHD",
+      "spec": {
+        "width": 1920,
+        "height": 1080,
+        "dpr": 1,
+        "touch": false,
+        "name": "Desktop Full HD"
+      },
+      "tests": [
+        {
+          "category": "navigation",
+          "name": "Header visibility",
+          "passed": true
+        },
+        {
+          "category": "navigation",
+          "name": "Logo display",
+          "passed": true
+        },
+        {
+          "category": "navigation",
+          "name": "Navigation structure",
+          "passed": true
+        },
+        {
+          "category": "navigation",
+          "name": "Mobile menu toggle (mobile only)",
+          "passed": true
+        },
+        {
+          "category": "layout",
+          "name": "Content overflow check",
+          "passed": true
+        },
+        {
+          "category": "layout",
+          "name": "Touch target sizes",
+          "passed": false
+        },
+        {
+          "category": "layout",
+          "name": "Typography readability",
+          "passed": false
+        },
+        {
+          "category": "interactions",
+          "name": "Mobile menu functionality",
+          "passed": true
+        },
+        {
+          "category": "interactions",
+          "name": "Keyboard navigation",
+          "passed": false,
+          "error": "page.waitForTimeout is not a function"
+        },
+        {
+          "category": "interactions",
+          "name": "Focus visibility",
+          "passed": true
+        },
+        {
+          "category": "accessibility",
+          "name": "ARIA labels",
+          "passed": true
+        },
+        {
+          "category": "accessibility",
+          "name": "Color contrast",
+          "passed": true
+        }
+      ],
+      "screenshots": ["./device-validation-results/screenshots/Desktop_FHD.png"],
+      "performance": {
+        "loadTime": 2810,
+        "jsHeapUsedSize": 1,
+        "jsHeapTotalSize": 2,
+        "domContentLoaded": 90.79999999981374,
+        "firstContentfulPaint": 851.3999999994412,
+        "layoutShift": 0,
+        "timeToInteractive": 0
+      },
+      "issues": [
+        "Touch targets too small: 1 elements",
+        "Layout: Touch target sizes failed",
+        "Layout: Typography readability failed",
+        "Interaction: Keyboard navigation error - page.waitForTimeout is not a function"
+      ],
+      "passed": 9,
+      "failed": 3
+    },
+    {
+      "name": "Desktop QHD",
+      "spec": {
+        "width": 2560,
+        "height": 1440,
+        "dpr": 1,
+        "touch": false,
+        "name": "Desktop QHD"
+      },
+      "tests": [
+        {
+          "category": "navigation",
+          "name": "Header visibility",
+          "passed": true
+        },
+        {
+          "category": "navigation",
+          "name": "Logo display",
+          "passed": true
+        },
+        {
+          "category": "navigation",
+          "name": "Navigation structure",
+          "passed": true
+        },
+        {
+          "category": "navigation",
+          "name": "Mobile menu toggle (mobile only)",
+          "passed": true
+        },
+        {
+          "category": "layout",
+          "name": "Content overflow check",
+          "passed": true
+        },
+        {
+          "category": "layout",
+          "name": "Touch target sizes",
+          "passed": false
+        },
+        {
+          "category": "layout",
+          "name": "Typography readability",
+          "passed": false
+        },
+        {
+          "category": "interactions",
+          "name": "Mobile menu functionality",
+          "passed": true
+        },
+        {
+          "category": "interactions",
+          "name": "Keyboard navigation",
+          "passed": false,
+          "error": "page.waitForTimeout is not a function"
+        },
+        {
+          "category": "interactions",
+          "name": "Focus visibility",
+          "passed": true
+        },
+        {
+          "category": "accessibility",
+          "name": "ARIA labels",
+          "passed": true
+        },
+        {
+          "category": "accessibility",
+          "name": "Color contrast",
+          "passed": true
+        }
+      ],
+      "screenshots": ["./device-validation-results/screenshots/Desktop_QHD.png"],
+      "performance": {
+        "loadTime": 3451,
+        "jsHeapUsedSize": 1,
+        "jsHeapTotalSize": 2,
+        "domContentLoaded": 71.70000000018626,
+        "firstContentfulPaint": 641.3000000007451,
+        "layoutShift": 0,
+        "timeToInteractive": 0
+      },
+      "issues": [
+        "Touch targets too small: 1 elements",
+        "Layout: Touch target sizes failed",
+        "Layout: Typography readability failed",
+        "Interaction: Keyboard navigation error - page.waitForTimeout is not a function"
+      ],
+      "passed": 9,
+      "failed": 3
+    },
+    {
+      "name": "Desktop 4K",
+      "spec": {
+        "width": 3840,
+        "height": 2160,
+        "dpr": 1,
+        "touch": false,
+        "name": "Desktop 4K"
+      },
+      "tests": [
+        {
+          "category": "navigation",
+          "name": "Header visibility",
+          "passed": true
+        },
+        {
+          "category": "navigation",
+          "name": "Logo display",
+          "passed": true
+        },
+        {
+          "category": "navigation",
+          "name": "Navigation structure",
+          "passed": true
+        },
+        {
+          "category": "navigation",
+          "name": "Mobile menu toggle (mobile only)",
+          "passed": true
+        },
+        {
+          "category": "layout",
+          "name": "Content overflow check",
+          "passed": true
+        },
+        {
+          "category": "layout",
+          "name": "Touch target sizes",
+          "passed": false
+        },
+        {
+          "category": "layout",
+          "name": "Typography readability",
+          "passed": false
+        },
+        {
+          "category": "interactions",
+          "name": "Mobile menu functionality",
+          "passed": true
+        },
+        {
+          "category": "interactions",
+          "name": "Keyboard navigation",
+          "passed": false,
+          "error": "page.waitForTimeout is not a function"
+        },
+        {
+          "category": "interactions",
+          "name": "Focus visibility",
+          "passed": true
+        },
+        {
+          "category": "accessibility",
+          "name": "ARIA labels",
+          "passed": true
+        },
+        {
+          "category": "accessibility",
+          "name": "Color contrast",
+          "passed": true
+        }
+      ],
+      "screenshots": ["./device-validation-results/screenshots/Desktop_4K.png"],
+      "performance": {
+        "loadTime": 3370,
+        "jsHeapUsedSize": 2,
+        "jsHeapTotalSize": 3,
+        "domContentLoaded": 106.5,
+        "firstContentfulPaint": 901.7000000001863,
+        "layoutShift": 0,
+        "timeToInteractive": 0.09999999962747097
+      },
+      "issues": [
+        "Touch targets too small: 1 elements",
+        "Layout: Touch target sizes failed",
+        "Layout: Typography readability failed",
+        "Interaction: Keyboard navigation error - page.waitForTimeout is not a function"
+      ],
+      "passed": 9,
+      "failed": 3
+    }
+  ]
+}

@@ -104,7 +104,7 @@ const configureCookieOptions = () => {
  * アクセストークンの自動ローテーション
  */
 const tokenRotation = tokenService => {
-  return async (req, res, next) => {
+  return async(req, res, next) => {
     if (!req.user || !req.token) {
       return next();
     }
@@ -309,7 +309,7 @@ const auditLogger = action => {
     // Capture original end function
     const originalEnd = res.end;
 
-    res.end = function (...args) {
+    res.end = function(...args) {
       const duration = Date.now() - startTime;
 
       logger.info('Security audit', {

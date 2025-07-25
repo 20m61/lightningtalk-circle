@@ -328,7 +328,7 @@ simulator
   });
 
 // Handle interruption
-process.on('SIGINT', async () => {
+process.on('SIGINT', async() => {
   console.log('\n\n🛑 Simulation interrupted');
   await simulator.stop();
   process.exit(0);

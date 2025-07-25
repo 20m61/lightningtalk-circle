@@ -424,7 +424,7 @@ class AuthenticationModule {
 }
 
 // Password visibility toggle
-window.togglePassword = function (fieldId) {
+window.togglePassword = function(fieldId) {
   const field = document.getElementById(fieldId);
   const wrapper = field?.closest('.ltc-input-wrapper');
   const eyeIcon = wrapper?.querySelector('.eye-icon');
@@ -454,7 +454,7 @@ window.togglePassword = function (fieldId) {
 };
 
 // Toast notification helper
-window.showToast = function (message, type = 'info') {
+window.showToast = function(message, type = 'info') {
   if (window.LightningTalk?.createToast) {
     const toast = window.LightningTalk.createToast({
       message,

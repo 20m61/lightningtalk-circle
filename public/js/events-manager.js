@@ -23,7 +23,7 @@ class EventsManager {
   async init() {
     await this.loadEvents();
     this.setupEventListeners();
-    
+
     // CSSが完全に読み込まれてからレンダリング
     if (document.readyState === 'complete') {
       this.renderHeroEvents();
@@ -534,9 +534,21 @@ document.addEventListener('DOMContentLoaded', () => {
   // Logger フォールバック処理
   if (typeof Logger === 'undefined') {
     window.Logger = {
-      info: (...args) => console.log('[EventsManager]', ...args),
-      error: (...args) => console.error('[EventsManager]', ...args),
-      warn: (...args) => console.warn('[EventsManager]', ...args)
+      info: (...args) => {
+        if (window.DEBUG_MODE) {
+          console.log('[EventsManager]', ...args);
+        }
+      },
+      error: (...args) => {
+        if (window.DEBUG_MODE) {
+          console.error('[EventsManager]', ...args);
+        }
+      },
+      warn: (...args) => {
+        if (window.DEBUG_MODE) {
+          console.warn('[EventsManager]', ...args);
+        }
+      }
     };
   }
 

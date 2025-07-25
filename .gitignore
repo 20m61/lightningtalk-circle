@@ -78,6 +78,15 @@ test-archives/
 playwright-report/
 *.heapsnapshot
 .jest-cache/
+screenshots-temp/
+screenshots-automated-ui-tests/
+screenshots-baseline/
+screenshots-diff/
+screenshots-ui-verification/
+*.test.log
+error-report.json
+error-check-screenshot.png
+responsive-test-results.md
 
 # Logs
 logs/
@@ -165,6 +174,11 @@ MONITORING-RUNBOOK.md
 .history/
 *.orig
 package-lock.json.*
+
+# PR documentation (keep in git history, not in working directory)
+PR-*-REVIEW.md
+PR-SELF-REVIEW-*.md
+PR-*-DETAILED-REVIEW.md
 
 # Logs
 logs
@@ -310,4 +324,5 @@ dist
 vite.config.js.timestamp-*
 vite.config.ts.timestamp-*
 
-.env
+.env*.json
+google_credentials_*.json

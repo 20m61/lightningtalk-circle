@@ -149,7 +149,7 @@ async function initializeSwagger() {
 }
 
 // Serve Swagger UI
-router.use('/', async (req, res, next) => {
+router.use('/', async(req, res, next) => {
   try {
     const spec = await initializeSwagger();
 
@@ -181,7 +181,7 @@ router.use('/', async (req, res, next) => {
 });
 
 // Serve raw OpenAPI spec as JSON
-router.get('/openapi.json', async (req, res) => {
+router.get('/openapi.json', async(req, res) => {
   try {
     const spec = await initializeSwagger();
     res.setHeader('Content-Type', 'application/json');
@@ -196,7 +196,7 @@ router.get('/openapi.json', async (req, res) => {
 });
 
 // Serve raw OpenAPI spec as YAML
-router.get('/openapi.yaml', async (req, res) => {
+router.get('/openapi.yaml', async(req, res) => {
   try {
     const spec = await initializeSwagger();
     const yamlSpec = yaml.dump(spec, {
@@ -218,7 +218,7 @@ router.get('/openapi.yaml', async (req, res) => {
 });
 
 // API documentation metadata
-router.get('/info', async (req, res) => {
+router.get('/info', async(req, res) => {
   try {
     const spec = await initializeSwagger();
 

@@ -245,26 +245,26 @@ class MigrationService {
 
     // Collection-specific transformations
     switch (collection) {
-      case 'events':
-        // Add sort key for events table
-        if (!prepared.createdAt) {
-          prepared.createdAt = new Date().toISOString();
-        }
-        break;
+    case 'events':
+      // Add sort key for events table
+      if (!prepared.createdAt) {
+        prepared.createdAt = new Date().toISOString();
+      }
+      break;
 
-      case 'participants':
-        // Ensure eventId is present (sort key)
-        if (!prepared.eventId) {
-          console.warn(chalk.yellow(`  ⚠ Participant ${prepared.id} missing eventId`));
-        }
-        break;
+    case 'participants':
+      // Ensure eventId is present (sort key)
+      if (!prepared.eventId) {
+        console.warn(chalk.yellow(`  ⚠ Participant ${prepared.id} missing eventId`));
+      }
+      break;
 
-      case 'talks':
-        // Ensure eventId is present (sort key)
-        if (!prepared.eventId) {
-          console.warn(chalk.yellow(`  ⚠ Talk ${prepared.id} missing eventId`));
-        }
-        break;
+    case 'talks':
+      // Ensure eventId is present (sort key)
+      if (!prepared.eventId) {
+        console.warn(chalk.yellow(`  ⚠ Talk ${prepared.id} missing eventId`));
+      }
+      break;
     }
 
     return prepared;
@@ -459,7 +459,7 @@ program
 program
   .command('rollback')
   .description('Rollback the migration using backup')
-  .action(async () => {
+  .action(async() => {
     const migration = new MigrationService({});
     await migration.loadProgress();
     await migration.rollback();
@@ -468,7 +468,7 @@ program
 program
   .command('status')
   .description('Check migration status')
-  .action(async () => {
+  .action(async() => {
     const migration = new MigrationService({});
     await migration.loadProgress();
 

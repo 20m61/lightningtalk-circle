@@ -30,7 +30,7 @@ class MonitoringInitializer {
 
       // Initialize local monitoring service (mock database for standalone script)
       const mockDatabase = {
-        findAll: async () => []
+        findAll: async() => []
       };
       this.monitoring = initializeMonitoring(mockDatabase);
       logger.info('Local monitoring service initialized');

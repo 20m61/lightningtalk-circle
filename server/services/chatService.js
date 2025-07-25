@@ -705,7 +705,7 @@ export class ChatService extends EventEmitter {
    */
   setupCleanup() {
     // Clean up old messages and inactive rooms
-    this.cleanupInterval = setInterval(async () => {
+    this.cleanupInterval = setInterval(async() => {
       await this.performCleanup();
     }, 3600000); // Every hour
   }

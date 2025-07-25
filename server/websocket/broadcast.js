@@ -41,7 +41,7 @@ exports.handler = async event => {
       timestamp: new Date().toISOString()
     });
 
-    const postCalls = connections.Items.map(async ({ connectionId }) => {
+    const postCalls = connections.Items.map(async({ connectionId }) => {
       try {
         await apigatewaymanagementapi.send(
           new PostToConnectionCommand({

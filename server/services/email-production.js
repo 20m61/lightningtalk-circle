@@ -28,14 +28,14 @@ export class ProductionEmailService extends EventEmitter {
 
   async setupEmailProvider() {
     switch (this.provider) {
-      case 'sendgrid':
-        await this.setupSendGrid();
-        break;
-      case 'ses':
-        await this.setupAWSSES();
-        break;
-      default:
-        throw new Error(`Unsupported email provider: ${this.provider}`);
+    case 'sendgrid':
+      await this.setupSendGrid();
+      break;
+    case 'ses':
+      await this.setupAWSSES();
+      break;
+    default:
+      throw new Error(`Unsupported email provider: ${this.provider}`);
     }
   }
 
@@ -164,12 +164,12 @@ export class ProductionEmailService extends EventEmitter {
     };
 
     switch (this.provider) {
-      case 'sendgrid':
-        return await sgMail.send(mailData);
-      case 'ses':
-        return await this.sendWithSES(mailData);
-      default:
-        throw new Error(`Unknown email provider: ${this.provider}`);
+    case 'sendgrid':
+      return await sgMail.send(mailData);
+    case 'ses':
+      return await this.sendWithSES(mailData);
+    default:
+      throw new Error(`Unknown email provider: ${this.provider}`);
     }
   }
 

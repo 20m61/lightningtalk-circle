@@ -1,0 +1,202 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Google OAuth認証テスト</title>
+    <style>
+      body {
+        font-family: 'Noto Sans JP', Arial, sans-serif;
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 20px;
+        background: #f5f5f5;
+      }
+      .container {
+        background: white;
+        padding: 30px;
+        border-radius: 10px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        margin-bottom: 20px;
+      }
+      .environment {
+        border: 2px solid #ddd;
+        padding: 20px;
+        margin-bottom: 20px;
+        border-radius: 8px;
+      }
+      .env-local {
+        border-color: #4caf50;
+      }
+      .env-dev {
+        border-color: #2196f3;
+      }
+      .env-prod {
+        border-color: #ff9800;
+      }
+      .btn {
+        background: #4285f4;
+        color: white;
+        border: none;
+        padding: 12px 24px;
+        border-radius: 8px;
+        cursor: pointer;
+        font-size: 16px;
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        text-decoration: none;
+        margin: 10px 0;
+        transition: transform 0.2s;
+      }
+      .btn:hover {
+        background: #3367d6;
+        transform: translateY(-2px);
+      }
+      .status {
+        padding: 10px;
+        border-radius: 5px;
+        margin: 10px 0;
+      }
+      .status.success {
+        background: #d4edda;
+        color: #155724;
+      }
+      .status.error {
+        background: #f8d7da;
+        color: #721c24;
+      }
+      .status.info {
+        background: #d1ecf1;
+        color: #0c5460;
+      }
+      .code {
+        background: #f8f9fa;
+        padding: 10px;
+        border-radius: 5px;
+        font-family: monospace;
+        font-size: 14px;
+        overflow-x: auto;
+      }
+      h2 {
+        color: #333;
+      }
+      h3 {
+        color: #666;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>🔐 Google OAuth 認証テスト（全環境）</h1>
+      <p>各環境でのGoogle OAuth認証をテストできます。</p>
+
+      <div class="status info">ℹ️ 現在のページURL: <span id="current-url"></span></div>
+    </div>
+
+    <!-- ローカル環境 -->
+    <div class="container environment env-local">
+      <h2>🏠 ローカル環境</h2>
+      <p>ポート3000での開発環境</p>
+      <div class="code">
+        Client ID: 5t48tpbh5qe26otojkfq1rf0ls<br />
+        Cognito Domain: lightningtalk-auth-dev.auth.ap-northeast-1.amazoncognito.com
+      </div>
+      <a
+        href="https://lightningtalk-auth-dev.auth.ap-northeast-1.amazoncognito.com/oauth2/authorize?client_id=5t48tpbh5qe26otojkfq1rf0ls&response_type=code&scope=email+openid+profile&redirect_uri=http%3A//localhost%3A3000/callback&identity_provider=Google"
+        class="btn"
+        target="_blank"
+      >
+        <img
+          src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg"
+          width="20"
+          height="20"
+          alt="Google"
+        />
+        ローカル環境でGoogleログイン
+      </a>
+    </div>
+
+    <!-- 開発環境 -->
+    <div class="container environment env-dev">
+      <h2>🚧 開発環境</h2>
+      <p>CloudFront開発環境</p>
+      <div class="code">
+        Client ID: 5t48tpbh5qe26otojkfq1rf0ls<br />
+        Cognito Domain: lightningtalk-auth-dev.auth.ap-northeast-1.amazoncognito.com<br />
+        CloudFront: d3ciavsjxk30rq.cloudfront.net
+      </div>
+      <a
+        href="https://lightningtalk-auth-dev.auth.ap-northeast-1.amazoncognito.com/oauth2/authorize?client_id=5t48tpbh5qe26otojkfq1rf0ls&response_type=code&scope=email+openid+profile&redirect_uri=https%3A//d3ciavsjxk30rq.cloudfront.net/callback&identity_provider=Google"
+        class="btn"
+        target="_blank"
+      >
+        <img
+          src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg"
+          width="20"
+          height="20"
+          alt="Google"
+        />
+        開発環境でGoogleログイン
+      </a>
+    </div>
+
+    <!-- 本番環境 -->
+    <div class="container environment env-prod">
+      <h2>🌐 本番環境</h2>
+      <p>https://xn--6wym69a.com（発表.com）</p>
+      <div class="code">
+        Client ID: 42u3ma63qf01utk4jcd6pn9l8s<br />
+        Cognito Domain: lightningtalk-secure-1753166187.auth.ap-northeast-1.amazoncognito.com<br />
+        Production URL: https://xn--6wym69a.com
+      </div>
+      <a
+        href="https://lightningtalk-secure-1753166187.auth.ap-northeast-1.amazoncognito.com/oauth2/authorize?client_id=42u3ma63qf01utk4jcd6pn9l8s&response_type=code&scope=email+openid+profile&redirect_uri=https%3A//xn--6wym69a.com/callback&identity_provider=Google"
+        class="btn"
+        target="_blank"
+      >
+        <img
+          src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg"
+          width="20"
+          height="20"
+          alt="Google"
+        />
+        本番環境でGoogleログイン
+      </a>
+    </div>
+
+    <div class="container">
+      <h2>🧪 テスト手順</h2>
+      <ol>
+        <li>各環境のボタンをクリック</li>
+        <li>Googleアカウントでログイン</li>
+        <li>各環境の/callbackページにリダイレクトされることを確認</li>
+        <li>URLパラメータに認証コード（code=...）が含まれていることを確認</li>
+      </ol>
+
+      <h3>✅ 成功パターン</h3>
+      <div class="status success">リダイレクト先URL例: https://xn--6wym69a.com/callback?code=4/0AQlEd8x...</div>
+
+      <h3>❌ エラーパターン</h3>
+      <div class="status error">
+        redirect_uri_mismatch エラーが表示される場合は、Google Cloud ConsoleでリダイレクトURIの設定を確認してください。
+      </div>
+    </div>
+
+    <script>
+      document.getElementById('current-url').textContent = window.location.href;
+
+      // 環境判定
+      if (window.location.hostname === 'localhost') {
+        document.querySelector('.env-local').style.borderColor = '#4CAF50';
+        document.querySelector('.env-local').style.borderWidth = '3px';
+      } else if (window.location.hostname.includes('cloudfront')) {
+        document.querySelector('.env-dev').style.borderColor = '#2196F3';
+        document.querySelector('.env-dev').style.borderWidth = '3px';
+      } else if (window.location.hostname.includes('xn--6wym69a.com')) {
+        document.querySelector('.env-prod').style.borderColor = '#FF9800';
+        document.querySelector('.env-prod').style.borderWidth = '3px';
+      }
+    </script>
+  </body>
+</html>

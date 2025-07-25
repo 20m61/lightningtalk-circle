@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ログインテスト - 新しいCognito認証</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #333;
+            text-align: center;
+        }
+        .config-info {
+            background: #e8f5e9;
+            padding: 20px;
+            border-radius: 5px;
+            margin: 20px 0;
+        }
+        .config-info h2 {
+            color: #2e7d32;
+            margin-top: 0;
+        }
+        .config-item {
+            margin: 10px 0;
+            padding: 10px;
+            background: #f1f8e9;
+            border-radius: 3px;
+            font-family: monospace;
+            word-break: break-all;
+        }
+        .button-container {
+            text-align: center;
+            margin: 30px 0;
+        }
+        .login-btn {
+            background: #4CAF50;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            font-size: 16px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .login-btn:hover {
+            background: #45a049;
+        }
+        .status {
+            margin: 20px 0;
+            padding: 15px;
+            border-radius: 5px;
+        }
+        .status.success {
+            background: #d4edda;
+            color: #155724;
+        }
+        .status.error {
+            background: #f8d7da;
+            color: #721c24;
+        }
+        .info {
+            background: #d1ecf1;
+            color: #0c5460;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 20px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔐 新しいCognito認証テスト</h1>
+        
+        <div class="info">
+            <strong>📋 テスト内容:</strong><br>
+            2025年7月22日にローテーションされた新しいAWS Cognito認証情報を使用してログイン機能をテストします。
+        </div>
+
+        <div class="config-info">
+            <h2>🆕 新しいCognito設定</h2>
+            <div class="config-item"><strong>User Pool ID:</strong> ap-northeast-1_IG3yOKBmT</div>
+            <div class="config-item"><strong>Client ID:</strong> 42u3ma63qf01utk4jcd6pn9l8s</div>
+            <div class="config-item"><strong>Domain:</strong> lightningtalk-secure-1738054592.auth.ap-northeast-1.amazoncognito.com</div>
+            <div class="config-item"><strong>Identity Pool ID:</strong> ap-northeast-1:f570516d-a516-49ca-bb11-71477a976d8c</div>
+        </div>
+
+        <div class="button-container">
+            <button class="login-btn" onclick="testCognitoLogin()">Cognitoログインをテスト</button>
+        </div>
+
+        <div id="status"></div>
+
+        <div class="config-info">
+            <h2>📊 環境変数の確認</h2>
+            <div id="env-check">読み込み中...</div>
+        </div>
+    </div>
+
+    <script>
+        // 環境変数を確認
+        function checkEnvironment() {
+            const envCheck = document.getElementById('env-check');
+            
+            // フロントエンドで使用される環境変数を確認
+            const config = {
+                userPoolId: process.env.VITE_USER_POOL_ID || window.VITE_USER_POOL_ID || 'Not Set',
+                clientId: process.env.VITE_USER_POOL_CLIENT_ID || window.VITE_USER_POOL_CLIENT_ID || 'Not Set',
+                domain: process.env.VITE_COGNITO_DOMAIN || window.VITE_COGNITO_DOMAIN || 'Not Set',
+                identityPoolId: process.env.VITE_IDENTITY_POOL_ID || window.VITE_IDENTITY_POOL_ID || 'Not Set',
+                region: process.env.VITE_AWS_REGION || window.VITE_AWS_REGION || 'ap-northeast-1'
+            };
+
+            envCheck.innerHTML = `
+                <div class="config-item"><strong>VITE_USER_POOL_ID:</strong> ${config.userPoolId}</div>
+                <div class="config-item"><strong>VITE_USER_POOL_CLIENT_ID:</strong> ${config.clientId}</div>
+                <div class="config-item"><strong>VITE_COGNITO_DOMAIN:</strong> ${config.domain}</div>
+                <div class="config-item"><strong>VITE_IDENTITY_POOL_ID:</strong> ${config.identityPoolId}</div>
+                <div class="config-item"><strong>VITE_AWS_REGION:</strong> ${config.region}</div>
+            `;
+        }
+
+        // Cognitoログインをテスト
+        async function testCognitoLogin() {
+            const statusDiv = document.getElementById('status');
+            statusDiv.innerHTML = '<div class="status">テスト中...</div>';
+
+            try {
+                // 新しいCognito設定
+                const cognitoConfig = {
+                    userPoolId: 'ap-northeast-1_IG3yOKBmT',
+                    clientId: '42u3ma63qf01utk4jcd6pn9l8s',
+                    region: 'ap-northeast-1',
+                    domain: 'lightningtalk-secure-1738054592.auth.ap-northeast-1.amazoncognito.com'
+                };
+
+                // OAuth URLを構築
+                const redirectUri = encodeURIComponent('http://localhost:3000/callback');
+                const authUrl = `https://${cognitoConfig.domain}/login?` +
+                    `client_id=${cognitoConfig.clientId}&` +
+                    `response_type=code&` +
+                    `scope=email+openid+profile&` +
+                    `redirect_uri=${redirectUri}`;
+
+                statusDiv.innerHTML = `
+                    <div class="status success">
+                        ✅ Cognito設定が正常に読み込まれました！
+                    </div>
+                    <div class="config-info">
+                        <h3>🔗 認証URL</h3>
+                        <div class="config-item" style="word-break: break-all;">
+                            ${authUrl}
+                        </div>
+                        <div style="margin-top: 10px;">
+                            <a href="${authUrl}" target="_blank" style="color: #4CAF50;">→ 認証ページを開く</a>
+                        </div>
+                    </div>
+                `;
+
+                // APIの認証エンドポイントも確認
+                const response = await fetch('/api/auth/me', {
+                    credentials: 'include'
+                });
+                
+                if (response.status === 401) {
+                    statusDiv.innerHTML += `
+                        <div class="status">
+                            ℹ️ 現在ログインしていません（正常）
+                        </div>
+                    `;
+                } else if (response.ok) {
+                    const user = await response.json();
+                    statusDiv.innerHTML += `
+                        <div class="status success">
+                            ✅ ログイン済み: ${user.email}
+                        </div>
+                    `;
+                }
+
+            } catch (error) {
+                statusDiv.innerHTML = `
+                    <div class="status error">
+                        ❌ エラーが発生しました: ${error.message}
+                    </div>
+                `;
+            }
+        }
+
+        // ページ読み込み時に環境変数をチェック
+        window.onload = checkEnvironment;
+    </script>
+</body>
+</html>

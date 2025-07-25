@@ -150,7 +150,7 @@ const performanceMonitoring = (req, res, next) => {
 
   // Override end method to measure performance
   const originalEnd = res.end;
-  res.end = function (...args) {
+  res.end = function(...args) {
     const endTime = process.hrtime.bigint();
     const duration = Number(endTime - startTime) / 1000000; // Convert to milliseconds
 
@@ -293,14 +293,14 @@ const bundleSizeWarning = (req, res, next) => {
   const originalWrite = res.write;
   const originalEnd = res.end;
 
-  res.write = function (chunk, ...args) {
+  res.write = function(chunk, ...args) {
     if (chunk) {
       responseSize += Buffer.byteLength(chunk);
     }
     return originalWrite.apply(res, [chunk, ...args]);
   };
 
-  res.end = function (chunk, ...args) {
+  res.end = function(chunk, ...args) {
     if (chunk) {
       responseSize += Buffer.byteLength(chunk);
     }
@@ -325,7 +325,7 @@ const bundleSizeWarning = (req, res, next) => {
  * Critical CSS inlining
  * クリティカルCSSのインライン化
  */
-const criticalCssInlining = async (req, res, next) => {
+const criticalCssInlining = async(req, res, next) => {
   // Only for HTML responses
   if (!req.path.endsWith('.html') && req.path !== '/') {
     return next();
@@ -334,7 +334,7 @@ const criticalCssInlining = async (req, res, next) => {
   // Store original send method
   const originalSend = res.send;
 
-  res.send = function (html) {
+  res.send = function(html) {
     if (typeof html === 'string' && html.includes('</head>')) {
       const criticalCssPath = join(process.cwd(), 'public/css/critical.css');
 

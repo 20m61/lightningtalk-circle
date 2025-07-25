@@ -1,0 +1,962 @@
+/**
+ * Lightning Talk Circle - Design Tokens
+ * 統一されたデザインシステムの基盤
+ */
+
+:root {
+  /* ========================================
+     Color System - Lightning Talk Brand
+     ======================================== */
+
+  /* Primary Colors - Lightning Talk Electric Orange */
+  --color-primary-50: #fff7ed;
+  --color-primary-100: #ffedd5;
+  --color-primary-200: #fed7aa;
+  --color-primary-300: #fdba74;
+  --color-primary-400: #fb923c;
+  --color-primary-500: #ff6b35; /* Main brand color - Electric Lightning */
+  --color-primary-600: #ea580c;
+  --color-primary-700: #c2410c;
+  --color-primary-800: #9a3412;
+  --color-primary-900: #7c2d12;
+  --color-primary-950: #431407;
+
+  /* Secondary Colors - Electric Turquoise */
+  --color-secondary-50: #f0fdfa;
+  --color-secondary-100: #ccfbf1;
+  --color-secondary-200: #99f6e4;
+  --color-secondary-300: #5eead4;
+  --color-secondary-400: #2dd4bf;
+  --color-secondary-500: #4ecdc4; /* Lightning Talk turquoise */
+  --color-secondary-600: #0d9488;
+  --color-secondary-700: #0f766e;
+  --color-secondary-800: #115e59;
+  --color-secondary-900: #134e4a;
+  --color-secondary-950: #042f2e;
+
+  /* Neutral Colors */
+  --color-neutral-0: #ffffff;
+  --color-neutral-50: #f9fafb;
+  --color-neutral-100: #f3f4f6;
+  --color-neutral-200: #e5e7eb;
+  --color-neutral-300: #d1d5db;
+  --color-neutral-400: #9ca3af;
+  --color-neutral-500: #6b7280;
+  --color-neutral-600: #4b5563;
+  --color-neutral-700: #374151;
+  --color-neutral-800: #1f2937;
+  --color-neutral-900: #111827;
+  --color-neutral-950: #030712;
+
+  /* Semantic Colors */
+  --color-success-50: #f0fdf4;
+  --color-success-500: #22c55e;
+  --color-success-700: #15803d;
+
+  --color-warning-50: #fffbeb;
+  --color-warning-500: #f59e0b;
+  --color-warning-700: #b45309;
+
+  --color-error-50: #fef2f2;
+  --color-error-500: #ef4444;
+  --color-error-700: #b91c1c;
+
+  --color-info-50: #eff6ff;
+  --color-info-500: #3b82f6;
+  --color-info-700: #1d4ed8;
+
+  /* ========================================
+     Typography System
+     ======================================== */
+
+  /* Font Families */
+  --font-family-primary: "Noto Sans JP", "Yu Gothic", "Helvetica Neue", Arial, sans-serif;
+  --font-family-heading: var(--font-family-primary);
+  --font-family-mono: ui-monospace, SFMono-Regular, Monaco, Consolas, monospace;
+
+  /* Font Sizes - Fluid Typography */
+  --font-size-xs: clamp(0.75rem, 1.5vw, 0.875rem); /* 12-14px */
+  --font-size-sm: clamp(0.875rem, 2vw, 1rem); /* 14-16px */
+  --font-size-base: clamp(1rem, 2.5vw, 1.125rem); /* 16-18px */
+  --font-size-lg: clamp(1.125rem, 3vw, 1.25rem); /* 18-20px */
+  --font-size-xl: clamp(1.25rem, 3.5vw, 1.5rem); /* 20-24px */
+  --font-size-2xl: clamp(1.5rem, 4vw, 1.875rem); /* 24-30px */
+  --font-size-3xl: clamp(1.875rem, 5vw, 2.25rem); /* 30-36px */
+  --font-size-4xl: clamp(2.25rem, 6vw, 3rem); /* 36-48px */
+  --font-size-5xl: clamp(3rem, 8vw, 4rem); /* 48-64px */
+
+  /* Font Weights */
+  --font-weight-light: 300;
+  --font-weight-normal: 400;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+  --font-weight-bold: 700;
+  --font-weight-extrabold: 800;
+
+  /* Line Heights */
+  --line-height-tight: 1.25;
+  --line-height-snug: 1.375;
+  --line-height-normal: 1.5;
+  --line-height-relaxed: 1.625;
+  --line-height-loose: 2;
+
+  /* Letter Spacing */
+  --letter-spacing-tighter: -0.05em;
+  --letter-spacing-tight: -0.025em;
+  --letter-spacing-normal: 0em;
+  --letter-spacing-wide: 0.025em;
+  --letter-spacing-wider: 0.05em;
+
+  /* ========================================
+     Spacing System - 8px Base
+     ======================================== */
+
+  --space-px: 1px;
+  --space-0: 0;
+  --space-0-5: 0.125rem; /* 2px */
+  --space-1: 0.25rem; /* 4px */
+  --space-1-5: 0.375rem; /* 6px */
+  --space-2: 0.5rem; /* 8px */
+  --space-2-5: 0.625rem; /* 10px */
+  --space-3: 0.75rem; /* 12px */
+  --space-3-5: 0.875rem; /* 14px */
+  --space-4: 1rem; /* 16px */
+  --space-5: 1.25rem; /* 20px */
+  --space-6: 1.5rem; /* 24px */
+  --space-7: 1.75rem; /* 28px */
+  --space-8: 2rem; /* 32px */
+  --space-9: 2.25rem; /* 36px */
+  --space-10: 2.5rem; /* 40px */
+  --space-11: 2.75rem; /* 44px */
+  --space-12: 3rem; /* 48px */
+  --space-14: 3.5rem; /* 56px */
+  --space-16: 4rem; /* 64px */
+  --space-20: 5rem; /* 80px */
+  --space-24: 6rem; /* 96px */
+  --space-28: 7rem; /* 112px */
+  --space-32: 8rem; /* 128px */
+  --space-36: 9rem; /* 144px */
+  --space-40: 10rem; /* 160px */
+  --space-44: 11rem; /* 176px */
+  --space-48: 12rem; /* 192px */
+  --space-52: 13rem; /* 208px */
+  --space-56: 14rem; /* 224px */
+  --space-60: 15rem; /* 240px */
+  --space-64: 16rem; /* 256px */
+  --space-72: 18rem; /* 288px */
+  --space-80: 20rem; /* 320px */
+  --space-96: 24rem; /* 384px */
+
+  /* ========================================
+     Sizing System
+     ======================================== */
+
+  /* Width & Height */
+  --size-0: 0;
+  --size-px: 1px;
+  --size-0-5: 0.125rem;
+  --size-1: 0.25rem;
+  --size-1-5: 0.375rem;
+  --size-2: 0.5rem;
+  --size-2-5: 0.625rem;
+  --size-3: 0.75rem;
+  --size-3-5: 0.875rem;
+  --size-4: 1rem;
+  --size-5: 1.25rem;
+  --size-6: 1.5rem;
+  --size-7: 1.75rem;
+  --size-8: 2rem;
+  --size-9: 2.25rem;
+  --size-10: 2.5rem;
+  --size-11: 2.75rem;
+  --size-12: 3rem;
+  --size-14: 3.5rem;
+  --size-16: 4rem;
+  --size-20: 5rem;
+  --size-24: 6rem;
+  --size-28: 7rem;
+  --size-32: 8rem;
+  --size-36: 9rem;
+  --size-40: 10rem;
+  --size-44: 11rem;
+  --size-48: 12rem;
+  --size-52: 13rem;
+  --size-56: 14rem;
+  --size-60: 15rem;
+  --size-64: 16rem;
+  --size-72: 18rem;
+  --size-80: 20rem;
+  --size-96: 24rem;
+
+  /* Container Sizes */
+  --container-xs: 20rem; /* 320px */
+  --container-sm: 24rem; /* 384px */
+  --container-md: 28rem; /* 448px */
+  --container-lg: 32rem; /* 512px */
+  --container-xl: 36rem; /* 576px */
+  --container-2xl: 42rem; /* 672px */
+  --container-3xl: 48rem; /* 768px */
+  --container-4xl: 56rem; /* 896px */
+  --container-5xl: 64rem; /* 1024px */
+  --container-6xl: 72rem; /* 1152px */
+  --container-7xl: 80rem; /* 1280px */
+  --container-full: 100%;
+
+  /* ========================================
+     Border Radius
+     ======================================== */
+
+  --radius-none: 0;
+  --radius-sm: 0.125rem; /* 2px */
+  --radius-base: 0.25rem; /* 4px */
+  --radius-md: 0.375rem; /* 6px */
+  --radius-lg: 0.5rem; /* 8px */
+  --radius-xl: 0.75rem; /* 12px */
+  --radius-2xl: 1rem; /* 16px */
+  --radius-3xl: 1.5rem; /* 24px */
+  --radius-full: 9999px;
+
+  /* ========================================
+     Shadow System
+     ======================================== */
+
+  --shadow-xs: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --shadow-sm: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px -1px rgba(0, 0, 0, 0.1);
+  --shadow-base: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
+  --shadow-md: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1);
+  --shadow-lg: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+  --shadow-xl: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+  --shadow-2xl: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+  --shadow-inner: inset 0 2px 4px 0 rgba(0, 0, 0, 0.05);
+
+  /* Focus Shadow */
+  --shadow-focus: 0 0 0 3px rgba(34, 197, 94, 0.1);
+  --shadow-focus-error: 0 0 0 3px rgba(239, 68, 68, 0.1);
+
+  /* ========================================
+     Z-Index Scale
+     ======================================== */
+
+  --z-index-hide: -1;
+  --z-index-auto: auto;
+  --z-index-base: 0;
+  --z-index-docked: 10;
+  --z-index-dropdown: 1000;
+  --z-index-sticky: 1100;
+  --z-index-banner: 1200;
+  --z-index-overlay: 1300;
+  --z-index-modal: 1400;
+  --z-index-popover: 1500;
+  --z-index-skiplink: 1600;
+  --z-index-toast: 1700;
+  --z-index-tooltip: 1800;
+
+  /* ========================================
+     Transition & Animation
+     ======================================== */
+
+  /* Durations */
+  --duration-75: 75ms;
+  --duration-100: 100ms;
+  --duration-150: 150ms;
+  --duration-200: 200ms;
+  --duration-300: 300ms;
+  --duration-500: 500ms;
+  --duration-700: 700ms;
+  --duration-1000: 1000ms;
+
+  /* Easing Functions */
+  --ease-linear: linear;
+  --ease-in: cubic-bezier(0.4, 0, 1, 1);
+  --ease-out: cubic-bezier(0, 0, 0.2, 1);
+  --ease-in-out: cubic-bezier(0.4, 0, 0.2, 1);
+  --ease-back: cubic-bezier(0.68, -0.55, 0.265, 1.55);
+
+  /* Common Transitions */
+  --transition-base: all var(--duration-150) var(--ease-out);
+  --transition-colors:
+    color var(--duration-150) var(--ease-out), background-color var(--duration-150) var(--ease-out),
+    border-color var(--duration-150) var(--ease-out);
+  --transition-opacity: opacity var(--duration-150) var(--ease-out);
+  --transition-shadow: box-shadow var(--duration-150) var(--ease-out);
+  --transition-transform: transform var(--duration-150) var(--ease-out);
+
+  /* ========================================
+     Breakpoints
+     ======================================== */
+
+  --breakpoint-xs: 320px; /* Mobile small */
+  --breakpoint-sm: 640px; /* Mobile large */
+  --breakpoint-md: 768px; /* Tablet */
+  --breakpoint-lg: 1024px; /* Desktop small */
+  --breakpoint-xl: 1280px; /* Desktop */
+  --breakpoint-2xl: 1536px; /* Desktop large */
+
+  /* ========================================
+     Component Tokens
+     ======================================== */
+
+  /* Header */
+  --header-height: 80px;
+  --header-bg: rgba(255, 255, 255, 0.1);
+  --header-bg-scrolled: rgba(248, 249, 250, 0.95);
+  --header-border: var(--color-primary-500);
+  --header-backdrop-filter: blur(10px);
+  --header-backdrop-filter-scrolled: blur(20px);
+
+  /* Navigation */
+  --nav-link-padding: var(--space-2-5) var(--space-4);
+  --nav-link-radius: var(--radius-2xl);
+  --nav-gap: var(--space-8);
+
+  /* Button */
+  --button-padding-sm: var(--space-2) var(--space-4);
+  --button-padding-base: var(--space-3) var(--space-6);
+  --button-padding-lg: var(--space-4) var(--space-8);
+  --button-radius: var(--radius-md);
+  --button-radius-base: var(--radius-md);
+  --button-font-weight: var(--font-weight-medium);
+  --button-focus-ring: var(--shadow-focus);
+
+  /* Card */
+  --card-padding: var(--space-6);
+  --card-radius: var(--radius-lg);
+  --card-shadow: var(--shadow-base);
+  --card-shadow-hover: var(--shadow-lg);
+  --card-border: 1px solid var(--color-neutral-200);
+
+  /* Theme */
+  --theme-background: var(--color-neutral-50);
+  --theme-surface: var(--color-neutral-0);
+  --theme-primary: var(--color-primary-500);
+  --theme-text: var(--color-neutral-900);
+  --theme-text-muted: var(--color-neutral-600);
+
+  /* Modal */
+  --modal-max-width: var(--container-lg);
+  --modal-padding: var(--space-6);
+  --modal-radius: var(--radius-xl);
+  --modal-shadow: var(--shadow-2xl);
+  --modal-backdrop: rgba(0, 0, 0, 0.5);
+
+  /* Form */
+  --form-input-padding: var(--space-3) var(--space-4);
+  --form-input-radius: var(--radius-md);
+  --form-input-border: 1px solid var(--color-neutral-300);
+  --form-input-border-focus: 1px solid var(--color-primary-500);
+  --form-input-shadow-focus: var(--shadow-focus);
+
+  /* Chat */
+  --chat-width: 350px;
+  --chat-height: 450px;
+  --chat-radius: var(--radius-xl);
+  --chat-shadow: var(--shadow-xl);
+  --chat-message-padding: var(--space-3) var(--space-4);
+  --chat-message-radius: var(--radius-lg);
+
+  /* Event Cards */
+  --event-card-padding: var(--space-6);
+  --event-card-radius: var(--radius-lg);
+  --event-card-shadow: var(--shadow-base);
+  --event-card-shadow-hover: var(--shadow-lg);
+  --event-card-transition:
+    transform var(--duration-200) var(--ease-out), box-shadow var(--duration-200) var(--ease-out);
+
+  /* ========================================
+     Dark Mode Support
+     ======================================== */
+
+  @media (prefers-color-scheme: dark) {
+    /* Override colors for dark mode */
+    --color-neutral-0: #000000;
+    --color-neutral-50: #0f0f0f;
+    --color-neutral-100: #1a1a1a;
+    --color-neutral-200: #262626;
+    --color-neutral-300: #404040;
+    --color-neutral-400: #737373;
+    --color-neutral-500: #a3a3a3;
+    --color-neutral-600: #d4d4d4;
+    --color-neutral-700: #e5e5e5;
+    --color-neutral-800: #f5f5f5;
+    --color-neutral-900: #fafafa;
+    --color-neutral-950: #ffffff;
+
+    /* Component adjustments for dark mode */
+    --header-bg: rgba(0, 0, 0, 0.1);
+    --header-bg-scrolled: rgba(15, 15, 15, 0.95);
+    --card-border: 1px solid var(--color-neutral-200);
+    --form-input-border: 1px solid var(--color-neutral-300);
+  }
+  /* ========================================
+     Advanced Animation System
+     ======================================== */
+
+  /* Lightning Talk Brand Animations */
+  --animation-lightning-pulse: lightning-pulse var(--duration-1000) var(--ease-in-out) infinite;
+  --animation-lightning-glow: lightning-glow var(--duration-700) var(--ease-out) infinite alternate;
+  --animation-spark-trail: spark-trail var(--duration-300) var(--ease-out);
+  --animation-electric-slide: electric-slide var(--duration-500) var(--ease-back);
+  --animation-talk-bounce: talk-bounce var(--duration-200) var(--ease-back);
+
+  /* Micro-interactions */
+  --animation-button-press: scale(0.98);
+  --animation-button-hover: scale(1.02);
+  --animation-card-lift: translateY(-4px);
+  --animation-icon-spin: rotate(360deg);
+  --animation-shake: shake var(--duration-300) ease-in-out;
+
+  /* Loading animations */
+  --animation-skeleton: skeleton-pulse 1.5s ease-in-out infinite;
+  --animation-loading-dots: loading-dots 1.4s ease-in-out infinite;
+  --animation-progress-bar: progress-bar var(--duration-1000) ease-out;
+
+  /* Page transitions */
+  --animation-page-enter: slideInRight var(--duration-300) var(--ease-out);
+  --animation-page-exit: slideOutLeft var(--duration-300) var(--ease-in);
+  --animation-modal-enter: modal-scale-in var(--duration-200) var(--ease-out);
+  --animation-modal-exit: modal-scale-out var(--duration-150) var(--ease-in);
+
+  /* Fun interactive elements */
+  --animation-confetti: confetti var(--duration-1000) ease-out;
+  --animation-celebration: celebration var(--duration-500) var(--ease-back);
+  --animation-success-checkmark: checkmark-draw var(--duration-500) ease-in-out;
+
+  /* ========================================
+     Advanced Multi-Device System
+     ======================================== */
+
+  /* Responsive Breakpoints with Container Queries Support */
+  --mobile-xs: 320px; /* Small phones */
+  --mobile-sm: 375px; /* iPhone SE, older phones */
+  --mobile-md: 390px; /* iPhone 12/13/14 Pro */
+  --mobile-lg: 414px; /* iPhone Plus models */
+  --mobile-xl: 480px; /* Large phones landscape */
+
+  --tablet-sm: 768px; /* iPad Mini, small tablets */
+  --tablet-md: 834px; /* iPad Air */
+  --tablet-lg: 1024px; /* iPad Pro, large tablets */
+  --tablet-xl: 1180px; /* Tablet landscape + sidebar */
+
+  --desktop-sm: 1280px; /* Small desktop, laptop */
+  --desktop-md: 1440px; /* Standard desktop */
+  --desktop-lg: 1680px; /* Large desktop */
+  --desktop-xl: 1920px; /* Full HD displays */
+  --desktop-2xl: 2560px; /* 4K displays */
+
+  /* Device-specific optimizations */
+  --touch-target-min: 44px; /* iOS HIG minimum */
+  --touch-target-comfortable: 48px; /* Comfortable touch */
+  --mouse-target-min: 24px; /* Mouse precision */
+
+  /* Device capability detection */
+  --supports-hover: false; /* Will be overridden by CSS */
+  --supports-touch: true; /* Will be overridden by CSS */
+  --prefers-motion: true; /* Will be overridden by CSS */
+
+  /* Responsive spacing scales */
+  --space-responsive-xs: clamp(0.25rem, 1vw, 0.5rem);
+  --space-responsive-sm: clamp(0.5rem, 2vw, 1rem);
+  --space-responsive-md: clamp(1rem, 3vw, 1.5rem);
+  --space-responsive-lg: clamp(1.5rem, 4vw, 2.5rem);
+  --space-responsive-xl: clamp(2rem, 6vw, 4rem);
+  --space-responsive-2xl: clamp(3rem, 8vw, 6rem);
+
+  /* Responsive font scaling */
+  --font-scale-mobile: 0.9;
+  --font-scale-tablet: 1;
+  --font-scale-desktop: 1.1;
+
+  /* Container sizing for different screens */
+  --container-mobile: min(100% - 2rem, 480px);
+  --container-tablet: min(100% - 4rem, 768px);
+  --container-desktop: min(100% - 6rem, 1200px);
+  --container-wide: min(100% - 8rem, 1400px);
+
+  /* ========================================
+     Advanced Interactive Elements
+     ======================================== */
+
+  /* Lightning Talk Brand Interactions */
+  --interaction-lightning-strike: 0 0 20px var(--color-primary-500);
+  --interaction-electric-border: 2px solid var(--color-primary-400);
+  --interaction-spark-shadow: 0 0 15px rgba(255, 107, 53, 0.4);
+  --interaction-glow-intense: 0 0 30px var(--color-secondary-400);
+
+  /* Hover effects */
+  --hover-lift-distance: -2px;
+  --hover-scale-factor: 1.02;
+  --hover-brightness-boost: 1.1;
+  --hover-shadow-expansion: 0 8px 25px rgba(0, 0, 0, 0.15);
+
+  /* Focus states */
+  --focus-ring-width: 3px;
+  --focus-ring-offset: 2px;
+  --focus-ring-color: var(--color-primary-500);
+  --focus-ring-shadow:
+    0 0 0 var(--focus-ring-offset) white,
+    0 0 0 calc(var(--focus-ring-offset) + var(--focus-ring-width)) var(--focus-ring-color);
+
+  /* Active states */
+  --active-scale: 0.95;
+  --active-brightness: 0.9;
+  --active-shadow-inset: inset 0 2px 4px rgba(0, 0, 0, 0.1);
+
+  /* Loading states */
+  --loading-shimmer: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+  --loading-pulse-opacity: 0.6;
+  --loading-spinner-speed: var(--duration-1000);
+
+  /* Fun micro-interactions */
+  --wiggle-amplitude: 2deg;
+  --bounce-height: -4px;
+  --rubber-band-scale: 1.1;
+  --jello-skew: 12.5deg;
+
+  /* Success/Error feedback */
+  --success-celebration-scale: 1.2;
+  --error-shake-distance: 4px;
+  --warning-pulse-scale: 1.05;
+}
+
+/* ========================================
+   Animation Keyframes Definitions
+   ======================================== */
+
+@keyframes lightning-pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.7;
+    box-shadow: var(--interaction-lightning-strike);
+  }
+}
+
+@keyframes lightning-glow {
+  from {
+    box-shadow: 0 0 5px var(--color-primary-500);
+  }
+  to {
+    box-shadow: var(--interaction-lightning-strike);
+  }
+}
+
+@keyframes spark-trail {
+  0% {
+    transform: translateX(-100%) rotate(0deg);
+    opacity: 0;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateX(100%) rotate(180deg);
+    opacity: 0;
+  }
+}
+
+@keyframes electric-slide {
+  0% {
+    transform: translateX(-10px);
+    opacity: 0;
+  }
+  100% {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes talk-bounce {
+  0% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(var(--bounce-height));
+  }
+  100% {
+    transform: translateY(0);
+  }
+}
+
+@keyframes shake {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  25% {
+    transform: translateX(var(--error-shake-distance));
+  }
+  75% {
+    transform: translateX(calc(-1 * var(--error-shake-distance)));
+  }
+}
+
+@keyframes skeleton-pulse {
+  0% {
+    opacity: 1;
+  }
+  50% {
+    opacity: var(--loading-pulse-opacity);
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+@keyframes loading-dots {
+  0%,
+  80%,
+  100% {
+    transform: scale(0);
+  }
+  40% {
+    transform: scale(1);
+  }
+}
+
+@keyframes progress-bar {
+  0% {
+    width: 0%;
+  }
+  100% {
+    width: 100%;
+  }
+}
+
+@keyframes slideInRight {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes slideOutLeft {
+  from {
+    transform: translateX(0);
+    opacity: 1;
+  }
+  to {
+    transform: translateX(-100%);
+    opacity: 0;
+  }
+}
+
+@keyframes modal-scale-in {
+  from {
+    transform: scale(0.9);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes modal-scale-out {
+  from {
+    transform: scale(1);
+    opacity: 1;
+  }
+  to {
+    transform: scale(0.9);
+    opacity: 0;
+  }
+}
+
+@keyframes confetti {
+  0% {
+    transform: rotateZ(0deg) translateY(0px) rotateX(0deg);
+    opacity: 1;
+  }
+  100% {
+    transform: rotateZ(720deg) translateY(500px) rotateX(360deg);
+    opacity: 0;
+  }
+}
+
+@keyframes celebration {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(var(--success-celebration-scale));
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+@keyframes checkmark-draw {
+  0% {
+    stroke-dashoffset: 100;
+  }
+  100% {
+    stroke-dashoffset: 0;
+  }
+}
+
+/* ========================================
+   Media Queries for Multi-Device Support
+   ======================================== */
+
+/* Touch device optimizations */
+@media (hover: none) and (pointer: coarse) {
+  :root {
+    --supports-hover: false;
+    --supports-touch: true;
+    /* Larger touch targets */
+    --button-padding-sm: var(--space-3) var(--space-5);
+    --button-padding-base: var(--space-4) var(--space-6);
+    --button-padding-lg: var(--space-5) var(--space-8);
+  }
+}
+
+/* Hover-capable devices */
+@media (hover: hover) and (pointer: fine) {
+  :root {
+    --supports-hover: true;
+    --supports-touch: false;
+  }
+}
+
+/* Reduced motion preferences */
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --prefers-motion: false;
+    --duration-75: 0ms;
+    --duration-100: 0ms;
+    --duration-150: 0ms;
+    --duration-200: 0ms;
+    --duration-300: 0ms;
+    --duration-500: 0ms;
+    --duration-700: 0ms;
+    --duration-1000: 0ms;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* High contrast mode */
+@media (prefers-contrast: high) {
+  :root {
+    --color-primary-500: #ff4500;
+    --color-secondary-500: #008b8b;
+    --shadow-focus: 0 0 0 3px #ffd700;
+  }
+}
+
+/* Dark mode optimizations */
+@media (prefers-color-scheme: dark) {
+  :root {
+    /* Enhanced dark mode animations */
+    --interaction-lightning-strike: 0 0 25px var(--color-primary-400);
+    --interaction-spark-shadow: 0 0 20px rgba(255, 107, 53, 0.6);
+    --interaction-glow-intense: 0 0 35px var(--color-secondary-300);
+  }
+}
+
+/* Container queries for component-level responsiveness */
+@container (max-width: 480px) {
+  .lightning-talk-component {
+    --font-size-base: var(--font-size-sm);
+    --space-component: var(--space-responsive-sm);
+  }
+}
+
+@container (min-width: 768px) {
+  .lightning-talk-component {
+    --font-size-base: var(--font-size-lg);
+    --space-component: var(--space-responsive-lg);
+  }
+}
+
+/* ========================================
+   Semantic Color Classes
+   ======================================== */
+
+.text-primary {
+  color: var(--color-primary-500);
+}
+.text-secondary {
+  color: var(--color-secondary-500);
+}
+.text-success {
+  color: var(--color-success-500);
+}
+.text-warning {
+  color: var(--color-warning-500);
+}
+.text-error {
+  color: var(--color-error-500);
+}
+.text-info {
+  color: var(--color-info-500);
+}
+
+.bg-primary {
+  background-color: var(--color-primary-500);
+}
+.bg-secondary {
+  background-color: var(--color-secondary-500);
+}
+.bg-success {
+  background-color: var(--color-success-500);
+}
+.bg-warning {
+  background-color: var(--color-warning-500);
+}
+.bg-error {
+  background-color: var(--color-error-500);
+}
+.bg-info {
+  background-color: var(--color-info-500);
+}
+
+.border-primary {
+  border-color: var(--color-primary-500);
+}
+.border-secondary {
+  border-color: var(--color-secondary-500);
+}
+.border-success {
+  border-color: var(--color-success-500);
+}
+.border-warning {
+  border-color: var(--color-warning-500);
+}
+.border-error {
+  border-color: var(--color-error-500);
+}
+.border-info {
+  border-color: var(--color-info-500);
+}
+
+/* ========================================
+   Advanced Interactive Classes
+   ======================================== */
+
+/* Lightning effects */
+.lightning-effect {
+  position: relative;
+  overflow: hidden;
+}
+
+.lightning-effect::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: var(--loading-shimmer);
+  animation: spark-trail var(--duration-700) ease-out;
+  pointer-events: none;
+}
+
+.lightning-effect:hover::before {
+  animation: spark-trail var(--duration-300) ease-out;
+}
+
+/* Bounce interaction */
+.bounce-on-click {
+  transition: var(--transition-transform);
+}
+
+.bounce-on-click:active {
+  animation: var(--animation-talk-bounce);
+}
+
+/* Glow effect */
+.glow-on-hover {
+  transition: box-shadow var(--duration-300) ease-out;
+}
+
+.glow-on-hover:hover {
+  box-shadow: var(--interaction-glow-intense);
+}
+
+/* Scale interaction */
+.scale-on-hover {
+  transition: transform var(--duration-200) var(--ease-out);
+}
+
+.scale-on-hover:hover {
+  transform: scale(var(--hover-scale-factor));
+}
+
+/* Loading states */
+.loading-skeleton {
+  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+  background-size: 200% 100%;
+  animation: var(--animation-skeleton);
+}
+
+.loading-dots::after {
+  content: "";
+  display: inline-block;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: currentColor;
+  animation: var(--animation-loading-dots);
+}
+
+/* Success celebration */
+.celebration-trigger {
+  position: relative;
+}
+
+.celebration-trigger.celebrating {
+  animation: var(--animation-celebration);
+}
+
+/* Fun micro-interactions */
+.wiggle-on-error {
+  animation: var(--animation-shake);
+}
+
+.pulse-on-focus:focus {
+  animation: lightning-pulse var(--duration-1000) ease-in-out 3;
+}
+
+/* Responsive visibility */
+.mobile-only {
+  display: block;
+}
+
+.tablet-only,
+.desktop-only {
+  display: none;
+}
+
+@media (min-width: 768px) {
+  .mobile-only {
+    display: none;
+  }
+
+  .tablet-only {
+    display: block;
+  }
+}
+
+@media (min-width: 1024px) {
+  .tablet-only {
+    display: none;
+  }
+
+  .desktop-only {
+    display: block;
+  }
+}

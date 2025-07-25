@@ -220,17 +220,17 @@ class RealtimeNotificationClient {
       const message = JSON.parse(event.data);
 
       switch (message.event || message.type) {
-        case 'connected':
-          this.logger.info('WebSocket connected', { data: message.data, category: 'realtime' });
-          break;
-        case 'subscribed':
-          this.logger.info('Subscribed to topics', { topics: message.data, category: 'realtime' });
-          break;
-        case 'pong':
-          this.updateLastActivity();
-          break;
-        default:
-          this.handleNotification(message.event || message.type, message.data);
+      case 'connected':
+        this.logger.info('WebSocket connected', { data: message.data, category: 'realtime' });
+        break;
+      case 'subscribed':
+        this.logger.info('Subscribed to topics', { topics: message.data, category: 'realtime' });
+        break;
+      case 'pong':
+        this.updateLastActivity();
+        break;
+      default:
+        this.handleNotification(message.event || message.type, message.data);
       }
     } catch (error) {
       this.logger.error('Failed to parse WebSocket message', {

@@ -3,8 +3,9 @@
  * モバイルデバイス専用のタッチインタラクション管理システム
  */
 
-class MobileTouchManager {
+class MobileTouchManager extends EventTarget {
   constructor() {
+    super();
     this.touches = new Map();
     this.gestures = new Map();
     this.touchStartTime = 0;
@@ -361,8 +362,70 @@ class MobileTouchManager {
 
   handlePointerUp(event) {
     if (event.pointerType !== 'touch') {
+      // マウス/ペンの終了処理
       this.handleMousePenEnd(event);
     }
+  }
+
+  /**
+   * マウス/ペンの終了処理
+   * @param {PointerEvent} event - ポインターイベント
+   */
+  handleMousePenEnd(event) {
+    // アクティブ状態を解除
+    this.isActive = false;
+
+    // ポインターIDの削除
+    const pointerId = event.pointerId;
+    if (this.activePointers) {
+      delete this.activePointers[pointerId];
+    }
+
+    // ホバー状態のリセット
+    if (event.target) {
+      event.target.classList.remove('hover', 'active', 'pressed');
+
+      // 親要素のホバー状態もリセット
+      const interactiveParent = event.target.closest('.interactive, .btn, .card, [role="button"]');
+      if (interactiveParent) {
+        interactiveParent.classList.remove('hover', 'active', 'pressed');
+      }
+    }
+
+    // ドラッグ状態のリセット
+    if (this.isDragging) {
+      this.isDragging = false;
+      document.body.classList.remove('dragging');
+
+      // ドラッグ終了イベントの発火
+      const dragEndEvent = new CustomEvent('dragend', {
+        detail: {
+          pointerType: event.pointerType,
+          target: event.target,
+          clientX: event.clientX,
+          clientY: event.clientY
+        }
+      });
+      this.dispatchEvent(dragEndEvent);
+    }
+
+    // カスタムイベントの発火
+    const pointerEndEvent = new CustomEvent('pointerend', {
+      detail: {
+        pointerType: event.pointerType,
+        target: event.target,
+        pointerId: event.pointerId,
+        pressure: event.pressure || 0
+      }
+    });
+    this.dispatchEvent(pointerEndEvent);
+
+    // デバッグログ
+    console.debug(`Mouse/Pen pointer up: ${event.pointerType}`, {
+      pointerId: event.pointerId,
+      target: event.target.tagName,
+      activePointers: Object.keys(this.activePointers || {}).length
+    });
   }
 
   /**

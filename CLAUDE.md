@@ -162,6 +162,15 @@ npm run analyze              # 実装用の指示を分析
 npm run quality              # 品質ゲートスクリプトの実行
 npm run env:switch           # 環境間をインタラクティブに切り替え
 npm run env:backup           # 現在の環境設定をバックアップ
+
+# UI自動化テスト
+npm run ui:screenshot         # UIスクリーンショット撮影
+npm run ui:test              # 自動UIテスト実行
+npm run ui:test:ci           # CI/CD用UIテスト
+npm run ui:test:setup        # テスト環境セットアップ
+npm run ui:test:baseline     # ベースライン画像更新
+npm run ui:test:report       # テストレポート生成
+npm run ui:test:full         # サーバー付きフルテスト
 ```
 
 ### 監視とセキュリティ
@@ -346,12 +355,13 @@ GOOGLE_ANALYTICS_ID=
 SENTRY_DSN=
 SLACK_WEBHOOK_URL=
 
-# AWS Cognito認証設定（本番環境）
-COGNITO_USER_POOL_ID=ap-northeast-1_Wwsw04u84
-COGNITO_CLIENT_ID=5s4ogan946f0dc19tklh0s1tim
+# AWS Cognito認証設定（本番環境） - セキュリティ強化済み
+# 重要：実際の値は環境変数またはAWS Secrets Managerで管理
+COGNITO_USER_POOL_ID=your-production-user-pool-id
+COGNITO_CLIENT_ID=your-production-client-id
 COGNITO_REGION=ap-northeast-1
-COGNITO_DOMAIN=lightningtalk-auth-v2.auth.ap-northeast-1.amazoncognito.com
-API_ENDPOINT=https://9qyaz7n47j.execute-api.ap-northeast-1.amazonaws.com/prod/api
+COGNITO_DOMAIN=your-cognito-domain.auth.ap-northeast-1.amazoncognito.com
+API_ENDPOINT=https://your-api-gateway-id.execute-api.ap-northeast-1.amazonaws.com/prod/api
 
 # Google OAuth設定（Cognito統合用）
 GOOGLE_CLIENT_ID=your-google-client-id.apps.googleusercontent.com

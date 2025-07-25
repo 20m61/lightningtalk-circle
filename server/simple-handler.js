@@ -5,7 +5,7 @@
 
 const logger = require('./utils/production-logger');
 
-exports.handler = async (event, context) => {
+exports.handler = async(event, context) => {
   const startTime = Date.now();
 
   logger.info('Simple health check handler invoked', {

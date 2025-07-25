@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>お問い合わせ - なんでもライトニングトーク</title>
+    
+    <!-- Favicon and App Icons -->
+    <link rel="icon" type="image/x-icon" href="/favicon.ico" />
+    <link rel="icon" type="image/png" sizes="16x16" href="/icons/favicon-16x16.png" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/icons/favicon-32x32.png" />
+    
+    <!-- Font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;600;700&display=swap" rel="stylesheet" />
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Noto Sans JP', sans-serif;
+            line-height: 1.7;
+            color: #333;
+            background-color: #f8f9fa;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            background: white;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            border-radius: 10px;
+            margin-top: 40px;
+            margin-bottom: 40px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid #22c55e;
+        }
+
+        .header h1 {
+            font-size: 2.2em;
+            color: #22c55e;
+            margin-bottom: 10px;
+        }
+
+        .header .subtitle {
+            color: #666;
+            font-size: 1.1em;
+        }
+
+        .section {
+            margin-bottom: 30px;
+        }
+
+        .section h2 {
+            font-size: 1.4em;
+            color: #22c55e;
+            margin-bottom: 15px;
+            padding-left: 10px;
+            border-left: 4px solid #22c55e;
+        }
+
+        .contact-method {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-left: 4px solid #22c55e;
+        }
+
+        .contact-method h3 {
+            color: #22c55e;
+            margin-bottom: 10px;
+            font-size: 1.2em;
+        }
+
+        .contact-method p {
+            margin-bottom: 8px;
+            color: #555;
+        }
+
+        .contact-method .email {
+            font-family: monospace;
+            font-size: 1.1em;
+            color: #0066cc;
+            background: #e8f4f8;
+            padding: 8px 12px;
+            border-radius: 4px;
+            word-break: break-all;
+        }
+
+        .emergency-contact {
+            background: #fff3cd;
+            border: 1px solid #ffc107;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+
+        .emergency-contact h3 {
+            color: #856404;
+            margin-bottom: 10px;
+        }
+
+        .phone-link {
+            display: inline-block;
+            color: #22c55e;
+            text-decoration: none;
+            font-size: 1.3em;
+            font-weight: 600;
+            padding: 10px 15px;
+            border: 2px solid #22c55e;
+            border-radius: 8px;
+            margin-top: 10px;
+            transition: all 0.3s ease;
+        }
+
+        .phone-link:hover {
+            background: #22c55e;
+            color: white;
+        }
+
+        .faq-section {
+            background: #e8f5e9;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+
+        .faq-item {
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #c8e6c9;
+        }
+
+        .faq-item:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+        }
+
+        .faq-question {
+            font-weight: 600;
+            color: #2e7d32;
+            margin-bottom: 8px;
+        }
+
+        .faq-answer {
+            color: #555;
+            padding-left: 15px;
+        }
+
+        .back-link {
+            text-align: center;
+            margin-top: 30px;
+        }
+
+        .back-link a {
+            color: #22c55e;
+            text-decoration: none;
+            font-weight: 600;
+            padding: 10px 20px;
+            border: 2px solid #22c55e;
+            border-radius: 25px;
+            transition: all 0.3s ease;
+        }
+
+        .back-link a:hover {
+            background: #22c55e;
+            color: white;
+        }
+
+        .response-time {
+            background: #d1ecf1;
+            border: 1px solid #bee5eb;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 15px 0;
+            text-align: center;
+        }
+
+        .response-time h4 {
+            color: #0c5460;
+            margin-bottom: 5px;
+        }
+
+        .response-time p {
+            color: #0c5460;
+            margin: 0;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                margin: 20px 10px;
+                padding: 15px;
+            }
+            
+            .header h1 {
+                font-size: 1.8em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>お問い合わせ</h1>
+            <div class="subtitle">Lightning Talk Circle（なんでもライトニングトーク）</div>
+        </div>
+
+        <div class="section">
+            <h2>📧 メールでのお問い合わせ</h2>
+            <div class="contact-method">
+                <h3>一般的なお問い合わせ</h3>
+                <p>サービスに関するご質問、ご要望、ご意見等はこちらまで：</p>
+                <a href="mailto:info@xn--6wym69a.com?subject=【お問い合わせ】なんでもライトニングトークについて&body=お問い合わせいただきありがとうございます。%0A%0A【お問い合わせ内容】%0A（以下に具体的な内容をご記入ください）%0A%0A%0A【お名前】%0A%0A【参加予定のイベント】%0A（該当する場合）%0A%0A【連絡先】%0A%0A----%0ALightning Talk Circle%0Ahttps://xn--6wym69a.com" class="email" style="text-decoration: none; display: block; color: #0066cc;">info@発表.com (info@xn--6wym69a.com)</a>
+                <div class="response-time">
+                    <h4>📅 回答予定</h4>
+                    <p>平日9:00-18:00（土日祝日を除く）<br>7営業日以内にご回答いたします</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>📞 緊急時の連絡先</h2>
+            <div class="emergency-contact">
+                <h3>⚠️ イベント当日の緊急連絡</h3>
+                <p>現地開催イベントで緊急事態が発生した場合の連絡先です：</p>
+                <a href="tel:080-4540-7479" class="phone-link">
+                    📱 080-4540-7479
+                </a>
+                <p style="margin-top: 10px; font-size: 0.9em; color: #666;">
+                    ※ イベント開催日のみ対応しています<br>
+                    ※ 一般的なお問い合わせはメールでお願いします
+                </p>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>❓ よくあるお問い合わせ</h2>
+            <div class="faq-section">
+                <div class="faq-item">
+                    <div class="faq-question">Q. イベントへの参加方法を教えてください</div>
+                    <div class="faq-answer">メインページの「参加登録」ボタンから登録できます。現地参加・オンライン参加を選択いただけます。</div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-question">Q. ライトニングトークの発表時間は？</div>
+                    <div class="faq-answer">発表時間は厳格に5分間です。時間超過の場合は運営側で終了させていただく場合があります。</div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-question">Q. 発表テーマに制限はありますか？</div>
+                    <div class="faq-answer">「なんでも」OKです！技術、趣味、日常の発見など自由にお話しください。ただし利用規約の禁止事項に該当する内容は不可です。</div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-question">Q. 当日の飛び入り発表はできますか？</div>
+                    <div class="faq-answer">はい、大歓迎です！事前申込みがなくても当日発表していただけます。</div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-question">Q. オンライン参加の方法は？</div>
+                    <div class="faq-answer">Google Meetを使用します。参加者にはイベント前にアクセス情報をお送りします。</div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-question">Q. 個人情報の取り扱いについて</div>
+                    <div class="faq-answer">詳細は<a href="/privacy.html" style="color: #22c55e;" target="_blank" rel="noopener">プライバシーポリシー</a>をご確認ください。必要最小限の情報のみを適切に管理しています。</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>📝 お問い合わせの際のお願い</h2>
+            <div class="contact-method">
+                <h3>円滑な対応のために以下をご記載ください</h3>
+                <ul style="padding-left: 20px; color: #555;">
+                    <li style="margin-bottom: 8px;">お名前（ニックネーム可）</li>
+                    <li style="margin-bottom: 8px;">お問い合わせの種類（参加について/発表について/技術的な問題/その他）</li>
+                    <li style="margin-bottom: 8px;">具体的なご質問・ご要望の内容</li>
+                    <li style="margin-bottom: 8px;">参加予定のイベント（該当する場合）</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>🔗 関連リンク</h2>
+            <div style="text-align: center; margin: 20px 0;">
+                <p style="margin-bottom: 10px;">
+                    <a href="/privacy.html" style="color: #22c55e; margin-right: 15px;" target="_blank" rel="noopener">プライバシーポリシー</a>
+                    <a href="/terms.html" style="color: #22c55e;" target="_blank" rel="noopener">利用規約</a>
+                </p>
+                <p style="color: #666; font-size: 0.9em;">
+                    規約に関するお問い合わせも上記メールアドレスまでお願いします
+                </p>
+            </div>
+        </div>
+
+        <div class="back-link">
+            <a href="/">← なんでもライトニングトークへ戻る</a>
+        </div>
+    </div>
+</body>
+</html>

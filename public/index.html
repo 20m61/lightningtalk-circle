@@ -2,7 +2,10 @@
 <html lang="ja">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes, viewport-fit=cover"
+    />
     <title>なんでもライトニングトーク ⚡</title>
 
     <!-- Favicon and App Icons -->
@@ -50,7 +53,7 @@
     <!-- Performance optimizations: Preload critical resources -->
     <link rel="preload" href="css/design-tokens.css" as="style" />
     <link rel="preload" href="css/style.css" as="style" />
-    <link rel="preload" href="js/main.js" as="script" />
+    <!-- main.js is disabled - removed preload -->
     <link rel="dns-prefetch" href="//fonts.googleapis.com" />
     <link rel="dns-prefetch" href="//fonts.gstatic.com" />
 
@@ -60,6 +63,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;600;700&display=swap" rel="stylesheet" />
 
     <!-- Base CSS - Foundation -->
+    <link rel="stylesheet" href="css/design-system.css" />
     <link rel="stylesheet" href="css/design-tokens.css" />
     <link rel="stylesheet" href="css/tailwind.css" />
     <link rel="stylesheet" href="css/style.css" />
@@ -71,9 +75,41 @@
     <!-- Integration CSS - Overrides -->
     <link rel="stylesheet" href="css/architecture-integration.css" />
     <link rel="stylesheet" href="css/auth.css" />
+    <link rel="stylesheet" href="css/auth-google-only.css" />
     <link rel="stylesheet" href="css/logo-integration.css" />
     <link rel="stylesheet" href="css/hero-events.css" />
     <link rel="stylesheet" href="css/mobile-optimizations.css" />
+    <link rel="stylesheet" href="css/mobile-responsive.css" />
+    <link rel="stylesheet" href="css/mobile-bottom-nav.css" />
+
+    <!-- UI/UX Enhancements -->
+    <link rel="stylesheet" href="css/ui-ux-enhancements.css" />
+    <link rel="stylesheet" href="css/enhanced-interactions.css" />
+    <link rel="stylesheet" href="css/event-modal.css" />
+    <link rel="stylesheet" href="css/modal-system.css" />
+
+    <!-- UI/UX Enhancement Fixes -->
+    <link rel="stylesheet" href="css/contrast-enhancements.css" />
+    <link rel="stylesheet" href="css/layout-enhancements.css" />
+    <link rel="stylesheet" href="css/button-enhancements.css" />
+    <link rel="stylesheet" href="css/contrast-improvements.css" />
+    <link rel="stylesheet" href="css/touch-target-improvements.css" />
+    <link rel="stylesheet" href="css/button-contrast-fix.css" />
+
+    <!-- Responsive Navigation System -->
+    <link rel="stylesheet" href="css/responsive-navigation.css" />
+
+    <!-- Admin Login Link -->
+    <link rel="stylesheet" href="css/admin-login-link.css" />
+
+    <!-- Unified Mobile Navigation -->
+    <link rel="stylesheet" href="css/mobile-navigation-unified.css" />
+
+    <!-- Mobile Conflicts Override (Must be last CSS) -->
+    <link rel="stylesheet" href="css/mobile-conflicts-override.css" />
+
+    <!-- Accessibility Improvements (WCAG 2.1 AA) -->
+    <link rel="stylesheet" href="css/accessibility-improvements.css" />
 
     <!-- Mobile-specific viewport meta tags -->
     <meta name="format-detection" content="telephone=no" />
@@ -95,37 +131,95 @@
     </script>
   </head>
   <body>
+    <!-- Skip Links for Accessibility -->
+    <a href="#main-content" class="skip-link">メインコンテンツへスキップ</a>
+    <a href="#all-events" class="skip-link">イベント一覧へスキップ</a>
+
     <header class="header">
-      <nav class="container flex flex--items-center flex--justify-between">
+      <div class="header__container">
+        <!-- Logo Section -->
         <div class="logo-container">
           <picture>
             <source srcset="/icons/logo-header.webp" type="image/webp" />
             <img src="/icons/logo-header.jpg" alt="なんでもライトニングトーク" class="logo-image" loading="eager" />
           </picture>
-          <div class="logo-text text-primary font-bold">なんでもLT</div>
+          <div class="logo-text">なんでもLT</div>
         </div>
-        <ul class="nav-links flex flex--items-center">
-          <li><a href="#hero" class="nav-link">イベント一覧</a></li>
-          <li><a href="#event-detail" class="nav-link">現在のイベント</a></li>
-          <li><a href="/presentations.html" class="nav-link">アーカイブ</a></li>
-          <li><a href="#about" class="nav-link">ライトニングトークとは</a></li>
-          <li><a href="#join" class="nav-link">参加方法</a></li>
-          <li><a href="#contact" class="nav-link">お問い合わせ</a></li>
-        </ul>
 
-        <!-- Auth Header Integration -->
-        <div id="auth-header" class="auth-header">
-          <!-- This will be populated by React -->
+        <!-- Desktop Navigation -->
+        <nav class="nav-links" role="navigation" aria-label="メインナビゲーション">
+          <!-- Primary Navigation (Always visible on tablet+) -->
+          <a href="#hero" class="nav-link nav-item--primary">イベント</a>
+          <a href="#event-detail" class="nav-link nav-item--primary">現在のイベント</a>
+
+          <!-- Secondary Navigation (Tablet+) -->
+          <a href="/presentations.html" class="nav-link nav-item--secondary">アーカイブ</a>
+          <a href="#about" class="nav-link nav-item--secondary">LTとは</a>
+
+          <!-- Tertiary Navigation (Desktop only) -->
+          <a href="#join" class="nav-link nav-item--tertiary">参加方法</a>
+          <a href="#contact" class="nav-link nav-item--tertiary">お問い合わせ</a>
+        </nav>
+
+        <!-- Admin Login Link (Desktop) -->
+        <div class="auth-section">
+          <a href="/admin-login.html" class="admin-login-link" aria-label="管理者ログイン">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+              <circle cx="12" cy="7" r="4"></circle>
+            </svg>
+            <span class="admin-login-text">管理者</span>
+          </a>
         </div>
-        <div class="mobile-menu-toggle">
-          <span></span>
-          <span></span>
-          <span></span>
-        </div>
-      </nav>
+
+        <!-- Mobile Menu Toggle -->
+        <button class="mobile-menu-toggle" type="button" aria-label="メニューを開く" aria-expanded="false">
+          <span class="mobile-menu-toggle__line"></span>
+          <span class="mobile-menu-toggle__line"></span>
+          <span class="mobile-menu-toggle__line"></span>
+        </button>
+      </div>
     </header>
 
-    <main>
+    <!-- Mobile Menu Overlay -->
+    <div class="mobile-menu-overlay"></div>
+
+    <!-- Mobile Menu Panel -->
+    <nav class="mobile-menu" role="navigation" aria-label="モバイルメインナビゲーション">
+      <ul class="mobile-menu__list">
+        <li class="mobile-menu__item">
+          <a href="#hero" class="mobile-menu__link">🎉 イベント一覧</a>
+        </li>
+        <li class="mobile-menu__item">
+          <a href="#event-detail" class="mobile-menu__link">⚡ 現在のイベント</a>
+        </li>
+        <li class="mobile-menu__item">
+          <a href="/presentations.html" class="mobile-menu__link">📚 アーカイブ</a>
+        </li>
+        <li class="mobile-menu__item">
+          <a href="#about" class="mobile-menu__link">💡 ライトニングトークとは</a>
+        </li>
+        <li class="mobile-menu__item">
+          <a href="#join" class="mobile-menu__link">🚀 参加方法</a>
+        </li>
+        <li class="mobile-menu__item">
+          <a href="#contact" class="mobile-menu__link">📧 お問い合わせ</a>
+        </li>
+      </ul>
+
+      <!-- Mobile Admin Login -->
+      <div class="mobile-menu__auth">
+        <a href="/admin-login.html" class="mobile-menu__admin-link">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+            <circle cx="12" cy="7" r="4"></circle>
+          </svg>
+          管理者ログイン
+        </a>
+      </div>
+    </nav>
+
+    <main id="main-content">
       <section id="hero" class="hero">
         <div class="container">
           <div class="floating-elements">
@@ -488,9 +582,9 @@
         </div>
         <p>5分間で世界が広がる。あなたの参加をお待ちしています！</p>
         <div class="footer-links">
-          <a href="/privacy">プライバシーポリシー</a>
-          <a href="/terms">利用規約</a>
-          <a href="/contact">お問い合わせ</a>
+          <a href="/privacy.html">プライバシーポリシー</a>
+          <a href="/terms.html">利用規約</a>
+          <a href="/contact.html">お問い合わせ</a>
         </div>
         <p class="copyright">© 2025 なんでもライトニングトーク. All rights reserved.</p>
 
@@ -536,60 +630,6 @@
       </div>
     </div>
 
-    <!-- 管理画面ログインモーダル -->
-    <div id="adminLoginModal" class="admin-login-modal">
-      <div class="admin-login-content">
-        <button class="close-btn" onclick="closeAdminLogin()">&times;</button>
-        <div class="admin-login-header">
-          <picture>
-            <source srcset="/icons/logo-footer.webp" type="image/webp" />
-            <img src="/icons/logo-footer.jpg" alt="なんでもライトニングトーク" class="admin-logo" loading="lazy" />
-          </picture>
-          <h2>🔐 管理画面ログイン</h2>
-          <p>イベントを追加・管理するには管理者権限が必要です</p>
-        </div>
-
-        <!-- Google認証ボタン（管理者向け） -->
-        <div class="google-login-section">
-          <button type="button" onclick="loginWithGoogle()" class="btn-google-login-modal">
-            <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google" />
-            管理者Googleアカウントでログイン
-          </button>
-          <div class="divider">
-            <span>または</span>
-          </div>
-        </div>
-
-        <form id="adminLoginForm" class="admin-login-form">
-          <div class="form-group">
-            <label for="adminEmail"> <i class="icon">📧</i> メールアドレス </label>
-            <input type="email" id="adminEmail" name="email" required placeholder="admin@example.com" autofocus />
-          </div>
-          <div class="form-group">
-            <label for="adminPassword"> <i class="icon">🔑</i> パスワード </label>
-            <input type="password" id="adminPassword" name="password" required placeholder="パスワードを入力" />
-          </div>
-          <div class="form-group remember-me">
-            <label>
-              <input type="checkbox" name="remember" />
-              ログイン状態を保持する
-            </label>
-          </div>
-          <div class="login-error" id="loginError" style="display: none">
-            <i class="icon">⚠️</i>
-            <span id="loginErrorMessage"></span>
-          </div>
-          <div class="form-buttons">
-            <button type="submit" class="login-btn"><i class="icon">🚀</i> ログイン</button>
-            <button type="button" class="cancel-btn" onclick="closeAdminLogin()">キャンセル</button>
-          </div>
-          <div class="login-help">
-            <p>パスワードをお忘れの場合は<a href="mailto:admin@lightningtalk.com">管理者</a>までご連絡ください</p>
-          </div>
-        </form>
-      </div>
-    </div>
-
     <!-- チャット機能 -->
     <div id="chatWidget" class="chat-widget">
       <button id="chatToggle" class="chat-toggle">
@@ -610,17 +650,119 @@
       </div>
     </div>
 
+    <!-- Registration Modal -->
+    <div id="registration-modal" class="modal modal--medium" data-modal="registration-modal" style="display: none">
+      <div class="modal__header">
+        <h2 class="modal__title">イベント参加登録</h2>
+        <button class="modal__close" data-modal-close aria-label="閉じる">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
+      </div>
+      <div class="modal__body">
+        <form id="registration-form" class="registration-form">
+          <div class="form-group">
+            <label for="reg-name">お名前 <span class="required">*</span></label>
+            <input type="text" id="reg-name" name="name" required placeholder="山田 太郎" />
+          </div>
+          <div class="form-group">
+            <label for="reg-email">メールアドレス <span class="required">*</span></label>
+            <input type="email" id="reg-email" name="email" required placeholder="example@email.com" />
+          </div>
+          <div class="form-group">
+            <label for="reg-phone">電話番号</label>
+            <input type="tel" id="reg-phone" name="phone" placeholder="090-1234-5678" />
+          </div>
+          <div class="form-group">
+            <label for="reg-comment">コメント・質問など</label>
+            <textarea
+              id="reg-comment"
+              name="comment"
+              rows="3"
+              placeholder="ご質問やご要望があればお書きください"
+            ></textarea>
+          </div>
+          <div class="form-actions">
+            <button type="submit" class="btn btn-primary">登録する</button>
+            <button type="button" class="btn btn-secondary" data-modal-close>キャンセル</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- デバッグ設定 - 最優先で読み込み -->
+    <script src="js/debug-config.js"></script>
+
+    <!-- エラーハンドラー - 早期に読み込み -->
+    <script src="js/error-handler.js"></script>
+
+    <!-- コンソールエラー監視 - 開発環境用 -->
+    <script src="js/console-monitor.js"></script>
+
+    <!-- 初期化修正 - グローバル関数の保証 -->
+    <script src="js/init-fix.js"></script>
+
+    <!-- Fetchラッパー - APIエラー処理 -->
+    <script src="js/fetch-wrapper.js"></script>
+
+    <!-- DOM キャッシュシステム -->
+    <script src="js/dom-cache.js"></script>
+
+    <!-- 統合インタラクション管理システム -->
+    <script src="js/interaction-manager-unified.js"></script>
+
     <!-- Frontend Logger - Load first for error capture -->
     <script src="js/logger.js"></script>
 
-    <script src="js/auth.js"></script>
+    <!-- Socket.IO - リアルタイム機能用 -->
+    <script src="/socket.io/socket.io.js"></script>
+
+    <!-- スクロール管理システム - 統合システムと連携 -->
+    <script src="js/scroll-fix-v2.js"></script>
+
+    <!-- Auth removed - admin login only -->
+    <!-- Google auth removed - admin login only -->
     <script src="js/unified-components.js"></script>
     <!-- <script src="js/animation-manager.js"></script> -->
     <script src="js/mobile-touch-manager.js"></script>
     <script src="js/mobile-components.js"></script>
     <!-- <script src="js/mobile-performance-optimizer.js"></script> -->
+
+    <!-- UI/UX Enhancement Scripts -->
+    <script src="js/modal-enhancements.js"></script>
+    <script src="js/progressive-image.js"></script>
+    <script src="js/micro-interactions.js"></script>
+    <script src="js/modal-functionality-fix.js"></script>
+    <script src="js/form-enhancements.js"></script>
+
     <script src="js/events-manager.js"></script>
-    <script src="js/main.js"></script>
+    <script src="js/modal-system.js"></script>
+    <script src="js/registration-modal.js"></script>
+    <script src="js/event-modal.js"></script>
+    <script src="js/events-manager-modal.js"></script>
+
+    <!-- 競合するスクリプトを無効化 - 統合システムで代替 -->
+    <!-- <script src="js/main.js"></script> -->
+    <!-- <script src="js/responsive-navigation.js"></script> -->
+    <!-- <script src="js/mobile-navigation.js"></script> -->
+    <!-- <script src="js/ui-ux-integration.js"></script> -->
+
+    <!-- PWA Installer -->
+    <script src="js/pwa-installer.js"></script>
+
+    <!-- 検索修正 - 統合システムと連携 -->
+    <script src="js/search-fix.js"></script>
+
+    <!-- 統合モバイルナビゲーション -->
+    <script src="js/mobile-navigation-unified.js"></script>
+
+    <!-- 緊急スクロール修正 - 最後の砦 -->
+    <script src="js/scroll-emergency-fix.js"></script>
+
+    <!-- コンソール検証スクリプト - 最終チェック -->
+    <script src="js/console-verification.js"></script>
 
     <!-- React Components Integration - Temporarily disabled -->
     <!-- <script type="module" src="js/react-integration.js"></script> -->

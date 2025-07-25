@@ -134,7 +134,9 @@ class LightningTalkServer {
               connectSrc: [
                 "'self'",
                 'https://accounts.google.com',
-                'https://*.auth.ap-northeast-1.amazoncognito.com'
+                'https://*.auth.ap-northeast-1.amazoncognito.com',
+                'https://*.execute-api.ap-northeast-1.amazonaws.com',
+                'wss://*.execute-api.ap-northeast-1.amazonaws.com'
               ],
               workerSrc: ["'self'", 'blob:'],
               objectSrc: ["'none'"],
@@ -162,7 +164,9 @@ class LightningTalkServer {
               connectSrc: [
                 "'self'",
                 'https://accounts.google.com',
-                'https://*.auth.ap-northeast-1.amazoncognito.com'
+                'https://*.auth.ap-northeast-1.amazoncognito.com',
+                'https://*.execute-api.ap-northeast-1.amazonaws.com',
+                'wss://*.execute-api.ap-northeast-1.amazonaws.com'
               ],
               workerSrc: ["'self'", 'blob:'],
               objectSrc: ["'none'"],
@@ -185,7 +189,15 @@ class LightningTalkServer {
       max: 100, // limit each IP to 100 requests per windowMs
       message: 'Too many requests from this IP, please try again later.',
       standardHeaders: true,
-      legacyHeaders: false
+      legacyHeaders: false,
+      skip: req => {
+        // Skip rate limiting for static images and assets
+        return (
+          req.path.startsWith('/images/') ||
+          req.path.startsWith('/icons/') ||
+          req.path.match(/\.(jpg|jpeg|png|gif|webp|svg|ico|css|js)$/i)
+        );
+      }
     });
     this.app.use(limiter);
 

@@ -1,0 +1,441 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>インタラクションテスト - Lightning Talk Circle</title>
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="css/base.css" />
+    <link rel="stylesheet" href="css/mobile-optimization.css" />
+    <link rel="stylesheet" href="css/mobile-conflicts-override.css" />
+
+    <style>
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 2rem;
+        background-color: #f8fafc;
+      }
+
+      .test-section {
+        background: white;
+        border-radius: 8px;
+        padding: 2rem;
+        margin-bottom: 2rem;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+      }
+
+      .test-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 1rem;
+        margin-top: 1rem;
+      }
+
+      .test-button {
+        padding: 0.75rem 1.5rem;
+        background-color: #3b82f6;
+        color: white;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+        min-height: 44px; /* アクセシビリティ要件 */
+        font-size: 1rem;
+      }
+
+      .test-button:hover {
+        background-color: #2563eb;
+      }
+
+      .test-button.secondary {
+        background-color: #6b7280;
+      }
+
+      .test-button.secondary:hover {
+        background-color: #4b5563;
+      }
+
+      .test-log {
+        background: #1e293b;
+        color: #e2e8f0;
+        padding: 1rem;
+        border-radius: 6px;
+        font-family: 'Monaco', 'Consolas', monospace;
+        font-size: 0.875rem;
+        max-height: 300px;
+        overflow-y: auto;
+        margin-top: 1rem;
+      }
+
+      .log-entry {
+        margin: 0.25rem 0;
+        display: flex;
+        align-items: flex-start;
+        gap: 0.5rem;
+      }
+
+      .log-timestamp {
+        color: #64748b;
+        font-size: 0.75rem;
+        min-width: 80px;
+      }
+
+      .log-type {
+        padding: 0.125rem 0.5rem;
+        border-radius: 4px;
+        font-size: 0.75rem;
+        min-width: 60px;
+        text-align: center;
+      }
+
+      .log-success {
+        background-color: #22c55e;
+        color: white;
+      }
+      .log-error {
+        background-color: #dc2626;
+        color: white;
+      }
+      .log-warn {
+        background-color: #f59e0b;
+        color: black;
+      }
+      .log-info {
+        background-color: #3b82f6;
+        color: white;
+      }
+
+      .status-indicator {
+        display: inline-block;
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+        margin-right: 0.5rem;
+      }
+
+      .status-success {
+        background-color: #22c55e;
+      }
+      .status-error {
+        background-color: #dc2626;
+      }
+      .status-pending {
+        background-color: #f59e0b;
+      }
+
+      /* モバイルメニューテスト用 */
+      .mobile-menu-toggle {
+        display: block;
+        background: none;
+        border: none;
+        font-size: 1.5rem;
+        cursor: pointer;
+        min-height: 44px;
+        min-width: 44px;
+      }
+
+      .mobile-menu {
+        position: fixed;
+        top: 0;
+        left: -100%;
+        width: 280px;
+        height: 100vh;
+        background: white;
+        transition: left 0.3s ease;
+        z-index: 1000;
+        padding: 2rem;
+        box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+      }
+
+      .mobile-menu--active {
+        left: 0;
+      }
+
+      .mobile-menu-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.5);
+        z-index: 999;
+        display: none;
+      }
+
+      .mobile-menu-overlay--active {
+        display: block;
+      }
+
+      .modal {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.5);
+        display: none;
+        justify-content: center;
+        align-items: center;
+        z-index: 1001;
+      }
+
+      .modal.show {
+        display: flex;
+      }
+
+      .modal-content {
+        background: white;
+        border-radius: 8px;
+        padding: 2rem;
+        max-width: 500px;
+        width: 90%;
+        position: relative;
+      }
+
+      .modal-close {
+        position: absolute;
+        top: 1rem;
+        right: 1rem;
+        background: none;
+        border: none;
+        font-size: 1.5rem;
+        cursor: pointer;
+        min-height: 44px;
+        min-width: 44px;
+      }
+
+      .search-btn {
+        padding: 0.5rem;
+        background-color: #3b82f6;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        min-height: 44px;
+        min-width: 44px;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>🔧 インタラクションテスト</h1>
+    <p>統合インタラクション管理システムの動作確認ツール</p>
+
+    <!-- モバイルメニューのテスト -->
+    <div class="test-section">
+      <h2>📱 モバイルメニューテスト</h2>
+      <p>ハンバーガーメニューをクリックしてメニューが正常に開閉することを確認します。</p>
+
+      <button class="mobile-menu-toggle">≡</button>
+
+      <div class="mobile-menu">
+        <h3>メニュー</h3>
+        <ul>
+          <li><a href="#test1">テストリンク1</a></li>
+          <li><a href="#test2">テストリンク2</a></li>
+          <li><a href="#test3">テストリンク3</a></li>
+        </ul>
+      </div>
+      <div class="mobile-menu-overlay"></div>
+    </div>
+
+    <!-- ボタンインタラクションテスト -->
+    <div class="test-section">
+      <h2>🖱️ ボタンインタラクションテスト</h2>
+      <p>様々なボタンをクリックして、イベントハンドリングが正常に動作することを確認します。</p>
+
+      <div class="test-grid">
+        <button class="test-button" onclick="testButtonClick('primary')">プライマリボタン</button>
+        <button class="test-button secondary" onclick="testButtonClick('secondary')">セカンダリボタン</button>
+        <button class="test-button" onclick="showTestModal()">モーダル表示</button>
+        <button class="search-btn" onclick="testSearch()">🔍</button>
+      </div>
+    </div>
+
+    <!-- モーダルテスト -->
+    <div class="test-section">
+      <h2>📋 モーダルテスト</h2>
+      <p>モーダルの表示・非表示とスクロールロックが正常に動作することを確認します。</p>
+
+      <button class="test-button" onclick="showTestModal()">テストモーダルを開く</button>
+    </div>
+
+    <!-- キーボードショートカットテスト -->
+    <div class="test-section">
+      <h2>⌨️ キーボードショートカットテスト</h2>
+      <p>キーボードショートカットが正常に動作することを確認します。</p>
+
+      <ul>
+        <li><strong>ESC</strong>: モーダル・メニューを閉じる</li>
+        <li><strong>Ctrl/Cmd + N</strong>: 新規作成</li>
+        <li><strong>Ctrl/Cmd + F</strong>: 検索フォーカス</li>
+      </ul>
+    </div>
+
+    <!-- ログ表示 -->
+    <div class="test-section">
+      <h2>📊 動作ログ</h2>
+      <p>インタラクションの動作状況をリアルタイムで表示します。</p>
+
+      <button class="test-button secondary" onclick="clearTestLog()">ログクリア</button>
+      <button class="test-button" onclick="showDebugInfo()">デバッグ情報表示</button>
+
+      <div id="test-log" class="test-log">
+        <div class="log-entry">
+          <span class="log-timestamp">--:--:--</span>
+          <span class="log-type log-info">INFO</span>
+          <span>テストページ準備完了</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- システム状態 -->
+    <div class="test-section">
+      <h2>🎯 システム状態</h2>
+      <div id="system-status">
+        <p><span class="status-indicator status-pending"></span>統合インタラクションマネージャー: 読み込み中...</p>
+        <p><span class="status-indicator status-pending"></span>スクロールマネージャー: 読み込み中...</p>
+        <p><span class="status-indicator status-pending"></span>イベントリスナー: 準備中...</p>
+      </div>
+    </div>
+
+    <!-- テストモーダル -->
+    <div id="test-modal" class="modal">
+      <div class="modal-content">
+        <button class="modal-close">&times;</button>
+        <h3>テストモーダル</h3>
+        <p>これはテスト用のモーダルです。</p>
+        <p>ESCキーまたは×ボタンで閉じることができます。</p>
+        <p>モーダルが開いている間は、背景のスクロールがロックされます。</p>
+        <button class="test-button" onclick="closeTestModal()">閉じる</button>
+      </div>
+    </div>
+
+    <!-- Scripts -->
+    <!-- 統合インタラクション管理システム - 最優先で読み込み -->
+    <script src="js/interaction-manager-unified.js"></script>
+
+    <!-- スクロール管理システム -->
+    <script src="js/scroll-fix-v2.js"></script>
+
+    <!-- テスト用スクリプト -->
+    <script>
+      let testLogContainer = document.getElementById('test-log');
+      let systemStatusContainer = document.getElementById('system-status');
+
+      // ログ出力関数
+      function logTest(type, message) {
+        const timestamp = new Date().toLocaleTimeString();
+        const entry = document.createElement('div');
+        entry.className = 'log-entry';
+        entry.innerHTML = `
+        <span class="log-timestamp">${timestamp}</span>
+        <span class="log-type log-${type}">${type.toUpperCase()}</span>
+        <span>${message}</span>
+      `;
+        testLogContainer.appendChild(entry);
+        testLogContainer.scrollTop = testLogContainer.scrollHeight;
+      }
+
+      // システム状態更新
+      function updateSystemStatus() {
+        const unifiedManager = window.unifiedInteractionManager;
+        const scrollManager = window.scrollManager;
+
+        let html = '';
+
+        if (unifiedManager) {
+          html +=
+            '<p><span class="status-indicator status-success"></span>統合インタラクションマネージャー: 正常動作</p>';
+        } else {
+          html += '<p><span class="status-indicator status-error"></span>統合インタラクションマネージャー: エラー</p>';
+        }
+
+        if (scrollManager) {
+          html += '<p><span class="status-indicator status-success"></span>スクロールマネージャー: 正常動作</p>';
+        } else {
+          html += '<p><span class="status-indicator status-error"></span>スクロールマネージャー: エラー</p>';
+        }
+
+        html += '<p><span class="status-indicator status-success"></span>イベントリスナー: 動作中</p>';
+
+        systemStatusContainer.innerHTML = html;
+      }
+
+      // テスト関数
+      function testButtonClick(type) {
+        logTest('success', `${type}ボタンがクリックされました`);
+      }
+
+      function showTestModal() {
+        const modal = document.getElementById('test-modal');
+        modal.classList.add('show');
+        if (window.scrollManager) {
+          window.scrollManager.lock('test-modal');
+        }
+        logTest('info', 'テストモーダルを表示しました');
+      }
+
+      function closeTestModal() {
+        const modal = document.getElementById('test-modal');
+        modal.classList.remove('show');
+        if (window.scrollManager) {
+          window.scrollManager.unlock('test-modal');
+        }
+        logTest('info', 'テストモーダルを閉じました');
+      }
+
+      function testSearch() {
+        logTest('info', '検索ボタンがクリックされました');
+      }
+
+      function clearTestLog() {
+        testLogContainer.innerHTML = '';
+        logTest('info', 'ログをクリアしました');
+      }
+
+      function showDebugInfo() {
+        if (window.debugInteractions) {
+          window.debugInteractions();
+          logTest('info', 'デバッグ情報をコンソールに出力しました');
+        } else {
+          logTest('warn', 'デバッグ関数が見つかりません');
+        }
+      }
+
+      // 初期化
+      document.addEventListener('DOMContentLoaded', () => {
+        logTest('info', 'DOMContentLoaded: テストページ初期化');
+
+        // システム状態を定期的に更新
+        setInterval(updateSystemStatus, 2000);
+
+        // 初回状態更新
+        setTimeout(updateSystemStatus, 1000);
+
+        // キーボードイベントのテスト
+        document.addEventListener('keydown', e => {
+          if (e.key === 'Escape') {
+            logTest('info', 'ESCキーが押されました');
+          } else if ((e.ctrlKey || e.metaKey) && e.key === 'n') {
+            logTest('info', 'Ctrl/Cmd+Nが押されました');
+          } else if ((e.ctrlKey || e.metaKey) && e.key === 'f') {
+            logTest('info', 'Ctrl/Cmd+Fが押されました');
+          }
+        });
+
+        logTest('success', 'テストページ初期化完了');
+      });
+
+      // エラー監視
+      window.addEventListener('error', e => {
+        logTest('error', `エラー: ${e.message} (${e.filename}:${e.lineno})`);
+      });
+
+      window.addEventListener('unhandledrejection', e => {
+        logTest('error', `未処理のPromise拒否: ${e.reason}`);
+      });
+    </script>
+  </body>
+</html>

@@ -156,7 +156,7 @@ router.get(
       }
 
       // Additional insights
-      const insights = await this.generateInsights(database, analyticsData);
+      const insights = await generateInsights(database, analyticsData);
 
       res.json({
         analytics: analyticsData,
@@ -285,6 +285,203 @@ router.put('/settings', async (req, res) => {
 });
 
 /**
+ * GET /api/admin/events
+ * Get all events with pagination and filtering
+ */
+router.get(
+  '/events',
+  query('page').optional().isInt({ min: 1 }),
+  query('status').optional().isIn(['draft', 'published', 'upcoming', 'ongoing', 'past']),
+  query('search').optional().isString(),
+  handleValidationErrors,
+  async (req, res) => {
+    try {
+      const { database } = req.app.locals;
+      const { page = 1, status, search } = req.query;
+      const limit = 9; // 3x3 grid per page
+      const offset = (page - 1) * limit;
+
+      // Build query filters
+      const filters = {};
+      if (status) filters.status = status;
+
+      // Get all events
+      let events = await database.findAll('events', filters);
+
+      // Apply search filter
+      if (search) {
+        const searchLower = search.toLowerCase();
+        events = events.filter(
+          event =>
+            event.title?.toLowerCase().includes(searchLower) ||
+            event.description?.toLowerCase().includes(searchLower) ||
+            event.venue?.name?.toLowerCase().includes(searchLower)
+        );
+      }
+
+      // Sort by date (newest first)
+      events.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+
+      // Calculate pagination
+      const totalEvents = events.length;
+      const totalPages = Math.ceil(totalEvents / limit);
+
+      // Apply pagination
+      const paginatedEvents = events.slice(offset, offset + limit);
+
+      // Enrich events with participant counts
+      const enrichedEvents = await Promise.all(
+        paginatedEvents.map(async event => {
+          const participants = await database.findAll('participants', { eventId: event.id });
+          return {
+            ...event,
+            participants,
+            participantCount: participants.length
+          };
+        })
+      );
+
+      res.json({
+        events: enrichedEvents,
+        pagination: {
+          page,
+          totalPages,
+          totalEvents,
+          hasMore: page < totalPages
+        }
+      });
+    } catch (error) {
+      console.error('Error fetching admin events:', error);
+      res.status(500).json({
+        error: 'Failed to fetch events',
+        message: 'イベントの取得に失敗しました'
+      });
+    }
+  }
+);
+
+/**
+ * POST /api/admin/events
+ * Create a new event
+ */
+router.post('/events', async (req, res) => {
+  try {
+    const { database, eventService } = req.app.locals;
+    const eventData = req.body;
+
+    // Validate required fields
+    if (!eventData.title || !eventData.date) {
+      return res.status(400).json({
+        error: 'Validation failed',
+        message: 'タイトルと日付は必須です'
+      });
+    }
+
+    // Create event
+    const newEvent = await eventService.createEvent({
+      ...eventData,
+      createdBy: req.user.id,
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString()
+    });
+
+    res.status(201).json({
+      success: true,
+      event: newEvent,
+      message: 'イベントを作成しました'
+    });
+  } catch (error) {
+    console.error('Error creating event:', error);
+    res.status(500).json({
+      error: 'Failed to create event',
+      message: 'イベントの作成に失敗しました'
+    });
+  }
+});
+
+/**
+ * PUT /api/admin/events/:id
+ * Update an event
+ */
+router.put('/events/:id', async (req, res) => {
+  try {
+    const { database, eventService } = req.app.locals;
+    const { id } = req.params;
+    const updates = req.body;
+
+    // Check if event exists
+    const event = await database.findById('events', id);
+    if (!event) {
+      return res.status(404).json({
+        error: 'Event not found',
+        message: 'イベントが見つかりません'
+      });
+    }
+
+    // Update event
+    const updatedEvent = await eventService.updateEvent(id, {
+      ...updates,
+      updatedAt: new Date().toISOString()
+    });
+
+    res.json({
+      success: true,
+      event: updatedEvent,
+      message: 'イベントを更新しました'
+    });
+  } catch (error) {
+    console.error('Error updating event:', error);
+    res.status(500).json({
+      error: 'Failed to update event',
+      message: 'イベントの更新に失敗しました'
+    });
+  }
+});
+
+/**
+ * DELETE /api/admin/events/:id
+ * Delete an event
+ */
+router.delete('/events/:id', async (req, res) => {
+  try {
+    const { database } = req.app.locals;
+    const { id } = req.params;
+
+    // Check if event exists
+    const event = await database.findById('events', id);
+    if (!event) {
+      return res.status(404).json({
+        error: 'Event not found',
+        message: 'イベントが見つかりません'
+      });
+    }
+
+    // Check if event has participants
+    const participants = await database.findAll('participants', { eventId: id });
+    if (participants.length > 0) {
+      return res.status(400).json({
+        error: 'Cannot delete event with participants',
+        message: '参加者がいるイベントは削除できません'
+      });
+    }
+
+    // Delete event
+    await database.delete('events', id);
+
+    res.json({
+      success: true,
+      message: 'イベントを削除しました'
+    });
+  } catch (error) {
+    console.error('Error deleting event:', error);
+    res.status(500).json({
+      error: 'Failed to delete event',
+      message: 'イベントの削除に失敗しました'
+    });
+  }
+});
+
+/**
  * POST /api/admin/maintenance
  * Perform maintenance tasks
  */
@@ -297,13 +494,13 @@ router.post('/maintenance', async (req, res) => {
 
     switch (action) {
       case 'cleanup':
-        result = await this.performCleanup(database);
+        result = await performCleanup(database);
         break;
       case 'backup':
-        result = await this.performBackup(database);
+        result = await performBackup(database);
         break;
       case 'optimize':
-        result = await this.performOptimization(database);
+        result = await performOptimization(database);
         break;
       default:
         return res.status(400).json({

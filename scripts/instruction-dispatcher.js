@@ -369,18 +369,18 @@ class InstructionDispatcher {
 
     // タスクタイプベースの候補
     switch (analysis.taskType) {
-      case 'feature':
-        files.push('src/features/', 'src/components/');
-        break;
-      case 'bugfix':
-        files.push('src/', 'tests/');
-        break;
-      case 'docs':
-        files.push('docs/', 'README.md');
-        break;
-      case 'test':
-        files.push('tests/', 'src/**/*.test.js');
-        break;
+    case 'feature':
+      files.push('src/features/', 'src/components/');
+      break;
+    case 'bugfix':
+      files.push('src/', 'tests/');
+      break;
+    case 'docs':
+      files.push('docs/', 'README.md');
+      break;
+    case 'test':
+      files.push('tests/', 'src/**/*.test.js');
+      break;
     }
 
     return [...new Set(files)]; // 重複除去
@@ -426,25 +426,25 @@ class InstructionDispatcher {
 
     // タスクタイプ別の提案
     switch (analysis.taskType) {
-      case 'feature':
-        suggestions.push('Consider writing tests alongside the feature');
-        suggestions.push('Update documentation after implementation');
-        break;
+    case 'feature':
+      suggestions.push('Consider writing tests alongside the feature');
+      suggestions.push('Update documentation after implementation');
+      break;
 
-      case 'bugfix':
-        suggestions.push('Add regression tests to prevent future occurrences');
-        suggestions.push('Consider if this indicates a larger architectural issue');
-        break;
+    case 'bugfix':
+      suggestions.push('Add regression tests to prevent future occurrences');
+      suggestions.push('Consider if this indicates a larger architectural issue');
+      break;
 
-      case 'refactor':
-        suggestions.push('Ensure comprehensive test coverage before refactoring');
-        suggestions.push('Consider performance benchmarks');
-        break;
+    case 'refactor':
+      suggestions.push('Ensure comprehensive test coverage before refactoring');
+      suggestions.push('Consider performance benchmarks');
+      break;
 
-      case 'docs':
-        suggestions.push('Include code examples and usage scenarios');
-        suggestions.push('Consider adding diagrams for complex concepts');
-        break;
+    case 'docs':
+      suggestions.push('Include code examples and usage scenarios');
+      suggestions.push('Consider adding diagrams for complex concepts');
+      break;
     }
 
     // 優先度別の提案

@@ -144,7 +144,7 @@ router.post(
       .isIn(['immediately', 'after_voting', 'never', 'manual']),
     body('settings.duration').optional().isInt({ min: 10, max: 3600 })
   ],
-  async (req, res) => {
+  async(req, res) => {
     try {
       const errors = validationResult(req);
       if (!errors.isEmpty()) {
@@ -264,7 +264,7 @@ router.get(
     query('status').optional().isIn(['draft', 'active', 'paused', 'ended']),
     query('includeResults').optional().isBoolean().toBoolean()
   ],
-  async (req, res) => {
+  async(req, res) => {
     try {
       const errors = validationResult(req);
       if (!errors.isEmpty()) {
@@ -351,7 +351,7 @@ router.get(
  *         schema:
  *           type: string
  */
-router.get('/:pollId', [param('pollId').isString().notEmpty()], async (req, res) => {
+router.get('/:pollId', [param('pollId').isString().notEmpty()], async(req, res) => {
   try {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
@@ -445,7 +445,7 @@ router.post(
     body('answers').isArray().notEmpty().withMessage('Answers are required'),
     body('participantInfo').optional().isObject()
   ],
-  async (req, res) => {
+  async(req, res) => {
     try {
       const errors = validationResult(req);
       if (!errors.isEmpty()) {
@@ -596,7 +596,7 @@ router.post(
   '/:pollId/start',
   authenticateToken,
   [param('pollId').isString().notEmpty()],
-  async (req, res) => {
+  async(req, res) => {
     try {
       const errors = validationResult(req);
       if (!errors.isEmpty()) {
@@ -690,7 +690,7 @@ router.post(
   '/:pollId/end',
   authenticateToken,
   [param('pollId').isString().notEmpty()],
-  async (req, res) => {
+  async(req, res) => {
     try {
       const errors = validationResult(req);
       if (!errors.isEmpty()) {
@@ -770,81 +770,81 @@ router.post(
 /**
  * Helper method to validate answers based on poll type
  */
-router.validateAnswers = function (poll, answers) {
+router.validateAnswers = function(poll, answers) {
   switch (poll.type) {
-    case 'multiple_choice':
-      // Check if all answers are valid options
-      return answers.every(answer => typeof answer === 'string' && poll.options.includes(answer));
+  case 'multiple_choice':
+    // Check if all answers are valid options
+    return answers.every(answer => typeof answer === 'string' && poll.options.includes(answer));
 
-    case 'rating_scale':
-      // Check if all answers are numbers within range (1-5)
-      return answers.every(answer => typeof answer === 'number' && answer >= 1 && answer <= 5);
+  case 'rating_scale':
+    // Check if all answers are numbers within range (1-5)
+    return answers.every(answer => typeof answer === 'number' && answer >= 1 && answer <= 5);
 
-    case 'text_input':
-      // Check if all answers are strings
-      return answers.every(answer => typeof answer === 'string' && answer.trim().length > 0);
+  case 'text_input':
+    // Check if all answers are strings
+    return answers.every(answer => typeof answer === 'string' && answer.trim().length > 0);
 
-    case 'yes_no':
-      // Check if answer is yes or no
-      return answers.length === 1 && ['yes', 'no'].includes(answers[0]);
+  case 'yes_no':
+    // Check if answer is yes or no
+    return answers.length === 1 && ['yes', 'no'].includes(answers[0]);
 
-    case 'ranking': {
-      // Check if answers are valid options and no duplicates
-      const uniqueAnswers = new Set(answers);
-      return (
-        answers.length === uniqueAnswers.size &&
+  case 'ranking': {
+    // Check if answers are valid options and no duplicates
+    const uniqueAnswers = new Set(answers);
+    return (
+      answers.length === uniqueAnswers.size &&
         answers.every(answer => poll.options.includes(answer))
-      );
-    }
+    );
+  }
 
-    default:
-      return false;
+  default:
+    return false;
   }
 };
 
 /**
  * Helper method to update response breakdown statistics
  */
-router.updateResponseBreakdown = function (poll) {
+router.updateResponseBreakdown = function(poll) {
   const breakdown = {};
 
   switch (poll.type) {
-    case 'multiple_choice':
-    case 'yes_no': {
-      poll.responses.forEach(response => {
-        response.answers.forEach(answer => {
-          breakdown[answer] = (breakdown[answer] || 0) + 1;
-        });
+  case 'multiple_choice':
+  case 'yes_no': {
+    poll.responses.forEach(response => {
+      response.answers.forEach(answer => {
+        breakdown[answer] = (breakdown[answer] || 0) + 1;
       });
-      break;
-    }
+    });
+    break;
+  }
 
-    case 'rating_scale': {
-      for (let i = 1; i <= 5; i++) {
-        breakdown[i] = 0;
-      }
-      poll.responses.forEach(response => {
-        response.answers.forEach(answer => {
-          breakdown[answer] = (breakdown[answer] || 0) + 1;
-        });
-      });
-      break;
+  case 'rating_scale': {
+    for (let i = 1; i <= 5; i++) {
+      breakdown[i] = 0;
     }
+    poll.responses.forEach(response => {
+      response.answers.forEach(answer => {
+        breakdown[answer] = (breakdown[answer] || 0) + 1;
+      });
+    });
+    break;
+  }
 
-    case 'ranking': {
-      poll.options.forEach(option => {
-        breakdown[option] = { position_sum: 0, count: 0 };
+  case 'ranking': {
+    poll.options.forEach(option => {
+      breakdown[option] = { position_sum: 0, count: 0 };
+    });
+    poll.responses.forEach(response => {
+      response.answers.forEach((answer, index) => {
+        if (breakdown[answer]) {
+          breakdown[answer].position_sum += index + 1;
+          breakdown[answer].count += 1;
+        }
       });
-      poll.responses.forEach(response => {
-        response.answers.forEach((answer, index) => {
-          if (breakdown[answer]) {
-            breakdown[answer].position_sum += index + 1;
-            breakdown[answer].count += 1;
-          }
-        });
-      });
-      break;
-    }
+    });
+    break;
+  }
   }
 
   poll.statistics.responseBreakdown = breakdown;
@@ -853,7 +853,7 @@ router.updateResponseBreakdown = function (poll) {
 /**
  * Helper method to calculate poll results
  */
-router.calculatePollResults = async function (poll) {
+router.calculatePollResults = async function(poll) {
   const results = {
     totalResponses: poll.statistics.totalResponses,
     uniqueParticipants: poll.statistics.uniqueParticipants,
@@ -862,76 +862,76 @@ router.calculatePollResults = async function (poll) {
   };
 
   switch (poll.type) {
-    case 'multiple_choice':
-    case 'yes_no': {
-      const total = Object.values(results.breakdown).reduce((sum, count) => sum + count, 0);
-      results.analysis = Object.entries(results.breakdown)
-        .map(([option, count]) => ({
-          option,
-          count,
-          percentage: total > 0 ? Math.round((count / total) * 100) : 0
-        }))
-        .sort((a, b) => b.count - a.count);
-      break;
-    }
+  case 'multiple_choice':
+  case 'yes_no': {
+    const total = Object.values(results.breakdown).reduce((sum, count) => sum + count, 0);
+    results.analysis = Object.entries(results.breakdown)
+      .map(([option, count]) => ({
+        option,
+        count,
+        percentage: total > 0 ? Math.round((count / total) * 100) : 0
+      }))
+      .sort((a, b) => b.count - a.count);
+    break;
+  }
 
-    case 'rating_scale': {
-      const ratings = Object.entries(results.breakdown).map(([rating, count]) => ({
-        rating: parseInt(rating),
-        count
-      }));
-      const totalRatings = ratings.reduce((sum, r) => sum + r.count, 0);
-      const weightedSum = ratings.reduce((sum, r) => sum + r.rating * r.count, 0);
+  case 'rating_scale': {
+    const ratings = Object.entries(results.breakdown).map(([rating, count]) => ({
+      rating: parseInt(rating),
+      count
+    }));
+    const totalRatings = ratings.reduce((sum, r) => sum + r.count, 0);
+    const weightedSum = ratings.reduce((sum, r) => sum + r.rating * r.count, 0);
 
-      results.analysis = {
-        ratings,
-        average: totalRatings > 0 ? Math.round((weightedSum / totalRatings) * 10) / 10 : 0,
-        distribution: ratings.map(r => ({
-          ...r,
-          percentage: totalRatings > 0 ? Math.round((r.count / totalRatings) * 100) : 0
-        }))
-      };
-      break;
-    }
+    results.analysis = {
+      ratings,
+      average: totalRatings > 0 ? Math.round((weightedSum / totalRatings) * 10) / 10 : 0,
+      distribution: ratings.map(r => ({
+        ...r,
+        percentage: totalRatings > 0 ? Math.round((r.count / totalRatings) * 100) : 0
+      }))
+    };
+    break;
+  }
 
-    case 'ranking': {
-      results.analysis = Object.entries(results.breakdown)
-        .map(([option, data]) => ({
-          option,
-          averagePosition:
+  case 'ranking': {
+    results.analysis = Object.entries(results.breakdown)
+      .map(([option, data]) => ({
+        option,
+        averagePosition:
             data.count > 0 ? Math.round((data.position_sum / data.count) * 10) / 10 : 0,
-          mentions: data.count
-        }))
-        .sort((a, b) => a.averagePosition - b.averagePosition);
-      break;
-    }
+        mentions: data.count
+      }))
+      .sort((a, b) => a.averagePosition - b.averagePosition);
+    break;
+  }
 
-    case 'text_input': {
-      // Simple word frequency analysis
-      const allText = poll.responses
-        .flatMap(r => r.answers)
-        .join(' ')
-        .toLowerCase();
-      const words = allText.split(/\s+/).filter(word => word.length > 3);
-      const wordFreq = {};
-      words.forEach(word => {
-        wordFreq[word] = (wordFreq[word] || 0) + 1;
-      });
+  case 'text_input': {
+    // Simple word frequency analysis
+    const allText = poll.responses
+      .flatMap(r => r.answers)
+      .join(' ')
+      .toLowerCase();
+    const words = allText.split(/\s+/).filter(word => word.length > 3);
+    const wordFreq = {};
+    words.forEach(word => {
+      wordFreq[word] = (wordFreq[word] || 0) + 1;
+    });
 
-      results.analysis = {
-        totalWords: words.length,
-        topWords: Object.entries(wordFreq)
-          .sort(([, a], [, b]) => b - a)
-          .slice(0, 10)
-          .map(([word, count]) => ({ word, count })),
-        responses: poll.responses.map(r => ({
-          id: r.id,
-          text: r.answers[0],
-          submittedAt: r.submittedAt
-        }))
-      };
-      break;
-    }
+    results.analysis = {
+      totalWords: words.length,
+      topWords: Object.entries(wordFreq)
+        .sort(([, a], [, b]) => b - a)
+        .slice(0, 10)
+        .map(([word, count]) => ({ word, count })),
+      responses: poll.responses.map(r => ({
+        id: r.id,
+        text: r.answers[0],
+        submittedAt: r.submittedAt
+      }))
+    };
+    break;
+  }
   }
 
   return results;

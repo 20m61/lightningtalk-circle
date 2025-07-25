@@ -599,15 +599,15 @@ class EventConflictResolver {
 
     conflicts.forEach(conflict => {
       switch (conflict.type) {
-        case 'time':
-          resolved.date = this.findAlternativeTime(eventData.date, conflict.suggestions);
-          break;
-        case 'venue':
-          resolved.venue = this.findAlternativeVenue(eventData.venue, conflict.alternatives);
-          break;
-        case 'resource':
-          resolved.resources = this.reallocateResources(eventData.resources, conflict.available);
-          break;
+      case 'time':
+        resolved.date = this.findAlternativeTime(eventData.date, conflict.suggestions);
+        break;
+      case 'venue':
+        resolved.venue = this.findAlternativeVenue(eventData.venue, conflict.alternatives);
+        break;
+      case 'resource':
+        resolved.resources = this.reallocateResources(eventData.resources, conflict.available);
+        break;
       }
     });
 

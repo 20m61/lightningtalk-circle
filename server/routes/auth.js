@@ -453,6 +453,152 @@ router.post(
 );
 
 /**
+ * POST /api/auth/callback
+ * Handle OAuth callback from Cognito
+ */
+router.post(
+  '/callback',
+  body('code').notEmpty().withMessage('Authorization code required'),
+  handleValidationErrors,
+  async (req, res) => {
+    try {
+      const { code } = req.body;
+
+      // Exchange authorization code for tokens with Cognito
+      const tokenUrl =
+        process.env.NODE_ENV === 'production'
+          ? `https://lightningtalk-secure-1753166187.auth.ap-northeast-1.amazoncognito.com/oauth2/token`
+          : `https://lightningtalk-auth-dev.auth.ap-northeast-1.amazoncognito.com/oauth2/token`;
+
+      // Get client secret from AWS Secrets Manager or environment
+      // SECURITY: Never hardcode secrets in the codebase
+      // For production: Use AWS Secrets Manager
+      // For development: Use environment variable GOOGLE_CLIENT_SECRET
+      let clientSecret;
+      try {
+        // Try to get from AWS Secrets Manager first (production)
+        const AWS = await import('aws-sdk');
+        const secretsManager = new AWS.SecretsManager({ region: 'ap-northeast-1' });
+        const secretResult = await secretsManager
+          .getSecretValue({
+            SecretId: 'lightningtalk-google-client-secret'
+          })
+          .promise();
+        const secretData = JSON.parse(secretResult.SecretString);
+        clientSecret = secretData.clientSecret;
+      } catch (error) {
+        console.error('Could not retrieve client secret from AWS Secrets Manager:', error.message);
+        // Use environment variable for development
+        clientSecret = process.env.GOOGLE_CLIENT_SECRET;
+
+        if (!clientSecret) {
+          throw new Error(
+            'Google Client Secret not configured. Please set GOOGLE_CLIENT_SECRET environment variable or configure AWS Secrets Manager.'
+          );
+        }
+      }
+
+      const params = new URLSearchParams({
+        grant_type: 'authorization_code',
+        client_id:
+          process.env.NODE_ENV === 'production'
+            ? '42u3ma63qf01utk4jcd6pn9l8s'
+            : '5t48tpbh5qe26otojkfq1rf0ls',
+        client_secret: clientSecret,
+        code: code,
+        redirect_uri:
+          process.env.NODE_ENV === 'production'
+            ? 'https://xn--6wym69a.com/callback'
+            : 'http://localhost:3333/callback'
+      });
+
+      const response = await fetch(tokenUrl, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded'
+        },
+        body: params
+      });
+
+      if (!response.ok) {
+        throw new Error(`Token exchange failed: ${response.status}`);
+      }
+
+      const tokenData = await response.json();
+
+      // Decode the ID token to get user information
+      const idTokenPayload = JSON.parse(
+        Buffer.from(tokenData.id_token.split('.')[1], 'base64').toString()
+      );
+
+      // Create user object from token payload
+      const user = {
+        id: idTokenPayload.sub,
+        email: idTokenPayload.email,
+        name: idTokenPayload.name || idTokenPayload.email,
+        role: idTokenPayload['custom:role'] || 'user',
+        provider: 'google'
+      };
+
+      res.json({
+        success: true,
+        id_token: tokenData.id_token,
+        access_token: tokenData.access_token,
+        refresh_token: tokenData.refresh_token,
+        user
+      });
+    } catch (error) {
+      console.error('OAuth callback error:', error);
+      res.status(500).json({
+        error: 'OAuth callback failed',
+        message: 'OAuth認証コールバックに失敗しました'
+      });
+    }
+  }
+);
+
+/**
+ * GET /api/auth/verify
+ * Verify JWT token
+ */
+router.get('/verify', async (req, res) => {
+  try {
+    const authHeader = req.headers.authorization;
+    if (!authHeader || !authHeader.startsWith('Bearer ')) {
+      return res.status(401).json({
+        error: 'No token provided',
+        message: 'トークンが提供されていません'
+      });
+    }
+
+    const token = authHeader.substring(7);
+
+    // Decode the ID token to get user information
+    const idTokenPayload = JSON.parse(Buffer.from(token.split('.')[1], 'base64').toString());
+
+    // Create user object from token payload
+    const user = {
+      id: idTokenPayload.sub,
+      email: idTokenPayload.email,
+      name: idTokenPayload.name || idTokenPayload.email,
+      role: idTokenPayload['custom:role'] || 'user',
+      provider: 'google'
+    };
+
+    res.json({
+      success: true,
+      user
+    });
+  } catch (error) {
+    console.error('Token verification error:', error);
+    res.status(401).json({
+      error: 'Invalid token',
+      message: '無効なトークンです'
+    });
+  }
+});
+
+/**
  * POST /api/auth/refresh
  * Refresh JWT token
  */

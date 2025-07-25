@@ -419,14 +419,14 @@ class ImageUploader {
             👁️
           </button>
           ${
-            this.options.allowDelete
-              ? `
+  this.options.allowDelete
+    ? `
             <button type="button" class="image-action-btn image-delete-btn" title="削除">
               🗑️
             </button>
           `
-              : ''
-          }
+    : ''
+}
         </div>
       </div>
       <div class="image-item-info">
