@@ -41,7 +41,7 @@ jobs:
       
       # Added retry logic for creating issues
       - name: Create issues
-        uses: nick-invision/retry@v2
+        uses: nick-invision/retry@v3
         with:
           timeout_minutes: 10
           max_attempts: 3
@@ -58,7 +58,7 @@ jobs:
       
       # Added retry logic for verification
       - name: Verify issues
-        uses: nick-invision/retry@v2
+        uses: nick-invision/retry@v3
         with:
           timeout_minutes: 5
           max_attempts: 3

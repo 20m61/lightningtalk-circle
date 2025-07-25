@@ -29,7 +29,7 @@ jobs:
       
       # Added retry logic for setting up labels
       - name: Set up labels
-        uses: nick-invision/retry@v2
+        uses: nick-invision/retry@v3
         with:
           timeout_minutes: 5
           max_attempts: 3
