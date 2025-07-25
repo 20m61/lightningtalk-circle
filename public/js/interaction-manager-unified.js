@@ -405,7 +405,9 @@ class UnifiedInteractionManager {
   setupScrollManagement() {
     // 既存のScrollManagerV2を使用
     if (!window.scrollManager) {
-      console.warn('[UnifiedInteractionManager] ScrollManager not found');
+      if (window.DEBUG_MODE) {
+        console.warn('[UnifiedInteractionManager] ScrollManager not found');
+      }
     }
   }
 

@@ -237,14 +237,14 @@ class EventsManager {
     if (filter !== 'all') {
       filteredEvents = this.events.filter(event => {
         switch (filter) {
-        case 'upcoming':
-          return event.status === 'upcoming';
-        case 'planning':
-          return event.status === 'planning';
-        case 'past':
-          return event.status === 'past';
-        default:
-          return true;
+          case 'upcoming':
+            return event.status === 'upcoming';
+          case 'planning':
+            return event.status === 'planning';
+          case 'past':
+            return event.status === 'past';
+          default:
+            return true;
         }
       });
     }
@@ -534,9 +534,21 @@ document.addEventListener('DOMContentLoaded', () => {
   // Logger フォールバック処理
   if (typeof Logger === 'undefined') {
     window.Logger = {
-      info: (...args) => console.log('[EventsManager]', ...args),
-      error: (...args) => console.error('[EventsManager]', ...args),
-      warn: (...args) => console.warn('[EventsManager]', ...args)
+      info: (...args) => {
+        if (window.DEBUG_MODE) {
+          console.log('[EventsManager]', ...args);
+        }
+      },
+      error: (...args) => {
+        if (window.DEBUG_MODE) {
+          console.error('[EventsManager]', ...args);
+        }
+      },
+      warn: (...args) => {
+        if (window.DEBUG_MODE) {
+          console.warn('[EventsManager]', ...args);
+        }
+      }
     };
   }
 
