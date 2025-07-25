@@ -36,7 +36,9 @@ class FrontendLogger {
       this.setupEventListeners();
       this.startBufferFlush();
     } catch (error) {
-      console.error('Failed to initialize FrontendLogger:', error);
+      if (window.DEBUG_MODE) {
+        console.error('Failed to initialize FrontendLogger:', error);
+      }
       // フォールバック: 基本的なconsoleログに戻す
       this.fallbackMode = true;
     }
@@ -283,9 +285,11 @@ class FrontendLogger {
 
     if (this.environment === 'development') {
       // 開発環境では詳細出力
-      console.group(`${prefix} ${message}`);
-      console.log('Details:', logEntry);
-      console.groupEnd();
+      if (window.DEBUG_MODE) {
+        console.group(`${prefix} ${message}`);
+        console.log('Details:', logEntry);
+        console.groupEnd();
+      }
     } else {
       // 本番環境では簡略出力
       const method = level === 'error' ? 'error' : level === 'warn' ? 'warn' : 'log';
@@ -391,7 +395,9 @@ class FrontendLogger {
     } catch (error) {
       // 送信失敗時はバッファに戻す
       this.buffer.unshift(...logsToSend);
-      console.error('Failed to send logs to server:', error);
+      if (window.DEBUG_MODE) {
+        console.error('Failed to send logs to server:', error);
+      }
     }
   }
 

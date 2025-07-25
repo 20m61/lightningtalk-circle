@@ -695,6 +695,18 @@
     <!-- デバッグ設定 - 最優先で読み込み -->
     <script src="js/debug-config.js"></script>
 
+    <!-- エラーハンドラー - 早期に読み込み -->
+    <script src="js/error-handler.js"></script>
+
+    <!-- コンソールエラー監視 - 開発環境用 -->
+    <script src="js/console-monitor.js"></script>
+
+    <!-- 初期化修正 - グローバル関数の保証 -->
+    <script src="js/init-fix.js"></script>
+
+    <!-- Fetchラッパー - APIエラー処理 -->
+    <script src="js/fetch-wrapper.js"></script>
+
     <!-- DOM キャッシュシステム -->
     <script src="js/dom-cache.js"></script>
 
@@ -703,6 +715,9 @@
 
     <!-- Frontend Logger - Load first for error capture -->
     <script src="js/logger.js"></script>
+
+    <!-- Socket.IO - リアルタイム機能用 -->
+    <script src="/socket.io/socket.io.js"></script>
 
     <!-- スクロール管理システム - 統合システムと連携 -->
     <script src="js/scroll-fix-v2.js"></script>
@@ -745,6 +760,9 @@
 
     <!-- 緊急スクロール修正 - 最後の砦 -->
     <script src="js/scroll-emergency-fix.js"></script>
+
+    <!-- コンソール検証スクリプト - 最終チェック -->
+    <script src="js/console-verification.js"></script>
 
     <!-- React Components Integration - Temporarily disabled -->
     <!-- <script type="module" src="js/react-integration.js"></script> -->
