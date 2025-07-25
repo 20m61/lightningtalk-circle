@@ -1,0 +1,2207 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>なんでもライトニングトーク ⚡</title>
+    <style>
+        /* ===== Enhanced Design System 2.0 ===== */
+        :root {
+            /* プライマリーカラー */
+            --primary-orange: #FF6B35;
+            --primary-yellow: #F7931E;
+            --primary-gradient: linear-gradient(135deg, #FF6B35 0%, #F7931E 100%);
+            
+            /* セカンダリーカラー */
+            --secondary-blue: #4ECDC4;
+            --secondary-purple: #45B7D1;
+            --accent-pink: #FD79A8;
+            
+            /* ニュートラルカラー */
+            --gray-50: #FAFAFA;
+            --gray-100: #F5F5F5;
+            --gray-200: #EEEEEE;
+            --gray-300: #E0E0E0;
+            --gray-400: #BDBDBD;
+            --gray-500: #9E9E9E;
+            --gray-700: #424242;
+            --gray-900: #212121;
+            
+            /* セマンティックカラー */
+            --success: #4CAF50;
+            --warning: #FF9800;
+            --error: #F44336;
+            --info: #4ECDC4;
+            
+            /* 透明度バリエーション */
+            --primary-alpha-10: rgba(255, 107, 53, 0.1);
+            --primary-alpha-20: rgba(255, 107, 53, 0.2);
+            --primary-alpha-80: rgba(255, 107, 53, 0.8);
+            
+            /* フォントファミリー */
+            --font-primary: 'Inter', 'Noto Sans JP', -apple-system, BlinkMacSystemFont, sans-serif;
+            --font-secondary: 'Poppins', 'Noto Sans JP', sans-serif;
+            
+            /* フォントサイズ（タイプスケール 1.25）*/
+            --text-xs: 0.75rem;    /* 12px */
+            --text-sm: 0.875rem;   /* 14px */
+            --text-base: 1rem;     /* 16px */
+            --text-lg: 1.125rem;   /* 18px */
+            --text-xl: 1.25rem;    /* 20px */
+            --text-2xl: 1.5rem;    /* 24px */
+            --text-3xl: 1.875rem;  /* 30px */
+            --text-4xl: 2.25rem;   /* 36px */
+            --text-5xl: 3rem;      /* 48px */
+            
+            /* スペーシング（8pxベース）*/
+            --space-1: 0.25rem;   /* 4px */
+            --space-2: 0.5rem;    /* 8px */
+            --space-3: 0.75rem;   /* 12px */
+            --space-4: 1rem;      /* 16px */
+            --space-5: 1.25rem;   /* 20px */
+            --space-6: 1.5rem;    /* 24px */
+            --space-8: 2rem;      /* 32px */
+            --space-10: 2.5rem;   /* 40px */
+            --space-12: 3rem;     /* 48px */
+            --space-16: 4rem;     /* 64px */
+            --space-20: 5rem;     /* 80px */
+            --space-24: 6rem;     /* 96px */
+            
+            /* 境界線半径 */
+            --radius-sm: 0.25rem;
+            --radius-md: 0.5rem;
+            --radius-lg: 1rem;
+            --radius-xl: 1.5rem;
+            --radius-full: 9999px;
+            
+            /* シャドウ */
+            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+            
+            /* アニメーション */
+            --transition-fast: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+            --transition-base: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            --transition-slow: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        /* ===== リセット & ベーススタイル ===== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--font-primary);
+            line-height: 1.6;
+            color: var(--gray-900);
+            background: var(--gray-50);
+            font-size: var(--text-base);
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        /* スキップリンク */
+        .skip-link {
+            position: absolute;
+            left: -9999px;
+            top: 0;
+            z-index: 9999;
+            padding: var(--space-4);
+            background: var(--gray-900);
+            color: white;
+            text-decoration: none;
+            border-radius: var(--radius-sm);
+        }
+
+        .skip-link:focus {
+            left: var(--space-4);
+        }
+
+        /* フォーカス可視化 */
+        *:focus {
+            outline: 2px solid var(--primary-orange);
+            outline-offset: 2px;
+            border-radius: var(--radius-sm);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 var(--space-4);
+        }
+
+        /* ===== ヘッダー ===== */
+        header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            box-shadow: var(--shadow-sm);
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            transition: var(--transition-base);
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: var(--space-4) 0;
+        }
+
+        .logo {
+            font-size: var(--text-2xl);
+            font-weight: 700;
+            background: var(--primary-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-decoration: none;
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: var(--space-8);
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: var(--gray-700);
+            font-weight: 500;
+            transition: var(--transition-base);
+            position: relative;
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--primary-gradient);
+            transition: var(--transition-base);
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        .nav-links a:hover {
+            color: var(--primary-orange);
+        }
+
+        .mobile-menu-toggle {
+            display: none;
+            flex-direction: column;
+            cursor: pointer;
+            gap: var(--space-1);
+        }
+
+        .mobile-menu-toggle span {
+            width: 25px;
+            height: 3px;
+            background: var(--gray-700);
+            transition: var(--transition-base);
+            border-radius: var(--radius-sm);
+        }
+
+        /* ===== ヒーローセクション ===== */
+        main {
+            margin-top: 76px;
+        }
+
+        .hero {
+            background: var(--primary-gradient);
+            color: white;
+            padding: var(--space-24) 0 var(--space-20);
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.1'%3E%3Ccircle cx='30' cy='30' r='2'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E") repeat;
+            opacity: 0.3;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero h1 {
+            font-size: clamp(var(--text-3xl), 5vw, var(--text-5xl));
+            font-weight: 800;
+            margin-bottom: var(--space-6);
+            line-height: 1.2;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .hero p {
+            font-size: var(--text-xl);
+            margin-bottom: var(--space-8);
+            opacity: 0.95;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .hero-stats {
+            display: flex;
+            justify-content: center;
+            gap: var(--space-8);
+            margin-top: var(--space-8);
+            flex-wrap: wrap;
+        }
+
+        .stat-item {
+            text-align: center;
+            background: rgba(255, 255, 255, 0.1);
+            padding: var(--space-4) var(--space-6);
+            border-radius: var(--radius-lg);
+            backdrop-filter: blur(10px);
+        }
+
+        .stat-number {
+            font-size: var(--text-2xl);
+            font-weight: 700;
+            display: block;
+        }
+
+        .stat-label {
+            font-size: var(--text-sm);
+            opacity: 0.9;
+        }
+
+        /* ===== ボタンシステム ===== */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: var(--space-3) var(--space-6);
+            font-size: var(--text-base);
+            font-weight: 600;
+            text-decoration: none;
+            border: none;
+            border-radius: var(--radius-lg);
+            cursor: pointer;
+            transition: var(--transition-base);
+            transform-origin: center;
+            min-height: 44px;
+            gap: var(--space-2);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-primary {
+            background: var(--primary-gradient);
+            color: white;
+            box-shadow: var(--shadow-md);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px) scale(1.02);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .btn-primary:active {
+            transform: translateY(0) scale(0.98);
+            transition-duration: 0.1s;
+        }
+
+        .btn-secondary {
+            background: white;
+            color: var(--primary-orange);
+            border: 2px solid var(--primary-orange);
+        }
+
+        .btn-secondary:hover {
+            background: var(--primary-orange);
+            color: white;
+            transform: translateY(-1px);
+        }
+
+        .btn-large {
+            padding: var(--space-4) var(--space-8);
+            font-size: var(--text-lg);
+            min-height: 52px;
+        }
+
+        /* ローディング状態 */
+        .btn-loading {
+            color: transparent;
+        }
+
+        .btn-loading::after {
+            content: '';
+            position: absolute;
+            width: 16px;
+            height: 16px;
+            top: 50%;
+            left: 50%;
+            margin: -8px 0 0 -8px;
+            border: 2px solid transparent;
+            border-top: 2px solid currentColor;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* ===== セクション共通 ===== */
+        .section {
+            padding: var(--space-20) 0;
+        }
+
+        .section-title {
+            font-size: clamp(var(--text-2xl), 4vw, var(--text-4xl));
+            font-weight: 700;
+            text-align: center;
+            margin-bottom: var(--space-12);
+            color: var(--gray-900);
+        }
+
+        .section-subtitle {
+            font-size: var(--text-lg);
+            text-align: center;
+            color: var(--gray-500);
+            max-width: 600px;
+            margin: 0 auto var(--space-16);
+        }
+
+        /* ===== イベント情報セクション ===== */
+        .event-info {
+            background: white;
+        }
+
+        .event-card {
+            background: white;
+            border-radius: var(--radius-xl);
+            padding: var(--space-8);
+            box-shadow: var(--shadow-lg);
+            max-width: 800px;
+            margin: 0 auto;
+            border: 1px solid var(--gray-200);
+        }
+
+        .date-highlight {
+            background: var(--primary-gradient);
+            color: white;
+            padding: var(--space-4) var(--space-6);
+            border-radius: var(--radius-lg);
+            text-align: center;
+            font-size: var(--text-xl);
+            font-weight: 700;
+            margin-bottom: var(--space-6);
+            box-shadow: var(--shadow-md);
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: var(--space-6);
+            margin: var(--space-6) 0;
+        }
+
+        .info-item {
+            padding: var(--space-5);
+            background: var(--gray-50);
+            border-radius: var(--radius-lg);
+            border-left: 4px solid var(--primary-orange);
+        }
+
+        .info-item h4 {
+            color: var(--primary-orange);
+            font-size: var(--text-lg);
+            margin-bottom: var(--space-2);
+            display: flex;
+            align-items: center;
+            gap: var(--space-2);
+        }
+
+        .phone-link {
+            display: inline-flex;
+            align-items: center;
+            gap: var(--space-2);
+            text-decoration: none;
+            color: var(--primary-orange);
+            font-weight: 600;
+            font-size: var(--text-lg);
+            transition: var(--transition-base);
+        }
+
+        .phone-link:hover {
+            color: var(--primary-yellow);
+            transform: scale(1.05);
+        }
+
+        .map-link {
+            color: var(--secondary-blue);
+            text-decoration: none;
+            font-weight: 500;
+            transition: var(--transition-base);
+        }
+
+        .map-link:hover {
+            color: var(--secondary-purple);
+            text-decoration: underline;
+        }
+
+        /* ===== アンケートセクション ===== */
+        .survey-section {
+            background: var(--gray-50);
+            padding: var(--space-6);
+            border-radius: var(--radius-lg);
+            margin-top: var(--space-6);
+        }
+
+        .survey-buttons {
+            display: flex;
+            gap: var(--space-4);
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .survey-btn {
+            background: white;
+            color: var(--gray-700);
+            border: 2px solid var(--gray-300);
+            transition: var(--transition-base);
+            position: relative;
+        }
+
+        .survey-btn:hover {
+            border-color: var(--primary-orange);
+            color: var(--primary-orange);
+            transform: translateY(-2px);
+        }
+
+        .survey-btn.voted {
+            background: var(--primary-gradient);
+            color: white;
+            border-color: transparent;
+        }
+
+        .count {
+            background: var(--accent-pink);
+            color: white;
+            padding: var(--space-1) var(--space-2);
+            border-radius: var(--radius-full);
+            font-size: var(--text-xs);
+            font-weight: 700;
+            min-width: 20px;
+            text-align: center;
+        }
+
+        /* ===== ライトニングトーク説明 ===== */
+        .about-lt {
+            background: var(--gray-50);
+        }
+
+        .lt-intro {
+            text-align: center;
+            margin-bottom: var(--space-16);
+        }
+
+        .intro-card {
+            background: white;
+            padding: var(--space-8);
+            border-radius: var(--radius-xl);
+            box-shadow: var(--shadow-md);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .intro-card h3 {
+            color: var(--primary-orange);
+            font-size: var(--text-2xl);
+            margin-bottom: var(--space-4);
+        }
+
+        .intro-card p {
+            font-size: var(--text-lg);
+            line-height: 1.7;
+            color: var(--gray-700);
+        }
+
+        /* タイムライン */
+        .timeline {
+            max-width: 800px;
+            margin: 0 auto;
+            position: relative;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 50%;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: var(--primary-gradient);
+            margin-left: -1px;
+        }
+
+        .timeline-item {
+            position: relative;
+            margin-bottom: var(--space-8);
+            display: flex;
+            align-items: center;
+        }
+
+        .timeline-item:nth-child(odd) {
+            flex-direction: row-reverse;
+        }
+
+        .timeline-dot {
+            width: 16px;
+            height: 16px;
+            background: var(--primary-gradient);
+            border-radius: 50%;
+            position: absolute;
+            left: 50%;
+            margin-left: -8px;
+            z-index: 2;
+            box-shadow: 0 0 0 4px white;
+        }
+
+        .timeline-content {
+            background: white;
+            padding: var(--space-6);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-md);
+            width: calc(50% - var(--space-8));
+            position: relative;
+        }
+
+        .timeline-item:nth-child(odd) .timeline-content {
+            margin-right: calc(50% + var(--space-8));
+        }
+
+        .timeline-item:nth-child(even) .timeline-content {
+            margin-left: calc(50% + var(--space-8));
+        }
+
+        .timeline-content h4 {
+            color: var(--primary-orange);
+            font-size: var(--text-lg);
+            margin-bottom: var(--space-2);
+        }
+
+        /* 魅力グリッド */
+        .benefits-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: var(--space-6);
+            margin-top: var(--space-8);
+        }
+
+        .benefit-item {
+            background: white;
+            padding: var(--space-6);
+            border-radius: var(--radius-lg);
+            text-align: center;
+            box-shadow: var(--shadow-sm);
+            transition: var(--transition-base);
+            border: 1px solid var(--gray-200);
+        }
+
+        .benefit-item:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        /* ===== 参加方法セクション ===== */
+        .participation {
+            background: white;
+        }
+
+        .participation-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: var(--space-8);
+            margin-bottom: var(--space-16);
+        }
+
+        .participation-card {
+            background: white;
+            padding: var(--space-8);
+            border-radius: var(--radius-xl);
+            box-shadow: var(--shadow-lg);
+            text-align: center;
+            transition: var(--transition-base);
+            border: 2px solid var(--gray-200);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .participation-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: var(--primary-gradient);
+        }
+
+        .participation-card:hover {
+            transform: translateY(-6px);
+            box-shadow: var(--shadow-xl);
+            border-color: var(--primary-orange);
+        }
+
+        .card-icon {
+            font-size: var(--text-4xl);
+            margin-bottom: var(--space-4);
+        }
+
+        .participation-card h3 {
+            color: var(--gray-900);
+            font-size: var(--text-xl);
+            margin-bottom: var(--space-4);
+        }
+
+        .participation-card p {
+            color: var(--gray-600);
+            margin-bottom: var(--space-4);
+            line-height: 1.6;
+        }
+
+        .card-note {
+            font-size: var(--text-sm);
+            color: var(--primary-orange);
+            font-weight: 600;
+            margin-bottom: var(--space-6);
+        }
+
+        /* トピック表示 */
+        .topics-showcase {
+            background: var(--gray-50);
+            padding: var(--space-8);
+            border-radius: var(--radius-xl);
+            margin-top: var(--space-12);
+        }
+
+        .topics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: var(--space-3);
+            margin: var(--space-6) 0;
+        }
+
+        .topic-item {
+            background: white;
+            padding: var(--space-4);
+            border-radius: var(--radius-lg);
+            text-align: center;
+            transition: var(--transition-base);
+            cursor: pointer;
+            border: 1px solid var(--gray-200);
+        }
+
+        .topic-item:hover {
+            background: var(--primary-gradient);
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .topics-note {
+            text-align: center;
+            color: var(--gray-600);
+            font-style: italic;
+            margin-top: var(--space-6);
+        }
+
+        /* ===== フッター ===== */
+        footer {
+            background: var(--gray-900);
+            color: white;
+            padding: var(--space-16) 0 var(--space-8);
+            text-align: center;
+        }
+
+        footer h3 {
+            background: var(--primary-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-size: var(--text-2xl);
+            margin-bottom: var(--space-4);
+        }
+
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: var(--space-6);
+            margin: var(--space-8) 0;
+            flex-wrap: wrap;
+        }
+
+        .footer-links a {
+            color: var(--gray-300);
+            text-decoration: none;
+            transition: var(--transition-base);
+        }
+
+        .footer-links a:hover {
+            color: var(--primary-orange);
+        }
+
+        .copyright {
+            color: var(--gray-500);
+            font-size: var(--text-sm);
+            margin-top: var(--space-8);
+        }
+
+        /* ===== チャットウィジェット ===== */
+        .chat-widget {
+            position: fixed;
+            bottom: var(--space-6);
+            right: var(--space-6);
+            z-index: 1000;
+        }
+
+        .chat-toggle {
+            background: var(--primary-gradient);
+            color: white;
+            border: none;
+            padding: var(--space-4);
+            border-radius: var(--radius-full);
+            font-size: var(--text-lg);
+            cursor: pointer;
+            box-shadow: var(--shadow-lg);
+            transition: var(--transition-base);
+            position: relative;
+            min-width: 60px;
+            min-height: 60px;
+        }
+
+        .chat-toggle:hover {
+            transform: scale(1.1);
+        }
+
+        .chat-notification-badge {
+            position: absolute;
+            top: -2px;
+            right: -2px;
+            width: 12px;
+            height: 12px;
+            background: var(--error);
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        .chat-container {
+            position: absolute;
+            bottom: 80px;
+            right: 0;
+            width: 320px;
+            max-height: 400px;
+            background: white;
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-xl);
+            overflow: hidden;
+            border: 1px solid var(--gray-200);
+        }
+
+        .chat-header {
+            background: var(--primary-gradient);
+            color: white;
+            padding: var(--space-4);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .chat-close {
+            background: none;
+            border: none;
+            color: white;
+            font-size: var(--text-lg);
+            cursor: pointer;
+        }
+
+        .chat-messages {
+            height: 250px;
+            overflow-y: auto;
+            padding: var(--space-4);
+            background: var(--gray-50);
+        }
+
+        .chat-welcome {
+            background: white;
+            padding: var(--space-3);
+            border-radius: var(--radius-lg);
+            font-size: var(--text-sm);
+            color: var(--gray-600);
+            margin-bottom: var(--space-4);
+        }
+
+        .chat-message {
+            margin-bottom: var(--space-3);
+            animation: slideIn 0.3s ease-out;
+        }
+
+        .chat-message.user {
+            text-align: right;
+        }
+
+        .chat-message.user .message-bubble {
+            background: var(--primary-gradient);
+            color: white;
+            margin-left: var(--space-6);
+        }
+
+        .chat-message.system .message-bubble {
+            background: white;
+            color: var(--gray-700);
+            margin-right: var(--space-6);
+        }
+
+        .message-bubble {
+            display: inline-block;
+            padding: var(--space-3);
+            border-radius: var(--radius-lg);
+            font-size: var(--text-sm);
+            max-width: 80%;
+            word-wrap: break-word;
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .chat-input-container {
+            display: flex;
+            padding: var(--space-4);
+            background: white;
+            border-top: 1px solid var(--gray-200);
+        }
+
+        .chat-input {
+            flex: 1;
+            padding: var(--space-3);
+            border: 1px solid var(--gray-300);
+            border-radius: var(--radius-lg);
+            font-size: var(--text-sm);
+            outline: none;
+            transition: var(--transition-base);
+        }
+
+        .chat-input:focus {
+            border-color: var(--primary-orange);
+            box-shadow: 0 0 0 3px var(--primary-alpha-20);
+        }
+
+        .chat-send {
+            background: var(--primary-gradient);
+            color: white;
+            border: none;
+            padding: var(--space-3) var(--space-4);
+            border-radius: var(--radius-lg);
+            margin-left: var(--space-2);
+            cursor: pointer;
+            font-size: var(--text-sm);
+            transition: var(--transition-base);
+        }
+
+        .chat-send:hover {
+            transform: scale(1.05);
+        }
+
+        /* ===== モーダル ===== */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 2000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(5px);
+            animation: fadeIn 0.3s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .modal-content {
+            background: white;
+            margin: 5% auto;
+            padding: var(--space-8);
+            border-radius: var(--radius-xl);
+            max-width: 600px;
+            position: relative;
+            animation: slideUp 0.3s ease-out;
+        }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .close {
+            position: absolute;
+            top: var(--space-4);
+            right: var(--space-6);
+            font-size: var(--text-2xl);
+            font-weight: bold;
+            cursor: pointer;
+            color: var(--gray-500);
+            transition: var(--transition-base);
+        }
+
+        .close:hover {
+            color: var(--gray-900);
+        }
+
+        /* フォームスタイル */
+        .form-group {
+            margin-bottom: var(--space-6);
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: var(--space-2);
+            font-weight: 600;
+            color: var(--gray-700);
+        }
+
+        .form-input {
+            width: 100%;
+            padding: var(--space-3);
+            border: 2px solid var(--gray-300);
+            border-radius: var(--radius-lg);
+            font-size: var(--text-base);
+            transition: var(--transition-base);
+            min-height: 44px;
+        }
+
+        .form-input:focus {
+            border-color: var(--primary-orange);
+            box-shadow: 0 0 0 3px var(--primary-alpha-20);
+        }
+
+        .form-input.error {
+            border-color: var(--error);
+            animation: shake 0.5s ease-in-out;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            10%, 30%, 50%, 70%, 90% { transform: translateX(-4px); }
+            20%, 40%, 60%, 80% { transform: translateX(4px); }
+        }
+
+        .form-input.success {
+            border-color: var(--success);
+        }
+
+        .form-help {
+            font-size: var(--text-sm);
+            color: var(--gray-500);
+            margin-top: var(--space-1);
+        }
+
+        .form-error {
+            font-size: var(--text-sm);
+            color: var(--error);
+            margin-top: var(--space-1);
+        }
+
+        /* ===== アニメーション効果 ===== */
+        .fade-in {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: var(--transition-slow);
+        }
+
+        .fade-in.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .scale-in {
+            opacity: 0;
+            transform: scale(0.9);
+            transition: var(--transition-slow);
+        }
+
+        .scale-in.visible {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        /* ===== レスポンシブデザイン ===== */
+        @media (max-width: 768px) {
+            .container {
+                padding: 0 var(--space-4);
+            }
+
+            .nav-links {
+                display: none;
+            }
+
+            .mobile-menu-toggle {
+                display: flex;
+            }
+
+            .hero {
+                padding: var(--space-16) 0 var(--space-12);
+            }
+
+            .hero h1 {
+                font-size: var(--text-3xl);
+            }
+
+            .hero p {
+                font-size: var(--text-lg);
+            }
+
+            .hero-stats {
+                flex-direction: column;
+                gap: var(--space-4);
+            }
+
+            .section {
+                padding: var(--space-12) 0;
+            }
+
+            .section-title {
+                font-size: var(--text-2xl);
+                margin-bottom: var(--space-8);
+            }
+
+            .event-card {
+                padding: var(--space-6);
+                margin: 0 var(--space-4);
+            }
+
+            .info-grid {
+                grid-template-columns: 1fr;
+                gap: var(--space-4);
+            }
+
+            .survey-buttons {
+                flex-direction: column;
+            }
+
+            .timeline::before {
+                left: var(--space-4);
+            }
+
+            .timeline-dot {
+                left: var(--space-4);
+                margin-left: -8px;
+            }
+
+            .timeline-item {
+                flex-direction: row;
+            }
+
+            .timeline-content {
+                width: calc(100% - var(--space-12));
+                margin-left: var(--space-12) !important;
+                margin-right: 0 !important;
+            }
+
+            .participation-grid {
+                grid-template-columns: 1fr;
+                gap: var(--space-6);
+            }
+
+            .topics-grid {
+                grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+                gap: var(--space-2);
+            }
+
+            .chat-container {
+                width: calc(100vw - var(--space-8));
+                right: var(--space-4);
+                bottom: 80px;
+            }
+
+            .footer-links {
+                flex-direction: column;
+                gap: var(--space-4);
+            }
+
+            .btn {
+                width: 100%;
+                justify-content: center;
+            }
+
+            .btn-large {
+                padding: var(--space-4);
+                font-size: var(--text-base);
+            }
+        }
+
+        @media (max-width: 480px) {
+            .hero {
+                padding: var(--space-12) 0 var(--space-10);
+            }
+
+            .event-card {
+                margin: 0 var(--space-2);
+                padding: var(--space-4);
+            }
+
+            .date-highlight {
+                font-size: var(--text-lg);
+                padding: var(--space-3) var(--space-4);
+            }
+
+            .topics-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .modal-content {
+                margin: 10% var(--space-4);
+                padding: var(--space-6);
+            }
+        }
+
+        /* ===== ユーティリティクラス ===== */
+        .sr-only {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
+            border: 0;
+        }
+
+        .text-center { text-align: center; }
+        .text-left { text-align: left; }
+        .text-right { text-align: right; }
+
+        .hidden { display: none; }
+        .block { display: block; }
+        .flex { display: flex; }
+        .inline-flex { display: inline-flex; }
+
+        .justify-center { justify-content: center; }
+        .justify-between { justify-content: space-between; }
+        .items-center { align-items: center; }
+
+        .w-full { width: 100%; }
+        .h-full { height: 100%; }
+
+        .mb-4 { margin-bottom: var(--space-4); }
+        .mb-6 { margin-bottom: var(--space-6); }
+        .mt-4 { margin-top: var(--space-4); }
+        .mt-6 { margin-top: var(--space-6); }
+
+        .p-4 { padding: var(--space-4); }
+        .p-6 { padding: var(--space-6); }
+        .px-4 { padding-left: var(--space-4); padding-right: var(--space-4); }
+        .py-4 { padding-top: var(--space-4); padding-bottom: var(--space-4); }
+    </style>
+</head>
+<body>
+    <a href="#main" class="skip-link">メインコンテンツへスキップ</a>
+    
+    <header role="banner">
+        <nav class="container" role="navigation" aria-label="メインナビゲーション">
+            <a href="#" class="logo" aria-label="なんでもライトニングトーク ホーム">⚡ なんでもLT</a>
+            <ul class="nav-links">
+                <li><a href="#event">イベント情報</a></li>
+                <li><a href="#about">ライトニングトークとは</a></li>
+                <li><a href="#join">参加方法</a></li>
+                <li><a href="#contact">お問い合わせ</a></li>
+            </ul>
+            <button class="mobile-menu-toggle" aria-label="メニューを開く" aria-expanded="false">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+        </nav>
+    </header>
+
+    <main id="main" role="main">
+        <section class="hero" aria-labelledby="hero-heading">
+            <div class="container">
+                <div class="hero-content">
+                    <h1 id="hero-heading">なんでもライトニングトーク ⚡</h1>
+                    <p>5分間で世界を変える！あなたの「なんでも」を聞かせて！</p>
+                    <a href="#event" class="btn btn-primary btn-large">第1回イベント詳細を見る 🚀</a>
+                    
+                    <div class="hero-stats">
+                        <div class="stat-item">
+                            <span class="stat-number" id="participantCount">0</span>
+                            <span class="stat-label">参加予定者</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-number">5</span>
+                            <span class="stat-label">発表時間（分）</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-number">∞</span>
+                            <span class="stat-label">可能性</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="event" class="section event-info" aria-labelledby="event-heading">
+            <div class="container">
+                <h2 id="event-heading" class="section-title">
+                    🎉 第1回 なんでもライトニングトーク 🎉
+                </h2>
+                
+                <div class="event-card fade-in">
+                    <div class="date-highlight">
+                        📅 2025年6月25日（水） 19:00〜
+                    </div>
+                    
+                    <div class="info-grid">
+                        <div class="info-item">
+                            <h4>📍 会場について</h4>
+                            <p><strong>新宿某所</strong>（6月20日に詳細確定予定）</p>
+                            <p><a href="https://maps.app.goo.gl/51TFv825jmuBsjbq5?g_st=ic" target="_blank" rel="noopener" class="map-link">🗺️ 地図を見る</a></p>
+                            <p>当日参加・飛び入り発表も大歓迎です！🎤</p>
+                        </div>
+                        
+                        <div class="info-item">
+                            <h4>📞 緊急連絡先</h4>
+                            <a href="tel:080-4540-7479" class="phone-link" aria-label="緊急連絡先に電話する">
+                                <span aria-hidden="true">☎️</span>
+                                080-4540-7479
+                            </a>
+                        </div>
+
+                        <div class="info-item">
+                            <h4>💻 オンライン参加も可能！</h4>
+                            <p><strong>時間:</strong> 18:30〜22:00 (JST)</p>
+                            <p><strong>Google Meet:</strong> <a href="https://meet.google.com/ycp-sdec-xsr" target="_blank" rel="noopener">参加リンク</a></p>
+                        </div>
+                    </div>
+
+                    <div class="survey-section">
+                        <h4>💭 参加方法アンケート</h4>
+                        <p class="text-center mb-4">どちらで参加予定ですか？</p>
+                        <div class="survey-buttons">
+                            <button id="onlineBtn" class="btn survey-btn" data-action="survey-online" aria-describedby="online-help">
+                                💻 オンライン参加 <span id="onlineCount" class="count">0</span>
+                            </button>
+                            <button id="offlineBtn" class="btn survey-btn" data-action="survey-offline" aria-describedby="offline-help">
+                                🏢 現地参加 <span id="offlineCount" class="count">0</span>
+                            </button>
+                        </div>
+                        <div id="online-help" class="sr-only">オンラインでGoogle Meetから参加</div>
+                        <div id="offline-help" class="sr-only">新宿の会場で現地参加</div>
+                    </div>
+
+                    <div class="text-center mt-6">
+                        <button class="btn btn-primary btn-large" data-action="register" aria-describedby="register-help">
+                            📝 参加登録する
+                        </button>
+                        <div id="register-help" class="sr-only">イベントの参加登録フォームを開く</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="about" class="section about-lt" aria-labelledby="about-heading">
+            <div class="container">
+                <h2 id="about-heading" class="section-title">⚡ ライトニングトークって何？</h2>
+                
+                <div class="lt-intro">
+                    <div class="intro-card scale-in">
+                        <h3>🎯 ライトニングトークとは</h3>
+                        <p>
+                            <strong>5分間</strong>という短い時間で行うプレゼンテーション！<br>
+                            テーマは自由、形式も自由、<strong>「なんでも」</strong>OKです！<br>
+                            技術、趣味、日常の発見、面白い話題... 何でも大歓迎！🌟
+                        </p>
+                    </div>
+                </div>
+
+                <h3 class="text-center mb-8">📚 ライトニングトークの歴史</h3>
+                
+                <div class="timeline">
+                    <div class="timeline-item fade-in">
+                        <div class="timeline-dot"></div>
+                        <div class="timeline-content">
+                            <h4>🏁 1997年</h4>
+                            <p>Perl Conference でライトニングトークが誕生！技術者コミュニティから生まれた文化です。</p>
+                        </div>
+                    </div>
+                    
+                    <div class="timeline-item fade-in">
+                        <div class="timeline-dot"></div>
+                        <div class="timeline-content">
+                            <h4>🌍 2000年代</h4>
+                            <p>世界中の技術カンファレンスに広がり、5分間で効果的に情報を伝える手法として確立。</p>
+                        </div>
+                    </div>
+                    
+                    <div class="timeline-item fade-in">
+                        <div class="timeline-dot"></div>
+                        <div class="timeline-content">
+                            <h4>🇯🇵 2000年代後半</h4>
+                            <p>日本の技術コミュニティにも導入され、多くの勉強会やカンファレンスで定番に。</p>
+                        </div>
+                    </div>
+                    
+                    <div class="timeline-item fade-in">
+                        <div class="timeline-dot"></div>
+                        <div class="timeline-content">
+                            <h4>🚀 現在</h4>
+                            <p>技術分野を超えて様々な領域に拡大。短時間で的確に伝える技術として注目！</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="lt-benefits mt-16">
+                    <h4 class="text-center mb-8">💡 ライトニングトークの魅力</h4>
+                    <div class="benefits-grid">
+                        <div class="benefit-item">
+                            <div style="font-size: var(--text-2xl); margin-bottom: var(--space-2);">⏰</div>
+                            <strong>短時間集中</strong><br>5分だから緊張しすぎない！
+                        </div>
+                        <div class="benefit-item">
+                            <div style="font-size: var(--text-2xl); margin-bottom: var(--space-2);">🎤</div>
+                            <strong>気軽な発表</strong><br>完璧でなくても大丈夫！
+                        </div>
+                        <div class="benefit-item">
+                            <div style="font-size: var(--text-2xl); margin-bottom: var(--space-2);">🌟</div>
+                            <strong>多様性</strong><br>様々な話題が聞ける！
+                        </div>
+                        <div class="benefit-item">
+                            <div style="font-size: var(--text-2xl); margin-bottom: var(--space-2);">🤝</div>
+                            <strong>交流促進</strong><br>新しい出会いとつながり！
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="join" class="section participation" aria-labelledby="join-heading">
+            <div class="container">
+                <h2 id="join-heading" class="section-title">🚀 参加方法</h2>
+
+                <div class="participation-grid">
+                    <div class="participation-card fade-in" data-type="listener">
+                        <div class="card-icon" aria-hidden="true">👥</div>
+                        <h3>聴講参加</h3>
+                        <p>
+                            様々な発表を聞いて楽しもう！<br>
+                            新しい発見や学びがいっぱい！
+                        </p>
+                        <p class="card-note">現地参加・オンライン参加どちらでもOK</p>
+                        <button class="btn btn-primary" data-action="register-listener">参加登録</button>
+                    </div>
+
+                    <div class="participation-card fade-in" data-type="speaker">
+                        <div class="card-icon" aria-hidden="true">🎤</div>
+                        <h3>事前発表申込み</h3>
+                        <p>
+                            5分間のライトニングトークで<br>
+                            あなたの「なんでも」を発表！
+                        </p>
+                        <p class="card-note">技術・趣味・日常・なんでもOK！</p>
+                        <button class="btn btn-primary" data-action="register-speaker">発表申込み</button>
+                    </div>
+
+                    <div class="participation-card fade-in" data-type="walkin">
+                        <div class="card-icon" aria-hidden="true">⚡</div>
+                        <h3>当日飛び入り発表</h3>
+                        <p>
+                            思い立ったらその場で発表！<br>
+                            スポンテイニアスな発表も大歓迎！
+                        </p>
+                        <p class="card-note">準備不要！思いついたことを5分で！</p>
+                        <button class="btn btn-secondary" data-action="walkin-info">詳細を見る</button>
+                    </div>
+                </div>
+
+                <div class="topics-showcase">
+                    <h3 class="text-center mb-6">📋 発表テーマ例</h3>
+                    <div class="topics-grid">
+                        <div class="topic-item" data-category="tech">💻 プログラミング・技術</div>
+                        <div class="topic-item" data-category="hobby">🎨 趣味・アート・創作</div>
+                        <div class="topic-item" data-category="learning">📚 読書・学習体験</div>
+                        <div class="topic-item" data-category="travel">🌍 旅行・文化体験</div>
+                        <div class="topic-item" data-category="food">🍳 料理・グルメ</div>
+                        <div class="topic-item" data-category="game">🎮 ゲーム・エンタメ</div>
+                        <div class="topic-item" data-category="lifehack">💡 ライフハック・効率化</div>
+                        <div class="topic-item" data-category="pet">🐱 ペット・動物</div>
+                        <div class="topic-item" data-category="garden">🌱 ガーデニング・植物</div>
+                        <div class="topic-item" data-category="money">📈 投資・副業</div>
+                        <div class="topic-item" data-category="sports">🏃‍♂️ スポーツ・健康</div>
+                        <div class="topic-item" data-category="music">🎵 音楽・演奏</div>
+                    </div>
+                    <p class="topics-note">
+                        ...などなど、本当になんでもOK！あなたの「これ話したい！」を聞かせてください 🌟
+                    </p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer id="contact" role="contentinfo">
+        <div class="container">
+            <h3>✨ なんでもライトニングトーク</h3>
+            <p>5分間で世界が広がる。あなたの参加をお待ちしています！</p>
+            <nav class="footer-links" aria-label="フッターナビゲーション">
+                <a href="/privacy">プライバシーポリシー</a>
+                <a href="/terms">利用規約</a>
+                <a href="/contact">お問い合わせ</a>
+            </nav>
+            <p class="copyright">
+                © 2025 なんでもライトニングトーク. All rights reserved.
+            </p>
+        </div>
+    </footer>
+
+    <!-- モーダル -->
+    <div id="registerModal" class="modal" role="dialog" aria-labelledby="modal-title" aria-hidden="true">
+        <div class="modal-content">
+            <button class="close" aria-label="モーダルを閉じる">&times;</button>
+            <div id="modalBody"></div>
+        </div>
+    </div>
+
+    <!-- チャット機能 -->
+    <div id="chatWidget" class="chat-widget">
+        <button id="chatToggle" class="chat-toggle" aria-label="チャットを開く" aria-describedby="chat-help">
+            💬 <span class="chat-notification-badge" style="display: none;" aria-hidden="true"></span>
+        </button>
+        <div id="chat-help" class="sr-only">イベントについて質問や感想を投稿できます</div>
+        <div id="chatContainer" class="chat-container" style="display: none;" role="dialog" aria-labelledby="chat-title">
+            <div class="chat-header">
+                <h4 id="chat-title">💬 イベントチャット</h4>
+                <button class="chat-close" aria-label="チャットを閉じる">&times;</button>
+            </div>
+            <div id="chatMessages" class="chat-messages" role="log" aria-live="polite" aria-label="チャットメッセージ">
+                <div class="chat-welcome">
+                    ようこそ！質問や感想をお気軽にどうぞ 🌟
+                </div>
+            </div>
+            <div class="chat-input-container">
+                <label for="chatInput" class="sr-only">チャットメッセージを入力</label>
+                <input type="text" id="chatInput" class="chat-input" placeholder="メッセージを入力..." maxlength="200" aria-describedby="chat-input-help">
+                <div id="chat-input-help" class="sr-only">最大200文字まで入力できます</div>
+                <button id="chatSend" class="chat-send">送信</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ライブリージョン（動的通知用） -->
+    <div aria-live="polite" aria-atomic="true" class="sr-only" id="announcements"></div>
+
+    <script>
+        // ===== Enhanced Lightning Talk Application =====
+        class LightningTalkApp {
+            constructor() {
+                this.data = {
+                    participants: this.loadFromStorage('participants', []),
+                    surveyData: this.loadFromStorage('surveyData', { online: 0, offline: 0 }),
+                    chatMessages: this.loadFromStorage('chatMessages', []),
+                    userVoted: this.loadFromStorage('userVoted', false)
+                };
+                
+                this.init();
+            }
+
+            init() {
+                this.updateParticipantCount();
+                this.updateSurveyDisplay();
+                this.setupEventListeners();
+                this.setupIntersectionObserver();
+                this.setupAccessibility();
+                this.loadChatMessages();
+                
+                // 開発環境での初期データ設定
+                if (this.data.participants.length === 0) {
+                    this.data.participants = [
+                        { name: 'テストユーザー1', type: 'listener', timestamp: Date.now() },
+                        { name: 'テストユーザー2', type: 'speaker', timestamp: Date.now() }
+                    ];
+                    this.saveToStorage('participants', this.data.participants);
+                }
+
+                // 統計データの初期化
+                if (this.data.surveyData.online === 0 && this.data.surveyData.offline === 0) {
+                    this.data.surveyData = { online: 3, offline: 7 };
+                    this.saveToStorage('surveyData', this.data.surveyData);
+                }
+
+                this.updateParticipantCount();
+                this.updateSurveyDisplay();
+            }
+
+            // ===== ストレージ管理 =====
+            loadFromStorage(key, defaultValue) {
+                try {
+                    const item = localStorage.getItem(`lightningTalk_${key}`);
+                    return item ? JSON.parse(item) : defaultValue;
+                } catch (error) {
+                    console.warn(`Storage load error for ${key}:`, error);
+                    return defaultValue;
+                }
+            }
+
+            saveToStorage(key, value) {
+                try {
+                    localStorage.setItem(`lightningTalk_${key}`, JSON.stringify(value));
+                } catch (error) {
+                    console.warn(`Storage save error for ${key}:`, error);
+                }
+            }
+
+            // ===== アクセシビリティ =====
+            setupAccessibility() {
+                // フォーカストラップ
+                document.addEventListener('keydown', (e) => {
+                    if (e.key === 'Escape') {
+                        this.closeModal();
+                        this.closeChatIfOpen();
+                    }
+                });
+
+                // スクリーンリーダー用の動的通知
+                this.announcements = document.getElementById('announcements');
+            }
+
+            announce(message) {
+                if (this.announcements) {
+                    this.announcements.textContent = message;
+                    setTimeout(() => {
+                        this.announcements.textContent = '';
+                    }, 1000);
+                }
+            }
+
+            // ===== イベントリスナー設定 =====
+            setupEventListeners() {
+                // アンケートボタン
+                document.getElementById('onlineBtn')?.addEventListener('click', () => this.handleSurveyVote('online'));
+                document.getElementById('offlineBtn')?.addEventListener('click', () => this.handleSurveyVote('offline'));
+
+                // 各種アクションボタン
+                document.addEventListener('click', (e) => {
+                    const action = e.target.dataset.action;
+                    if (action) {
+                        e.preventDefault();
+                        this.handleAction(action);
+                    }
+                });
+
+                // モーダル
+                document.querySelector('.close')?.addEventListener('click', () => this.closeModal());
+                document.getElementById('registerModal')?.addEventListener('click', (e) => {
+                    if (e.target.id === 'registerModal') {
+                        this.closeModal();
+                    }
+                });
+
+                // チャット機能
+                document.getElementById('chatToggle')?.addEventListener('click', () => this.toggleChat());
+                document.querySelector('.chat-close')?.addEventListener('click', () => this.closeChat());
+                document.getElementById('chatSend')?.addEventListener('click', () => this.sendChatMessage());
+                document.getElementById('chatInput')?.addEventListener('keypress', (e) => {
+                    if (e.key === 'Enter') {
+                        this.sendChatMessage();
+                    }
+                });
+
+                // モバイルメニュー
+                document.querySelector('.mobile-menu-toggle')?.addEventListener('click', () => this.toggleMobileMenu());
+
+                // トピックアイテムのクリック
+                document.querySelectorAll('.topic-item').forEach(item => {
+                    item.addEventListener('click', () => this.handleTopicClick(item));
+                });
+            }
+
+            // ===== アクション処理 =====
+            handleAction(action) {
+                const actions = {
+                    'register': () => this.showRegistrationForm('general'),
+                    'register-listener': () => this.showRegistrationForm('listener'),
+                    'register-speaker': () => this.showRegistrationForm('speaker'),
+                    'walkin-info': () => this.showWalkinInfo(),
+                    'survey-online': () => this.handleSurveyVote('online'),
+                    'survey-offline': () => this.handleSurveyVote('offline')
+                };
+
+                if (actions[action]) {
+                    actions[action]();
+                } else {
+                    console.warn(`Unknown action: ${action}`);
+                }
+            }
+
+            // ===== アンケート機能 =====
+            handleSurveyVote(type) {
+                if (this.data.userVoted) {
+                    this.announce('既に投票済みです');
+                    return;
+                }
+
+                this.data.surveyData[type]++;
+                this.data.userVoted = true;
+                
+                this.saveToStorage('surveyData', this.data.surveyData);
+                this.saveToStorage('userVoted', this.data.userVoted);
+                
+                this.updateSurveyDisplay();
+                this.announce(`${type === 'online' ? 'オンライン' : '現地'}参加で投票しました`);
+
+                // ボタンアニメーション
+                const button = document.getElementById(`${type}Btn`);
+                if (button) {
+                    button.classList.add('voted');
+                    button.style.animation = 'pulse 0.5s ease-in-out';
+                }
+            }
+
+            updateSurveyDisplay() {
+                const onlineCount = document.getElementById('onlineCount');
+                const offlineCount = document.getElementById('offlineCount');
+                
+                if (onlineCount) onlineCount.textContent = this.data.surveyData.online;
+                if (offlineCount) offlineCount.textContent = this.data.surveyData.offline;
+
+                if (this.data.userVoted) {
+                    document.querySelectorAll('.survey-btn').forEach(btn => {
+                        btn.disabled = true;
+                        btn.style.opacity = '0.7';
+                    });
+                }
+            }
+
+            // ===== 参加者数表示 =====
+            updateParticipantCount() {
+                const countElement = document.getElementById('participantCount');
+                if (countElement) {
+                    const count = this.data.participants.length;
+                    countElement.textContent = count;
+                    
+                    // カウントアップアニメーション
+                    countElement.style.animation = 'none';
+                    setTimeout(() => {
+                        countElement.style.animation = 'pulse 0.5s ease-in-out';
+                    }, 100);
+                }
+            }
+
+            // ===== 登録フォーム =====
+            showRegistrationForm(type) {
+                const typeLabels = {
+                    'general': '参加登録',
+                    'listener': '聴講参加登録',
+                    'speaker': '発表者登録'
+                };
+
+                const additionalFields = type === 'speaker' ? `
+                    <div class="form-group">
+                        <label for="talkTitle" class="form-label">発表タイトル <span aria-label="必須項目">*</span></label>
+                        <input type="text" id="talkTitle" name="talkTitle" class="form-input" required 
+                               aria-describedby="title-help" placeholder="例: 私の趣味のプログラミング">
+                        <div id="title-help" class="form-help">どんなテーマでも大丈夫です！</div>
+                    </div>
+                    <div class="form-group">
+                        <label for="talkDescription" class="form-label">発表内容（簡単な説明）</label>
+                        <textarea id="talkDescription" name="talkDescription" class="form-input" rows="3" 
+                                  aria-describedby="desc-help" placeholder="5分間で話したい内容を簡単に..."></textarea>
+                        <div id="desc-help" class="form-help">詳細な内容でなくても構いません</div>
+                    </div>
+                ` : '';
+
+                const modalContent = `
+                    <h2 id="modal-title">${typeLabels[type] || '参加登録'}</h2>
+                    <form id="registrationForm" novalidate>
+                        <div class="form-group">
+                            <label for="participantName" class="form-label">お名前 <span aria-label="必須項目">*</span></label>
+                            <input type="text" id="participantName" name="name" class="form-input" required 
+                                   aria-describedby="name-help" placeholder="ニックネームでもOK">
+                            <div id="name-help" class="form-help">本名でなくてもニックネームでOKです</div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="participantEmail" class="form-label">メールアドレス <span aria-label="必須項目">*</span></label>
+                            <input type="email" id="participantEmail" name="email" class="form-input" required 
+                                   aria-describedby="email-help" placeholder="example@email.com">
+                            <div id="email-help" class="form-help">連絡用です。第三者には提供しません</div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="participationType" class="form-label">参加方法 <span aria-label="必須項目">*</span></label>
+                            <select id="participationType" name="participationType" class="form-input" required 
+                                    aria-describedby="type-help">
+                                <option value="">選択してください</option>
+                                <option value="online">オンライン参加</option>
+                                <option value="offline">現地参加</option>
+                                <option value="both">両方対応可能</option>
+                            </select>
+                            <div id="type-help" class="form-help">当日の参加方法を選択してください</div>
+                        </div>
+                        
+                        ${additionalFields}
+                        
+                        <div class="form-group">
+                            <label for="participantMessage" class="form-label">メッセージ・質問など</label>
+                            <textarea id="participantMessage" name="message" class="form-input" rows="3" 
+                                      placeholder="何かあればお気軽に..."></textarea>
+                        </div>
+                        
+                        <div class="text-center">
+                            <button type="submit" class="btn btn-primary btn-large">登録する</button>
+                        </div>
+                    </form>
+                `;
+
+                this.showModal(modalContent);
+                
+                // フォーム送信処理
+                document.getElementById('registrationForm')?.addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    this.handleRegistration(e.target, type);
+                });
+            }
+
+            handleRegistration(form, type) {
+                const formData = new FormData(form);
+                const data = Object.fromEntries(formData.entries());
+                
+                // バリデーション
+                if (!this.validateForm(data)) {
+                    return;
+                }
+                
+                // 参加者データに追加
+                const participant = {
+                    ...data,
+                    type: type,
+                    timestamp: Date.now(),
+                    id: Date.now().toString()
+                };
+                
+                this.data.participants.push(participant);
+                this.saveToStorage('participants', this.data.participants);
+                this.updateParticipantCount();
+                
+                // 成功メッセージ
+                const successMessage = `
+                    <div class="text-center">
+                        <h2 id="modal-title">登録完了！🎉</h2>
+                        <p style="font-size: var(--text-lg); margin: var(--space-6) 0;">
+                            <strong>${data.name}</strong>さん、ありがとうございます！
+                        </p>
+                        <p>
+                            登録情報を確認のメールをお送りします。<br>
+                            イベント当日をお楽しみに！
+                        </p>
+                        <button class="btn btn-primary" onclick="lightningTalkApp.closeModal()">
+                            OK
+                        </button>
+                    </div>
+                `;
+                
+                document.getElementById('modalBody').innerHTML = successMessage;
+                this.announce('参加登録が完了しました');
+            }
+
+            validateForm(data) {
+                const errors = [];
+                
+                if (!data.name?.trim()) {
+                    errors.push('お名前を入力してください');
+                    this.addFieldError('participantName', 'お名前を入力してください');
+                }
+                
+                if (!data.email?.trim()) {
+                    errors.push('メールアドレスを入力してください');
+                    this.addFieldError('participantEmail', 'メールアドレスを入力してください');
+                } else if (!this.isValidEmail(data.email)) {
+                    errors.push('正しいメールアドレスを入力してください');
+                    this.addFieldError('participantEmail', '正しいメールアドレスを入力してください');
+                }
+                
+                if (!data.participationType) {
+                    errors.push('参加方法を選択してください');
+                    this.addFieldError('participationType', '参加方法を選択してください');
+                }
+                
+                return errors.length === 0;
+            }
+
+            addFieldError(fieldId, message) {
+                const field = document.getElementById(fieldId);
+                if (field) {
+                    field.classList.add('error');
+                    
+                    // エラーメッセージを表示
+                    let errorDiv = field.parentNode.querySelector('.form-error');
+                    if (!errorDiv) {
+                        errorDiv = document.createElement('div');
+                        errorDiv.className = 'form-error';
+                        field.parentNode.appendChild(errorDiv);
+                    }
+                    errorDiv.textContent = message;
+                    
+                    // フィールドにフォーカス
+                    field.focus();
+                    
+                    // エラー状態をクリア
+                    field.addEventListener('input', () => {
+                        field.classList.remove('error');
+                        if (errorDiv) {
+                            errorDiv.remove();
+                        }
+                    }, { once: true });
+                }
+            }
+
+            isValidEmail(email) {
+                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                return emailRegex.test(email);
+            }
+
+            // ===== 飛び入り参加情報 =====
+            showWalkinInfo() {
+                const modalContent = `
+                    <h2 id="modal-title">当日飛び入り発表について ⚡</h2>
+                    <div style="text-align: left;">
+                        <h3 style="color: var(--primary-orange); margin-bottom: var(--space-4);">🎤 飛び入り発表とは？</h3>
+                        <p style="margin-bottom: var(--space-4);">
+                            事前申込みなしで、当日その場で発表できるシステムです！<br>
+                            思いついたこと、突然話したくなったこと、なんでもOK！
+                        </p>
+                        
+                        <h3 style="color: var(--primary-orange); margin-bottom: var(--space-4);">✨ こんな人におすすめ</h3>
+                        <ul style="margin-bottom: var(--space-4); padding-left: var(--space-6);">
+                            <li>事前に決めるのは苦手だけど、その場のノリで話したい</li>
+                            <li>他の人の発表を聞いて、刺激を受けて話したくなった</li>
+                            <li>完璧じゃないけど、とりあえず共有したいことがある</li>
+                            <li>初回参加で雰囲気を見てから決めたい</li>
+                        </ul>
+                        
+                        <h3 style="color: var(--primary-orange); margin-bottom: var(--space-4);">🚀 当日の流れ</h3>
+                        <ol style="margin-bottom: var(--space-4); padding-left: var(--space-6);">
+                            <li>イベント開始後、飛び入り発表の募集時間があります</li>
+                            <li>手を挙げて発表したい旨を伝える</li>
+                            <li>簡単に名前とテーマを教えてもらいます</li>
+                            <li>順番が来たら5分間で自由に発表！</li>
+                        </ol>
+                        
+                        <div style="background: var(--primary-alpha-10); padding: var(--space-4); border-radius: var(--radius-lg); margin-bottom: var(--space-6);">
+                            <h4 style="color: var(--primary-orange); margin-bottom: var(--space-2);">💡 発表のコツ</h4>
+                            <ul style="padding-left: var(--space-4);">
+                                <li>完璧である必要はありません</li>
+                                <li>1つのポイントに絞って話す</li>
+                                <li>体験談や具体例があると◎</li>
+                                <li>楽しく話すことが一番大切！</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="text-center">
+                            <button class="btn btn-primary" onclick="lightningTalkApp.closeModal()">
+                                了解！当日参加します 🎉
+                            </button>
+                        </div>
+                    </div>
+                `;
+                
+                this.showModal(modalContent);
+            }
+
+            // ===== チャット機能 =====
+            toggleChat() {
+                const container = document.getElementById('chatContainer');
+                const isVisible = container.style.display !== 'none';
+                
+                if (isVisible) {
+                    this.closeChat();
+                } else {
+                    this.openChat();
+                }
+            }
+
+            openChat() {
+                const container = document.getElementById('chatContainer');
+                const toggle = document.getElementById('chatToggle');
+                
+                container.style.display = 'block';
+                toggle.setAttribute('aria-label', 'チャットを閉じる');
+                
+                // 入力フィールドにフォーカス
+                document.getElementById('chatInput')?.focus();
+                
+                // 通知バッジを非表示
+                const badge = document.querySelector('.chat-notification-badge');
+                if (badge) {
+                    badge.style.display = 'none';
+                }
+            }
+
+            closeChat() {
+                const container = document.getElementById('chatContainer');
+                const toggle = document.getElementById('chatToggle');
+                
+                container.style.display = 'none';
+                toggle.setAttribute('aria-label', 'チャットを開く');
+            }
+
+            closeChatIfOpen() {
+                const container = document.getElementById('chatContainer');
+                if (container.style.display !== 'none') {
+                    this.closeChat();
+                }
+            }
+
+            sendChatMessage() {
+                const input = document.getElementById('chatInput');
+                const message = input.value.trim();
+                
+                if (!message) return;
+                
+                const chatMessage = {
+                    id: Date.now().toString(),
+                    message: message,
+                    timestamp: Date.now(),
+                    type: 'user'
+                };
+                
+                this.data.chatMessages.push(chatMessage);
+                this.saveToStorage('chatMessages', this.data.chatMessages);
+                
+                this.displayChatMessage(chatMessage);
+                input.value = '';
+                
+                // 自動応答（デモ用）
+                setTimeout(() => {
+                    this.addSystemResponse(message);
+                }, 1000);
+            }
+
+            displayChatMessage(message) {
+                const messagesContainer = document.getElementById('chatMessages');
+                const messageElement = document.createElement('div');
+                messageElement.className = `chat-message ${message.type}`;
+                
+                const time = new Date(message.timestamp).toLocaleTimeString('ja-JP', {
+                    hour: '2-digit',
+                    minute: '2-digit'
+                });
+                
+                messageElement.innerHTML = `
+                    <div class="message-bubble">
+                        ${this.escapeHtml(message.message)}
+                        <div style="font-size: var(--text-xs); opacity: 0.7; margin-top: var(--space-1);">${time}</div>
+                    </div>
+                `;
+                
+                messagesContainer.appendChild(messageElement);
+                messagesContainer.scrollTop = messagesContainer.scrollHeight;
+            }
+
+            addSystemResponse(userMessage) {
+                const responses = [
+                    'ありがとうございます！当日が楽しみですね 🌟',
+                    'いいですね！他の参加者の方も参考になると思います 👍',
+                    'そうですね！みんなで盛り上がりましょう 🎉',
+                    'ご質問ありがとうございます。当日お答えします 💡',
+                    'そのテーマ、とても興味深いです！ 🤔'
+                ];
+                
+                const randomResponse = responses[Math.floor(Math.random() * responses.length)];
+                
+                const systemMessage = {
+                    id: Date.now().toString(),
+                    message: randomResponse,
+                    timestamp: Date.now(),
+                    type: 'system'
+                };
+                
+                this.data.chatMessages.push(systemMessage);
+                this.saveToStorage('chatMessages', this.data.chatMessages);
+                
+                this.displayChatMessage(systemMessage);
+                
+                // 通知バッジ表示（チャットが閉じている場合）
+                const container = document.getElementById('chatContainer');
+                if (container.style.display === 'none') {
+                    const badge = document.querySelector('.chat-notification-badge');
+                    if (badge) {
+                        badge.style.display = 'block';
+                    }
+                }
+            }
+
+            loadChatMessages() {
+                const messagesContainer = document.getElementById('chatMessages');
+                
+                // ウェルカムメッセージ以外をクリア
+                const welcome = messagesContainer.querySelector('.chat-welcome');
+                messagesContainer.innerHTML = '';
+                if (welcome) {
+                    messagesContainer.appendChild(welcome);
+                }
+                
+                // 保存されたメッセージを表示
+                this.data.chatMessages.forEach(message => {
+                    this.displayChatMessage(message);
+                });
+            }
+
+            escapeHtml(text) {
+                const div = document.createElement('div');
+                div.textContent = text;
+                return div.innerHTML;
+            }
+
+            // ===== トピッククリック =====
+            handleTopicClick(item) {
+                const category = item.dataset.category;
+                const topic = item.textContent;
+                
+                // アニメーション効果
+                item.style.transform = 'scale(0.95)';
+                setTimeout(() => {
+                    item.style.transform = '';
+                }, 150);
+                
+                // 発表登録フォームを開く
+                setTimeout(() => {
+                    this.showRegistrationForm('speaker');
+                    
+                    // タイトルフィールドにトピックを設定
+                    setTimeout(() => {
+                        const titleField = document.getElementById('talkTitle');
+                        if (titleField) {
+                            titleField.value = `${topic}について`;
+                            titleField.focus();
+                        }
+                    }, 100);
+                }, 200);
+            }
+
+            // ===== モーダル管理 =====
+            showModal(content) {
+                const modal = document.getElementById('registerModal');
+                const modalBody = document.getElementById('modalBody');
+                
+                if (modal && modalBody) {
+                    modalBody.innerHTML = content;
+                    modal.style.display = 'block';
+                    modal.setAttribute('aria-hidden', 'false');
+                    
+                    // フォーカス管理
+                    const firstInput = modal.querySelector('input, button, select, textarea');
+                    if (firstInput) {
+                        firstInput.focus();
+                    }
+                }
+            }
+
+            closeModal() {
+                const modal = document.getElementById('registerModal');
+                if (modal) {
+                    modal.style.display = 'none';
+                    modal.setAttribute('aria-hidden', 'true');
+                }
+            }
+
+            // ===== モバイルメニュー =====
+            toggleMobileMenu() {
+                const toggle = document.querySelector('.mobile-menu-toggle');
+                const navLinks = document.querySelector('.nav-links');
+                
+                if (toggle && navLinks) {
+                    const isOpen = toggle.getAttribute('aria-expanded') === 'true';
+                    
+                    toggle.setAttribute('aria-expanded', !isOpen);
+                    navLinks.style.display = isOpen ? 'none' : 'flex';
+                    
+                    // ハンバーガーアイコンのアニメーション
+                    toggle.classList.toggle('active');
+                }
+            }
+
+            // ===== Intersection Observer =====
+            setupIntersectionObserver() {
+                const options = {
+                    threshold: 0.1,
+                    rootMargin: '0px 0px -50px 0px'
+                };
+
+                const observer = new IntersectionObserver((entries) => {
+                    entries.forEach(entry => {
+                        if (entry.isIntersecting) {
+                            entry.target.classList.add('visible');
+                        }
+                    });
+                }, options);
+
+                // アニメーション対象要素を監視
+                document.querySelectorAll('.fade-in, .scale-in').forEach(el => {
+                    observer.observe(el);
+                });
+            }
+        }
+
+        // ===== アプリケーション初期化 =====
+        document.addEventListener('DOMContentLoaded', () => {
+            window.lightningTalkApp = new LightningTalkApp();
+        });
+
+        // ===== スムーススクロール =====
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // ===== パフォーマンス監視 =====
+        if ('performance' in window) {
+            window.addEventListener('load', () => {
+                const perfData = performance.getEntriesByType('navigation')[0];
+                if (perfData) {
+                    console.log('ページ読み込み時間:', Math.round(perfData.loadEventEnd - perfData.loadEventStart), 'ms');
+                }
+            });
+        }
+    </script>
+</body>
+</html>
