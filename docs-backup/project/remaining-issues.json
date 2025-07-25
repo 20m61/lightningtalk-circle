@@ -1,0 +1,141 @@
+{
+  "project": "Lightning Talk Circle",
+  "created_at": "2025-07-11",
+  "issues": [
+    {
+      "id": "websocket-timeout",
+      "title": "WebSocketテストのタイムアウト問題を解決する",
+      "description": "WebSocketの単体テスト実行時にタイムアウトが発生しています。これによりリアルタイム機能の信頼性に懸念があります。",
+      "priority": "high",
+      "severity": "critical",
+      "labels": ["bug", "websocket", "testing", "performance"],
+      "acceptance_criteria": [
+        "WebSocketテストが2分以内に完了する",
+        "全てのWebSocket関連テストが成功する",
+        "適切なタイムアウト設定とクリーンアップが実装されている"
+      ],
+      "technical_details": {
+        "affected_files": ["tests/unit/services/websocket.test.js", "server/websocket.js"],
+        "root_cause": "未調査",
+        "proposed_solutions": [
+          "afterEachでの適切なソケットクローズ処理",
+          "テストタイムアウトの延長",
+          "モックの改善"
+        ]
+      }
+    },
+    {
+      "id": "test-coverage",
+      "title": "テストカバレッジの実測と80%達成",
+      "description": "現在モックレポートのみで実際のテストカバレッジが不明です。コード品質保証のため実測と改善が必要です。",
+      "priority": "high",
+      "severity": "major",
+      "labels": ["testing", "quality", "coverage"],
+      "acceptance_criteria": [
+        "実際のテストカバレッジレポートが生成される",
+        "全体のカバレッジが80%以上",
+        "重要なビジネスロジックが95%以上カバーされている"
+      ],
+      "technical_details": {
+        "current_status": "モックレポートのみ",
+        "target_coverage": {
+          "statements": 80,
+          "branches": 80,
+          "functions": 80,
+          "lines": 80
+        },
+        "critical_areas": [
+          "server/services/votingService.js",
+          "server/services/dynamodb-database.js",
+          "server/middleware/auth.js"
+        ]
+      }
+    },
+    {
+      "id": "memory-leak-check",
+      "title": "メモリリーク検証と対策実施",
+      "description": "長時間稼働時のメモリリークの可能性が未検証です。本番環境の安定性確保のため検証が必要です。",
+      "priority": "high",
+      "severity": "major",
+      "labels": ["performance", "stability", "monitoring"],
+      "acceptance_criteria": [
+        "24時間の負荷テストでメモリ使用量が安定",
+        "WebSocket接続の適切なクリーンアップが確認される",
+        "メモリプロファイリングレポートの作成"
+      ],
+      "technical_details": {
+        "areas_to_check": [
+          "WebSocket接続管理",
+          "イベントリスナーの解放",
+          "データベース接続プール",
+          "キャッシュ管理"
+        ],
+        "tools": ["heapdump", "clinic.js", "Chrome DevTools"]
+      }
+    },
+    {
+      "id": "node-modules-integrity",
+      "title": "node_modules整合性の確認と修正",
+      "description": "node_modules/.package-lock.jsonに関する警告が出ており、依存関係の整合性確認が必要です。",
+      "priority": "medium",
+      "severity": "minor",
+      "labels": ["dependencies", "build", "development"],
+      "acceptance_criteria": [
+        "npm ciでクリーンインストールが成功する",
+        "不要な警告が解消される",
+        "package-lock.jsonが最新状態"
+      ],
+      "technical_details": {
+        "symptoms": "git diffで大量の削除が表示される",
+        "possible_causes": [
+          "npm/nodeバージョンの不一致",
+          "不適切な.gitignore設定",
+          "package-lock.jsonの競合"
+        ]
+      }
+    },
+    {
+      "id": "js-css-optimization",
+      "title": "JavaScript/CSSのパフォーマンス最適化",
+      "description": "フロントエンドアセットの最適化状況が未確認です。ユーザー体験向上のため最適化が必要です。",
+      "priority": "medium",
+      "severity": "minor",
+      "labels": ["performance", "frontend", "optimization"],
+      "acceptance_criteria": [
+        "JSバンドルサイズが500KB以下",
+        "CSSファイルが100KB以下",
+        "Lighthouse Performance スコア90以上"
+      ],
+      "technical_details": {
+        "current_changes": {
+          "main.js": "+425 lines",
+          "style.css": "+504 lines"
+        },
+        "optimization_targets": [
+          "コード分割の実装",
+          "Tree shakingの適用",
+          "CSS purgeの実装",
+          "画像の遅延読み込み"
+        ]
+      }
+    },
+    {
+      "id": "cdk-deprecation-warning",
+      "title": "CDKの非推奨警告への対応",
+      "description": "AWS CDKで非推奨のAPIに関する警告が出ています。将来的な互換性のため対応が必要です。",
+      "priority": "low",
+      "severity": "minor",
+      "labels": ["infrastructure", "cdk", "maintenance"],
+      "acceptance_criteria": [
+        "全ての非推奨警告が解消される",
+        "CDKが最新バージョンに更新される",
+        "デプロイが警告なしで成功する"
+      ],
+      "technical_details": {
+        "warning": "UserPoolIdentityProviderGoogleProps#clientSecret is deprecated",
+        "solution": "clientSecretValueを使用する",
+        "affected_file": "cdk/lib/cognito-stack.js"
+      }
+    }
+  ]
+}

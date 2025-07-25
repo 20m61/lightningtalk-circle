@@ -1,0 +1,273 @@
+/**
+ * Lightning Talk Circle - Critical CSS
+ * Critical path CSS for above-the-fold content
+ * Should be inlined in HTML <head> for optimal performance
+ */
+
+/* ========================================
+   Critical Design Tokens
+   ======================================== */
+
+:root {
+  /* Critical colors for initial render */
+  --color-primary-500: #22c55e;
+  --color-primary-600: #16a34a;
+  --color-neutral-0: #ffffff;
+  --color-neutral-50: #f9fafb;
+  --color-neutral-900: #111827;
+
+  /* Critical typography */
+  --font-family-primary: "Noto Sans JP", "Yu Gothic", "Helvetica Neue", Arial, sans-serif;
+  --font-size-base: clamp(1rem, 2.5vw, 1.125rem);
+  --font-size-xl: clamp(1.25rem, 3.5vw, 1.5rem);
+  --font-size-3xl: clamp(1.875rem, 5vw, 2.25rem);
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+  --font-weight-bold: 700;
+
+  /* Critical spacing */
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-6: 1.5rem;
+  --space-8: 2rem;
+
+  /* Critical layout */
+  --header-height: 80px;
+  --container-lg: 32rem;
+
+  /* Critical borders and shadows */
+  --radius-md: 0.375rem;
+  --radius-lg: 0.5rem;
+  --shadow-base: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
+
+  /* Critical transitions */
+  --transition-colors: color 150ms ease, background-color 150ms ease, border-color 150ms ease;
+}
+
+/* ========================================
+   Critical Base Styles
+   ======================================== */
+
+html {
+  box-sizing: border-box;
+  font-size: 100%;
+  line-height: 1.15;
+  -webkit-text-size-adjust: 100%;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: inherit;
+}
+
+body {
+  margin: 0;
+  font-family: var(--font-family-primary);
+  font-size: var(--font-size-base);
+  line-height: 1.5;
+  color: var(--color-neutral-900);
+  background-color: var(--color-neutral-50);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* ========================================
+   Critical Header Styles
+   ======================================== */
+
+.header {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  border-bottom: 2px solid var(--color-primary-500);
+  padding: var(--space-4) 0;
+  position: sticky;
+  top: 0;
+  z-index: 1100;
+}
+
+.container {
+  width: 100%;
+  max-width: var(--container-lg);
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: var(--space-4);
+  padding-right: var(--space-4);
+}
+
+.flex {
+  display: flex;
+}
+
+.flex--items-center {
+  align-items: center;
+}
+
+.flex--justify-between {
+  justify-content: space-between;
+}
+
+.logo {
+  font-size: var(--font-size-xl);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-primary-500);
+  text-decoration: none;
+}
+
+/* ========================================
+   Critical Navigation
+   ======================================== */
+
+.nav-links {
+  display: flex;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  gap: var(--space-8);
+}
+
+.nav-link {
+  padding: var(--space-2) var(--space-4);
+  border-radius: var(--radius-md);
+  text-decoration: none;
+  color: var(--color-neutral-900);
+  font-weight: var(--font-weight-medium);
+  transition: var(--transition-colors);
+}
+
+/* ========================================
+   Critical Button Styles
+   ======================================== */
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  font-family: var(--font-family-primary);
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-medium);
+  line-height: 1.25;
+  text-decoration: none;
+  white-space: nowrap;
+  padding: var(--space-3) var(--space-6);
+  min-height: 2.75rem;
+  border: 1px solid transparent;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  user-select: none;
+  transition: var(--transition-colors);
+  outline: none;
+}
+
+.btn-primary {
+  background-color: var(--color-primary-500);
+  color: var(--color-neutral-0);
+  border-color: var(--color-primary-500);
+}
+
+.btn-outline {
+  background-color: transparent;
+  color: var(--color-primary-500);
+  border-color: var(--color-primary-500);
+}
+
+/* ========================================
+   Critical Typography
+   ======================================== */
+
+h1,
+h2,
+h3 {
+  margin: 0 0 var(--space-4) 0;
+  font-family: var(--font-family-primary);
+  font-weight: var(--font-weight-semibold);
+  line-height: 1.25;
+  color: var(--color-neutral-900);
+}
+
+h1 {
+  font-size: var(--font-size-3xl);
+  font-weight: var(--font-weight-bold);
+}
+
+h2 {
+  font-size: var(--font-size-xl);
+  font-weight: var(--font-weight-bold);
+}
+
+p {
+  margin: 0 0 var(--space-4) 0;
+  line-height: 1.625;
+}
+
+/* ========================================
+   Critical Utilities
+   ======================================== */
+
+.text-center {
+  text-align: center;
+}
+
+.text-primary {
+  color: var(--color-primary-500);
+}
+
+.font-bold {
+  font-weight: var(--font-weight-bold);
+}
+
+.hidden {
+  display: none;
+}
+
+.block {
+  display: block;
+}
+
+/* ========================================
+   Critical Responsive Breakpoints
+   ======================================== */
+
+@media (max-width: 767px) {
+  .container {
+    padding-left: var(--space-3);
+    padding-right: var(--space-3);
+  }
+
+  .nav-links {
+    gap: var(--space-4);
+  }
+
+  .btn {
+    min-height: 2.75rem; /* Ensure touch targets */
+  }
+}
+
+/* ========================================
+   Critical Loading State
+   ======================================== */
+
+.loading {
+  opacity: 0.6;
+  pointer-events: none;
+}
+
+/* ========================================
+   Performance Optimizations
+   ======================================== */
+
+/* Preload key fonts */
+@font-display: swap;
+
+/* Reduce motion for accessibility and performance */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

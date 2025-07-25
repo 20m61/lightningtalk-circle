@@ -1,0 +1,189 @@
+{
+  "metadata": {
+    "project": "Lightning Talk Circle",
+    "analyzed_date": "2025-07-12",
+    "total_issues": 23,
+    "priority_breakdown": {
+      "critical": 5,
+      "high": 8,
+      "medium": 10
+    }
+  },
+  "issues": [
+    {
+      "id": "INFRA-001",
+      "category": "Infrastructure",
+      "priority": "critical",
+      "title": "CDK非推奨APIの使用",
+      "description": "複数のCDK APIが非推奨となっており、将来のアップグレードで動作しなくなる可能性がある",
+      "impact": "CDKアップグレード時の破壊的変更リスク",
+      "affected_files": ["cdk/lib/cognito-stack.js", "cdk/lib/api-stack.js"],
+      "solution": "非推奨APIを最新のAPIに置き換える"
+    },
+    {
+      "id": "SEC-001",
+      "category": "Security",
+      "priority": "critical",
+      "title": "JWT開発用シークレットの使用",
+      "description": "本番環境でJWT開発用シークレットが使用される可能性がある",
+      "impact": "認証トークンの偽造リスク",
+      "affected_files": ["server/middleware/auth.js"],
+      "solution": "環境変数JWT_SECRETの必須化と検証強化"
+    },
+    {
+      "id": "QUAL-001",
+      "category": "Code Quality",
+      "priority": "critical",
+      "title": "セキュリティ関連テストの失敗",
+      "description": "sanitizer.test.jsとauth.test.jsが失敗しており、XSS対策と認証機能の品質が保証されていない",
+      "impact": "セキュリティ脆弱性の存在可能性",
+      "affected_files": [
+        "tests/unit/utils/sanitizer.test.js",
+        "tests/unit/middleware/auth.test.js"
+      ],
+      "solution": "テストの修正と実装の確認"
+    },
+    {
+      "id": "INFRA-002",
+      "category": "Infrastructure",
+      "priority": "high",
+      "title": "スタック構成の複雑性",
+      "description": "複数のCDKスタックファイルが存在し、バックアップファイルも残っている",
+      "impact": "メンテナンス性の低下、設定の不整合リスク",
+      "affected_files": [
+        "cdk/lib/api-stack.js",
+        "cdk/lib/api-stack-backup.js",
+        "cdk/lib/database-stack.js"
+      ],
+      "solution": "スタック構成の整理と不要ファイルの削除"
+    },
+    {
+      "id": "OPS-001",
+      "category": "Operations",
+      "priority": "high",
+      "title": "未追跡のLambdaデプロイメントファイル",
+      "description": "複数バージョンのLambdaハンドラーZIPファイルがgit管理されていない",
+      "impact": "デプロイメントの一貫性欠如",
+      "affected_files": ["server/lambda-handler-v*.zip", "lambda-deployment.zip"],
+      "solution": ".gitignoreへの追加またはクリーンアップ"
+    },
+    {
+      "id": "QUAL-002",
+      "category": "Code Quality",
+      "priority": "high",
+      "title": "大量のESLintエラー",
+      "description": "ビルドされたJavaScriptファイルに50件以上のESLint警告が存在",
+      "impact": "コード品質の低下、バグの温床",
+      "affected_files": ["public/build/js/LoginModal-CSz-kptF.js"],
+      "solution": "ESLint設定の見直しとコード修正"
+    },
+    {
+      "id": "INFRA-003",
+      "category": "Infrastructure",
+      "priority": "high",
+      "title": "環境変数管理の複雑性",
+      "description": ".env.production.templateに211行もの設定項目があり、管理が困難",
+      "impact": "設定ミスによるデプロイメントエラー",
+      "affected_files": [".env.production.template"],
+      "solution": "環境変数の整理とグループ化"
+    },
+    {
+      "id": "DOC-001",
+      "category": "Documentation",
+      "priority": "high",
+      "title": "ドキュメントの不整合",
+      "description": "README.mdがAurora Serverlessを記載しているが、実際はDynamoDBを使用",
+      "impact": "新規開発者の混乱",
+      "affected_files": ["README.md", "CLAUDE.md"],
+      "solution": "ドキュメントの更新と整合性確保"
+    },
+    {
+      "id": "FUNC-001",
+      "category": "Functionality",
+      "priority": "medium",
+      "title": "WebSocket実装の分散",
+      "description": "WebSocket関連コードが複数箇所に分散している",
+      "impact": "リアルタイム機能の実装が不明確",
+      "affected_files": ["server/websocket.js", "server/websocket/"],
+      "solution": "WebSocket実装の統合と整理"
+    },
+    {
+      "id": "INFRA-004",
+      "category": "Infrastructure",
+      "priority": "medium",
+      "title": "DynamoDBテーブルの多さ",
+      "description": "6つのDynamoDBテーブルが存在し、管理が複雑",
+      "impact": "コスト増加、管理の複雑性",
+      "affected_files": ["cdk/lib/database-stack.js"],
+      "solution": "テーブル設計の見直しと統合検討"
+    },
+    {
+      "id": "OPS-002",
+      "category": "Operations",
+      "priority": "medium",
+      "title": "モニタリング設定の複雑性",
+      "description": "monitoring-stack.jsに319行のコードがあり、多数のアラームが設定されている",
+      "impact": "アラート疲れ、重要な問題の見逃し",
+      "affected_files": ["cdk/lib/monitoring-stack.js"],
+      "solution": "アラーム設定の最適化と閾値の見直し"
+    },
+    {
+      "id": "QUAL-003",
+      "category": "Code Quality",
+      "priority": "medium",
+      "title": "TypeScriptの未使用",
+      "description": "CDKプロジェクトがJavaScriptで記述されている",
+      "impact": "型安全性の欠如",
+      "affected_files": ["cdk/lib/*.js"],
+      "solution": "TypeScriptへの段階的移行"
+    },
+    {
+      "id": "QUAL-004",
+      "category": "Code Quality",
+      "priority": "medium",
+      "title": "テストカバレッジの不明確性",
+      "description": "モックされたカバレッジレポートで実際のカバレッジが不明",
+      "impact": "品質保証の不足",
+      "affected_files": ["tests/"],
+      "solution": "実際のテストカバレッジ測定と改善"
+    },
+    {
+      "id": "OPS-003",
+      "category": "Operations",
+      "priority": "medium",
+      "title": "デプロイプロセスの不透明性",
+      "description": "複数のデプロイメントスクリプトが存在し、正しい手順が不明確",
+      "impact": "デプロイメント失敗のリスク",
+      "affected_files": ["scripts/", "package.json"],
+      "solution": "デプロイメント手順の文書化と統一"
+    },
+    {
+      "id": "INFRA-005",
+      "category": "Infrastructure",
+      "priority": "medium",
+      "title": "リソース命名規則の不統一",
+      "description": "本番環境でprod接尾辞を使用しているが、環境間の区別が不明確",
+      "impact": "リソース管理の混乱",
+      "affected_files": ["cdk/lib/*.js"],
+      "solution": "命名規則の標準化"
+    }
+  ],
+  "recommendations": {
+    "immediate_actions": [
+      "テスト失敗の修正（特にセキュリティ関連）",
+      "JWT開発用シークレットの本番環境での使用防止",
+      "CDK非推奨APIの更新"
+    ],
+    "short_term_actions": ["ESLintエラーの修正", "未追跡ファイルの整理", "ドキュメントの更新"],
+    "medium_term_actions": [
+      "TypeScriptへの移行",
+      "テストカバレッジの向上",
+      "モニタリング設定の最適化"
+    ],
+    "long_term_actions": [
+      "インフラストラクチャの簡素化",
+      "CI/CDパイプラインの改善",
+      "包括的なドキュメント整備"
+    ]
+  }
+}

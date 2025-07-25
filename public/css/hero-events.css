@@ -7,18 +7,19 @@
 .hero-events-preview {
   margin: 3rem 0;
   padding: 2rem;
-  background: rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.95);
   border-radius: 20px;
   backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
 }
 
 .hero-events-title {
   text-align: center;
-  color: #ffffff;
+  color: #1a1a1a;
   font-size: 2rem;
   margin-bottom: 2rem;
-  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+  font-weight: 700;
 }
 
 .hero-events-grid {
@@ -288,24 +289,30 @@
 
 .filter-btn {
   padding: 0.5rem 1rem;
-  border: 2px solid rgba(255, 255, 255, 0.3);
-  background: rgba(255, 255, 255, 0.1);
-  color: white;
+  border: 2px solid #4b5563;
+  background: #ffffff;
+  color: #1f2937;
   border-radius: 20px;
   cursor: pointer;
   transition: all 0.3s ease;
   font-size: 0.9rem;
   font-weight: 500;
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
 }
 
 .filter-btn:hover {
-  background: rgba(255, 255, 255, 0.2);
+  background: #f3f4f6;
+  border-color: #374151;
   transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
 .filter-btn.active {
-  background: rgba(255, 255, 255, 0.9);
-  color: #2d3748;
+  background: #1f2937;
+  color: #ffffff;
+  border-color: #1f2937;
   font-weight: 600;
 }
 

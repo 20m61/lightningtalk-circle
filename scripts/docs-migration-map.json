@@ -1,0 +1,71 @@
+{
+  "mappings": {
+    "README.md": {
+      "target": "docs-new/quick-start/00-overview.md",
+      "type": "split",
+      "sections": {
+        "overview": "docs-new/quick-start/00-overview.md",
+        "installation": "docs-new/quick-start/01-local-development.md",
+        "docker": "docs-new/quick-start/02-docker-setup.md"
+      }
+    },
+    "CLAUDE.md": {
+      "target": "docs-new/development/claude-instructions.md",
+      "type": "move"
+    },
+    "docs/deployment/aws-setup.md": {
+      "target": "docs-new/deployment/aws-cdk-setup.md",
+      "type": "move"
+    },
+    "docs/deployment/docker-deployment.md": {
+      "target": "docs-new/deployment/docker-deployment.md",
+      "type": "move"
+    },
+    "docs/deployment/wordpress-deployment.md": {
+      "target": "docs-new/deployment/wordpress-deployment.md",
+      "type": "move"
+    },
+    "docs/api/": {
+      "target": "docs-new/api/",
+      "type": "directory-move"
+    },
+    "docs/architecture/": {
+      "target": "docs-new/architecture/",
+      "type": "directory-move"
+    },
+    "docs/project/": {
+      "target": "docs-new/legacy/project/",
+      "type": "directory-move"
+    },
+    "docs/google-oauth-setup.md": {
+      "target": "docs-new/deployment/authentication-setup.md",
+      "type": "move"
+    },
+    "docs/MERGE-READY-STATUS.md": {
+      "target": "docs-new/development/merge-ready-status.md",
+      "type": "move"
+    },
+    "docs/IMPLEMENTATION-STATUS.md": {
+      "target": "docs-new/development/implementation-status.md",
+      "type": "move"
+    },
+    "docs/UI-UX-IMPROVEMENTS.md": {
+      "target": "docs-new/development/ui-ux-improvements.md",
+      "type": "move"
+    },
+    "docs/troubleshooting/": {
+      "target": "docs-new/quick-start/04-troubleshooting.md",
+      "type": "consolidate"
+    }
+  },
+  "metadata": {
+    "migration_version": "1.0.0",
+    "strategy": "phase3-docs-optimization",
+    "backup_location": "docs-backup/",
+    "validation_rules": [
+      "check_internal_links",
+      "verify_markdown_syntax",
+      "validate_file_structure"
+    ]
+  }
+}

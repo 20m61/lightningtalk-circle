@@ -3,7 +3,7 @@
  * WebSocket接続の管理とイベント処理
  */
 
-export class WebSocketManager {
+class WebSocketManager {
   constructor(url = '') {
     this.url = url || this.getWebSocketUrl();
     this.socket = null;
@@ -13,6 +13,9 @@ export class WebSocketManager {
     this.eventHandlers = new Map();
     this.isConnected = false;
     this.connectionId = null;
+
+    // Socket.IOの読み込みを待つ
+    this.waitForSocketIO();
   }
 
   getWebSocketUrl() {
@@ -20,9 +23,39 @@ export class WebSocketManager {
     return `${protocol}//${window.location.host}`;
   }
 
+  async waitForSocketIO() {
+    try {
+      // Socket.IOの読み込みを待つ
+      if (typeof io === 'undefined') {
+        if (window.ioLoadPromise) {
+          await window.ioLoadPromise;
+        } else {
+          // フォールバック: 最大3秒待つ
+          let attempts = 0;
+          while (typeof io === 'undefined' && attempts < 30) {
+            await new Promise(resolve => setTimeout(resolve, 100));
+            attempts++;
+          }
+        }
+      }
+
+      if (typeof io !== 'undefined') {
+        this.connect();
+      } else {
+        // Socket.IOが利用できない場合は静かにスキップ
+        if (window.DEBUG_MODE) {
+          console.info('[WebSocketManager] Socket.IO not available - real-time features disabled');
+        }
+      }
+    } catch (error) {
+      if (window.DEBUG_MODE) {
+        console.warn('[WebSocketManager] Error waiting for Socket.IO:', error);
+      }
+    }
+  }
+
   connect() {
     if (typeof io === 'undefined') {
-      console.warn('Socket.IO not loaded. Real-time features disabled.');
       return;
     }
 
@@ -38,7 +71,7 @@ export class WebSocketManager {
 
   setupSocketListeners() {
     this.socket.on('connect', () => {
-      console.log('WebSocket connected');
+      if (window.DEBUG_MODE) console.log('[WebSocketManager] Connected');
       this.isConnected = true;
       this.reconnectAttempts = 0;
       this.connectionId = this.socket.id;
@@ -46,18 +79,19 @@ export class WebSocketManager {
     });
 
     this.socket.on('disconnect', reason => {
-      console.log('WebSocket disconnected:', reason);
+      if (window.DEBUG_MODE) console.log('[WebSocketManager] Disconnected:', reason);
       this.isConnected = false;
       this.emit('connection:lost', { reason });
     });
 
     this.socket.on('error', error => {
-      console.error('WebSocket error:', error);
+      if (window.DEBUG_MODE) console.error('[WebSocketManager] Error:', error);
       this.emit('connection:error', { error });
     });
 
     this.socket.on('reconnect', attemptNumber => {
-      console.log('WebSocket reconnected after', attemptNumber, 'attempts');
+      if (window.DEBUG_MODE)
+        console.log('[WebSocketManager] Reconnected after', attemptNumber, 'attempts');
       this.emit('connection:reconnected', { attempts: attemptNumber });
     });
 
@@ -67,7 +101,7 @@ export class WebSocketManager {
     });
 
     this.socket.on('reconnect_failed', () => {
-      console.error('WebSocket reconnection failed');
+      if (window.DEBUG_MODE) console.error('[WebSocketManager] Reconnection failed');
       this.emit('connection:failed');
     });
   }
@@ -109,7 +143,8 @@ export class WebSocketManager {
         try {
           handler(data);
         } catch (error) {
-          console.error(`Error in event handler for ${event}:`, error);
+          if (window.DEBUG_MODE)
+            console.error(`[WebSocketManager] Error in handler for ${event}:`, error);
         }
       });
     }
@@ -117,7 +152,8 @@ export class WebSocketManager {
 
   send(event, data) {
     if (!this.isConnected || !this.socket) {
-      console.warn('WebSocket not connected. Message queued:', event, data);
+      if (window.DEBUG_MODE)
+        console.warn('[WebSocketManager] Not connected. Message queued:', event, data);
       return false;
     }
 
@@ -154,12 +190,13 @@ export class WebSocketManager {
 // Singleton instance
 let wsManagerInstance = null;
 
-export function getWebSocketManager() {
+// グローバル関数として公開
+window.getWebSocketManager = function () {
   if (!wsManagerInstance) {
     wsManagerInstance = new WebSocketManager();
   }
   return wsManagerInstance;
-}
+};
 
 // Auto-connect on module load if Socket.IO is available
 if (typeof io !== 'undefined') {

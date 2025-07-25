@@ -173,6 +173,73 @@ npm run ui:test:report       # テストレポート生成
 npm run ui:test:full         # サーバー付きフルテスト
 ```
 
+### 🆕 ビルドアーティファクト管理（v1.8.0）
+
+```bash
+# 全アーティファクトのビルドとパッケージング
+npm run build:all            # 全てのビルド成果物を作成
+
+# 個別パッケージング
+npm run package:static       # 静的サイトパッケージング
+npm run package:lambda       # Lambda関数パッケージング
+npm run package:wp-themes    # WordPressテーマパッケージング
+npm run package:docker       # Dockerイメージパッケージング
+
+# ビルド成果物の構造
+build-artifacts/
+├── static/v1.8.0/          # 静的サイトアーカイブ
+├── lambda/v1.8.0/          # Lambda関数パッケージ
+├── wordpress/v1.8.0/       # WordPressテーマパッケージ
+└── docker/v1.8.0/          # Dockerイメージアーカイブ
+```
+
+### 🆕 環境設定管理（v1.8.0）
+
+```bash
+# 環境切り替え（インタラクティブ）
+npm run env:switch           # 対話的に環境を選択
+
+# 環境管理コマンド
+npm run env:backup           # 現在の.envをバックアップ
+npm run env:validate         # 環境設定の検証
+npm run env:list            # 利用可能な環境を一覧表示
+
+# 環境構造
+environments/
+├── shared/                 # 共通設定
+│   ├── base.env           # 基本設定
+│   ├── security.env       # セキュリティ設定
+│   └── features.env       # 機能フラグ
+├── development/           # 開発環境
+│   ├── local.env         # ローカル開発
+│   └── docker.env        # Docker開発
+├── staging/              # ステージング環境
+└── production/           # 本番環境
+```
+
+### 🆕 ドキュメント管理（v1.8.0）
+
+```bash
+# ドキュメント移行
+npm run docs:migrate         # ドキュメントを新構造に移行
+npm run docs:migrate:dry-run # 移行のドライラン（安全確認）
+
+# リンク管理
+npm run docs:check-links     # 壊れたリンクをチェック
+npm run docs:check-links:fix # リンクの自動修正（可能な場合）
+npm run docs:fix-broken-links # 壊れたリンクの自動修正ツール
+
+# 新しいドキュメント構造
+docs/
+├── api/                    # API ドキュメント
+├── guides/                 # 開発者ガイド
+├── technical/              # 技術仕様書
+├── deployment/             # デプロイメントガイド
+├── security/               # セキュリティドキュメント
+├── monitoring/             # 監視設定
+└── project/               # プロジェクト管理
+```
+
 ### 監視とセキュリティ
 
 ```bash
@@ -595,6 +662,20 @@ OAuth認証システムを実装しています：
 7. **国際化ドメイン名**: 本番環境では`xn--6wym69a.com`（発表.com）を使用
 8. **CloudWatch接続エラー**: AWS認証情報とリージョン設定を確認
 9. **監視メトリクス未表示**: `ENABLE_CLOUDWATCH_METRICS=true`の設定を確認
+
+### 🆕 v1.8.0で修正された問題
+
+1. **ES Modules エラー**
+   - 問題: `ReferenceError: require is not defined in ES module scope`
+   - 解決: 影響するスクリプトを`.cjs`拡張子に変更
+
+2. **壊れたドキュメントリンク**
+   - 問題: 33個のリンク切れが検出される
+   - 解決: `npm run docs:fix-broken-links`で自動修正（26個修正済み）
+
+3. **chalk依存関係エラー**
+   - 問題: `TypeError: chalk.blue is not a function`
+   - 解決: ANSIエスケープシーケンスを使用した独自実装
 
 ### デバッグモード
 

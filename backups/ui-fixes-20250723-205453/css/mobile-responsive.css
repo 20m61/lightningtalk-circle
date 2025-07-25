@@ -1,0 +1,317 @@
+/**
+ * Mobile Responsive Design System
+ * モバイルファーストのレスポンシブデザイン
+ */
+
+/* ===========================
+   モバイルファースト基本設定
+   =========================== */
+@media (max-width: 768px) {
+  /* レイアウト調整 */
+  body {
+    font-size: var(--font-size-base);
+    line-height: var(--line-height-base);
+    padding-top: calc(var(--mobile-header-height, 56px) + env(safe-area-inset-top));
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior-y: contain;
+  }
+
+  /* コンテナ幅の調整 */
+  .container {
+    padding: 0 var(--spacing-md);
+    padding-left: calc(var(--spacing-md) + env(safe-area-inset-left));
+    padding-right: calc(var(--spacing-md) + env(safe-area-inset-right));
+  }
+
+  /* ヘッダーのモバイル最適化 */
+  header {
+    height: var(--mobile-header-height, 56px);
+    padding: var(--spacing-sm) 0;
+  }
+
+  header nav {
+    padding: 0 var(--spacing-md);
+  }
+
+  .logo {
+    font-size: var(--font-size-lg);
+  }
+
+  /* ヒーローセクション */
+  .hero {
+    padding: var(--spacing-2xl) 0;
+    min-height: calc(100vh - var(--mobile-header-height, 56px));
+  }
+
+  .hero h1 {
+    font-size: var(--font-size-2xl);
+    margin-bottom: var(--spacing-md);
+  }
+
+  .hero p {
+    font-size: var(--font-size-base);
+    margin-bottom: var(--spacing-lg);
+  }
+
+  /* カード・コンポーネント */
+  .card,
+  .event-card {
+    margin-bottom: var(--spacing-md);
+    border-radius: var(--radius-md);
+  }
+
+  .card-content,
+  .event-card__content {
+    padding: var(--spacing-md);
+  }
+
+  /* グリッドレイアウト */
+  .grid,
+  .events-grid {
+    grid-template-columns: 1fr;
+    gap: var(--spacing-md);
+  }
+
+  /* フォーム要素 */
+  input,
+  select,
+  textarea,
+  button {
+    font-size: 16px; /* iOSのズーム防止 */
+    min-height: var(--mobile-touch-target, 44px);
+  }
+
+  /* ボタン最適化 */
+  .btn,
+  button {
+    padding: var(--spacing-sm) var(--spacing-lg);
+    font-size: var(--font-size-base);
+    min-height: var(--mobile-touch-target, 44px);
+    width: 100%;
+    margin-bottom: var(--spacing-sm);
+  }
+
+  .btn-group {
+    flex-direction: column;
+    gap: var(--spacing-sm);
+  }
+
+  .btn-group .btn {
+    width: 100%;
+  }
+
+  /* テーブルのモバイル表示 */
+  table {
+    font-size: var(--font-size-sm);
+  }
+
+  .table-responsive {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  /* フッターナビゲーション */
+  .mobile-nav {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: var(--color-surface);
+    border-top: 1px solid var(--color-border-light);
+    display: flex;
+    justify-content: space-around;
+    padding: var(--spacing-sm) 0;
+    padding-bottom: calc(var(--spacing-sm) + env(safe-area-inset-bottom));
+    z-index: var(--z-sticky);
+    box-shadow: var(--shadow-lg);
+  }
+
+  .mobile-nav__item {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    color: var(--color-text-secondary);
+    text-decoration: none;
+    font-size: var(--font-size-xs);
+    padding: var(--spacing-xs);
+    border-radius: var(--radius-md);
+    transition: all var(--transition-fast);
+  }
+
+  .mobile-nav__item:active {
+    background: var(--color-background-alt);
+  }
+
+  .mobile-nav__item.active {
+    color: var(--color-primary);
+  }
+
+  .mobile-nav__icon {
+    width: 24px;
+    height: 24px;
+  }
+
+  /* セクション間隔の調整 */
+  section {
+    padding: var(--spacing-xl) 0;
+  }
+
+  /* 見出しサイズの調整 */
+  h1 {
+    font-size: var(--font-size-2xl);
+  }
+  h2 {
+    font-size: var(--font-size-xl);
+  }
+  h3 {
+    font-size: var(--font-size-lg);
+  }
+  h4 {
+    font-size: var(--font-size-base);
+  }
+
+  /* 画像の最適化 */
+  img {
+    max-width: 100%;
+    height: auto;
+  }
+
+  /* スワイプ可能なコンテナ */
+  .swipeable {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+  }
+
+  .swipeable::-webkit-scrollbar {
+    display: none;
+  }
+
+  .swipeable > * {
+    scroll-snap-align: start;
+  }
+}
+
+/* ===========================
+   タブレット対応
+   =========================== */
+@media (min-width: 769px) and (max-width: 1024px) {
+  .container {
+    max-width: 100%;
+    padding: 0 var(--spacing-lg);
+  }
+
+  .grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .btn {
+    width: auto;
+  }
+}
+
+/* ===========================
+   小型デバイス対応
+   =========================== */
+@media (max-width: 374px) {
+  :root {
+    --font-size-base: 14px;
+    --font-size-sm: 12px;
+  }
+
+  .container {
+    padding: 0 var(--spacing-sm);
+  }
+
+  .hero h1 {
+    font-size: var(--font-size-xl);
+  }
+}
+
+/* ===========================
+   横向き対応
+   =========================== */
+@media (orientation: landscape) and (max-height: 500px) {
+  .hero {
+    min-height: auto;
+    padding: var(--spacing-lg) 0;
+  }
+
+  header {
+    position: relative;
+  }
+
+  .modal {
+    max-height: 90vh;
+  }
+}
+
+/* ===========================
+   ダークモード対応
+   =========================== */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --color-background: #1a1a1a;
+    --color-surface: #2d2d2d;
+    --color-text-primary: #ffffff;
+    --color-text-secondary: #b0b0b0;
+    --color-border: #404040;
+  }
+
+  .mobile-nav {
+    background: #2d2d2d;
+    border-top-color: #404040;
+  }
+}
+
+/* ===========================
+   アクセシビリティ向上
+   =========================== */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* ===========================
+   高コントラストモード
+   =========================== */
+@media (prefers-contrast: high) {
+  :root {
+    --color-primary: #0066cc;
+    --color-text-primary: #000000;
+    --color-background: #ffffff;
+    --color-border: #000000;
+  }
+
+  .btn {
+    border: 2px solid currentColor;
+  }
+}
+
+/* ===========================
+   プリント対応
+   =========================== */
+@media print {
+  header,
+  .mobile-nav,
+  .chat-widget,
+  .modal-backdrop {
+    display: none !important;
+  }
+
+  body {
+    padding-top: 0;
+  }
+
+  .container {
+    max-width: 100%;
+  }
+}
