@@ -10,6 +10,9 @@ class ModalFunctionalityFix {
 
   init() {
     this.ensureModalSystemWorks();
+    this.fixRegistrationModal();
+    this.fixEventModal();
+    this.addFallbackTriggers();
   }
 
   ensureModalSystemWorks() {
@@ -62,7 +65,7 @@ class ModalFunctionalityFix {
       modal = document.getElementById('registerModal');
     }
 
-    // Ensure modal has proper styling but remains hidden initially
+    // Ensure modal has proper styling for visibility
     if (modal) {
       modal.style.position = 'fixed';
       modal.style.zIndex = '1000';
@@ -71,7 +74,6 @@ class ModalFunctionalityFix {
       modal.style.width = '100%';
       modal.style.height = '100%';
       modal.style.backgroundColor = 'rgba(0,0,0,0.5)';
-      modal.style.display = 'none'; // 重要: 初期状態では非表示
     }
   }
 

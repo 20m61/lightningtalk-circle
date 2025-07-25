@@ -229,14 +229,15 @@ npm run docs:check-links     # 壊れたリンクをチェック
 npm run docs:check-links:fix # リンクの自動修正（可能な場合）
 npm run docs:fix-broken-links # 壊れたリンクの自動修正ツール
 
-# 新しいドキュメント構造（準備中）
-docs-new/
-├── quick-start/            # クイックスタートガイド
-├── deployment/             # デプロイメントガイド
+# 新しいドキュメント構造
+docs/
 ├── api/                    # API ドキュメント
-├── architecture/           # アーキテクチャ説明
-├── development/            # 開発ガイド
-└── legacy/                # アーカイブドキュメント
+├── guides/                 # 開発者ガイド
+├── technical/              # 技術仕様書
+├── deployment/             # デプロイメントガイド
+├── security/               # セキュリティドキュメント
+├── monitoring/             # 監視設定
+└── project/               # プロジェクト管理
 ```
 
 ### 監視とセキュリティ

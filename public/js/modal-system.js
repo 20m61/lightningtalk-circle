@@ -60,9 +60,7 @@ class ModalSystem {
   register(modalId, options = {}) {
     const modal = document.getElementById(modalId);
     if (!modal) {
-      if (window.DEBUG_MODE) {
-        console.warn(`Modal with id "${modalId}" not found`);
-      }
+      console.warn(`Modal with id "${modalId}" not found`);
       return;
     }
 
@@ -106,9 +104,7 @@ class ModalSystem {
   async open(modalId, data = {}) {
     const modalConfig = this.modals.get(modalId);
     if (!modalConfig) {
-      if (window.DEBUG_MODE) {
-        console.warn(`Modal "${modalId}" is not registered`);
-      }
+      console.warn(`Modal "${modalId}" is not registered`);
       return;
     }
 

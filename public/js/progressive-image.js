@@ -101,13 +101,9 @@ class ProgressiveImageLoader {
     } catch (error) {
       // AVIFファイルが存在しない場合は警告レベルに下げる
       if ((error.message && error.message.includes('404')) || error.message.includes('Not Found')) {
-        if (window.DEBUG_MODE) {
-          console.warn('Progressive image file not found (expected):', originalSrc, error.message);
-        }
+        console.warn('Progressive image file not found (expected):', originalSrc, error.message);
       } else {
-        if (window.DEBUG_MODE) {
-          console.error('Progressive image loading failed:', originalSrc, error);
-        }
+        console.error('Progressive image loading failed:', originalSrc, error);
       }
       this.handleImageError(img, error);
     }
@@ -190,8 +186,7 @@ class ProgressiveImageLoader {
       const controller = new AbortController();
       const timeout = setTimeout(() => controller.abort(), 2000); // 2秒でタイムアウト
 
-      const fetchFunc = window.safeFetch || fetch;
-      const response = await fetchFunc(src, {
+      const response = await fetch(src, {
         method: 'HEAD',
         signal: controller.signal,
         // キャッシュを使用して重複リクエストを避ける

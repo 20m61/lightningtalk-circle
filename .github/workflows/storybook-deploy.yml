@@ -96,7 +96,7 @@ jobs:
           echo "📦 Storybook build size: $BUILD_SIZE"
 
       - name: 📊 Upload Coverage Reports
-        uses: codecov/codecov-action@v4
+        uses: codecov/codecov-action@v5
         with:
           file: lightningtalk-modern/packages/components/coverage/lcov.info
           fail_ci_if_error: false
@@ -140,7 +140,7 @@ jobs:
           path: ${{ env.STORYBOOK_BUILD_DIR }}
 
       - name: 🖼️ Run Visual Tests with Chromatic
-        uses: chromaui/action@v1
+        uses: chromaui/action@v13
         if: env.CHROMATIC_PROJECT_TOKEN != ''
         with:
           projectToken: ${{ secrets.CHROMATIC_PROJECT_TOKEN }}

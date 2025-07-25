@@ -118,7 +118,7 @@ jobs:
 
     - name: CodeQL Analysis
       if: github.event_name == 'pull_request'
-      uses: github/codeql-action/analyze@v2
+      uses: github/codeql-action/analyze@v3
       with:
         languages: javascript
 

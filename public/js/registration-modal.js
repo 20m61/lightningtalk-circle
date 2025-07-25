@@ -174,9 +174,7 @@
           throw new Error(result.message || '登録に失敗しました');
         }
       } catch (error) {
-        if (window.DEBUG_MODE) {
-          console.error('Registration error:', error);
-        }
+        console.error('Registration error:', error);
         this.showError(error.message || 'エラーが発生しました。もう一度お試しください。');
       } finally {
         // ボタンを有効化
