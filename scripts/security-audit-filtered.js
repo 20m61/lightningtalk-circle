@@ -33,18 +33,18 @@ const SENSITIVE_PATTERNS = {
     /\bsk-[a-zA-Z0-9]{48}\b/g,                  // OpenAI API Key
     /\bxoxb-[0-9]{11}-[0-9]{11}-[a-zA-Z0-9]{24}/g, // Slack Bot Token (precise)
     /\bxoxp-[0-9]{11}-[0-9]{11}-[a-zA-Z0-9]{24}/g, // Slack User Token (precise)
-    /\bAIza[0-9A-Za-z\-_]{35}\b/g,              // Google API Key
+    /\bAIza[0-9A-Za-z-_]{35}\b/g,              // Google API Key
     /[0-9]{12}-[0-9A-Za-z_]{32}\.apps\.googleusercontent\.com/g // Google OAuth Client ID
   ],
 
   // データベース認証情報
   databaseCredentials: [
-    /mongodb:\/\/[a-zA-Z0-9_]+:[^@\s]+@[^\/\s]+/g,  // MongoDB URI with credentials
-    /postgres:\/\/[a-zA-Z0-9_]+:[^@\s]+@[^\/\s]+/g, // PostgreSQL URI with credentials
-    /mysql:\/\/[a-zA-Z0-9_]+:[^@\s]+@[^\/\s]+/g,    // MySQL URI with credentials
+    /mongodb:\/\/[a-zA-Z0-9_]+:[^@\s]+@[^/\s]+/g,  // MongoDB URI with credentials
+    /postgres:\/\/[a-zA-Z0-9_]+:[^@\s]+@[^/\s]+/g, // PostgreSQL URI with credentials
+    /mysql:\/\/[a-zA-Z0-9_]+:[^@\s]+@[^/\s]+/g,    // MySQL URI with credentials
     /password\s*[:=]\s*["'][^"']{8,}["']/gi,        // Strong passwords (8+ chars)
     /DATABASE_PASSWORD\s*[:=]\s*["'][^"']+["']/gi,  // Database password env vars
-    /DB_PASS\s*[:=]\s*["'][^"']+["']/gi            // Database password env vars
+    /DB_PASS\s*[:=]\s*["'][^"']+["']/gi             // Database password env vars
   ],
 
   // 実際の個人情報（日本の形式）

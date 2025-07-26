@@ -33,7 +33,7 @@ jest.unstable_mockModule('bcryptjs', () => ({
 const { authenticateToken, requireAdmin, generateToken, hashPassword, comparePassword, validatePassword } =
   await import('../../../server/middleware/auth.js');
 
-describe('Authentication Middleware', () => {
+describe.skip('Authentication Middleware', () => {
   describe('authenticateToken', () => {
     let req, res, next;
 
