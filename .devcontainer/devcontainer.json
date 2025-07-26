@@ -49,10 +49,10 @@
     }
   },
 
-  "postCreateCommand": "npm install && npm run dev",
+  "postCreateCommand": "npm install && npm run dev"
 
-  "features": {
-    "ghcr.io/devcontainers/features/github-cli:1": {},
-    "ghcr.io/devcontainers/features/aws-cli:1": {}
-  }
+  // "features": {
+  //   "ghcr.io/devcontainers/features/github-cli:1": {},
+  //   "ghcr.io/devcontainers/features/aws-cli:1": {}
+  // }
 }
