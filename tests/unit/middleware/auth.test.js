@@ -33,6 +33,9 @@ jest.unstable_mockModule('bcryptjs', () => ({
 const { authenticateToken, requireAdmin, generateToken, hashPassword, comparePassword, validatePassword } =
   await import('../../../server/middleware/auth.js');
 
+// TODO: Fix ES module mocking issues to re-enable these tests
+// These tests are critical for ensuring authentication security
+// Issue: Mocking jsonwebtoken and bcryptjs modules with jest.unstable_mockModule is not fully compatible
 describe.skip('Authentication Middleware', () => {
   describe('authenticateToken', () => {
     let req, res, next;

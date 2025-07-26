@@ -45,6 +45,9 @@ const os = {
   loadavg: mockLoadavg
 };
 
+// TODO: Fix OS-dependent tests to work consistently across different environments
+// These tests validate the health check system but rely on OS-specific functions
+// Issue: Mocking os module functions causes platform-specific test failures
 describe('Health Check Functions', () => {
   describe('Memory Statistics', () => {
     test.skip('should calculate memory stats correctly', () => {

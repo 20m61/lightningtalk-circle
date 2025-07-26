@@ -135,6 +135,9 @@ class MockLightningTalkApp {
   }
 }
 
+// TODO: Fix timezone-dependent date calculations to re-enable these tests
+// These tests ensure the countdown timer displays correctly for the event
+// Issue: Date mock handling and timezone differences cause inconsistent test results
 describe.skip('Countdown Timer', () => {
   let app;
   let originalDateNow;
