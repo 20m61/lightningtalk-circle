@@ -5,21 +5,24 @@ import { jest } from '@jest/globals';
  * WordPress統合機能の単体テスト
  */
 
+// Mock WordPress data
+const mockWordPressData = {
+  ajaxUrl: 'https://example.com/wp-admin/admin-ajax.php',
+  nonce: 'test-nonce-123',
+  events: [
+    {
+      id: 1,
+      title: 'Test Lightning Talk Event',
+      date: '2025-06-25T19:00:00+09:00',
+      venue: 'Test Venue',
+      status: 'upcoming'
+    }
+  ]
+};
+
 // Mock WordPress global objects
 global.window = {
-  wpLightningTalk: {
-    ajaxUrl: 'https://example.com/wp-admin/admin-ajax.php',
-    nonce: 'test-nonce-123',
-    events: [
-      {
-        id: 1,
-        title: 'Test Lightning Talk Event',
-        date: '2025-06-25T19:00:00+09:00',
-        venue: 'Test Venue',
-        status: 'upcoming'
-      }
-    ]
-  },
+  wpLightningTalk: mockWordPressData,
   fetch: jest.fn(),
   localStorage: {
     getItem: jest.fn(),
