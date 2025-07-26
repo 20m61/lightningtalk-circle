@@ -6,10 +6,15 @@ import { EventEmitter } from 'events';
  * 投票サービスの単体テスト
  */
 
+// Store original uuid for later
+let mockUuidV4 = jest.fn();
+
 // Mock uuid module
-jest.unstable_mockModule('uuid', () => ({
-  v4: jest.fn(() => 'test-session-id')
-}));
+jest.unstable_mockModule('uuid', () => {
+  return {
+    v4: mockUuidV4
+  };
+});
 
 // Mock logger module
 jest.unstable_mockModule('../../../server/utils/logger.js', () => ({
@@ -30,6 +35,9 @@ describe('VotingService', () => {
   let mockSession;
 
   beforeEach(() => {
+    // Reset uuid mock for each test
+    mockUuidV4.mockReturnValue('test-session-id');
+    
     // Mock database
     mockDatabase = {
       create: jest.fn(),
@@ -103,8 +111,8 @@ describe('VotingService', () => {
       });
 
       expect(mockDatabase.create).toHaveBeenCalledWith('voting_sessions', expect.any(Object));
-      expect(votingService.activeSessions.has(session.id)).toBe(true);
-      expect(votingService.sessionTimers.has(session.id)).toBe(true);
+      expect(votingService.activeSessions.has('test-session-id')).toBe(true);
+      expect(votingService.sessionTimers.has('test-session-id')).toBe(true);
     });
 
     it('should emit sessionCreated event', async () => {
@@ -143,7 +151,7 @@ describe('VotingService', () => {
 
       expect(mockDatabase.update).toHaveBeenCalledWith(
         'voting_sessions',
-        expect.any(String),
+        'test-session-id',
         expect.objectContaining({
           status: 'ended'
         })
