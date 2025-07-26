@@ -3,7 +3,7 @@
  * 一般的なエラーを防ぐための対策
  */
 
-(function () {
+(function() {
   'use strict';
 
   // 1. グローバル変数の未定義エラーを防ぐ
@@ -28,7 +28,7 @@
   });
 
   // 2. DOM要素の存在チェック関数
-  window.safeGetElement = function (selector) {
+  window.safeGetElement = function(selector) {
     try {
       const element = document.querySelector(selector);
       return element || null;
@@ -37,7 +37,7 @@
     }
   };
 
-  window.safeGetElements = function (selector) {
+  window.safeGetElements = function(selector) {
     try {
       return document.querySelectorAll(selector);
     } catch (e) {
@@ -46,7 +46,7 @@
   };
 
   // 3. イベントリスナーの安全な追加
-  window.safeAddListener = function (element, event, handler, options) {
+  window.safeAddListener = function(element, event, handler, options) {
     if (element && element.addEventListener) {
       try {
         element.addEventListener(event, handler, options);
@@ -59,7 +59,7 @@
   };
 
   // 4. 非同期処理のエラーハンドリング
-  window.safePromise = function (promise) {
+  window.safePromise = function(promise) {
     return promise.catch(error => {
       if (window.DEBUG_MODE) {
         console.warn('[SafePromise] Caught error:', error);
@@ -70,14 +70,14 @@
 
   // 5. localStorage/sessionStorageの安全なアクセス
   window.safeStorage = {
-    getItem: function (key) {
+    getItem(key) {
       try {
         return localStorage.getItem(key);
       } catch (e) {
         return null;
       }
     },
-    setItem: function (key, value) {
+    setItem(key, value) {
       try {
         localStorage.setItem(key, value);
         return true;
@@ -85,7 +85,7 @@
         return false;
       }
     },
-    removeItem: function (key) {
+    removeItem(key) {
       try {
         localStorage.removeItem(key);
         return true;
@@ -96,7 +96,7 @@
   };
 
   // 6. フォームデータの安全な取得
-  window.safeFormData = function (form) {
+  window.safeFormData = function(form) {
     if (!form || !(form instanceof HTMLFormElement)) {
       return null;
     }
@@ -108,7 +108,7 @@
   };
 
   // 7. JSON の安全なパース
-  window.safeParse = function (jsonString, defaultValue = null) {
+  window.safeParse = function(jsonString, defaultValue = null) {
     try {
       return JSON.parse(jsonString);
     } catch (e) {
@@ -149,7 +149,7 @@
 
   // 9. イベントハンドラーのnullチェック
   const originalAddEventListener = EventTarget.prototype.addEventListener;
-  EventTarget.prototype.addEventListener = function (type, listener, options) {
+  EventTarget.prototype.addEventListener = function(type, listener, options) {
     if (listener === null || listener === undefined) {
       return;
     }

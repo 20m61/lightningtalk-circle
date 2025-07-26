@@ -38,7 +38,7 @@ router.post(
   body('email').isEmail().normalizeEmail().withMessage('Valid email required'),
   body('password').notEmpty().withMessage('Password required'),
   handleValidationErrors,
-  async (req, res) => {
+  async(req, res) => {
     try {
       const { database } = req.app.locals;
       const { email, password } = req.body;
@@ -104,7 +104,7 @@ router.post(
   body('name').notEmpty().trim().withMessage('Name required'),
   body('role').optional().isIn(['user', 'admin']).withMessage('Invalid role'),
   handleValidationErrors,
-  async (req, res) => {
+  async(req, res) => {
     try {
       const { database } = req.app.locals;
       const { email, password, name, role = 'user' } = req.body;
@@ -163,7 +163,7 @@ router.post(
  * GET /api/auth/me
  * Get current user info
  */
-router.get('/me', authenticateToken, async (req, res) => {
+router.get('/me', authenticateToken, async(req, res) => {
   try {
     const { database } = req.app.locals;
     const user = await database.findById('users', req.user.id);
@@ -205,7 +205,7 @@ router.put(
     .isLength({ min: 8 })
     .withMessage('New password must be at least 8 characters'),
   handleValidationErrors,
-  async (req, res) => {
+  async(req, res) => {
     try {
       const { database } = req.app.locals;
       const { currentPassword, newPassword } = req.body;
@@ -264,7 +264,7 @@ router.put(
  * GET /api/auth/users
  * List all users (admin only)
  */
-router.get('/users', authenticateToken, requireAdmin, async (req, res) => {
+router.get('/users', authenticateToken, requireAdmin, async(req, res) => {
   try {
     const { database } = req.app.locals;
     const users = await database.findAll('users');
@@ -300,7 +300,7 @@ router.put(
   body('name').optional().trim().isLength({ min: 1 }).withMessage('Name cannot be empty'),
   body('role').optional().isIn(['user', 'admin']).withMessage('Invalid role'),
   handleValidationErrors,
-  async (req, res) => {
+  async(req, res) => {
     try {
       const { database } = req.app.locals;
       const { id } = req.params;
@@ -358,7 +358,7 @@ router.put(
  * DELETE /api/auth/users/:id
  * Delete user (admin only)
  */
-router.delete('/users/:id', authenticateToken, requireAdmin, async (req, res) => {
+router.delete('/users/:id', authenticateToken, requireAdmin, async(req, res) => {
   try {
     const { database } = req.app.locals;
     const { id } = req.params;
@@ -405,7 +405,7 @@ router.post(
   '/google',
   body('idToken').notEmpty().withMessage('ID token required'),
   handleValidationErrors,
-  async (req, res) => {
+  async(req, res) => {
     try {
       const { verifyCognitoToken, syncCognitoUser } = await import('../middleware/cognito-auth.js');
       const { database } = req.app.locals;
@@ -460,15 +460,15 @@ router.post(
   '/callback',
   body('code').notEmpty().withMessage('Authorization code required'),
   handleValidationErrors,
-  async (req, res) => {
+  async(req, res) => {
     try {
       const { code } = req.body;
 
       // Exchange authorization code for tokens with Cognito
       const tokenUrl =
         process.env.NODE_ENV === 'production'
-          ? `https://lightningtalk-secure-1753166187.auth.ap-northeast-1.amazoncognito.com/oauth2/token`
-          : `https://lightningtalk-auth-dev.auth.ap-northeast-1.amazoncognito.com/oauth2/token`;
+          ? 'https://lightningtalk-secure-1753166187.auth.ap-northeast-1.amazoncognito.com/oauth2/token'
+          : 'https://lightningtalk-auth-dev.auth.ap-northeast-1.amazoncognito.com/oauth2/token';
 
       // Get client secret from AWS Secrets Manager or environment
       // SECURITY: Never hardcode secrets in the codebase
@@ -505,7 +505,7 @@ router.post(
             ? '42u3ma63qf01utk4jcd6pn9l8s'
             : '5t48tpbh5qe26otojkfq1rf0ls',
         client_secret: clientSecret,
-        code: code,
+        code,
         redirect_uri:
           process.env.NODE_ENV === 'production'
             ? 'https://xn--6wym69a.com/callback'
@@ -561,7 +561,7 @@ router.post(
  * GET /api/auth/verify
  * Verify JWT token
  */
-router.get('/verify', async (req, res) => {
+router.get('/verify', async(req, res) => {
   try {
     const authHeader = req.headers.authorization;
     if (!authHeader || !authHeader.startsWith('Bearer ')) {
@@ -606,7 +606,7 @@ router.post(
   '/refresh',
   body('refreshToken').notEmpty().withMessage('Refresh token required'),
   handleValidationErrors,
-  async (req, res) => {
+  async(req, res) => {
     try {
       const { database } = req.app.locals;
       const { refreshToken } = req.body;

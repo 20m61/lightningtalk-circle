@@ -62,7 +62,7 @@ class EnvironmentManager {
     });
 
     // Add metadata
-    envContent += `# Environment Metadata\n`;
+    envContent += '# Environment Metadata\n';
     envContent += `ENV_LOADED_AT=${new Date().toISOString()}\n`;
     envContent += `ENV_NAME=${environment}\n`;
     envContent += `ENV_MODE=${mode}\n`;
@@ -76,7 +76,7 @@ class EnvironmentManager {
         `✅ Environment switched to: ${colors.bold(environment)}${mode !== 'local' ? ` (${mode})` : ''}`
       )
     );
-    console.log(colors.gray(`📁 Configuration saved to: .env`));
+    console.log(colors.gray('📁 Configuration saved to: .env'));
 
     // Show environment info
     this.showEnvironmentInfo(environment, mode);
@@ -277,49 +277,49 @@ const arg1 = process.argv[3];
 const arg2 = process.argv[4];
 
 switch (command) {
-  case 'switch':
-    if (!arg1) {
-      console.error(colors.red('❌ Error: Environment name required'));
-      console.log('Usage: node env-manager.js switch <environment> [mode]');
-      process.exit(1);
-    }
-    manager.loadEnvironment(arg1, arg2);
-    break;
-
-  case 'list':
-    manager.listEnvironments();
-    break;
-
-  case 'current':
-    manager.showCurrentEnvironment();
-    break;
-
-  case 'validate':
-    if (!arg1) {
-      console.error(colors.red('❌ Error: Environment name required'));
-      process.exit(1);
-    }
-    manager.validateEnvironment(arg1);
-    break;
-
-  case 'create':
-    if (!arg1) {
-      console.error(colors.red('❌ Error: Environment name required'));
-      process.exit(1);
-    }
-    manager.createTemplate(arg1);
-    break;
-
-  case 'help':
-  case '--help':
-  case '-h':
-    manager.showHelp();
-    break;
-
-  default:
-    if (command) {
-      console.error(colors.red(`❌ Unknown command: ${command}`));
-    }
-    manager.showHelp();
+case 'switch':
+  if (!arg1) {
+    console.error(colors.red('❌ Error: Environment name required'));
+    console.log('Usage: node env-manager.js switch <environment> [mode]');
     process.exit(1);
+  }
+  manager.loadEnvironment(arg1, arg2);
+  break;
+
+case 'list':
+  manager.listEnvironments();
+  break;
+
+case 'current':
+  manager.showCurrentEnvironment();
+  break;
+
+case 'validate':
+  if (!arg1) {
+    console.error(colors.red('❌ Error: Environment name required'));
+    process.exit(1);
+  }
+  manager.validateEnvironment(arg1);
+  break;
+
+case 'create':
+  if (!arg1) {
+    console.error(colors.red('❌ Error: Environment name required'));
+    process.exit(1);
+  }
+  manager.createTemplate(arg1);
+  break;
+
+case 'help':
+case '--help':
+case '-h':
+  manager.showHelp();
+  break;
+
+default:
+  if (command) {
+    console.error(colors.red(`❌ Unknown command: ${command}`));
+  }
+  manager.showHelp();
+  process.exit(1);
 }

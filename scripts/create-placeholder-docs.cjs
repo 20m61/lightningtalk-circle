@@ -199,7 +199,7 @@ ${description}
 
     console.log(
       colors.bold(
-        `\n📊 作成結果: ${colors.green(this.createdCount + '個')}のプレースホルダーファイルを作成しました`
+        `\n📊 作成結果: ${colors.green(`${this.createdCount}個`)}のプレースホルダーファイルを作成しました`
       )
     );
     console.log(colors.blue('\n💡 次のステップ:'));

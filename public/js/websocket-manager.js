@@ -71,7 +71,7 @@ class WebSocketManager {
 
   setupSocketListeners() {
     this.socket.on('connect', () => {
-      if (window.DEBUG_MODE) console.log('[WebSocketManager] Connected');
+      if (window.DEBUG_MODE) {console.log('[WebSocketManager] Connected');}
       this.isConnected = true;
       this.reconnectAttempts = 0;
       this.connectionId = this.socket.id;
@@ -79,19 +79,19 @@ class WebSocketManager {
     });
 
     this.socket.on('disconnect', reason => {
-      if (window.DEBUG_MODE) console.log('[WebSocketManager] Disconnected:', reason);
+      if (window.DEBUG_MODE) {console.log('[WebSocketManager] Disconnected:', reason);}
       this.isConnected = false;
       this.emit('connection:lost', { reason });
     });
 
     this.socket.on('error', error => {
-      if (window.DEBUG_MODE) console.error('[WebSocketManager] Error:', error);
+      if (window.DEBUG_MODE) {console.error('[WebSocketManager] Error:', error);}
       this.emit('connection:error', { error });
     });
 
     this.socket.on('reconnect', attemptNumber => {
       if (window.DEBUG_MODE)
-        console.log('[WebSocketManager] Reconnected after', attemptNumber, 'attempts');
+      {console.log('[WebSocketManager] Reconnected after', attemptNumber, 'attempts');}
       this.emit('connection:reconnected', { attempts: attemptNumber });
     });
 
@@ -101,7 +101,7 @@ class WebSocketManager {
     });
 
     this.socket.on('reconnect_failed', () => {
-      if (window.DEBUG_MODE) console.error('[WebSocketManager] Reconnection failed');
+      if (window.DEBUG_MODE) {console.error('[WebSocketManager] Reconnection failed');}
       this.emit('connection:failed');
     });
   }
@@ -144,7 +144,7 @@ class WebSocketManager {
           handler(data);
         } catch (error) {
           if (window.DEBUG_MODE)
-            console.error(`[WebSocketManager] Error in handler for ${event}:`, error);
+          {console.error(`[WebSocketManager] Error in handler for ${event}:`, error);}
         }
       });
     }
@@ -153,7 +153,7 @@ class WebSocketManager {
   send(event, data) {
     if (!this.isConnected || !this.socket) {
       if (window.DEBUG_MODE)
-        console.warn('[WebSocketManager] Not connected. Message queued:', event, data);
+      {console.warn('[WebSocketManager] Not connected. Message queued:', event, data);}
       return false;
     }
 
@@ -191,7 +191,7 @@ class WebSocketManager {
 let wsManagerInstance = null;
 
 // グローバル関数として公開
-window.getWebSocketManager = function () {
+window.getWebSocketManager = function() {
   if (!wsManagerInstance) {
     wsManagerInstance = new WebSocketManager();
   }

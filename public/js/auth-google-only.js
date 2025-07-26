@@ -80,7 +80,7 @@ class GoogleAuthManager {
 
   updateUI() {
     const container = document.getElementById('auth-container');
-    if (!container) return;
+    if (!container) {return;}
 
     if (this.currentUser) {
       container.innerHTML = this.renderUserProfile();
@@ -165,10 +165,10 @@ class GoogleAuthManager {
     const authUrl =
       `https://${this.config.domain}/login?` +
       `client_id=${this.config.clientId}&` +
-      `response_type=code&` +
-      `scope=email+openid+profile&` +
+      'response_type=code&' +
+      'scope=email+openid+profile&' +
       `redirect_uri=${encodeURIComponent(this.config.redirectUri)}&` +
-      `identity_provider=Google`;
+      'identity_provider=Google';
 
     // Redirect to Cognito hosted UI
     window.location.href = authUrl;
@@ -284,7 +284,7 @@ class GoogleAuthManager {
       const jsonPayload = decodeURIComponent(
         atob(base64)
           .split('')
-          .map(c => '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2))
+          .map(c => `%${(`00${c.charCodeAt(0).toString(16)}`).slice(-2)}`)
           .join('')
       );
       return JSON.parse(jsonPayload);

@@ -45,7 +45,7 @@ async function captureScreenshots() {
         path: `screenshots/current/${viewport.name}-main.png`,
         fullPage: viewport.fullPage
       });
-      console.log(`  ✅ メインビュー`);
+      console.log('  ✅ メインビュー');
 
       // Capture with modal open
       try {
@@ -57,10 +57,10 @@ async function captureScreenshots() {
             path: `screenshots/current/${viewport.name}-modal.png`,
             fullPage: false
           });
-          console.log(`  ✅ モーダル表示`);
+          console.log('  ✅ モーダル表示');
         }
       } catch (e) {
-        console.log(`  ⚠️  モーダルスクリーンショットをスキップ`);
+        console.log('  ⚠️  モーダルスクリーンショットをスキップ');
       }
 
       await page.close();

@@ -125,7 +125,7 @@ async function main() {
 
   for (const screenshot of screenshots) {
     const filePath = path.join(SCREENSHOTS_DIR, screenshot.name);
-    
+
     if (!fs.existsSync(filePath)) {
       console.error(`❌ File not found: ${filePath}`);
       continue;
@@ -134,23 +134,23 @@ async function main() {
     try {
       // Read SVG file and create inline data URL
       const fileContent = fs.readFileSync(filePath, 'utf-8');
-      
+
       // Clean up SVG for inline use
       const cleanedSvg = fileContent
         .replace(/\n/g, ' ')
         .replace(/\s+/g, ' ')
         .replace(/> </g, '><')
         .trim();
-      
+
       // Create data URL
       const dataUrl = `data:image/svg+xml,${encodeURIComponent(cleanedSvg)}`;
-      
+
       uploadedFiles.push({
         name: screenshot.name,
         description: screenshot.description,
         url: dataUrl
       });
-      
+
       console.log(`✅ Created inline SVG for: ${screenshot.name}`);
     } catch (error) {
       console.error(`❌ Error processing ${screenshot.name}:`, error.message);

@@ -88,7 +88,7 @@ class SearchManager {
       const title = card.querySelector('.event-title, h3')?.textContent || '';
       const description =
         card.querySelector('.event-description, .event-excerpt, p')?.textContent || '';
-      const content = (title + ' ' + description).toLowerCase();
+      const content = (`${title} ${description}`).toLowerCase();
 
       const isVisible = !searchTerm || content.includes(searchTerm.toLowerCase());
 

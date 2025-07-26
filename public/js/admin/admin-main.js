@@ -225,7 +225,7 @@ class AdminDashboard {
 
   renderEvents() {
     const container = document.querySelector('.admin-events-list');
-    if (!container) return;
+    if (!container) {return;}
 
     if (this.events.length === 0) {
       container.innerHTML = this.renderEmptyState();
@@ -423,7 +423,7 @@ class AdminDashboard {
   }
 
   formatDate(dateString) {
-    if (!dateString) return '未定';
+    if (!dateString) {return '未定';}
 
     const date = new Date(dateString);
     const options = {
@@ -469,10 +469,10 @@ class AdminDashboard {
 
   showEditModal(event) {
     const modal = this.createModal('イベント編集', this.renderEditForm(event));
-    
+
     // フォーム送信処理
     const form = modal.querySelector('#editEventForm');
-    form.addEventListener('submit', async (e) => {
+    form.addEventListener('submit', async(e) => {
       e.preventDefault();
       await this.handleEditSubmit(e, event.id);
     });
@@ -480,7 +480,7 @@ class AdminDashboard {
 
   showDetailModal(event) {
     const modal = this.createModal('イベント詳細', this.renderDetailView(event));
-    
+
     // 参加者ボタンのハンドラー
     const participantsBtn = modal.querySelector('.view-participants-btn');
     if (participantsBtn) {
@@ -518,7 +518,7 @@ class AdminDashboard {
     `;
 
     document.body.insertAdjacentHTML('beforeend', modalHtml);
-    
+
     const modal = document.querySelector('.admin-modal');
     const closeBtn = modal.querySelector('.admin-modal__close');
     const backdrop = modal.querySelector('.admin-modal__backdrop');
@@ -672,7 +672,7 @@ class AdminDashboard {
 
   renderParticipantsList(event) {
     const participants = event.participants || [];
-    
+
     if (participants.length === 0) {
       return '<p class="admin-empty">参加者はまだいません</p>';
     }
@@ -729,15 +729,15 @@ class AdminDashboard {
     `;
 
     document.body.insertAdjacentHTML('beforeend', menuHtml);
-    
+
     const menu = document.querySelector('.admin-context-menu');
-    
+
     // メニュー項目のクリックハンドラー
     menu.addEventListener('click', (e) => {
       const item = e.target.closest('[data-action]');
-      if (!item) return;
-      
-      const action = item.dataset.action;
+      if (!item) {return;}
+
+      const { action } = item.dataset;
       this.handleContextMenuAction(action, event);
       menu.remove();
     });
@@ -750,20 +750,20 @@ class AdminDashboard {
 
   async handleContextMenuAction(action, event) {
     switch (action) {
-      case 'edit':
-        this.editEvent(event);
-        break;
-      case 'duplicate':
-        this.duplicateEvent(event);
-        break;
-      case 'view':
-        this.viewEventDetail(event);
-        break;
-      case 'delete':
-        if (confirm(`「${event.title}」を削除しますか？`)) {
-          await this.deleteEvent(event.id);
-        }
-        break;
+    case 'edit':
+      this.editEvent(event);
+      break;
+    case 'duplicate':
+      this.duplicateEvent(event);
+      break;
+    case 'view':
+      this.viewEventDetail(event);
+      break;
+    case 'delete':
+      if (confirm(`「${event.title}」を削除しますか？`)) {
+        await this.deleteEvent(event.id);
+      }
+      break;
     }
   }
 

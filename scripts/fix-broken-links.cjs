@@ -146,7 +146,7 @@ class BrokenLinkFixer {
     const redirectMapPath = path.join(this.projectRoot, 'docs-redirects.json');
     fs.writeFileSync(redirectMapPath, JSON.stringify(redirects, null, 2));
 
-    console.log(colors.blue(`\n📝 リダイレクトマップを生成しました: docs-redirects.json`));
+    console.log(colors.blue('\n📝 リダイレクトマップを生成しました: docs-redirects.json'));
   }
 
   generateFixReport() {
@@ -161,8 +161,8 @@ class BrokenLinkFixer {
 
 ${this.fixedCount > 0 ? '### 自動修正されたリンク\n' : ''}
 ${Object.entries(this.autoFixMappings)
-  .map(([old, fixed]) => `- \`${old}\` → \`${fixed}\``)
-  .join('\n')}
+    .map(([old, fixed]) => `- \`${old}\` → \`${fixed}\``)
+    .join('\n')}
 
 ## 手動修正が必要なリンク
 
@@ -182,7 +182,7 @@ ${Object.entries(this.autoFixMappings)
     const fixReportPath = path.join(this.projectRoot, 'LINK-FIX-REPORT.md');
     fs.writeFileSync(fixReportPath, reportContent);
 
-    console.log(colors.blue(`\n📊 修正レポートを生成しました: LINK-FIX-REPORT.md`));
+    console.log(colors.blue('\n📊 修正レポートを生成しました: LINK-FIX-REPORT.md'));
   }
 
   async run() {
@@ -204,9 +204,9 @@ ${Object.entries(this.autoFixMappings)
     this.generateFixReport();
 
     // サマリー表示
-    console.log('\n' + colors.bold('📊 修正結果:'));
-    console.log(`自動修正: ${colors.green(this.fixedCount + '個')}`);
-    console.log(`スキップ: ${colors.yellow(this.skippedCount + '個')}`);
+    console.log(`\n${colors.bold('📊 修正結果:')}`);
+    console.log(`自動修正: ${colors.green(`${this.fixedCount}個`)}`);
+    console.log(`スキップ: ${colors.yellow(`${this.skippedCount}個`)}`);
 
     if (this.skippedCount > 0) {
       console.log(colors.yellow('\n💡 手動修正が必要なリンクがあります'));

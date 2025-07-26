@@ -3,7 +3,7 @@
  * 必要最小限のスクリプトのみを読み込む
  */
 
-(function () {
+(function() {
   console.log('[Mobile Optimization] 最適化ローダー開始');
 
   // デバイス判定
@@ -89,7 +89,7 @@
   // パフォーマンス監視
   if (window.performance && window.performance.timing) {
     window.addEventListener('load', () => {
-      const timing = window.performance.timing;
+      const { timing } = window.performance;
       const loadTime = timing.loadEventEnd - timing.navigationStart;
       console.log(`[Mobile Optimization] ページロード時間: ${loadTime}ms`);
 

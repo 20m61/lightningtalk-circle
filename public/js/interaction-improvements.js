@@ -13,25 +13,25 @@ class InteractionManager {
 
   detectDevice() {
     const width = window.innerWidth;
-    if (width >= 1024) return 'desktop';
-    if (width >= 768) return 'tablet';
+    if (width >= 1024) {return 'desktop';}
+    if (width >= 768) {return 'tablet';}
     return 'mobile';
   }
 
   init() {
     // デバイス別の初期化
     this.setupCommonInteractions();
-    
+
     switch (this.device) {
-      case 'desktop':
-        this.setupDesktopInteractions();
-        break;
-      case 'tablet':
-        this.setupTabletInteractions();
-        break;
-      case 'mobile':
-        this.setupMobileInteractions();
-        break;
+    case 'desktop':
+      this.setupDesktopInteractions();
+      break;
+    case 'tablet':
+      this.setupTabletInteractions();
+      break;
+    case 'mobile':
+      this.setupMobileInteractions();
+      break;
     }
 
     // リサイズ時の再初期化
@@ -51,13 +51,13 @@ class InteractionManager {
   setupCommonInteractions() {
     // フォーカス管理の改善
     this.improveFocusManagement();
-    
+
     // スクロール問題の修正
     this.fixScrollIssues();
-    
+
     // フォーム操作の改善
     this.improveFormInteractions();
-    
+
     // モーダル操作の統一
     this.unifyModalBehavior();
   }
@@ -74,7 +74,7 @@ class InteractionManager {
           searchInput.select();
         }
       }
-      
+
       // Alt + 1-9: クイックナビゲーション
       if (e.altKey && e.key >= '1' && e.key <= '9') {
         e.preventDefault();
@@ -88,7 +88,7 @@ class InteractionManager {
 
     // ツールチップの改善
     this.enhanceTooltips();
-    
+
     // ドラッグ操作の改善
     this.enhanceDragOperations();
   }
@@ -96,10 +96,10 @@ class InteractionManager {
   setupTabletInteractions() {
     // タッチ遅延の除去
     this.removeTouchDelay();
-    
+
     // スワイプジェスチャーの追加
     this.addSwipeGestures();
-    
+
     // 画面回転時の調整
     this.handleOrientationChange();
   }
@@ -107,13 +107,13 @@ class InteractionManager {
   setupMobileInteractions() {
     // タッチ遅延の除去
     this.removeTouchDelay();
-    
+
     // プルダウンリフレッシュの防止
     this.preventPullToRefresh();
-    
+
     // ボトムナビゲーションの改善
     this.improveBottomNavigation();
-    
+
     // ソフトキーボード対応
     this.handleSoftKeyboard();
   }
@@ -148,7 +148,7 @@ class InteractionManager {
             trapFocus(node);
             // 最初のフォーカス可能要素にフォーカス
             const firstInput = node.querySelector('input, button');
-            if (firstInput) firstInput.focus();
+            if (firstInput) {firstInput.focus();}
           }
         });
       });
@@ -160,7 +160,7 @@ class InteractionManager {
   fixScrollIssues() {
     // overscroll-behaviorの設定
     document.documentElement.style.overscrollBehavior = 'none';
-    
+
     // モーダル内のスクロール改善
     document.addEventListener('wheel', (e) => {
       const modal = e.target.closest('.admin-modal__body, .modal-body');
@@ -168,7 +168,7 @@ class InteractionManager {
         const { scrollTop, scrollHeight, clientHeight } = modal;
         const isTop = scrollTop === 0;
         const isBottom = scrollTop + clientHeight >= scrollHeight - 1;
-        
+
         if ((isTop && e.deltaY < 0) || (isBottom && e.deltaY > 0)) {
           e.preventDefault();
         }
@@ -183,11 +183,11 @@ class InteractionManager {
       // Enterキーでの送信制御
       form.addEventListener('keydown', (e) => {
         if (e.key === 'Enter' && !e.shiftKey) {
-          const target = e.target;
+          const { target } = e;
           if (target.tagName === 'TEXTAREA') {
             return; // テキストエリアでは改行を許可
           }
-          
+
           // 次のフィールドへフォーカス
           const inputs = Array.from(form.querySelectorAll('input, select, textarea, button'));
           const currentIndex = inputs.indexOf(target);
@@ -207,12 +207,12 @@ class InteractionManager {
     const inputs = document.querySelectorAll('input[required], textarea[required]');
     inputs.forEach(input => {
       let hasInteracted = false;
-      
+
       input.addEventListener('blur', () => {
         hasInteracted = true;
         this.validateField(input);
       });
-      
+
       input.addEventListener('input', () => {
         if (hasInteracted) {
           this.validateField(input);
@@ -225,7 +225,7 @@ class InteractionManager {
     const isValid = field.checkValidity();
     field.classList.toggle('error', !isValid && field.value.length > 0);
     field.classList.toggle('success', isValid && field.value.length > 0);
-    
+
     // エラーメッセージの表示
     let errorEl = field.nextElementSibling;
     if (!errorEl || !errorEl.classList.contains('field-error')) {
@@ -233,7 +233,7 @@ class InteractionManager {
       errorEl.classList.add('field-error');
       field.parentNode.insertBefore(errorEl, field.nextSibling);
     }
-    
+
     errorEl.textContent = isValid ? '' : field.validationMessage;
     errorEl.style.display = isValid ? 'none' : 'block';
   }
@@ -241,7 +241,7 @@ class InteractionManager {
   unifyModalBehavior() {
     // 背景クリックで閉じる
     document.addEventListener('click', (e) => {
-      if (e.target.classList.contains('admin-modal__backdrop') || 
+      if (e.target.classList.contains('admin-modal__backdrop') ||
           e.target.classList.contains('modal-backdrop')) {
         const modal = e.target.closest('.admin-modal, .modal');
         if (modal) {
@@ -269,21 +269,21 @@ class InteractionManager {
   addSwipeGestures() {
     let touchStartX = 0;
     let touchEndX = 0;
-    
+
     document.addEventListener('touchstart', (e) => {
       touchStartX = e.touches[0].clientX;
     }, { passive: true });
-    
+
     document.addEventListener('touchend', (e) => {
       touchEndX = e.changedTouches[0].clientX;
       const diff = touchStartX - touchEndX;
-      
+
       // 左スワイプでメニューを開く
       if (diff < -50 && touchStartX < 50) {
         const menuToggle = document.querySelector('.mobile-menu-toggle');
-        if (menuToggle) menuToggle.click();
+        if (menuToggle) {menuToggle.click();}
       }
-      
+
       // 右スワイプでメニューを閉じる
       if (diff > 50) {
         const openMenu = document.querySelector('.mobile-menu--open');
@@ -299,7 +299,7 @@ class InteractionManager {
       // ビューポートの再計算
       const vh = window.innerHeight * 0.01;
       document.documentElement.style.setProperty('--vh', `${vh}px`);
-      
+
       // レイアウトの調整
       setTimeout(() => {
         window.scrollTo(0, window.scrollY);
@@ -309,15 +309,15 @@ class InteractionManager {
 
   preventPullToRefresh() {
     let touchStartY = 0;
-    
+
     document.addEventListener('touchstart', (e) => {
       touchStartY = e.touches[0].clientY;
     }, { passive: true });
-    
+
     document.addEventListener('touchmove', (e) => {
       const touchY = e.touches[0].clientY;
       const touchDiff = touchY - touchStartY;
-      
+
       if (window.scrollY === 0 && touchDiff > 0 && e.cancelable) {
         e.preventDefault();
       }
@@ -330,18 +330,18 @@ class InteractionManager {
       const vh = window.innerHeight * 0.01;
       document.documentElement.style.setProperty('--vh', `${vh}px`);
     };
-    
+
     setViewportHeight();
     window.addEventListener('resize', setViewportHeight);
-    
+
     // スクロール時のナビゲーション表示制御
     let lastScrollY = window.scrollY;
     let ticking = false;
-    
+
     const updateNavVisibility = () => {
       const currentScrollY = window.scrollY;
       const bottomNav = document.querySelector('.bottom-nav, .mobile-bottom-nav');
-      
+
       if (bottomNav) {
         if (currentScrollY > lastScrollY && currentScrollY > 100) {
           bottomNav.style.transform = 'translateY(100%)';
@@ -349,11 +349,11 @@ class InteractionManager {
           bottomNav.style.transform = 'translateY(0)';
         }
       }
-      
+
       lastScrollY = currentScrollY;
       ticking = false;
     };
-    
+
     window.addEventListener('scroll', () => {
       if (!ticking) {
         requestAnimationFrame(updateNavVisibility);
@@ -364,7 +364,7 @@ class InteractionManager {
 
   handleSoftKeyboard() {
     const inputs = document.querySelectorAll('input, textarea');
-    
+
     inputs.forEach(input => {
       input.addEventListener('focus', () => {
         // フォーカス時にビューポートを調整
@@ -373,7 +373,7 @@ class InteractionManager {
         }, 300);
       });
     });
-    
+
     // iOS対策
     if (/iPhone|iPad|iPod/.test(navigator.userAgent)) {
       document.addEventListener('focusout', () => {
@@ -384,24 +384,24 @@ class InteractionManager {
 
   enhanceTooltips() {
     const elementsWithTitle = document.querySelectorAll('[title]');
-    
+
     elementsWithTitle.forEach(element => {
       const titleText = element.getAttribute('title');
       element.removeAttribute('title');
-      
+
       let tooltip;
-      
+
       element.addEventListener('mouseenter', () => {
         tooltip = document.createElement('div');
         tooltip.classList.add('custom-tooltip');
         tooltip.textContent = titleText;
         document.body.appendChild(tooltip);
-        
+
         const rect = element.getBoundingClientRect();
         tooltip.style.left = `${rect.left + rect.width / 2}px`;
         tooltip.style.top = `${rect.top - 10}px`;
       });
-      
+
       element.addEventListener('mouseleave', () => {
         if (tooltip) {
           tooltip.remove();
@@ -413,13 +413,13 @@ class InteractionManager {
   enhanceDragOperations() {
     // ドラッグ可能な要素の改善
     const draggables = document.querySelectorAll('[draggable="true"]');
-    
+
     draggables.forEach(draggable => {
       draggable.addEventListener('dragstart', (e) => {
         e.dataTransfer.effectAllowed = 'move';
         draggable.classList.add('dragging');
       });
-      
+
       draggable.addEventListener('dragend', () => {
         draggable.classList.remove('dragging');
       });

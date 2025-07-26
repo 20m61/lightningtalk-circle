@@ -126,7 +126,7 @@ class ScrollManagerV2 {
   // 5秒後に自動チェック（安全装置）
   setTimeout(() => {
     if (manager.isScrollLocked() && manager.locks.size === 0) {
-      if (window.DEBUG_MODE) console.warn('[ScrollManagerV2] 不正なロック状態を検出、自動修復');
+      if (window.DEBUG_MODE) {console.warn('[ScrollManagerV2] 不正なロック状態を検出、自動修復');}
       manager.forceUnlock();
     }
   }, 5000);

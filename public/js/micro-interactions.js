@@ -47,7 +47,7 @@ class MicroInteractions {
   initRippleEffect() {
     document.addEventListener('click', e => {
       const target = e.target.closest('[data-ripple]');
-      if (!target) return;
+      if (!target) {return;}
 
       const ripple = document.createElement('span');
       const rect = target.getBoundingClientRect();
@@ -330,7 +330,7 @@ class MicroInteractions {
   // サウンドフィードバック
   initSoundFeedback() {
     // Web Audio API を使用した軽量なサウンドフィードバック
-    if (!window.AudioContext && !window.webkitAudioContext) return;
+    if (!window.AudioContext && !window.webkitAudioContext) {return;}
 
     const audioContext = new (window.AudioContext || window.webkitAudioContext)();
 

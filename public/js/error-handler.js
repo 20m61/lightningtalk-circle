@@ -3,7 +3,7 @@
  * コンソールエラーを捕捉して適切に処理
  */
 
-(function () {
+(function() {
   'use strict';
 
   // エラーを記録するかどうか
@@ -65,8 +65,8 @@
 
     // エラー情報をフォーマット
     const errorDetails = {
-      message: message,
-      source: source,
+      message,
+      source,
       line: lineno,
       column: colno,
       stack: error ? error.stack : 'No stack trace',
@@ -94,12 +94,12 @@
   }
 
   // グローバルエラーハンドラーを設定
-  window.addEventListener('error', function (event) {
+  window.addEventListener('error', (event) => {
     handleError(event.message, event.filename, event.lineno, event.colno, event.error);
   });
 
   // Promiseの未処理拒否を捕捉
-  window.addEventListener('unhandledrejection', function (event) {
+  window.addEventListener('unhandledrejection', (event) => {
     handleError(`Unhandled Promise Rejection: ${event.reason}`, '', 0, 0, event.reason);
   });
 
@@ -153,13 +153,13 @@
   // デバッグ用ユーティリティ
   window.errorHandler = {
     // エラーログをクリア
-    clearErrors: function () {
+    clearErrors() {
       console.clear();
       console.log('%c✅ エラーログをクリアしました', 'color: #10b981; font-weight: bold;');
     },
 
     // 現在のエラー状態を確認
-    checkStatus: function () {
+    checkStatus() {
       console.log('%c🔍 エラーハンドラー状態', 'color: #3b82f6; font-weight: bold;');
       console.log('デバッグモード:', window.DEBUG_MODE);
       console.log('エラーログ記録:', logErrors);
@@ -167,23 +167,23 @@
     },
 
     // 手動でエラーをテスト
-    testError: function (type = 'null') {
+    testError(type = 'null') {
       switch (type) {
-        case 'null': {
-          const nullObj = null;
-          nullObj.test(); // エラーを発生させる
-          break;
-        }
-        case 'undefined': {
-          const undefinedObj = {};
-          undefinedObj.method.call(); // エラーを発生させる
-          break;
-        }
-        case 'promise':
-          Promise.reject('テスト用のPromise拒否');
-          break;
-        default:
-          throw new Error('テスト用のエラー');
+      case 'null': {
+        const nullObj = null;
+        nullObj.test(); // エラーを発生させる
+        break;
+      }
+      case 'undefined': {
+        const undefinedObj = {};
+        undefinedObj.method.call(); // エラーを発生させる
+        break;
+      }
+      case 'promise':
+        Promise.reject('テスト用のPromise拒否');
+        break;
+      default:
+        throw new Error('テスト用のエラー');
       }
     }
   };

@@ -23,7 +23,7 @@ class UnifiedInteractionManager {
   }
 
   init() {
-    if (this.initialized) return;
+    if (this.initialized) {return;}
 
     // 既存のイベントリスナーをクリーンアップ
     this.cleanupConflictingListeners();
@@ -44,7 +44,7 @@ class UnifiedInteractionManager {
     window.unifiedInteractionManager = this;
 
     this.log('初期化完了');
-    if (this.debug) this.logStatus();
+    if (this.debug) {this.logStatus();}
   }
 
   cleanupConflictingListeners() {
@@ -112,7 +112,7 @@ class UnifiedInteractionManager {
   }
 
   handleClick(e) {
-    const target = e.target;
+    const { target } = e;
     const closest = selector => target.closest(selector);
 
     this.logEvent('click', target);
@@ -174,7 +174,7 @@ class UnifiedInteractionManager {
   }
 
   handleTouchEnd(e) {
-    if (!this.touchStartX) return;
+    if (!this.touchStartX) {return;}
 
     const touchEndX = e.changedTouches[0].clientX;
     const touchEndY = e.changedTouches[0].clientY;
@@ -210,18 +210,18 @@ class UnifiedInteractionManager {
     // Ctrl/Cmd + ショートカット
     if (e.ctrlKey || e.metaKey) {
       switch (e.key) {
-        case 'n':
-          e.preventDefault();
-          this.handleAdminCreate();
-          break;
-        case 'f':
-          e.preventDefault();
-          this.focusSearch();
-          break;
-        case '/':
-          e.preventDefault();
-          this.focusSearch();
-          break;
+      case 'n':
+        e.preventDefault();
+        this.handleAdminCreate();
+        break;
+      case 'f':
+        e.preventDefault();
+        this.focusSearch();
+        break;
+      case '/':
+        e.preventDefault();
+        this.focusSearch();
+        break;
       }
     }
   }
@@ -241,7 +241,7 @@ class UnifiedInteractionManager {
     if (form.classList.contains('search-form')) {
       e.preventDefault();
       this.handleSearchSubmit(form);
-      return;
+
     }
   }
 
@@ -427,10 +427,10 @@ class UnifiedInteractionManager {
 
   // デバッグ機能
   logEvent(type, target, detail = '') {
-    if (!this.debug) return;
+    if (!this.debug) {return;}
 
     const targetInfo = target.tagName
-      ? `${target.tagName}${target.className ? '.' + target.className.split(' ')[0] : ''}`
+      ? `${target.tagName}${target.className ? `.${target.className.split(' ')[0]}` : ''}`
       : target.toString();
 
     this.log(`[UnifiedInteractionManager] ${type}: ${targetInfo} ${detail}`);

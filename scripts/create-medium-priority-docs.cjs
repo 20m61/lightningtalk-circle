@@ -788,11 +788,11 @@ mediumPriorityDocs.forEach(doc => {
     // ファイルを作成
     fs.writeFileSync(fullPath, doc.content);
 
-    console.log(colors.green('✓') + ` ${doc.path}`);
+    console.log(`${colors.green('✓')} ${doc.path}`);
     console.log(colors.gray(`  タイトル: ${doc.title}`));
     successCount++;
   } catch (error) {
-    console.log(colors.red('✗') + ` ${doc.path}: ${error.message}`);
+    console.log(`${colors.red('✗')} ${doc.path}: ${error.message}`);
     errorCount++;
   }
 });
@@ -800,6 +800,6 @@ mediumPriorityDocs.forEach(doc => {
 console.log(colors.gray('='.repeat(60)));
 console.log(
   colors.bold(
-    `📊 作成結果: ${colors.green(successCount + '個')}成功, ${colors.red(errorCount + '個')}エラー`
+    `📊 作成結果: ${colors.green(`${successCount}個`)}成功, ${colors.red(`${errorCount}個`)}エラー`
   )
 );

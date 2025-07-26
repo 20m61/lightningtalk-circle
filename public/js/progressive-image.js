@@ -65,16 +65,16 @@ class ProgressiveImageLoader {
   }
 
   async loadImage(img) {
-    const src = img.dataset.src;
-    const srcset = img.dataset.srcset;
-    const sizes = img.dataset.sizes;
-    const placeholder = img.dataset.placeholder;
+    const { src } = img.dataset;
+    const { srcset } = img.dataset;
+    const { sizes } = img.dataset;
+    const { placeholder } = img.dataset;
     const originalSrc = src; // エラーメッセージ用に保存
 
-    if (!src) return;
+    if (!src) {return;}
 
     // すでに読み込み済みの画像はスキップ
-    if (this.loadedImages.has(img)) return;
+    if (this.loadedImages.has(img)) {return;}
     this.loadedImages.add(img);
 
     try {
@@ -205,8 +205,8 @@ class ProgressiveImageLoader {
     return new Promise((resolve, reject) => {
       const img = new Image();
 
-      if (srcset) img.srcset = srcset;
-      if (sizes) img.sizes = sizes;
+      if (srcset) {img.srcset = srcset;}
+      if (sizes) {img.sizes = sizes;}
 
       img.onload = () => resolve(src);
       img.onerror = () => reject(new Error(`Failed to load image: ${src}`));
@@ -234,8 +234,8 @@ class ProgressiveImageLoader {
 
     // 画像の適用
     img.src = src;
-    if (srcset) img.srcset = srcset;
-    if (sizes) img.sizes = sizes;
+    if (srcset) {img.srcset = srcset;}
+    if (sizes) {img.sizes = sizes;}
 
     // トランジション効果
     requestAnimationFrame(() => {
@@ -289,7 +289,7 @@ class ProgressiveImageLoader {
 
   handleNetworkChange() {
     // ネットワーク状態に応じて画像品質を調整
-    const connection = navigator.connection;
+    const { connection } = navigator;
     const isSlowConnection =
       connection.effectiveType === 'slow-2g' || connection.effectiveType === '2g';
 

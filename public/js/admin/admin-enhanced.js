@@ -269,7 +269,7 @@ class AdminEnhanced {
 
     // 一括操作ボタン
     document.addEventListener('click', e => {
-      const action = e.target.dataset.action;
+      const { action } = e.target.dataset;
       if (action && e.target.closest('.admin-bulk-actions')) {
         this.handleBulkAction(action);
       }
@@ -277,7 +277,7 @@ class AdminEnhanced {
   }
 
   updateSelectedEvents(checkbox) {
-    const eventId = checkbox.dataset.eventId;
+    const { eventId } = checkbox.dataset;
     if (checkbox.checked) {
       this.selectedEvents.add(eventId);
     } else {
@@ -297,7 +297,7 @@ class AdminEnhanced {
   }
 
   async handleBulkAction(action) {
-    if (this.selectedEvents.size === 0) return;
+    if (this.selectedEvents.size === 0) {return;}
 
     const confirmMessages = {
       publish: `${this.selectedEvents.size}件のイベントを公開しますか？`,
@@ -384,15 +384,15 @@ class AdminEnhanced {
       const data = await this.fetchAllEvents();
 
       switch (format) {
-        case 'csv':
-          this.downloadCSV(data);
-          break;
-        case 'json':
-          this.downloadJSON(data);
-          break;
-        case 'pdf':
-          this.generatePDFReport(data);
-          break;
+      case 'csv':
+        this.downloadCSV(data);
+        break;
+      case 'json':
+        this.downloadJSON(data);
+        break;
+      case 'pdf':
+        this.generatePDFReport(data);
+        break;
       }
 
       this.showNotification(`${format.toUpperCase()}形式でエクスポートしました`, 'success');
@@ -497,14 +497,14 @@ class AdminEnhanced {
       if ((e.ctrlKey || e.metaKey) && e.key === 'n') {
         e.preventDefault();
         const createBtn = document.querySelector('.admin-create-btn');
-        if (createBtn) createBtn.click();
+        if (createBtn) {createBtn.click();}
       }
 
       // Ctrl/Cmd + F: 検索フォーカス
       if ((e.ctrlKey || e.metaKey) && e.key === 'f') {
         e.preventDefault();
         const searchInput = document.querySelector('.admin-search__input');
-        if (searchInput) searchInput.focus();
+        if (searchInput) {searchInput.focus();}
       }
 
       // Ctrl/Cmd + A: 全選択（イベント一覧表示時）

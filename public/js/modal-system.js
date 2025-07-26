@@ -164,17 +164,17 @@ class ModalSystem {
    * モーダルを閉じる
    */
   async close(modalId) {
-    if (!modalId) return;
+    if (!modalId) {return;}
 
     const modalConfig = this.modals.get(modalId);
-    if (!modalConfig) return;
+    if (!modalConfig) {return;}
 
     const { element: modal, backdrop, options } = modalConfig;
 
     // onCloseコールバック
     if (options.onClose) {
       const shouldClose = options.onClose(modal);
-      if (shouldClose === false) return;
+      if (shouldClose === false) {return;}
     }
 
     // モーダルとバックドロップを非表示
@@ -253,7 +253,7 @@ class ModalSystem {
     const lastFocusable = focusableElements[focusableElements.length - 1];
 
     modal.addEventListener('keydown', e => {
-      if (e.key !== 'Tab') return;
+      if (e.key !== 'Tab') {return;}
 
       if (e.shiftKey) {
         if (document.activeElement === firstFocusable) {
@@ -311,7 +311,7 @@ class ModalSystem {
 
     return new Promise(resolve => {
       // 確認ダイアログ用のモーダルを動的に作成
-      const modalId = 'confirm-modal-' + Date.now();
+      const modalId = `confirm-modal-${Date.now()}`;
       const modal = document.createElement('div');
       modal.id = modalId;
       modal.className = 'modal modal--confirm';
@@ -416,7 +416,7 @@ class ModalSystem {
     };
 
     const handleTouchMove = e => {
-      if (!isDragging) return;
+      if (!isDragging) {return;}
 
       currentY = e.touches[0].clientY;
       const deltaY = currentY - startY;
@@ -427,7 +427,7 @@ class ModalSystem {
     };
 
     const handleTouchEnd = () => {
-      if (!isDragging) return;
+      if (!isDragging) {return;}
 
       isDragging = false;
       modal.style.transition = '';

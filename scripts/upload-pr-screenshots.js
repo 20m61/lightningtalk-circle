@@ -31,9 +31,9 @@ async function convertSvgToPng(svgPath) {
 
 async function getPresignedUrl(fileName) {
   console.log(`📤 Getting presigned URL for: ${fileName}`);
-  
+
   const requestData = JSON.stringify({
-    fileName: fileName,
+    fileName,
     contentType: fileName.endsWith('.svg') ? 'image/svg+xml' : 'image/png',
     prNumber: PR_NUMBER,
     userId: 'ui-ux-demo'
@@ -72,10 +72,10 @@ async function getPresignedUrl(fileName) {
 }
 
 async function uploadToS3(uploadUrl, filePath) {
-  console.log(`☁️  Uploading to S3...`);
-  
+  console.log('☁️  Uploading to S3...');
+
   const fileData = fs.readFileSync(filePath);
-  
+
   return new Promise((resolve, reject) => {
     const url = new URL(uploadUrl);
     const options = {
@@ -200,7 +200,7 @@ async function main() {
 
   // Check if API is available
   const isLocalMode = API_ENDPOINT.includes('localhost');
-  
+
   if (isLocalMode) {
     console.log('⚠️  Running in local mode. Make sure the server is running with: npm run dev');
     console.log('⚠️  Alternatively, set API_ENDPOINT to the deployed API URL\n');
@@ -208,7 +208,7 @@ async function main() {
 
   for (const screenshot of screenshots) {
     const filePath = path.join(SCREENSHOTS_DIR, screenshot.name);
-    
+
     if (!fs.existsSync(filePath)) {
       console.error(`❌ File not found: ${filePath}`);
       continue;
@@ -217,31 +217,31 @@ async function main() {
     try {
       // For demonstration, we'll create a direct GitHub URL
       // In production, you would use the actual S3 upload process
-      
+
       if (isLocalMode && !process.env.FORCE_UPLOAD) {
         // Create a data URL for local demonstration
         const fileContent = fs.readFileSync(filePath, 'utf-8');
         const base64 = Buffer.from(fileContent).toString('base64');
         const dataUrl = `data:image/svg+xml;base64,${base64}`;
-        
+
         uploadedFiles.push({
           name: screenshot.name,
           description: screenshot.description,
           url: dataUrl
         });
-        
+
         console.log(`✅ Created data URL for: ${screenshot.name}`);
       } else {
         // Use actual S3 upload
         const { uploadUrl, downloadUrl } = await getPresignedUrl(screenshot.name);
         await uploadToS3(uploadUrl, filePath);
-        
+
         uploadedFiles.push({
           name: screenshot.name,
           description: screenshot.description,
           url: downloadUrl
         });
-        
+
         console.log(`✅ Uploaded to S3: ${screenshot.name}`);
       }
     } catch (error) {

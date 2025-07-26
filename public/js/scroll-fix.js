@@ -13,18 +13,18 @@ class ScrollManager {
   init() {
     // オリジナルのstyle.overflowセッターを保存
     const originalStyleDescriptor = Object.getOwnPropertyDescriptor(CSSStyleDeclaration.prototype, 'overflow');
-    
+
     // カスタムセッターでラップ
     Object.defineProperty(document.body.style, 'overflow', {
       set: (value) => {
         console.log(`[ScrollManager] overflow設定試行: ${value}`);
-        
+
         if (value === 'hidden') {
           this.lockScroll();
         } else if (value === '' || value === 'auto' || value === 'visible') {
           this.unlockScroll();
         }
-        
+
         // オリジナルのセッターは呼ばない（ScrollManagerが管理）
       },
       get: () => {
@@ -61,7 +61,7 @@ class ScrollManager {
     if (this.lockCount > 0) {
       this.lockCount--;
       console.log(`[ScrollManager] スクロールアンロック試行 (count: ${this.lockCount})`);
-      
+
       if (this.lockCount === 0) {
         // すべてのロックが解除された時の処理
         const scrollY = document.body.style.top;
@@ -70,10 +70,10 @@ class ScrollManager {
           .replace(/top:\s*-?\d+px;?/gi, '')
           .replace(/width:\s*100%;?/gi, '')
           .replace(/overflow-y:\s*scroll;?/gi, '');
-        
+
         document.documentElement.style.scrollBehavior = '';
         window.scrollTo(0, parseInt(scrollY || '0') * -1);
-        console.log(`[ScrollManager] スクロール完全解除`);
+        console.log('[ScrollManager] スクロール完全解除');
       }
     }
   }
@@ -86,9 +86,9 @@ class ScrollManager {
       .replace(/width:\s*100%;?/gi, '')
       .replace(/overflow-y:\s*scroll;?/gi, '')
       .replace(/overflow:\s*hidden;?/gi, '');
-    
+
     document.documentElement.style.scrollBehavior = '';
-    console.log(`[ScrollManager] 強制スクロール解除`);
+    console.log('[ScrollManager] 強制スクロール解除');
   }
 
   observeModalChanges() {
@@ -96,9 +96,9 @@ class ScrollManager {
     const observer = new MutationObserver((mutations) => {
       const hasModal = document.querySelector('.admin-modal, .modal, .event-modal');
       const hasMenu = document.querySelector('.mobile-menu--open, .nav-menu--open');
-      
+
       if (!hasModal && !hasMenu && this.lockCount > 0) {
-        console.log(`[ScrollManager] モーダル/メニューが検出されないため強制解除`);
+        console.log('[ScrollManager] モーダル/メニューが検出されないため強制解除');
         this.forceUnlockScroll();
       }
     });
@@ -129,19 +129,19 @@ document.addEventListener('DOMContentLoaded', () => {
       // すべてのモーダルを閉じる
       const modals = document.querySelectorAll('.admin-modal, .modal, .event-modal');
       modals.forEach(modal => {
-        if (modal.classList.contains('admin-modal--open') || 
+        if (modal.classList.contains('admin-modal--open') ||
             modal.classList.contains('modal--open') ||
             modal.style.display !== 'none') {
           modal.remove();
         }
       });
-      
+
       // メニューを閉じる
       const mobileMenus = document.querySelectorAll('.mobile-menu--open, .nav-menu--open');
       mobileMenus.forEach(menu => {
         menu.classList.remove('mobile-menu--open', 'nav-menu--open');
       });
-      
+
       // スクロールを解除
       setTimeout(() => {
         window.scrollManager.forceUnlockScroll();

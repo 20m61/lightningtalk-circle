@@ -35,9 +35,9 @@ function initProgressiveImages() {
 
   images.forEach(img => {
     // すでに処理済みの画像はスキップ
-    if (img.dataset.src) return;
+    if (img.dataset.src) {return;}
 
-    const src = img.src;
+    const { src } = img;
     const isLazyLoadable = !img.hasAttribute('loading') || img.loading === 'lazy';
 
     if (isLazyLoadable) {
@@ -220,7 +220,7 @@ function initFormEnhancements() {
 function enhanceSmoothScroll() {
   // 既存のスムーススクロールを強化
   document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-    anchor.addEventListener('click', function (e) {
+    anchor.addEventListener('click', function(e) {
       e.preventDefault();
 
       const targetId = this.getAttribute('href').substring(1);

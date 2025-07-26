@@ -375,7 +375,7 @@ class MobileTouchManager {
     this.isActive = false;
 
     // ポインターIDの削除
-    const pointerId = event.pointerId;
+    const { pointerId } = event;
     if (this.activePointers) {
       delete this.activePointers[pointerId];
     }

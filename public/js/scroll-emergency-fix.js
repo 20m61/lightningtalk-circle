@@ -3,7 +3,7 @@
  * ページロード後に即座にスクロールを解放
  */
 
-(function () {
+(function() {
   const debug = window.DEBUG_MODE || false;
   const log = debug ? console.log.bind(console, '[緊急スクロール修正]') : () => {};
 
@@ -58,7 +58,7 @@
   const observer = new MutationObserver(mutations => {
     mutations.forEach(mutation => {
       if (mutation.type === 'attributes' && mutation.attributeName === 'style') {
-        const target = mutation.target;
+        const { target } = mutation;
         if (
           (target === document.body || target === document.documentElement) &&
           (target.style.overflow === 'hidden' || target.style.position === 'fixed')

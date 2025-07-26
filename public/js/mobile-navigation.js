@@ -140,7 +140,7 @@ class MobileNavigation {
       const item = e.target.closest('.mobile-bottom-nav__item');
       if (item) {
         e.preventDefault();
-        const tab = item.dataset.tab;
+        const { tab } = item.dataset;
         this.setActiveTab(tab);
         this.handleNavigation(tab);
       }
@@ -161,7 +161,7 @@ class MobileNavigation {
       const item = e.target.closest('.fab-menu__item');
       if (item) {
         e.preventDefault();
-        const action = item.dataset.action;
+        const { action } = item.dataset;
         this.handleFabAction(action);
         this.closeFab();
       }
@@ -225,23 +225,23 @@ class MobileNavigation {
 
   handleNavigation(tab) {
     switch (tab) {
-      case 'home':
-        window.location.hash = '';
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-        break;
-      case 'events':
-        window.location.hash = 'events';
-        break;
-      case 'search':
-        this.openSearchModal();
-        break;
-      case 'profile':
-        if (window.googleAuth && window.googleAuth.isAuthenticated()) {
-          this.openProfileModal();
-        } else {
-          window.googleAuth.login();
-        }
-        break;
+    case 'home':
+      window.location.hash = '';
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      break;
+    case 'events':
+      window.location.hash = 'events';
+      break;
+    case 'search':
+      this.openSearchModal();
+      break;
+    case 'profile':
+      if (window.googleAuth && window.googleAuth.isAuthenticated()) {
+        this.openProfileModal();
+      } else {
+        window.googleAuth.login();
+      }
+      break;
     }
   }
 
@@ -293,31 +293,31 @@ class MobileNavigation {
 
   handleFabAction(action) {
     switch (action) {
-      case 'create-event':
-        if (window.googleAuth && window.googleAuth.isAuthenticated()) {
-          // 管理者権限チェック
-          const user = window.googleAuth.getUser();
-          if (user.role === 'admin') {
-            window.location.href = '/admin#create-event';
-          } else {
-            this.showPermissionError();
-          }
+    case 'create-event':
+      if (window.googleAuth && window.googleAuth.isAuthenticated()) {
+        // 管理者権限チェック
+        const user = window.googleAuth.getUser();
+        if (user.role === 'admin') {
+          window.location.href = '/admin#create-event';
         } else {
-          window.googleAuth.login();
+          this.showPermissionError();
         }
-        break;
-      case 'register-talk':
-        // 発表申込モーダルを開く
-        if (window.modalSystem) {
-          window.modalSystem.open('talk-submission-modal');
-        }
-        break;
-      case 'quick-register':
-        // 参加登録モーダルを開く
-        if (window.modalSystem) {
-          window.modalSystem.open('registration-modal');
-        }
-        break;
+      } else {
+        window.googleAuth.login();
+      }
+      break;
+    case 'register-talk':
+      // 発表申込モーダルを開く
+      if (window.modalSystem) {
+        window.modalSystem.open('talk-submission-modal');
+      }
+      break;
+    case 'quick-register':
+      // 参加登録モーダルを開く
+      if (window.modalSystem) {
+        window.modalSystem.open('registration-modal');
+      }
+      break;
     }
   }
 

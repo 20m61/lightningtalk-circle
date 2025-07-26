@@ -40,7 +40,7 @@ async function detailedErrorCheck() {
           location: `${location.url}:${location.lineNumber}:${location.columnNumber}`,
           timestamp: new Date().toISOString()
         });
-        console.log(`\n❌ Console Error:`);
+        console.log('\n❌ Console Error:');
         console.log(`   Message: ${text}`);
         console.log(`   Location: ${location.url}:${location.lineNumber}`);
       }
@@ -53,7 +53,7 @@ async function detailedErrorCheck() {
         stack: error.stack,
         timestamp: new Date().toISOString()
       });
-      console.log(`\n💥 Page Error:`);
+      console.log('\n💥 Page Error:');
       console.log(`   Message: ${error.message}`);
       if (error.stack) {
         console.log(`   Stack: ${error.stack.split('\n')[0]}`);
@@ -68,7 +68,7 @@ async function detailedErrorCheck() {
         errorText: request.failure()?.errorText,
         timestamp: new Date().toISOString()
       });
-      console.log(`\n🌐 Network Error:`);
+      console.log('\n🌐 Network Error:');
       console.log(`   URL: ${request.url()}`);
       console.log(`   Error: ${request.failure()?.errorText}`);
     });
@@ -76,7 +76,7 @@ async function detailedErrorCheck() {
     // ランタイムエラーをキャッチ
     await page.evaluateOnNewDocument(() => {
       window.addEventListener('error', e => {
-        console.error('Runtime error:', e.message, 'at', e.filename + ':' + e.lineno);
+        console.error('Runtime error:', e.message, 'at', `${e.filename}:${e.lineno}`);
       });
 
       window.addEventListener('unhandledrejection', e => {
@@ -90,7 +90,7 @@ async function detailedErrorCheck() {
       timeout: 30000
     });
 
-    console.log(`\n📊 ページ読み込み結果:`);
+    console.log('\n📊 ページ読み込み結果:');
     console.log(`   Status: ${response.status()}`);
     console.log(`   URL: ${response.url()}`);
 
@@ -113,7 +113,7 @@ async function detailedErrorCheck() {
       };
     });
 
-    console.log(`\n📋 ページ構成:`);
+    console.log('\n📋 ページ構成:');
     console.log(`   Title: ${pageContent.title}`);
     console.log(`   Scripts: ${pageContent.scripts.length}個`);
     console.log(`   Stylesheets: ${pageContent.stylesheets.length}個`);
@@ -122,7 +122,7 @@ async function detailedErrorCheck() {
     console.log(`   LightningTalkApp: ${pageContent.hasLightningTalkApp ? '✅' : '❌'}`);
 
     // スクリプトのロード状況を確認
-    console.log(`\n📜 読み込まれたスクリプト:`);
+    console.log('\n📜 読み込まれたスクリプト:');
     pageContent.scripts.forEach((script, index) => {
       if (script.src !== 'inline') {
         console.log(`   ${index + 1}. ${script.src.replace(TEST_URL, '')}`);
@@ -133,7 +133,7 @@ async function detailedErrorCheck() {
     await new Promise(resolve => setTimeout(resolve, 3000));
 
     // エラーサマリー
-    console.log(`\n📊 エラーサマリー:`);
+    console.log('\n📊 エラーサマリー:');
     console.log(`   Console Errors: ${errors.console.length}`);
     console.log(`   Page Errors: ${errors.page.length}`);
     console.log(`   Network Errors: ${errors.network.length}`);
@@ -153,11 +153,11 @@ async function detailedErrorCheck() {
     };
 
     await fs.writeFile('error-report.json', JSON.stringify(report, null, 2));
-    console.log(`\n📄 詳細なエラーレポートを error-report.json に保存しました`);
+    console.log('\n📄 詳細なエラーレポートを error-report.json に保存しました');
 
     // スクリーンショットを撮影
     await page.screenshot({ path: 'error-check-screenshot.png', fullPage: true });
-    console.log(`📸 スクリーンショットを error-check-screenshot.png に保存しました`);
+    console.log('📸 スクリーンショットを error-check-screenshot.png に保存しました');
 
     return report.summary.totalErrors === 0;
   } catch (error) {

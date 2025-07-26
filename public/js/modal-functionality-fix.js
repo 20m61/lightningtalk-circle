@@ -158,7 +158,7 @@ class ModalFunctionalityFix {
 
   setupModalCloseHandlers() {
     const modal = document.getElementById('registerModal');
-    if (!modal) return;
+    if (!modal) {return;}
 
     // Close button handler
     const closeButtons = modal.querySelectorAll('.close, .close-modal, [data-modal-close]');

@@ -27,7 +27,7 @@ const screenshots = [
   {
     name: 'progressive-image-loading',
     description: 'Progressive Image Loading with blur-up effect',
-    steps: async (page) => {
+    steps: async(page) => {
       await page.goto(BASE_URL, { waitUntil: 'networkidle2' });
       // Clear cache to see progressive loading
       await page.evaluate(() => {
@@ -45,7 +45,7 @@ const screenshots = [
   {
     name: 'ripple-effect',
     description: 'Ripple effect on button click',
-    steps: async (page) => {
+    steps: async(page) => {
       await page.goto(BASE_URL, { waitUntil: 'networkidle2' });
       const button = await page.$('.btn-primary');
       const box = await button.boundingBox();
@@ -56,7 +56,7 @@ const screenshots = [
   {
     name: '3d-card-hover',
     description: '3D card hover effect',
-    steps: async (page) => {
+    steps: async(page) => {
       await page.goto(BASE_URL, { waitUntil: 'networkidle2' });
       await page.evaluate(() => {
         window.scrollTo(0, document.querySelector('.event-card').offsetTop - 100);
@@ -69,7 +69,7 @@ const screenshots = [
   {
     name: 'form-validation',
     description: 'Real-time form validation',
-    steps: async (page) => {
+    steps: async(page) => {
       await page.goto(BASE_URL, { waitUntil: 'networkidle2' });
       // Open registration modal
       await page.click('[data-action="register-speaker"]');
@@ -83,7 +83,7 @@ const screenshots = [
   {
     name: 'dark-mode',
     description: 'Dark mode theme',
-    steps: async (page) => {
+    steps: async(page) => {
       await page.goto(BASE_URL, { waitUntil: 'networkidle2' });
       // Click dark mode toggle
       await page.click('.dark-mode-toggle');
@@ -93,7 +93,7 @@ const screenshots = [
   {
     name: 'mobile-responsive',
     description: 'Mobile responsive design',
-    steps: async (page) => {
+    steps: async(page) => {
       await page.setViewport({ width: 375, height: 812 }); // iPhone X
       await page.goto(BASE_URL, { waitUntil: 'networkidle2' });
     },
@@ -103,7 +103,7 @@ const screenshots = [
 
 async function captureScreenshots() {
   console.log('🚀 Starting screenshot capture...');
-  
+
   const browser = await puppeteer.launch({
     headless: 'new',
     args: ['--no-sandbox', '--disable-setuid-sandbox']
@@ -114,9 +114,9 @@ async function captureScreenshots() {
   for (const screenshot of screenshots) {
     try {
       console.log(`📸 Capturing: ${screenshot.description}`);
-      
+
       const page = await browser.newPage();
-      
+
       // Set viewport
       if (!screenshot.fullPage) {
         await page.setViewport({ width: 1920, height: 1080 });
@@ -128,7 +128,7 @@ async function captureScreenshots() {
       // Take screenshot
       const filename = `${screenshot.name}.png`;
       const filepath = path.join(OUTPUT_DIR, filename);
-      
+
       await page.screenshot({
         path: filepath,
         fullPage: screenshot.fullPage || false
@@ -141,7 +141,7 @@ async function captureScreenshots() {
       });
 
       console.log(`✅ Captured: ${filename}`);
-      
+
       await page.close();
     } catch (error) {
       console.error(`❌ Error capturing ${screenshot.name}:`, error.message);
@@ -154,7 +154,7 @@ async function captureScreenshots() {
 
 async function uploadToS3(files) {
   console.log('\n📤 Uploading screenshots to S3...');
-  
+
   const uploadedUrls = [];
 
   for (const file of files) {
@@ -176,7 +176,7 @@ async function uploadToS3(files) {
       }
 
       const { data } = await response.json();
-      
+
       // Upload to S3
       const fileData = fs.readFileSync(file.path);
       const uploadResponse = await fetch(data.uploadUrl, {
@@ -206,9 +206,9 @@ async function uploadToS3(files) {
 
 async function generateMarkdown(screenshots) {
   console.log('\n📝 Generating PR comment markdown...');
-  
+
   let markdown = '## 📸 UI/UX Improvements Screenshots\n\n';
-  
+
   for (const screenshot of screenshots) {
     markdown += `### ${screenshot.description}\n`;
     markdown += `![${screenshot.description}](${screenshot.url})\n\n`;
@@ -219,15 +219,15 @@ async function generateMarkdown(screenshots) {
 
   const markdownPath = path.join(OUTPUT_DIR, 'pr-comment.md');
   fs.writeFileSync(markdownPath, markdown);
-  
+
   console.log(`✅ Markdown saved to: ${markdownPath}`);
-  
+
   return markdown;
 }
 
 async function postToPR(markdown, screenshots) {
   console.log('\n💬 Posting screenshots to PR...');
-  
+
   try {
     const response = await fetch(`${BASE_URL}/api/screenshots/post-to-pr`, {
       method: 'POST',
@@ -266,7 +266,7 @@ async function main() {
 
     // Capture screenshots
     const capturedFiles = await captureScreenshots();
-    
+
     if (capturedFiles.length === 0) {
       console.error('❌ No screenshots were captured');
       process.exit(1);
@@ -295,7 +295,7 @@ async function main() {
 
     console.log('\n✨ Screenshot capture complete!');
     console.log(`📁 Screenshots saved to: ${OUTPUT_DIR}`);
-    
+
   } catch (error) {
     console.error('❌ Fatal error:', error);
     process.exit(1);

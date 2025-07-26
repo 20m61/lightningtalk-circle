@@ -51,16 +51,16 @@ fixes.forEach(fix => {
       // ファイルを書き戻す
       fs.writeFileSync(filePath, content);
 
-      console.log(colors.green('✓') + ` ${fix.file}:${fix.lineNumber}`);
+      console.log(`${colors.green('✓')} ${fix.file}:${fix.lineNumber}`);
       console.log(colors.gray(`  ${fix.oldLink} → ${fix.newLink}`));
       console.log(colors.gray(`  理由: ${fix.reason}`));
       successCount++;
     } else {
-      console.log(colors.yellow('⚠') + ` ${fix.file}:${fix.lineNumber} - リンクが見つかりません`);
+      console.log(`${colors.yellow('⚠')} ${fix.file}:${fix.lineNumber} - リンクが見つかりません`);
       errorCount++;
     }
   } catch (error) {
-    console.log(colors.red('✗') + ` ${fix.file}: ${error.message}`);
+    console.log(`${colors.red('✗')} ${fix.file}: ${error.message}`);
     errorCount++;
   }
 });
@@ -68,7 +68,7 @@ fixes.forEach(fix => {
 console.log(colors.gray('='.repeat(60)));
 console.log(
   colors.bold(
-    `📊 修正結果: ${colors.green(successCount + '個')}成功, ${colors.red(errorCount + '個')}失敗`
+    `📊 修正結果: ${colors.green(`${successCount}個`)}成功, ${colors.red(`${errorCount}個`)}失敗`
   )
 );
 

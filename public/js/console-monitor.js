@@ -3,7 +3,7 @@
  * リアルタイムでコンソールエラーを検出して報告
  */
 
-(function () {
+(function() {
   'use strict';
 
   // エラー収集用配列
@@ -39,7 +39,7 @@
   }
 
   // console.errorをオーバーライド
-  console.error = function (...args) {
+  console.error = function(...args) {
     const message = args
       .map(arg => {
         if (typeof arg === 'object') {
@@ -53,7 +53,7 @@
       })
       .join(' ');
 
-    const stack = new Error().stack;
+    const { stack } = new Error();
     trackError('error', message, stack);
 
     // 元のconsole.errorを呼び出し
@@ -61,7 +61,7 @@
   };
 
   // console.warnをオーバーライド
-  console.warn = function (...args) {
+  console.warn = function(...args) {
     const message = args.map(arg => String(arg)).join(' ');
 
     // 無視するパターン
@@ -90,7 +90,7 @@
 
   // Promiseの未処理拒否
   window.addEventListener('unhandledrejection', event => {
-    const reason = event.reason;
+    const { reason } = event;
     const message = reason instanceof Error ? reason.message : String(reason);
     const stack = reason instanceof Error ? reason.stack : 'No stack trace';
 
@@ -98,7 +98,7 @@
   });
 
   // エラーレポート関数
-  window.getConsoleErrors = function () {
+  window.getConsoleErrors = function() {
     console.log(
       '%c=== Console Error Report ===',
       'color: #ef4444; font-weight: bold; font-size: 16px;'
@@ -142,7 +142,7 @@
   };
 
   // クリア関数
-  window.clearConsoleErrors = function () {
+  window.clearConsoleErrors = function() {
     collectedErrors.length = 0;
     errorPatterns.clear();
     console.log('%c🧹 Error log cleared', 'color: #10b981; font-weight: bold;');
