@@ -113,7 +113,7 @@ class ResponsiveNavigation {
   }
 
   openMobileMenu() {
-    if (this.state.isMenuOpen) return;
+    if (this.state.isMenuOpen) {return;}
 
     this.state.isMenuOpen = true;
 
@@ -139,7 +139,7 @@ class ResponsiveNavigation {
   }
 
   closeMobileMenu() {
-    if (!this.state.isMenuOpen) return;
+    if (!this.state.isMenuOpen) {return;}
 
     this.state.isMenuOpen = false;
 
@@ -219,7 +219,7 @@ class ResponsiveNavigation {
   }
 
   handleTabNavigation(event) {
-    if (!this.elements.mobileMenu) return;
+    if (!this.elements.mobileMenu) {return;}
 
     const focusableElements = this.elements.mobileMenu.querySelectorAll(
       'a, button, input, textarea, select, details, [tabindex]:not([tabindex="-1"])'
@@ -246,9 +246,9 @@ class ResponsiveNavigation {
   getCurrentBreakpoint() {
     const width = window.innerWidth;
 
-    if (width >= this.breakpoints.desktopLarge) return 'desktopLarge';
-    if (width >= this.breakpoints.desktop) return 'desktop';
-    if (width >= this.breakpoints.tablet) return 'tablet';
+    if (width >= this.breakpoints.desktopLarge) {return 'desktopLarge';}
+    if (width >= this.breakpoints.desktop) {return 'desktop';}
+    if (width >= this.breakpoints.tablet) {return 'tablet';}
     return 'mobile';
   }
 
@@ -290,7 +290,7 @@ class ResponsiveNavigation {
   }
 
   setupTouchHandling() {
-    if (!('ontouchstart' in window)) return;
+    if (!('ontouchstart' in window)) {return;}
 
     let touchStartX = 0;
     let touchStartY = 0;

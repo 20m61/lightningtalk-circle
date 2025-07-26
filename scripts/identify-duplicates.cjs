@@ -92,7 +92,7 @@ class DuplicateFinder {
 
     // プレースホルダーファイルを検出
     const checkPlaceholders = dir => {
-      if (!fs.existsSync(dir)) return;
+      if (!fs.existsSync(dir)) {return;}
 
       const items = fs.readdirSync(dir);
       items.forEach(item => {
@@ -113,7 +113,7 @@ class DuplicateFinder {
 
     // 空のディレクトリを検出
     const checkEmptyDirs = dir => {
-      if (!fs.existsSync(dir)) return;
+      if (!fs.existsSync(dir)) {return;}
 
       const items = fs.readdirSync(dir);
 
@@ -183,12 +183,12 @@ echo "✅ クリーンアップ完了"
     fs.writeFileSync(scriptPath, cleanupScript);
     fs.chmodSync(scriptPath, '755');
 
-    console.log(colors.gray('\n' + '='.repeat(60)));
+    console.log(colors.gray(`\n${'='.repeat(60)}`));
     console.log(colors.bold('📊 サマリー:'));
-    console.log(`  重複ファイル: ${colors.red(this.duplicates.length + '個')}`);
-    console.log(`  プレースホルダー: ${colors.yellow(this.placeholders.length + '個')}`);
-    console.log(`  空ディレクトリ: ${colors.yellow(this.emptyDirs.length + '個')}`);
-    console.log(colors.blue(`\nクリーンアップスクリプト: scripts/cleanup-duplicates.sh`));
+    console.log(`  重複ファイル: ${colors.red(`${this.duplicates.length}個`)}`);
+    console.log(`  プレースホルダー: ${colors.yellow(`${this.placeholders.length}個`)}`);
+    console.log(`  空ディレクトリ: ${colors.yellow(`${this.emptyDirs.length}個`)}`);
+    console.log(colors.blue('\nクリーンアップスクリプト: scripts/cleanup-duplicates.sh'));
     console.log(colors.gray('実行前に内容を確認してください'));
   }
 }

@@ -3,13 +3,13 @@
  * グローバル関数と変数の定義を保証
  */
 
-(function () {
+(function() {
   'use strict';
 
   // 必須グローバル関数の定義（見つからない場合のフォールバック）
   const requiredGlobals = {
     // モーダル関連
-    showAdminLogin: function () {
+    showAdminLogin() {
       if (window.unifiedInteractionManager && window.unifiedInteractionManager.showAdminLogin) {
         window.unifiedInteractionManager.showAdminLogin();
       } else {
@@ -17,7 +17,7 @@
       }
     },
 
-    closeVoteModal: function () {
+    closeVoteModal() {
       if (window.unifiedInteractionManager && window.unifiedInteractionManager.closeVoteModal) {
         window.unifiedInteractionManager.closeVoteModal();
       } else {
@@ -29,7 +29,7 @@
     },
 
     // スクロール修正
-    fixScroll: function () {
+    fixScroll() {
       if (window.scrollManager && window.scrollManager.forceUnlock) {
         window.scrollManager.forceUnlock();
       } else {
@@ -40,7 +40,7 @@
     },
 
     // デバッグ関数
-    debugInteractions: function () {
+    debugInteractions() {
       console.log('=== Interaction Debug Info ===');
       console.log('UnifiedInteractionManager:', !!window.unifiedInteractionManager);
       console.log('ScrollManager:', !!window.scrollManager);

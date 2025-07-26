@@ -152,7 +152,7 @@ async function validateLayout(page) {
   // ヘッダーの固定表示確認
   results.fixedHeader = await page.evaluate(() => {
     const header = document.querySelector('header, .header, nav');
-    if (!header) return false;
+    if (!header) {return false;}
     const style = window.getComputedStyle(header);
     return style.position === 'fixed' || style.position === 'sticky';
   });
@@ -160,7 +160,7 @@ async function validateLayout(page) {
   // コンテンツの中央配置確認
   results.centeredContent = await page.evaluate(() => {
     const main = document.querySelector('main, .main-content, .container');
-    if (!main) return false;
+    if (!main) {return false;}
     const style = window.getComputedStyle(main);
     return style.marginLeft === 'auto' && style.marginRight === 'auto';
   });
@@ -187,7 +187,7 @@ async function validateButtons(page) {
     let validCount = 0;
     buttons.forEach(btn => {
       const rect = btn.getBoundingClientRect();
-      if (rect.width >= 44 && rect.height >= 44) validCount++;
+      if (rect.width >= 44 && rect.height >= 44) {validCount++;}
     });
     return {
       valid: validCount,
@@ -230,14 +230,14 @@ async function validateTypography(page) {
 
   // フォントサイズの検証
   results.fontSize = await page.evaluate(() => {
-    const body = document.body;
+    const { body } = document;
     const baseFontSize = parseInt(window.getComputedStyle(body).fontSize);
     const paragraphs = document.querySelectorAll('p, .text');
     let tooSmall = 0;
 
     paragraphs.forEach(p => {
       const fontSize = parseInt(window.getComputedStyle(p).fontSize);
-      if (fontSize < 14) tooSmall++;
+      if (fontSize < 14) {tooSmall++;}
     });
 
     return {
@@ -315,7 +315,7 @@ async function validateInteractions(page) {
     for (const selector of modalSelectors) {
       try {
         modalTrigger = await page.waitForSelector(selector, { timeout: 1000 });
-        if (modalTrigger) break;
+        if (modalTrigger) {break;}
       } catch (e) {
         // Continue to next selector
       }
@@ -458,7 +458,7 @@ function generateSummaryReport(results) {
     });
   });
 
-  console.log('\n' + '='.repeat(50));
+  console.log(`\n${'='.repeat(50)}`);
   console.log(`✅ 合格: ${totalPassed}`);
   console.log(`❌ 問題: ${totalIssues}`);
   console.log(`📊 合格率: ${((totalPassed / (totalPassed + totalIssues)) * 100).toFixed(1)}%`);

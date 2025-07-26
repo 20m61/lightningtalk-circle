@@ -11,7 +11,7 @@ class DOMCache {
   }
 
   init() {
-    if (this.initialized) return;
+    if (this.initialized) {return;}
 
     // よく使用される要素を事前キャッシュ
     this.preloadCommonElements();

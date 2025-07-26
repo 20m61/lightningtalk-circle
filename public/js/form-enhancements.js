@@ -190,10 +190,10 @@ class FormEnhancements {
 
   validateField(name) {
     const fieldData = this.fields.get(name);
-    if (!fieldData) return true;
+    if (!fieldData) {return true;}
 
     const field = fieldData.element;
-    const value = field.value;
+    const { value } = field;
     const errors = [];
 
     // HTML5バリデーション
@@ -366,7 +366,7 @@ class FormEnhancements {
 
   restoreFormData() {
     const saved = localStorage.getItem(`form-autosave-${this.formId}`);
-    if (!saved) return;
+    if (!saved) {return;}
 
     const { data, timestamp } = JSON.parse(saved);
 
@@ -411,7 +411,7 @@ class FormEnhancements {
   restoreData(data) {
     Object.entries(data).forEach(([name, value]) => {
       const fieldData = this.fields.get(name);
-      if (!fieldData) return;
+      if (!fieldData) {return;}
 
       const field = fieldData.element;
 
@@ -419,7 +419,7 @@ class FormEnhancements {
         field.checked = value;
       } else if (field.type === 'radio') {
         const radio = this.form.querySelector(`input[name="${name}"][value="${value}"]`);
-        if (radio) radio.checked = true;
+        if (radio) {radio.checked = true;}
       } else {
         field.value = value;
       }
@@ -498,8 +498,8 @@ class FormEnhancements {
   }
 
   updateCharacterCount(field) {
-    const maxLength = field.maxLength;
-    if (maxLength <= 0) return;
+    const { maxLength } = field;
+    if (maxLength <= 0) {return;}
 
     const wrapper = field.closest('.form-field') || field.parentElement;
     let counter = wrapper.querySelector('.character-counter');
@@ -545,22 +545,22 @@ class FormEnhancements {
     const feedback = [];
 
     // 長さ
-    if (password.length >= 8) score++;
-    if (password.length >= 12) score++;
-    else feedback.push('12文字以上にすることを推奨');
+    if (password.length >= 8) {score++;}
+    if (password.length >= 12) {score++;}
+    else {feedback.push('12文字以上にすることを推奨');}
 
     // 複雑さ
-    if (/[a-z]/.test(password)) score++;
-    else feedback.push('小文字を含める');
+    if (/[a-z]/.test(password)) {score++;}
+    else {feedback.push('小文字を含める');}
 
-    if (/[A-Z]/.test(password)) score++;
-    else feedback.push('大文字を含める');
+    if (/[A-Z]/.test(password)) {score++;}
+    else {feedback.push('大文字を含める');}
 
-    if (/[0-9]/.test(password)) score++;
-    else feedback.push('数字を含める');
+    if (/[0-9]/.test(password)) {score++;}
+    else {feedback.push('数字を含める');}
 
-    if (/[^a-zA-Z0-9]/.test(password)) score++;
-    else feedback.push('記号を含める');
+    if (/[^a-zA-Z0-9]/.test(password)) {score++;}
+    else {feedback.push('記号を含める');}
 
     // 一般的なパスワードチェック
     const commonPasswords = ['password', '123456', 'qwerty', 'abc123'];
@@ -708,14 +708,14 @@ class FormEnhancements {
       <h3>入力エラーがあります</h3>
       <ul>
         ${errors
-          .map(
-            error => `
+    .map(
+      error => `
           <li>
             <a href="#${error.fieldId}">${error.label}: ${error.messages.join(', ')}</a>
           </li>
         `
-          )
-          .join('')}
+    )
+    .join('')}
       </ul>
     `;
 
@@ -733,7 +733,7 @@ class FormEnhancements {
 
         errors.push({
           fieldId: field.id,
-          name: name,
+          name,
           label: label ? label.textContent.replace(' *', '') : name,
           messages: fieldData.errors
         });

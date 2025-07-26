@@ -183,7 +183,7 @@ class RegistrationModal {
         button.setAttribute('data-modal-trigger', this.modalId);
 
         // イベントIDがある場合は保持
-        const eventId = button.dataset.eventId;
+        const { eventId } = button.dataset;
         if (eventId) {
           button.addEventListener('click', () => {
             this.currentEventId = eventId;

@@ -94,7 +94,7 @@ class UnifiedMobileNavigation {
     document.addEventListener(
       'touchend',
       e => {
-        if (!e.changedTouches) return;
+        if (!e.changedTouches) {return;}
 
         const touchEndX = e.changedTouches[0].clientX;
         const touchEndY = e.changedTouches[0].clientY;
@@ -102,7 +102,7 @@ class UnifiedMobileNavigation {
         const diffY = touchEndY - touchStartY;
 
         // 垂直方向の移動が大きい場合は無視
-        if (Math.abs(diffY) > Math.abs(diffX)) return;
+        if (Math.abs(diffY) > Math.abs(diffX)) {return;}
 
         // 左端からの右スワイプでメニューを開く
         if (diffX > 50 && touchStartX < 50 && !this.isMenuOpen) {
@@ -127,7 +127,7 @@ class UnifiedMobileNavigation {
   }
 
   openMenu() {
-    if (this.isMenuOpen) return;
+    if (this.isMenuOpen) {return;}
 
     this.isMenuOpen = true;
 
@@ -150,14 +150,14 @@ class UnifiedMobileNavigation {
     // フォーカス管理
     setTimeout(() => {
       const firstLink = this.menu.querySelector('.mobile-menu__link');
-      if (firstLink) firstLink.focus();
+      if (firstLink) {firstLink.focus();}
     }, 300);
 
     console.log('Mobile menu opened');
   }
 
   closeMenu() {
-    if (!this.isMenuOpen) return;
+    if (!this.isMenuOpen) {return;}
 
     this.isMenuOpen = false;
 
@@ -240,7 +240,7 @@ window.addEventListener('load', () => {
 });
 
 // デバッグ用関数
-window.debugMobileMenu = function () {
+window.debugMobileMenu = function() {
   console.log('=== Mobile Menu Debug Info ===');
   console.log('Menu open:', unifiedMobileNav?.isOpen());
   console.log('Toggle element:', !!document.querySelector('.mobile-menu-toggle'));

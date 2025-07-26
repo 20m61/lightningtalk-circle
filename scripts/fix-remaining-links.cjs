@@ -191,12 +191,12 @@ class RemainingLinkFixer {
 ## 修正内容
 
 ${this.fixes
-  .map(
-    fix => `### ${fix.file}
+    .map(
+      fix => `### ${fix.file}
 - \`${fix.old}\` → \`${fix.new}\`
 `
-  )
-  .join('\n')}
+    )
+    .join('\n')}
 
 ## 修正戦略
 
@@ -228,9 +228,9 @@ ${this.fixes
     const reportPath = path.join(this.projectRoot, 'REMAINING-LINKS-FIX-REPORT.md');
     fs.writeFileSync(reportPath, reportContent);
 
-    console.log(colors.blue(`\n📊 修正レポートを生成しました: REMAINING-LINKS-FIX-REPORT.md`));
+    console.log(colors.blue('\n📊 修正レポートを生成しました: REMAINING-LINKS-FIX-REPORT.md'));
     console.log(
-      colors.bold(`\n📊 修正結果: ${colors.green(this.fixedCount + '個')}のリンクを修正しました`)
+      colors.bold(`\n📊 修正結果: ${colors.green(`${this.fixedCount}個`)}のリンクを修正しました`)
     );
   }
 }

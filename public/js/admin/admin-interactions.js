@@ -31,7 +31,7 @@ class AdminInteractions {
       const card = e.target.closest('.admin-event-card');
       if (card) {
         const editBtn = card.querySelector('[data-action="edit"]');
-        if (editBtn) editBtn.click();
+        if (editBtn) {editBtn.click();}
       }
     });
 
@@ -45,7 +45,7 @@ class AdminInteractions {
   addCardHoverEffect(card) {
     if (!card.dataset.enhanced) {
       card.dataset.enhanced = 'true';
-      
+
       // アクションボタンの表示アニメーション
       const actions = card.querySelector('.admin-event-card__actions');
       if (actions) {
@@ -61,7 +61,7 @@ class AdminInteractions {
       if ((e.ctrlKey || e.metaKey) && e.key === 'n') {
         e.preventDefault();
         const createBtn = document.querySelector('.admin-create-btn');
-        if (createBtn) createBtn.click();
+        if (createBtn) {createBtn.click();}
       }
 
       // Ctrl/Cmd + S: 保存（モーダル内）
@@ -70,7 +70,7 @@ class AdminInteractions {
         if (modal && modal.style.display !== 'none') {
           e.preventDefault();
           const saveBtn = modal.querySelector('.btn-primary');
-          if (saveBtn) saveBtn.click();
+          if (saveBtn) {saveBtn.click();}
         }
       }
 
@@ -79,7 +79,7 @@ class AdminInteractions {
         const modal = document.querySelector('.admin-modal');
         if (modal && modal.style.display !== 'none') {
           const closeBtn = modal.querySelector('.admin-modal__close');
-          if (closeBtn) closeBtn.click();
+          if (closeBtn) {closeBtn.click();}
         }
       }
 
@@ -97,12 +97,12 @@ class AdminInteractions {
   // ローディング状態の改善
   addLoadingStates() {
     // ボタンのローディング状態
-    document.addEventListener('click', async (e) => {
+    document.addEventListener('click', async(e) => {
       const btn = e.target.closest('.btn');
       if (btn && !btn.disabled) {
         const originalText = btn.textContent;
         const isSmall = btn.classList.contains('btn-sm');
-        
+
         // データ操作系のボタンのみ
         if (btn.dataset.action || btn.type === 'submit') {
           btn.disabled = true;
@@ -110,7 +110,7 @@ class AdminInteractions {
             <span class="loading-spinner ${isSmall ? 'loading-spinner--sm' : ''}"></span>
             ${isSmall ? '' : '処理中...'}
           `;
-          
+
           // 元に戻すための処理
           setTimeout(() => {
             if (btn.disabled) {
@@ -240,8 +240,8 @@ class AdminInteractions {
     document.body.appendChild(tooltip);
 
     const rect = element.getBoundingClientRect();
-    tooltip.style.left = rect.left + rect.width / 2 - tooltip.offsetWidth / 2 + 'px';
-    tooltip.style.top = rect.bottom + 8 + 'px';
+    tooltip.style.left = `${rect.left + rect.width / 2 - tooltip.offsetWidth / 2}px`;
+    tooltip.style.top = `${rect.bottom + 8}px`;
 
     setTimeout(() => tooltip.classList.add('show'), 10);
     return tooltip;
@@ -251,7 +251,7 @@ class AdminInteractions {
   improveFormValidation() {
     document.addEventListener('input', (e) => {
       const input = e.target;
-      if (input.classList.contains('admin-form__input') || 
+      if (input.classList.contains('admin-form__input') ||
           input.classList.contains('admin-form__textarea')) {
         this.validateField(input);
       }
@@ -305,7 +305,7 @@ class AdminInteractions {
   // フィールドエラー表示
   showFieldError(field, isValid, message) {
     const wrapper = field.closest('.admin-form__group');
-    if (!wrapper) return;
+    if (!wrapper) {return;}
 
     let errorEl = wrapper.querySelector('.form-error-message');
     if (!errorEl) {
@@ -352,11 +352,11 @@ class AdminInteractions {
     });
 
     document.addEventListener('touchmove', (e) => {
-      if (!currentCard) return;
-      
+      if (!currentCard) {return;}
+
       const currentX = e.touches[0].clientX;
       const diff = startX - currentX;
-      
+
       if (Math.abs(diff) > 50) {
         e.preventDefault();
         currentCard.style.transform = `translateX(${-diff}px)`;
@@ -364,18 +364,18 @@ class AdminInteractions {
     });
 
     document.addEventListener('touchend', (e) => {
-      if (!currentCard) return;
-      
+      if (!currentCard) {return;}
+
       const endX = e.changedTouches[0].clientX;
       const diff = startX - endX;
-      
+
       if (diff > 100) {
         // 左スワイプ - アクション表示
         currentCard.classList.add('show-actions');
       } else {
         currentCard.style.transform = '';
       }
-      
+
       currentCard = null;
     });
   }

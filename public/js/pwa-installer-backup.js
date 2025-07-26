@@ -274,7 +274,7 @@ class PWAInstaller {
 
   isDismissed() {
     const dismissedTime = localStorage.getItem('pwa-install-dismissed');
-    if (!dismissedTime) return false;
+    if (!dismissedTime) {return false;}
 
     // 7日後に再表示
     const daysSinceDismissed = (Date.now() - parseInt(dismissedTime)) / (1000 * 60 * 60 * 24);

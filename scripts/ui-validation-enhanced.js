@@ -177,7 +177,7 @@ async function validateLayout(page) {
   // ヘッダーの固定表示確認
   results.fixedHeader = await page.evaluate(() => {
     const header = document.querySelector('header, .header, nav');
-    if (!header) return false;
+    if (!header) {return false;}
     const style = window.getComputedStyle(header);
     return style.position === 'fixed' || style.position === 'sticky';
   });
@@ -225,7 +225,7 @@ async function validateButtonsEnhanced(page) {
   results.touchTargetSize = await page.evaluate(selectors => {
     const buttons = document.querySelectorAll(selectors);
     let validCount = 0;
-    let details = [];
+    const details = [];
 
     buttons.forEach((btn, index) => {
       const style = window.getComputedStyle(btn);
@@ -300,14 +300,14 @@ async function validateTypographyEnhanced(page) {
 
   // フォントサイズの検証
   results.fontSize = await page.evaluate(() => {
-    const body = document.body;
+    const { body } = document;
     const baseFontSize = parseInt(window.getComputedStyle(body).fontSize);
     const textElements = document.querySelectorAll('p, li, span, div, td');
     let tooSmall = 0;
 
     textElements.forEach(el => {
       const fontSize = parseInt(window.getComputedStyle(el).fontSize);
-      if (fontSize < 14) tooSmall++;
+      if (fontSize < 14) {tooSmall++;}
     });
 
     return {
@@ -338,7 +338,7 @@ async function validateTypographyEnhanced(page) {
     );
     let goodContrast = 0;
     let poorContrast = 0;
-    let details = [];
+    const details = [];
 
     elements.forEach(el => {
       const style = window.getComputedStyle(el);
@@ -373,7 +373,7 @@ async function validateTypographyEnhanced(page) {
               text: el.textContent.trim().substring(0, 30),
               contrast: contrast.toFixed(2),
               color: style.color,
-              bgColor: bgColor
+              bgColor
             });
           }
         }
@@ -408,7 +408,7 @@ async function validateInteractions(page) {
     for (const selector of modalSelectors) {
       try {
         modalTrigger = await page.waitForSelector(selector, { timeout: 1000 });
-        if (modalTrigger) break;
+        if (modalTrigger) {break;}
       } catch (e) {
         continue;
       }
@@ -541,7 +541,7 @@ function generateSummaryReport(results) {
     });
   });
 
-  console.log('\n' + '='.repeat(50));
+  console.log(`\n${'='.repeat(50)}`);
   console.log(`✅ 合格: ${totalPassed}`);
   console.log(`❌ 問題: ${totalIssues}`);
   console.log(`📊 合格率: ${((totalPassed / (totalPassed + totalIssues)) * 100).toFixed(1)}%`);

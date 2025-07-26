@@ -89,13 +89,13 @@ linkFixes.forEach(fix => {
         fs.writeFileSync(filePath, content);
         const matches = originalContent.match(fix.pattern);
         const count = matches ? matches.length : 0;
-        console.log(colors.green('✓') + ` ${file} - ${count}個のリンクを修正`);
+        console.log(`${colors.green('✓')} ${file} - ${count}個のリンクを修正`);
         totalFixed += count;
       } else {
         console.log(colors.gray(`○ ${file} - 修正対象なし`));
       }
     } catch (error) {
-      console.log(colors.red('✗') + ` ${file}: ${error.message}`);
+      console.log(`${colors.red('✗')} ${file}: ${error.message}`);
       totalErrors++;
     }
   });
@@ -104,7 +104,7 @@ linkFixes.forEach(fix => {
 console.log(colors.gray('='.repeat(60)));
 console.log(
   colors.bold(
-    `📊 修正結果: ${colors.green(totalFixed + '個')}のリンクを修正, ${colors.red(totalErrors + '個')}のエラー`
+    `📊 修正結果: ${colors.green(`${totalFixed}個`)}のリンクを修正, ${colors.red(`${totalErrors}個`)}のエラー`
   )
 );
 console.log(colors.blue('\n次のステップ: npm run docs:check-links で修正を確認してください'));

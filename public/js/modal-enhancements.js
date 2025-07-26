@@ -9,17 +9,17 @@ class ModalEnhancementSystem {
     this.previousFocus = null;
     this.focusableElements = 'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])';
     this.isInitialized = false;
-    
+
     this.init();
   }
 
   init() {
-    if (this.isInitialized) return;
-    
+    if (this.isInitialized) {return;}
+
     this.setupEventListeners();
     this.enhanceExistingModals();
     this.isInitialized = true;
-    
+
     console.log('✅ Modal Enhancement System initialized');
   }
 
@@ -45,7 +45,7 @@ class ModalEnhancementSystem {
           const modal = mutation.target;
           if (modal.classList.contains('modal') || modal.id.includes('modal')) {
             const isVisible = modal.style.display === 'block' || !modal.style.display.includes('none');
-            
+
             if (isVisible && this.activeModal !== modal) {
               this.openModal(modal);
             } else if (!isVisible && this.activeModal === modal) {
@@ -77,7 +77,7 @@ class ModalEnhancementSystem {
       modal.setAttribute('role', 'dialog');
     }
     modal.setAttribute('aria-modal', 'true');
-    
+
     if (!modal.getAttribute('aria-labelledby')) {
       const heading = modal.querySelector('h1, h2, h3, h4, h5, h6');
       if (heading) {
@@ -117,7 +117,7 @@ class ModalEnhancementSystem {
     closeBtn.innerHTML = '×';
     closeBtn.setAttribute('aria-label', 'モーダルを閉じる');
     closeBtn.setAttribute('type', 'button');
-    
+
     // スタイルの適用
     Object.assign(closeBtn.style, {
       position: 'absolute',
@@ -137,24 +137,24 @@ class ModalEnhancementSystem {
       justifyContent: 'center',
       transition: 'all 0.2s ease'
     });
-    
+
     closeBtn.addEventListener('mouseenter', () => {
       closeBtn.style.backgroundColor = '#f0f0f0';
       closeBtn.style.color = '#333';
     });
-    
+
     closeBtn.addEventListener('mouseleave', () => {
       closeBtn.style.backgroundColor = 'transparent';
       closeBtn.style.color = '#666';
     });
-    
+
     return closeBtn;
   }
 
   adjustTabOrder(modal) {
     // フォーカス可能な要素を取得
     const focusableElements = modal.querySelectorAll(this.focusableElements);
-    
+
     focusableElements.forEach((element, index) => {
       // 最初と最後の要素にデータ属性を追加
       if (index === 0) {
@@ -187,12 +187,12 @@ class ModalEnhancementSystem {
 
     // bodyのスクロール無効化
     document.body.style.overflow = 'hidden';
-    
+
     console.log('🔓 Modal opened with accessibility enhancements');
   }
 
   closeModal(modal) {
-    if (modal !== this.activeModal) return;
+    if (modal !== this.activeModal) {return;}
 
     // アニメーション効果
     this.animateModalClose(modal).then(() => {
@@ -233,7 +233,7 @@ class ModalEnhancementSystem {
 
     // 新しいフォーカストラップリスナー
     modal._focusTrapListener = (e) => {
-      if (e.key !== 'Tab') return;
+      if (e.key !== 'Tab') {return;}
 
       if (e.shiftKey) {
         // Shift + Tab
@@ -268,7 +268,7 @@ class ModalEnhancementSystem {
     // アニメーション実行
     requestAnimationFrame(() => {
       modal.style.opacity = '1';
-      
+
       if (modalContent) {
         modalContent.style.transition = 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)';
         modalContent.style.transform = 'translate(-50%, -50%) scale(1)';
@@ -280,15 +280,15 @@ class ModalEnhancementSystem {
   animateModalClose(modal) {
     return new Promise((resolve) => {
       const modalContent = modal.querySelector('.modal-content, .modal-dialog, .modal-body');
-      
+
       modal.style.opacity = '0';
-      
+
       if (modalContent) {
         modalContent.style.transition = 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)';
         modalContent.style.transform = 'translate(-50%, -50%) scale(0.9)';
         modalContent.style.opacity = '0';
       }
-      
+
       setTimeout(resolve, 300);
     });
   }

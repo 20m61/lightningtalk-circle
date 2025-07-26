@@ -45,7 +45,7 @@ async function updateEvent(tableName, environment) {
     await docClient.send(new PutCommand(params));
     console.log(`✅ ${environment}環境のイベントデータ更新完了`);
     console.log(`   - タイトル: ${eventData.title}`);
-    console.log(`   - 日時: 2025年7月30日(水) 19:00-21:00`);
+    console.log('   - 日時: 2025年7月30日(水) 19:00-21:00');
   } catch (error) {
     console.error(`❌ ${environment}環境の更新エラー:`, error.message);
   }

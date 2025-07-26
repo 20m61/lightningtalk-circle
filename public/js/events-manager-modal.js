@@ -9,13 +9,13 @@ if (typeof EventsManager !== 'undefined') {
   const originalRenderEventCard = EventsManager.prototype.renderEventCard;
 
   // Override init to add modal integration
-  EventsManager.prototype.init = async function () {
+  EventsManager.prototype.init = async function() {
     await originalInit.call(this);
     this.initModalIntegration();
   };
 
   // Add modal integration method
-  EventsManager.prototype.initModalIntegration = function () {
+  EventsManager.prototype.initModalIntegration = function() {
     // Ensure modal is available
     if (!window.eventModal) {
       console.warn('EventModal not initialized');
@@ -27,7 +27,7 @@ if (typeof EventsManager !== 'undefined') {
       const eventCard = e.target.closest('.event-card[data-event-id]');
       if (eventCard && !e.target.closest('.btn, button')) {
         e.preventDefault();
-        const eventId = eventCard.dataset.eventId;
+        const { eventId } = eventCard.dataset;
         this.openEventModal(eventId);
       }
     });
@@ -38,7 +38,7 @@ if (typeof EventsManager !== 'undefined') {
         const eventCard = e.target.closest('.event-card[data-event-id]');
         if (eventCard && !e.target.closest('.btn, button')) {
           e.preventDefault();
-          const eventId = eventCard.dataset.eventId;
+          const { eventId } = eventCard.dataset;
           this.openEventModal(eventId);
         }
       }
@@ -46,7 +46,7 @@ if (typeof EventsManager !== 'undefined') {
   };
 
   // Add method to open event modal
-  EventsManager.prototype.openEventModal = function (eventId) {
+  EventsManager.prototype.openEventModal = function(eventId) {
     const event = this.events.find(e => e.id === eventId);
     if (event && window.eventModal) {
       // Get current voting data from localStorage
@@ -78,7 +78,7 @@ if (typeof EventsManager !== 'undefined') {
   };
 
   // Override renderEventCard to add modal attributes
-  EventsManager.prototype.renderEventCard = function (event) {
+  EventsManager.prototype.renderEventCard = function(event) {
     const card = originalRenderEventCard.call(this, event);
 
     // Add data attributes and accessibility
@@ -102,7 +102,7 @@ if (typeof EventsManager !== 'undefined') {
   };
 
   // Helper methods
-  EventsManager.prototype.generateDefaultSchedule = function (event) {
+  EventsManager.prototype.generateDefaultSchedule = function(event) {
     const startTime = new Date(event.date);
     const schedule = [
       {
@@ -134,7 +134,7 @@ if (typeof EventsManager !== 'undefined') {
     return schedule;
   };
 
-  EventsManager.prototype.getDefaultNotes = function (format) {
+  EventsManager.prototype.getDefaultNotes = function(format) {
     const notes = {
       hybrid: `
         <ul>
@@ -165,7 +165,7 @@ if (typeof EventsManager !== 'undefined') {
     return notes[format] || notes.hybrid;
   };
 
-  EventsManager.prototype.formatTime = function (date) {
+  EventsManager.prototype.formatTime = function(date) {
     return date.toLocaleTimeString('ja-JP', {
       hour: '2-digit',
       minute: '2-digit',

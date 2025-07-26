@@ -3,7 +3,7 @@
  * 本番環境では自動的にログを無効化
  */
 
-(function () {
+(function() {
   // 本番ドメインの判定
   const isProduction =
     window.location.hostname === 'xn--6wym69a.com' ||
@@ -30,25 +30,25 @@
 
   // カスタムロガー
   window.debugLog = {
-    error: function (...args) {
+    error(...args) {
       if (window.CURRENT_LOG_LEVEL >= window.LOG_LEVEL.ERROR) {
         console.error(...args);
       }
     },
 
-    warn: function (...args) {
+    warn(...args) {
       if (window.CURRENT_LOG_LEVEL >= window.LOG_LEVEL.WARN) {
         console.warn(...args);
       }
     },
 
-    info: function (...args) {
+    info(...args) {
       if (window.CURRENT_LOG_LEVEL >= window.LOG_LEVEL.INFO) {
         console.log(...args);
       }
     },
 
-    debug: function (...args) {
+    debug(...args) {
       if (window.CURRENT_LOG_LEVEL >= window.LOG_LEVEL.DEBUG) {
         console.log(...args);
       }
@@ -57,7 +57,7 @@
 
   // 既存のconsole.logをオーバーライド（オプション）
   if (!window.DEBUG_MODE && !forceDebug) {
-    const noop = function () {};
+    const noop = function() {};
     console.log = noop;
     console.debug = noop;
     // console.warnとconsole.errorは残す

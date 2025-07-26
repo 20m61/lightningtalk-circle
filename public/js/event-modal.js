@@ -239,7 +239,7 @@ class EventModal {
     modalContent.addEventListener(
       'touchmove',
       e => {
-        if (!this.touchStartY) return;
+        if (!this.touchStartY) {return;}
 
         const touchEndY = e.touches[0].clientY;
         const touchEndX = e.touches[0].clientX;
@@ -248,7 +248,7 @@ class EventModal {
 
         // Swipe down to close (only if at top)
         if (diffY < -50 && Math.abs(diffX) < 50) {
-          const scrollTop = modalContent.scrollTop;
+          const { scrollTop } = modalContent;
           if (scrollTop === 0) {
             this.close();
           }
@@ -418,30 +418,30 @@ class EventModal {
   }
 
   handleKeyboard(e) {
-    if (!this.modal.classList.contains('is-open')) return;
+    if (!this.modal.classList.contains('is-open')) {return;}
 
     switch (e.key) {
-      case 'Escape':
-        this.close();
-        break;
-      case 'Tab':
-        this.trapFocus(e);
-        break;
-      case 'Enter':
-      case ' ':
-        // Handle Enter/Space on tab buttons
-        if (e.target.classList.contains('tab-button')) {
-          e.preventDefault();
-          this.switchTab(e.target.dataset.tab);
-        }
-        break;
-      case 'ArrowLeft':
-      case 'ArrowRight':
-        if (window.innerWidth < 768) {
-          this.navigateTabs(e.key === 'ArrowRight' ? 1 : -1);
-          e.preventDefault();
-        }
-        break;
+    case 'Escape':
+      this.close();
+      break;
+    case 'Tab':
+      this.trapFocus(e);
+      break;
+    case 'Enter':
+    case ' ':
+      // Handle Enter/Space on tab buttons
+      if (e.target.classList.contains('tab-button')) {
+        e.preventDefault();
+        this.switchTab(e.target.dataset.tab);
+      }
+      break;
+    case 'ArrowLeft':
+    case 'ArrowRight':
+      if (window.innerWidth < 768) {
+        this.navigateTabs(e.key === 'ArrowRight' ? 1 : -1);
+        e.preventDefault();
+      }
+      break;
     }
   }
 
@@ -543,7 +543,7 @@ class EventModal {
 
   // Utility methods
   formatDate(dateString) {
-    if (!dateString) return '日付未定';
+    if (!dateString) {return '日付未定';}
     const date = new Date(dateString);
     const options = { year: 'numeric', month: 'long', day: 'numeric', weekday: 'long' };
     return date.toLocaleDateString('ja-JP', options);
@@ -595,7 +595,7 @@ class EventModal {
   }
 
   generateCalendarUrl(event) {
-    const startDate = new Date(event.date + ' ' + (event.time || '19:00'));
+    const startDate = new Date(`${event.date} ${event.time || '19:00'}`);
     const endDate = new Date(startDate.getTime() + 3 * 60 * 60 * 1000); // 3 hours
 
     const formatDate = date => {

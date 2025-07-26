@@ -86,7 +86,7 @@ class ManualMergeApproval {
 
       // テスト実行 (設定されている場合)
       console.log('  🧪 Test execution...');
-      let testsPassed = true;
+      const testsPassed = true;
       try {
         execSync('npm test 2>/dev/null', { encoding: 'utf8' });
       } catch (error) {
@@ -181,7 +181,7 @@ class ManualMergeApproval {
       for (const file of jsFiles) {
         const filePath = `public/js/${file}`;
         if (fs.existsSync(filePath)) {
-          const size = fs.statSync(filePath).size;
+          const { size } = fs.statSync(filePath);
           totalSize += size;
           console.log(`    📄 ${file}: ${(size / 1024).toFixed(1)}KB`);
         } else {

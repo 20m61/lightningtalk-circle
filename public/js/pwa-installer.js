@@ -6,55 +6,55 @@
 (function() {
   'use strict';
 
-class PWAInstaller {
-  constructor() {
-    this.deferredPrompt = null;
-    this.installButton = null;
-    this.installBanner = null;
-    this.updateBanner = null;
-    this.setupEventListeners();
-    this.createUI();
-    this.checkInstallState();
-    this.registerServiceWorker();
-  }
+  class PWAInstaller {
+    constructor() {
+      this.deferredPrompt = null;
+      this.installButton = null;
+      this.installBanner = null;
+      this.updateBanner = null;
+      this.setupEventListeners();
+      this.createUI();
+      this.checkInstallState();
+      this.registerServiceWorker();
+    }
 
-  setupEventListeners() {
+    setupEventListeners() {
     // インストールプロンプトをキャッチ
-    window.addEventListener('beforeinstallprompt', (e) => {
-      e.preventDefault();
-      this.deferredPrompt = e;
-      this.showInstallPromotion();
-      
-      // アナリティクスイベント
-      if (window.gtag) {
-        window.gtag('event', 'pwa_install_available');
-      }
-    });
+      window.addEventListener('beforeinstallprompt', (e) => {
+        e.preventDefault();
+        this.deferredPrompt = e;
+        this.showInstallPromotion();
 
-    // インストール成功
-    window.addEventListener('appinstalled', () => {
-      console.log('PWA was installed');
-      this.hideInstallPromotion();
-      
-      // アナリティクスイベント
-      if (window.gtag) {
-        window.gtag('event', 'pwa_installed');
-      }
-    });
+        // アナリティクスイベント
+        if (window.gtag) {
+          window.gtag('event', 'pwa_install_available');
+        }
+      });
 
-    // ページ表示状態の変更を監視
-    document.addEventListener('visibilitychange', () => {
-      if (document.visibilityState === 'visible') {
-        this.checkForUpdates();
-      }
-    });
-  }
+      // インストール成功
+      window.addEventListener('appinstalled', () => {
+        console.log('PWA was installed');
+        this.hideInstallPromotion();
 
-  createUI() {
+        // アナリティクスイベント
+        if (window.gtag) {
+          window.gtag('event', 'pwa_installed');
+        }
+      });
+
+      // ページ表示状態の変更を監視
+      document.addEventListener('visibilitychange', () => {
+        if (document.visibilityState === 'visible') {
+          this.checkForUpdates();
+        }
+      });
+    }
+
+    createUI() {
     // インストールバナー
-    this.installBanner = document.createElement('div');
-    this.installBanner.className = 'pwa-install-banner';
-    this.installBanner.innerHTML = `
+      this.installBanner = document.createElement('div');
+      this.installBanner.className = 'pwa-install-banner';
+      this.installBanner.innerHTML = `
       <div class="pwa-install-content">
         <div class="pwa-install-icon">
           <svg viewBox="0 0 24 24" width="24" height="24">
@@ -73,67 +73,67 @@ class PWAInstaller {
         </button>
       </div>
     `;
-    document.body.appendChild(this.installBanner);
+      document.body.appendChild(this.installBanner);
 
-    // インストールボタンのイベント
-    this.installButton = this.installBanner.querySelector('.pwa-install-button');
-    this.installButton.addEventListener('click', () => this.installPWA());
+      // インストールボタンのイベント
+      this.installButton = this.installBanner.querySelector('.pwa-install-button');
+      this.installButton.addEventListener('click', () => this.installPWA());
 
-    // 閉じるボタン
-    const dismissButton = this.installBanner.querySelector('.pwa-install-dismiss');
-    dismissButton.addEventListener('click', () => this.hideInstallPromotion());
+      // 閉じるボタン
+      const dismissButton = this.installBanner.querySelector('.pwa-install-dismiss');
+      dismissButton.addEventListener('click', () => this.hideInstallPromotion());
 
-    // アップデートバナー
-    this.updateBanner = document.createElement('div');
-    this.updateBanner.className = 'pwa-update-banner';
-    this.updateBanner.innerHTML = `
+      // アップデートバナー
+      this.updateBanner = document.createElement('div');
+      this.updateBanner.className = 'pwa-update-banner';
+      this.updateBanner.innerHTML = `
       <div class="pwa-update-content">
         <span>新しいバージョンが利用可能です</span>
         <button class="pwa-update-button">更新</button>
       </div>
     `;
-    document.body.appendChild(this.updateBanner);
+      document.body.appendChild(this.updateBanner);
 
-    // 更新ボタンのイベント
-    const updateButton = this.updateBanner.querySelector('.pwa-update-button');
-    updateButton.addEventListener('click', () => this.updatePWA());
-  }
-
-  async checkInstallState() {
-    // スタンドアロンモードで実行されているかチェック
-    if (window.matchMedia('(display-mode: standalone)').matches) {
-      console.log('PWA is running in standalone mode');
-      return;
+      // 更新ボタンのイベント
+      const updateButton = this.updateBanner.querySelector('.pwa-update-button');
+      updateButton.addEventListener('click', () => this.updatePWA());
     }
 
-    // iOSの場合は特別な処理
-    if (this.isIOS()) {
+    async checkInstallState() {
+    // スタンドアロンモードで実行されているかチェック
+      if (window.matchMedia('(display-mode: standalone)').matches) {
+        console.log('PWA is running in standalone mode');
+        return;
+      }
+
+      // iOSの場合は特別な処理
+      if (this.isIOS()) {
       // iOSではbeforeinstallpromptイベントが発火しない
-      const isInstalled = this.isIOSInstalled();
-      if (!isInstalled) {
-        this.showIOSInstallGuide();
+        const isInstalled = this.isIOSInstalled();
+        if (!isInstalled) {
+          this.showIOSInstallGuide();
+        }
       }
     }
-  }
 
-  isIOS() {
-    const userAgent = window.navigator.userAgent.toLowerCase();
-    return /iphone|ipad|ipod/.test(userAgent);
-  }
-
-  isIOSInstalled() {
-    return window.navigator.standalone === true;
-  }
-
-  showIOSInstallGuide() {
-    // 既に表示したことがある場合はスキップ
-    if (localStorage.getItem('pwa-ios-guide-shown')) {
-      return;
+    isIOS() {
+      const userAgent = window.navigator.userAgent.toLowerCase();
+      return /iphone|ipad|ipod/.test(userAgent);
     }
 
-    const guide = document.createElement('div');
-    guide.className = 'pwa-ios-guide';
-    guide.innerHTML = `
+    isIOSInstalled() {
+      return window.navigator.standalone === true;
+    }
+
+    showIOSInstallGuide() {
+    // 既に表示したことがある場合はスキップ
+      if (localStorage.getItem('pwa-ios-guide-shown')) {
+        return;
+      }
+
+      const guide = document.createElement('div');
+      guide.className = 'pwa-ios-guide';
+      guide.innerHTML = `
       <div class="pwa-ios-guide-content">
         <h3>ホーム画面に追加</h3>
         <p>
@@ -144,138 +144,138 @@ class PWAInstaller {
         <button class="pwa-ios-guide-close">閉じる</button>
       </div>
     `;
-    document.body.appendChild(guide);
+      document.body.appendChild(guide);
 
-    setTimeout(() => {
-      guide.classList.add('show');
-    }, 100);
+      setTimeout(() => {
+        guide.classList.add('show');
+      }, 100);
 
-    const closeButton = guide.querySelector('.pwa-ios-guide-close');
-    closeButton.addEventListener('click', () => {
-      guide.remove();
-      localStorage.setItem('pwa-ios-guide-shown', 'true');
-    });
-  }
-
-  showInstallPromotion() {
-    // 既にインストール済みの場合は表示しない
-    if (this.isInstalled()) {
-      return;
+      const closeButton = guide.querySelector('.pwa-ios-guide-close');
+      closeButton.addEventListener('click', () => {
+        guide.remove();
+        localStorage.setItem('pwa-ios-guide-shown', 'true');
+      });
     }
 
-    // 過去に非表示にした場合は一定期間表示しない
-    const dismissedTime = localStorage.getItem('pwa-install-dismissed');
-    if (dismissedTime) {
-      const daysSinceDismissed = (Date.now() - parseInt(dismissedTime)) / (1000 * 60 * 60 * 24);
-      if (daysSinceDismissed < 7) {
+    showInstallPromotion() {
+    // 既にインストール済みの場合は表示しない
+      if (this.isInstalled()) {
         return;
       }
+
+      // 過去に非表示にした場合は一定期間表示しない
+      const dismissedTime = localStorage.getItem('pwa-install-dismissed');
+      if (dismissedTime) {
+        const daysSinceDismissed = (Date.now() - parseInt(dismissedTime)) / (1000 * 60 * 60 * 24);
+        if (daysSinceDismissed < 7) {
+          return;
+        }
+      }
+
+      setTimeout(() => {
+        this.installBanner.classList.add('show');
+      }, 2000); // 2秒後に表示
     }
 
-    setTimeout(() => {
-      this.installBanner.classList.add('show');
-    }, 2000); // 2秒後に表示
-  }
-
-  hideInstallPromotion() {
-    this.installBanner.classList.remove('show');
-    localStorage.setItem('pwa-install-dismissed', Date.now().toString());
-  }
-
-  async installPWA() {
-    if (!this.deferredPrompt) {
-      return;
+    hideInstallPromotion() {
+      this.installBanner.classList.remove('show');
+      localStorage.setItem('pwa-install-dismissed', Date.now().toString());
     }
 
-    // インストールプロンプトを表示
-    this.deferredPrompt.prompt();
+    async installPWA() {
+      if (!this.deferredPrompt) {
+        return;
+      }
 
-    // ユーザーの選択を待つ
-    const { outcome } = await this.deferredPrompt.userChoice;
-    
-    console.log(`User response to the install prompt: ${outcome}`);
+      // インストールプロンプトを表示
+      this.deferredPrompt.prompt();
 
-    // プロンプトは一度しか使えないのでリセット
-    this.deferredPrompt = null;
+      // ユーザーの選択を待つ
+      const { outcome } = await this.deferredPrompt.userChoice;
 
-    // バナーを非表示
-    this.hideInstallPromotion();
+      console.log(`User response to the install prompt: ${outcome}`);
 
-    // アナリティクスイベント
-    if (window.gtag) {
-      window.gtag('event', 'pwa_install_' + outcome);
+      // プロンプトは一度しか使えないのでリセット
+      this.deferredPrompt = null;
+
+      // バナーを非表示
+      this.hideInstallPromotion();
+
+      // アナリティクスイベント
+      if (window.gtag) {
+        window.gtag('event', `pwa_install_${outcome}`);
+      }
     }
-  }
 
-  isInstalled() {
+    isInstalled() {
     // スタンドアロンモードで実行されているか
-    if (window.matchMedia('(display-mode: standalone)').matches) {
-      return true;
+      if (window.matchMedia('(display-mode: standalone)').matches) {
+        return true;
+      }
+
+      // iOSの場合
+      if (this.isIOS() && window.navigator.standalone === true) {
+        return true;
+      }
+
+      return false;
     }
 
-    // iOSの場合
-    if (this.isIOS() && window.navigator.standalone === true) {
-      return true;
-    }
+    async registerServiceWorker() {
+      if ('serviceWorker' in navigator) {
+        try {
+          const registration = await navigator.serviceWorker.register('/service-worker.js');
+          console.log('Service Worker registered:', registration);
 
-    return false;
-  }
-
-  async registerServiceWorker() {
-    if ('serviceWorker' in navigator) {
-      try {
-        const registration = await navigator.serviceWorker.register('/service-worker.js');
-        console.log('Service Worker registered:', registration);
-
-        // アップデートチェック
-        registration.addEventListener('updatefound', () => {
-          const newWorker = registration.installing;
-          newWorker.addEventListener('statechange', () => {
-            if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+          // アップデートチェック
+          registration.addEventListener('updatefound', () => {
+            const newWorker = registration.installing;
+            newWorker.addEventListener('statechange', () => {
+              if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
               // 新しいバージョンが利用可能
-              this.showUpdateBanner();
-            }
+                this.showUpdateBanner();
+              }
+            });
           });
-        });
 
-        // 定期的にアップデートをチェック
-        setInterval(() => {
-          registration.update();
-        }, 60 * 60 * 1000); // 1時間ごと
+          // 定期的にアップデートをチェック
+          setInterval(() => {
+            registration.update();
+          }, 60 * 60 * 1000); // 1時間ごと
 
-      } catch (error) {
-        console.error('Service Worker registration failed:', error);
+        } catch (error) {
+          console.error('Service Worker registration failed:', error);
+        }
       }
     }
-  }
 
-  showUpdateBanner() {
-    this.updateBanner.classList.add('show');
-  }
+    showUpdateBanner() {
+      this.updateBanner.classList.add('show');
+    }
 
-  updatePWA() {
+    updatePWA() {
     // 新しいService Workerをアクティベート
-    if ('serviceWorker' in navigator && navigator.serviceWorker.controller) {
-      navigator.serviceWorker.controller.postMessage({ type: 'SKIP_WAITING' });
+      if ('serviceWorker' in navigator && navigator.serviceWorker.controller) {
+        navigator.serviceWorker.controller.postMessage({ type: 'SKIP_WAITING' });
+      }
+
+      // ページをリロード
+      window.location.reload();
     }
 
-    // ページをリロード
-    window.location.reload();
-  }
-
-  async checkForUpdates() {
-    if ('serviceWorker' in navigator) {
-      const registration = await navigator.serviceWorker.getRegistration();
-      if (registration) {
-        registration.update();
+    async checkForUpdates() {
+      if ('serviceWorker' in navigator) {
+        const registration = await navigator.serviceWorker.getRegistration();
+        if (registration) {
+          registration.update();
+        }
       }
     }
   }
-}
 
-// スタイル追加
-const style = document.createElement('style');
-style.textContent = `
+  // スタイル追加
+  const style = document.createElement('style');
+  style.textContent = `
   /* インストールバナー */
   .pwa-install-banner {
     position: fixed;
@@ -440,11 +440,11 @@ style.textContent = `
     top: calc(var(--spacing-lg) + env(safe-area-inset-top));
   }
 `;
-document.head.appendChild(style);
+  document.head.appendChild(style);
 
-// 初期化
-document.addEventListener('DOMContentLoaded', () => {
-  window.pwaInstaller = new PWAInstaller();
-});
+  // 初期化
+  document.addEventListener('DOMContentLoaded', () => {
+    window.pwaInstaller = new PWAInstaller();
+  });
 
 })(); // IIFE終了

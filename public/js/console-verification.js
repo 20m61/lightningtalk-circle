@@ -3,7 +3,7 @@
  * 本番環境でのコンソールログクリーンアップを検証
  */
 
-(function () {
+(function() {
   'use strict';
 
   // 検証開始メッセージ
@@ -51,8 +51,8 @@
   ];
 
   let componentsReady = 0;
-  let maxWaitTime = 5000; // 5秒
-  let checkInterval = 100;
+  const maxWaitTime = 5000; // 5秒
+  const checkInterval = 100;
   let waitTime = 0;
 
   function checkSystemComponents() {
@@ -113,12 +113,12 @@
 
   // エラーカウント（開発環境のみ）
   if (isDevelopment) {
-    console.error = function (...args) {
+    console.error = function(...args) {
       errorCount++;
       return originalConsoleError.apply(console, args);
     };
 
-    console.warn = function (...args) {
+    console.warn = function(...args) {
       // ResizeObserverやDOMエラーは除外
       const message = args.join(' ');
       if (

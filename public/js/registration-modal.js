@@ -3,7 +3,7 @@
  * 参加登録用モーダルの管理
  */
 
-(function () {
+(function() {
   'use strict';
 
   class RegistrationModal {

@@ -3,14 +3,14 @@
  * APIエラーを適切に処理するためのfetchラッパー
  */
 
-(function () {
+(function() {
   'use strict';
 
   // 元のfetchを保存
   const originalFetch = window.fetch;
 
   // エラーを静かに処理するfetchラッパー
-  window.safeFetch = async function (url, options = {}) {
+  window.safeFetch = async function(url, options = {}) {
     try {
       const response = await originalFetch(url, options);
 
@@ -43,7 +43,7 @@
   // グローバルfetchのオーバーライド（オプション）
   // 注意: 既存のコードに影響を与える可能性があるため、デフォルトでは無効
   if (window.OVERRIDE_FETCH) {
-    window.fetch = function (url, options) {
+    window.fetch = function(url, options) {
       // APIエンドポイントのみラップ
       if (url.startsWith('/api/') || url.includes('/api/')) {
         return window.safeFetch(url, options);
@@ -54,7 +54,7 @@
   }
 
   // APIヘルパー関数
-  window.apiRequest = async function (endpoint, options = {}) {
+  window.apiRequest = async function(endpoint, options = {}) {
     const apiEndpoint = window.APP_CONFIG?.apiEndpoint || '/api';
     const url = endpoint.startsWith('http') ? endpoint : `${apiEndpoint}${endpoint}`;
 

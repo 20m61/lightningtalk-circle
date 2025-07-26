@@ -167,7 +167,7 @@ class LightningTalkApp {
   throttle(func, delay) {
     let timeoutId;
     let lastExecTime = 0;
-    return function (...args) {
+    return function(...args) {
       const currentTime = Date.now();
 
       if (currentTime - lastExecTime > delay) {
@@ -188,7 +188,7 @@ class LightningTalkApp {
 
   debounce(func, delay) {
     let timeoutId;
-    return function (...args) {
+    return function(...args) {
       clearTimeout(timeoutId);
       timeoutId = setTimeout(() => func.apply(this, args), delay);
     };
@@ -317,47 +317,47 @@ class LightningTalkApp {
 
     try {
       switch (action) {
-        case 'register':
-          this.openRegistrationModal('general');
-          break;
-        case 'register-listener':
-          this.openRegistrationModal('listener');
-          break;
-        case 'register-speaker':
-          this.openRegistrationModal('speaker');
-          break;
-        case 'feedback':
-          this.openFeedbackForm();
-          break;
-        case 'walkin-info':
-          this.showWalkinInfo();
-          break;
-        case 'survey-online':
-          this.incrementSurveyCounter('online');
-          break;
-        case 'survey-offline':
-          this.incrementSurveyCounter('offline');
-          break;
-        case 'view-detail':
-          this.openEventDetailModal(element.dataset.eventId);
-          break;
-        case 'toggle-participants':
-          this.toggleParticipantsList();
-          break;
-        case 'toggle-settings':
-          this.toggleChatSettings();
-          break;
-        case 'minimize':
-          this.minimizeChat();
-          break;
-        case 'attach-file':
-          this.openFileAttachment();
-          break;
-        case 'emoji':
-          this.toggleEmojiPicker();
-          break;
-        default:
-          this.logger.warn('Unknown action:', { action });
+      case 'register':
+        this.openRegistrationModal('general');
+        break;
+      case 'register-listener':
+        this.openRegistrationModal('listener');
+        break;
+      case 'register-speaker':
+        this.openRegistrationModal('speaker');
+        break;
+      case 'feedback':
+        this.openFeedbackForm();
+        break;
+      case 'walkin-info':
+        this.showWalkinInfo();
+        break;
+      case 'survey-online':
+        this.incrementSurveyCounter('online');
+        break;
+      case 'survey-offline':
+        this.incrementSurveyCounter('offline');
+        break;
+      case 'view-detail':
+        this.openEventDetailModal(element.dataset.eventId);
+        break;
+      case 'toggle-participants':
+        this.toggleParticipantsList();
+        break;
+      case 'toggle-settings':
+        this.toggleChatSettings();
+        break;
+      case 'minimize':
+        this.minimizeChat();
+        break;
+      case 'attach-file':
+        this.openFileAttachment();
+        break;
+      case 'emoji':
+        this.toggleEmojiPicker();
+        break;
+      default:
+        this.logger.warn('Unknown action:', { action });
       }
     } catch (error) {
       this.logger.error('Action execution failed:', { action, error: error.message });
@@ -448,8 +448,8 @@ class LightningTalkApp {
                 </div>
                 
                 ${
-                  showSpeakerFields
-                    ? `
+  showSpeakerFields
+    ? `
                 <div class="form-group">
                     <label for="talkTitle">発表タイトル *</label>
                     <input type="text" id="talkTitle" name="talkTitle" required maxlength="200" placeholder="例: 猫の写真で学ぶマシンラーニング">
@@ -484,8 +484,8 @@ class LightningTalkApp {
                     </select>
                 </div>
                 `
-                    : ''
-                }
+    : ''
+}
                 
                 <div class="form-group">
                     <label for="message">メッセージ・質問など</label>
@@ -1649,15 +1649,15 @@ class LightningTalkApp {
     picker.innerHTML = `
       <div class="emoji-grid">
         ${commonEmojis
-          .map(emoji => `<button class="emoji-btn" data-emoji="${emoji}">${emoji}</button>`)
-          .join('')}
+    .map(emoji => `<button class="emoji-btn" data-emoji="${emoji}">${emoji}</button>`)
+    .join('')}
       </div>
     `;
 
     // 絵文字選択イベント
     picker.addEventListener('click', e => {
       if (e.target.classList.contains('emoji-btn')) {
-        const emoji = e.target.dataset.emoji;
+        const { emoji } = e.target.dataset;
         this.insertEmoji(emoji);
         picker.classList.add('hidden');
       }
@@ -2242,14 +2242,14 @@ class LightningTalkApp {
 
       // Handle different message types efficiently
       switch (data.type) {
-        case 'voteUpdate':
-          this.handleVoteUpdate(data);
-          break;
-        case 'pong':
-          // Keep-alive response, no action needed
-          break;
-        default:
-          this.logger.warn('Unknown WebSocket message type', { type: data.type, data });
+      case 'voteUpdate':
+        this.handleVoteUpdate(data);
+        break;
+      case 'pong':
+        // Keep-alive response, no action needed
+        break;
+      default:
+        this.logger.warn('Unknown WebSocket message type', { type: data.type, data });
       }
     } catch (error) {
       this.logger.error('Error parsing WebSocket message', {
@@ -3132,7 +3132,7 @@ if (document.readyState === 'loading') {
     };
 
     // Admin login processing - Googleログインのみ使用
-    window.processAdminLogin = async () => {
+    window.processAdminLogin = async() => {
       // Googleログインにリダイレクト
       if (window.googleAuth) {
         window.googleAuth.login();
@@ -3315,7 +3315,7 @@ if (document.readyState === 'loading') {
   };
 
   // Admin login processing - Googleログインのみ使用
-  window.processAdminLogin = async () => {
+  window.processAdminLogin = async() => {
     // Googleログインにリダイレクト
     if (window.googleAuth) {
       window.googleAuth.login();
